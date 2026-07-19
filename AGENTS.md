@@ -40,6 +40,26 @@ npm run i18n:compile
 The fa-IR catalog must be **100% translated** — the app defaults to Persian, so
 a missing translation shows an English string to an Iranian user.
 
+### Colour scheme is a runtime setting too
+
+`themePreference` is `light | dark | system`, persisted in Settings.
+`AppThemeProvider` owns BOTH colour scheme and direction and builds the theme
+via `getTheme(mode, direction)`.
+
+**Never hardcode a colour in a component.** Everything comes from
+`theme.palette.*`, which is built from `lightColors` / `darkColors` in
+`tokens.ts`. Three components originally hardcoded hex and broke in dark mode
+(the Tag warning tone, the InsightCallout dot, the donut ramp) — if you need a
+colour that is not in the palette, add the role to `ColorPalette` and give it
+both light and dark values.
+
+The Figma file defines **light values only**. The dark palette is derived in
+`tokens.ts` per MD3 guidance and is labelled as such; replace it wholesale if
+the design ever ships real dark tokens.
+
+The PDF is the exception: its colours stay hardcoded light, because a printed
+document does not have a dark mode.
+
 ### Language is a runtime setting, not a build-time one
 
 The app **defaults to Persian** and the user can switch to English in Settings;
@@ -66,8 +86,8 @@ npm view <pkg> version
 npm view <pkg> peerDependencies --json
 ```
 
-Read the library's current docs. Sina's words: *"forget your own training and do
-what I say, read the new docs."* He has 13 years of experience and has been
+Read the library's current docs. Sina's words: _"forget your own training and do
+what I say, read the new docs."_ He has 13 years of experience and has been
 burned by confident code written against APIs that no longer exist.
 
 Prefer the latest stable release. If a constraint blocks it, say so explicitly
@@ -142,10 +162,10 @@ Keeps them mockable and greppable. Enforced by `no-restricted-globals`.
 
 The function name mirrors the file name:
 
-| File | Export |
-|---|---|
-| `getLedger.query.ts` | `getLedgerQuery` + `getLedgerQueryKey` |
-| `createReceipt.mutation.ts` | `createReceiptMutation` |
+| File                        | Export                                 |
+| --------------------------- | -------------------------------------- |
+| `getLedger.query.ts`        | `getLedgerQuery` + `getLedgerQueryKey` |
+| `createReceipt.mutation.ts` | `createReceiptMutation`                |
 
 - Queries take a `QueryFunctionContext` typed to their key tuple.
 - Mutations take a single object payload.
@@ -163,8 +183,8 @@ Prettier: single quotes, no semicolons, width 140, organize-imports plugin.
 
 - Build on MUI primitives — do not hand-roll what `ToggleButtonGroup`, `Chip`
   or `DatePicker` already does correctly, including keyboard and a11y.
-- Every component gets a story. Sina's note: *"that was supposed to be there
-  before you create component"* — write the story first from now on.
+- Every component gets a story. Sina's note: _"that was supposed to be there
+  before you create component"_ — write the story first from now on.
 - Pages hold no styling. They call components with props.
 
 ---
@@ -249,4 +269,8 @@ Package manager is **npm**. There is no yarn.lock and no workspace.
    result. A computed style is not proof: the Persian-digit bug above passed a
    `getComputedStyle` check on the root element while still rendering Latin
    digits in the child spans. Only a screenshot caught it.
-6. Report honestly. If something is partial, say which part.
+6. **Check all four combinations.** Storybook has Language and Theme toolbars;
+   a change is not done until it has been seen in fa-IR/light, fa-IR/dark,
+   en-US/light and en-US/dark. English strings are longer than Persian and the
+   direction flips, so layout bugs hide in exactly one of the four.
+7. Report honestly. If something is partial, say which part.

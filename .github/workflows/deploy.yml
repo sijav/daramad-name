@@ -1,0 +1,103 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Two independent targets, deliberately.
+#
+# Iranian users face two separate failure modes: foreign hosts that block Iran
+# for sanctions reasons (Vercel/Netlify sit on AWS, which blocks sanctioned
+# countries), and Iranian filtering of foreign hosts. An Iranian host dodges
+# both, so Liara is the demo link; GitHub Pages is the always-available mirror.
+#
+# The Liara job is skipped automatically until LIARA_API_TOKEN is set, so this
+# workflow is green from the first push.
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - run: yarn install --frozen-lockfile
+
+      # GitHub Pages serves from /<repo>/, so the bundle needs that base path.
+      - name: Build for GitHub Pages
+        run: yarn build
+        env:
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/
+
+      # A SPA on Pages 404s on deep links (/ledger) because there is no server
+      # rewrite. Serving index.html as the 404 page makes the client router
+      # handle them.
+      - name: Add SPA fallback
+        run: cp dist/index.html dist/404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      # Liara serves from the domain root, so this build uses the default base.
+      - name: Build for Liara
+        run: yarn build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-root
+          path: dist
+          retention-days: 7
+
+  github-pages:
+    name: GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  liara:
+    name: Liara
+    needs: build
+    runs-on: ubuntu-latest
+    # Skipped until the token exists, so the pipeline is green out of the box.
+    if: ${{ github.event_name != 'pull_request' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist-root
+          path: dist
+
+      - name: Deploy to Liara
+        env:
+          LIARA_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
+          LIARA_APP: ${{ vars.LIARA_APP_NAME }}
+        run: |
+          if [ -z "$LIARA_TOKEN" ]; then
+            echo "LIARA_API_TOKEN not set — skipping Liara deploy."
+            echo "Add the secret in Settings > Secrets and variables > Actions to enable it."
+            exit 0
+          fi
+          npm i -g @liara/cli
+          liara deploy --app "$LIARA_APP" --platform static --path dist --api-token "$LIARA_TOKEN" --no-app-logs --detach

@@ -1,0 +1,11 @@
+node_modules/
+dist/
+storybook-static/
+*.local
+.env.local
+.env.*.local
+.DS_Store
+*.log
+.vscode/*
+!.vscode/extensions.json
+.idea/

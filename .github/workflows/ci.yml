@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    name: Lint, typecheck, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install
+        run: yarn install --frozen-lockfile
+
+      - name: Compile i18n catalogs
+        run: yarn i18n:compile
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Typecheck
+        run: yarn lint:tsc
+
+      - name: Build
+        run: yarn build
+
+      - name: Build Storybook
+        run: yarn build-storybook

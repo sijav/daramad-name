@@ -19,6 +19,9 @@ declare module '@mui/material/styles' {
     glassBorder: string
     brandPrimary: string
     brandPrimarySubtle: string
+    borderDefault: string
+    surfaceSubtle: string
+    chartSeries: readonly string[]
   }
 
   interface PaletteOptions {
@@ -31,5 +34,8 @@ declare module '@mui/material/styles' {
     glassBorder?: string
     brandPrimary?: string
     brandPrimarySubtle?: string
+    borderDefault?: string
+    surfaceSubtle?: string
+    chartSeries?: readonly string[]
   }
 }

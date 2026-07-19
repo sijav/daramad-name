@@ -1,14 +1,16 @@
-import { Trans, useLingui } from '@lingui/react/macro'
+import { useLingui } from '@lingui/react/macro'
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded'
+import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded'
 import { Box, CircularProgress, Grid, MenuItem, Stack, TextField, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSettings } from 'src/core/query'
+import { ChartCard } from 'src/shared/chart-card'
 import { EmptyState } from 'src/shared/empty-state'
 import { useFormat } from 'src/shared/format'
 import { GlassCard } from 'src/shared/glass-card'
-import { InsightBanner } from 'src/shared/insight-banner'
+import { InsightCallout } from 'src/shared/insight-callout'
 import { PageHeader } from 'src/shared/page-header'
 import {
   getClientSharesQuery,
@@ -18,17 +20,22 @@ import {
   getPopulatedYearsQuery,
   getPopulatedYearsQueryKey,
 } from 'src/shared/queries'
-import { StatTile } from 'src/shared/stat-tile'
+import { Tag } from 'src/shared/tag'
+import { TopCustomers } from 'src/shared/top-customers'
 import { yearOf, yearRange } from 'src/shared/utils'
 import { ClientShareChart } from './ClientShareChart'
 import { MonthlyIncomeChart } from './MonthlyIncomeChart'
 
-/** Scenario 4: the annual picture, and the dependency warning that comes with it. */
+/**
+ * Scenario 4, laid out to the design's `Charts/Desktop/RTL`: a full-width bar
+ * chart, then two equal columns — the donut with its insight callout beneath,
+ * beside the ranked client list.
+ */
 export const ChartsPage = () => {
   const { t } = useLingui()
-  const { digits } = useFormat()
   const navigate = useNavigate()
   const { calendar } = useSettings()
+  const { digits } = useFormat()
   const [year, setYear] = useState(() => yearOf(new Date(), calendar))
 
   const { data: years = [] } = useQuery({
@@ -47,7 +54,6 @@ export const ChartsPage = () => {
   })
 
   const yearTotal = months?.reduce((sum, month) => sum + month.totalToman, 0) ?? 0
-  const activeMonths = months?.filter((month) => month.totalToman > 0).length ?? 0
   const hasData = yearTotal > 0
 
   return (
@@ -56,13 +62,16 @@ export const ChartsPage = () => {
         title={t`Charts`}
         subtitle={t`A one-year picture of your income`}
         action={
-          <TextField select value={year} onChange={(event) => setYear(Number(event.target.value))} label={t`Year`} sx={{ minWidth: 140 }}>
-            {years.map((option) => (
-              <MenuItem key={option} value={option}>
-                {digits(option)}
-              </MenuItem>
-            ))}
-          </TextField>
+          <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
+            <Tag icon={<CalendarMonthRoundedIcon sx={{ fontSize: 15 }} />} label={t`Report range: ${digits(year)}`} />
+            <TextField select size="small" value={year} onChange={(event) => setYear(Number(event.target.value))} sx={{ minWidth: 118 }}>
+              {years.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {digits(option)}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Stack>
         }
       />
 
@@ -82,40 +91,35 @@ export const ChartsPage = () => {
         </GlassCard>
       ) : (
         <Stack spacing={3}>
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 12, sm: 4 }}>
-              <StatTile label={t`Income for ${digits(year)}`} value={yearTotal} emphasis />
+          <ChartCard title={t`Income for ${digits(year)}`} subtitle={t`Vertical axis figures are in millions of Toman.`}>
+            <MonthlyIncomeChart months={months ?? []} calendar={calendar} />
+          </ChartCard>
+
+          <Grid container spacing={3}>
+            <Grid size={{ xs: 12, lg: 6 }}>
+              <Stack spacing={2} sx={{ height: '100%' }}>
+                <ChartCard title={t`Client share of income`} subtitle={t`Based on the income recorded this year`}>
+                  <ClientShareChart shares={shareData?.shares ?? []} othersLabel={t`Others`} />
+                </ChartCard>
+
+                {shareData?.insight ? (
+                  <InsightCallout message={t`${digits(shareData.insight.percentage)}% of your income comes from a single client.`} />
+                ) : null}
+              </Stack>
             </Grid>
-            <Grid size={{ xs: 6, sm: 4 }}>
-              <StatTile label={t`Monthly average`} value={Math.round(yearTotal / 12)} hint={t`Divided by the 12 months of the year`} />
-            </Grid>
-            <Grid size={{ xs: 6, sm: 4 }}>
-              <StatTile label={t`Months with income`} value={t`${digits(activeMonths)} of 12`} />
+
+            <Grid size={{ xs: 12, lg: 6 }}>
+              <ChartCard title={t`Top clients`}>
+                {(shareData?.shares.length ?? 0) > 0 ? (
+                  <TopCustomers shares={shareData?.shares ?? []} othersLabel={t`Others`} />
+                ) : (
+                  <Typography variant="body2" color="text.secondary">
+                    {t`Nothing recorded in this range yet.`}
+                  </Typography>
+                )}
+              </ChartCard>
             </Grid>
           </Grid>
-
-          <GlassCard>
-            <Typography variant="h3" sx={{ mb: 2 }}>
-              <Trans>Income over 12 months</Trans>
-            </Typography>
-            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
-              <Trans>Vertical axis figures are in millions of Toman.</Trans>
-            </Typography>
-            <MonthlyIncomeChart months={months ?? []} calendar={calendar} />
-          </GlassCard>
-
-          <GlassCard>
-            <Typography variant="h3" sx={{ mb: 2 }}>
-              <Trans>Client share</Trans>
-            </Typography>
-            <ClientShareChart shares={shareData?.shares ?? []} />
-            {shareData?.insight ? (
-              <InsightBanner
-                sx={{ mt: 2 }}
-                message={t`${digits(shareData.insight.percentage)}% of your income comes from one client (“${shareData.insight.clientName}”). If they leave, a large part of your income goes with them.`}
-              />
-            ) : null}
-          </GlassCard>
         </Stack>
       )}
     </Box>

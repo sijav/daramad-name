@@ -13,8 +13,12 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#. placeholder {0}: number(Math.round(row.totalToman / 1_000_000))
+#: src/shared/top-customers/TopCustomers.tsx
+msgid "{0} M Toman"
+msgstr "{0} M Toman"
+
 #. placeholder {0}: digits(activeMonths)
-#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "{0} of 12"
 msgstr "{0} of 12"
@@ -40,12 +44,14 @@ msgstr "{0} results based on the active filters"
 msgid "{0} to {1}"
 msgstr "{0} to {1}"
 
-#. placeholder {0}: digits(Math.round((item.value / total(shares)) * 100))
+#. placeholder {0}: digits(pct(leader.totalToman))
+#. placeholder {0}: digits(pct(row.totalToman))
 #: src/pages/charts/ClientShareChart.tsx
 msgid "{0}%"
 msgstr "{0}%"
 
 #. placeholder {0}: digits(shareData.insight.percentage)
+#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "{0}% of your income comes from a single client."
 msgstr "{0}% of your income comes from a single client."
@@ -53,8 +59,8 @@ msgstr "{0}% of your income comes from a single client."
 #. placeholder {0}: digits(shareData.insight.percentage)
 #. placeholder {1}: shareData.insight.clientName
 #: src/pages/charts/ChartsPage.tsx
-msgid "{0}% of your income comes from one client (“{1}”). If they leave, a large part of your income goes with them."
-msgstr "{0}% of your income comes from one client (“{1}”). If they leave, a large part of your income goes with them."
+#~ msgid "{0}% of your income comes from one client (“{1}”). If they leave, a large part of your income goes with them."
+#~ msgstr "{0}% of your income comes from one client (“{1}”). If they leave, a large part of your income goes with them."
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "{count} sample receipts added."
@@ -180,6 +186,7 @@ msgstr "Bahman"
 msgid "Banner and social posts"
 msgstr "Banner and social posts"
 
+#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Based on the income recorded this year"
 msgstr "Based on the income recorded this year"
@@ -243,9 +250,10 @@ msgid "Client / project"
 msgstr "Client / project"
 
 #: src/pages/charts/ChartsPage.tsx
-msgid "Client share"
-msgstr "Client share"
+#~ msgid "Client share"
+#~ msgstr "Client share"
 
+#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Client share of income"
 msgstr "Client share of income"
@@ -309,8 +317,8 @@ msgid "Dey"
 msgstr "Dey"
 
 #: src/pages/charts/ChartsPage.tsx
-msgid "Divided by the 12 months of the year"
-msgstr "Divided by the 12 months of the year"
+#~ msgid "Divided by the 12 months of the year"
+#~ msgstr "Divided by the 12 months of the year"
 
 #: src/pages/report/ReportPage.tsx
 msgid "Divided by the months in the range, not only the months with income"
@@ -442,8 +450,8 @@ msgid "Income ledger"
 msgstr "Income ledger"
 
 #: src/pages/charts/ChartsPage.tsx
-msgid "Income over 12 months"
-msgstr "Income over 12 months"
+#~ msgid "Income over 12 months"
+#~ msgstr "Income over 12 months"
 
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Income overview"
@@ -514,7 +522,6 @@ msgstr "Month"
 msgid "Month-by-month breakdown"
 msgstr "Month-by-month breakdown"
 
-#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
 #: src/pages/ledger/LedgerPage.tsx
 msgid "Monthly average"
@@ -524,7 +531,6 @@ msgstr "Monthly average"
 msgid "Monthly income"
 msgstr "Monthly income"
 
-#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Months with income"
 msgstr "Months with income"
@@ -570,6 +576,7 @@ msgstr "Note (optional)"
 msgid "Nothing matched these filters"
 msgstr "Nothing matched these filters"
 
+#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/RecentReceipts.tsx
 msgid "Nothing recorded in this range yet."
 msgstr "Nothing recorded in this range yet."
@@ -615,6 +622,7 @@ msgstr "Original amount"
 msgid "Other"
 msgstr "Other"
 
+#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Others"
 msgstr "Others"
@@ -695,6 +703,7 @@ msgid "Record your first receipt"
 msgstr "Record your first receipt"
 
 #. placeholder {0}: digits(year)
+#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Report range: {0}"
 msgstr "Report range: {0}"
@@ -894,6 +903,7 @@ msgstr "Toman"
 msgid "Toman equivalent"
 msgstr "Toman equivalent"
 
+#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Top clients"
 msgstr "Top clients"
@@ -956,8 +966,8 @@ msgid "Wire transfer"
 msgstr "Wire transfer"
 
 #: src/pages/charts/ChartsPage.tsx
-msgid "Year"
-msgstr "Year"
+#~ msgid "Year"
+#~ msgstr "Year"
 
 #: src/shared/ledger-state/LedgerState.tsx
 msgid "You have not recorded any receipts yet"

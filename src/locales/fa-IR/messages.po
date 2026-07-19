@@ -13,8 +13,12 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#. placeholder {0}: number(Math.round(row.totalToman / 1_000_000))
+#: src/shared/top-customers/TopCustomers.tsx
+msgid "{0} M Toman"
+msgstr "{0} م تومان"
+
 #. placeholder {0}: digits(activeMonths)
-#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "{0} of 12"
 msgstr "{0} از ۱۲"
@@ -40,12 +44,14 @@ msgstr "{0} نتیجه بر اساس فیلترهای فعال"
 msgid "{0} to {1}"
 msgstr "{0} تا {1}"
 
-#. placeholder {0}: digits(Math.round((item.value / total(shares)) * 100))
+#. placeholder {0}: digits(pct(leader.totalToman))
+#. placeholder {0}: digits(pct(row.totalToman))
 #: src/pages/charts/ClientShareChart.tsx
 msgid "{0}%"
 msgstr "{0}٪"
 
 #. placeholder {0}: digits(shareData.insight.percentage)
+#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "{0}% of your income comes from a single client."
 msgstr "{0}٪ از درآمد شما از یک مشتری تأمین شده است."
@@ -53,8 +59,8 @@ msgstr "{0}٪ از درآمد شما از یک مشتری تأمین شده اس
 #. placeholder {0}: digits(shareData.insight.percentage)
 #. placeholder {1}: shareData.insight.clientName
 #: src/pages/charts/ChartsPage.tsx
-msgid "{0}% of your income comes from one client (“{1}”). If they leave, a large part of your income goes with them."
-msgstr "{0}٪ درآمدت از یک مشتری است («{1}»). اگر این مشتری برود، بخش بزرگی از درآمدت می‌رود."
+#~ msgid "{0}% of your income comes from one client (“{1}”). If they leave, a large part of your income goes with them."
+#~ msgstr "{0}٪ درآمدت از یک مشتری است («{1}»). اگر این مشتری برود، بخش بزرگی از درآمدت می‌رود."
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "{count} sample receipts added."
@@ -180,6 +186,7 @@ msgstr "بهمن"
 msgid "Banner and social posts"
 msgstr "بنر و پست شبکه اجتماعی"
 
+#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Based on the income recorded this year"
 msgstr "بر اساس درآمد ثبت‌شده در این سال"
@@ -243,9 +250,10 @@ msgid "Client / project"
 msgstr "مشتری / پروژه"
 
 #: src/pages/charts/ChartsPage.tsx
-msgid "Client share"
-msgstr "سهم مشتری‌ها"
+#~ msgid "Client share"
+#~ msgstr "سهم مشتری‌ها"
 
+#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Client share of income"
 msgstr "سهم مشتری‌ها از درآمد"
@@ -309,8 +317,8 @@ msgid "Dey"
 msgstr "دی"
 
 #: src/pages/charts/ChartsPage.tsx
-msgid "Divided by the 12 months of the year"
-msgstr "تقسیم بر ۱۲ ماه سال"
+#~ msgid "Divided by the 12 months of the year"
+#~ msgstr "تقسیم بر ۱۲ ماه سال"
 
 #: src/pages/report/ReportPage.tsx
 msgid "Divided by the months in the range, not only the months with income"
@@ -442,8 +450,8 @@ msgid "Income ledger"
 msgstr "دفتر درآمد"
 
 #: src/pages/charts/ChartsPage.tsx
-msgid "Income over 12 months"
-msgstr "درآمد ۱۲ ماه"
+#~ msgid "Income over 12 months"
+#~ msgstr "درآمد ۱۲ ماه"
 
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Income overview"
@@ -514,7 +522,6 @@ msgstr "ماه"
 msgid "Month-by-month breakdown"
 msgstr "تفکیک ماه‌به‌ماه"
 
-#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
 #: src/pages/ledger/LedgerPage.tsx
 msgid "Monthly average"
@@ -524,7 +531,6 @@ msgstr "میانگین ماهانه"
 msgid "Monthly income"
 msgstr "درآمد ماهانه"
 
-#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Months with income"
 msgstr "ماه‌های دارای درآمد"
@@ -570,6 +576,7 @@ msgstr "یادداشت (اختیاری)"
 msgid "Nothing matched these filters"
 msgstr "با این فیلترها چیزی پیدا نشد"
 
+#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/RecentReceipts.tsx
 msgid "Nothing recorded in this range yet."
 msgstr "در این بازه هنوز چیزی ثبت نشده."
@@ -615,6 +622,7 @@ msgstr "مبلغ اصلی"
 msgid "Other"
 msgstr "دیگر"
 
+#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Others"
 msgstr "بقیه"
@@ -695,6 +703,7 @@ msgid "Record your first receipt"
 msgstr "ثبت اولین دریافتی"
 
 #. placeholder {0}: digits(year)
+#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Report range: {0}"
 msgstr "بازه گزارش: سال {0}"
@@ -894,6 +903,7 @@ msgstr "تومان"
 msgid "Toman equivalent"
 msgstr "معادل تومانی"
 
+#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Top clients"
 msgstr "مشتری‌های برتر"
@@ -956,8 +966,8 @@ msgid "Wire transfer"
 msgstr "حواله"
 
 #: src/pages/charts/ChartsPage.tsx
-msgid "Year"
-msgstr "سال"
+#~ msgid "Year"
+#~ msgstr "سال"
 
 #: src/shared/ledger-state/LedgerState.tsx
 msgid "You have not recorded any receipts yet"

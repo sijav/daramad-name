@@ -26,6 +26,12 @@ export interface ColorPalette {
   outline: string
   outlineVariant: string
   neutralVariant: string
+  /** `--border-default`: the 1px hairline on chart cards. */
+  borderDefault: string
+  /** `--surface-subtle`: the unfilled part of a progress track. */
+  surfaceSubtle: string
+  /** Categorical series colours for the donut, in the design's order. */
+  chartSeries: readonly string[]
   glassSurface: string
   glassBorder: string
   success: string
@@ -62,6 +68,11 @@ export const lightColors: ColorPalette = {
   outline: '#7c7e83',
   outlineVariant: '#c8cbcf',
   neutralVariant: '#95989c',
+  borderDefault: '#dadde1',
+  surfaceSubtle: '#f8f9fb',
+  // blue/40, success/40, warning/40, neutral-variant/60 — the design uses a
+  // categorical set here, not a single-hue ramp.
+  chartSeries: ['#3b6ef5', '#2e9e5b', '#e2a400', '#95989c', '#6b93f7', '#7c7e83'],
 
   glassSurface: 'rgba(255, 255, 255, 0.6)',
   glassBorder: 'rgba(255, 255, 255, 0.7)',
@@ -108,6 +119,10 @@ export const darkColors: ColorPalette = {
   outline: '#8e9195',
   outlineVariant: '#44474b',
   neutralVariant: '#6b6e72',
+  borderDefault: '#3a3d42',
+  surfaceSubtle: '#1d1f23',
+  // Lightened so each series keeps its hue identity against a dark surface.
+  chartSeries: ['#7ea6ff', '#5fc98a', '#f0c04a', '#a8abaf', '#9db8ff', '#8e9195'],
 
   // The glass treatment inverts: a light film on dark, not a white one.
   glassSurface: 'rgba(38, 40, 44, 0.6)',
@@ -163,6 +178,12 @@ export const typeScale = {
   headingMedium: { fontSize: 28, fontWeight: 700, lineHeight: 42 / 28 },
   titleLarge: { fontSize: 22, fontWeight: 600, lineHeight: 32 / 22 },
   titleMedium: { fontSize: 18, fontWeight: 600, lineHeight: 30 / 18 },
+  /** FA/Title/Small — chart card headings; also FA/Number/Compact. */
+  titleSmall: { fontSize: 16, fontWeight: 600, lineHeight: 26 / 16 },
+  /** FA/Label/Medium — the client name beside a share bar. */
+  labelMedium: { fontSize: 13, fontWeight: 500, lineHeight: 20 / 13 },
+  /** FA/Body/Small — legend labels. */
+  bodySmall: { fontSize: 13, fontWeight: 400, lineHeight: 22 / 13 },
   labelLarge: { fontSize: 14, fontWeight: 600, lineHeight: 22 / 14 },
   bodyLarge: { fontSize: 16, fontWeight: 400, lineHeight: 26 / 16 },
   bodyMedium: { fontSize: 14, fontWeight: 400, lineHeight: 24 / 14 },

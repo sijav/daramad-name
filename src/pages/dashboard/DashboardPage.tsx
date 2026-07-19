@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSettings } from 'src/core/query'
 import { ClientShareChart, MonthlyIncomeChart } from 'src/pages/charts'
+import { ChartCard } from 'src/shared/chart-card'
 import { EmptyState } from 'src/shared/empty-state'
 import { useFormat } from 'src/shared/format'
 import { GlassCard } from 'src/shared/glass-card'
@@ -109,27 +110,20 @@ export const DashboardPage = () => {
 
           <Grid container spacing={3}>
             <Grid size={{ xs: 12, lg: 7 }}>
-              <GlassCard sx={{ height: '100%' }}>
-                <Typography variant="h3" sx={{ mb: 2 }}>
-                  <Trans>Income by month</Trans>
-                </Typography>
+              <ChartCard title={t`Income by month`}>
                 <MonthlyIncomeChart months={months ?? []} calendar={calendar} />
-              </GlassCard>
+              </ChartCard>
             </Grid>
 
             <Grid size={{ xs: 12, lg: 5 }}>
-              <GlassCard sx={{ height: '100%' }}>
-                <Typography variant="h3" sx={{ mb: 0.5 }}>
-                  <Trans>Client share of income</Trans>
-                </Typography>
-                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
-                  <Trans>Based on the income recorded this year</Trans>
-                </Typography>
-                <ClientShareChart shares={shareData?.shares ?? []} />
+              <Stack spacing={2} sx={{ height: '100%' }}>
+                <ChartCard title={t`Client share of income`} subtitle={t`Based on the income recorded this year`}>
+                  <ClientShareChart shares={shareData?.shares ?? []} othersLabel={t`Others`} />
+                </ChartCard>
                 {shareData?.insight ? (
                   <InsightCallout message={t`${digits(shareData.insight.percentage)}% of your income comes from a single client.`} />
                 ) : null}
-              </GlassCard>
+              </Stack>
             </Grid>
           </Grid>
 
@@ -150,12 +144,9 @@ export const DashboardPage = () => {
 
             <Grid size={{ xs: 12, lg: 5 }}>
               <Stack spacing={3} sx={{ height: '100%' }}>
-                <GlassCard>
-                  <Typography variant="h3" sx={{ mb: 2 }}>
-                    <Trans>Top clients</Trans>
-                  </Typography>
+                <ChartCard title={t`Top clients`}>
                   <TopCustomers shares={shareData?.shares ?? []} othersLabel={t`Others`} />
-                </GlassCard>
+                </ChartCard>
 
                 <GlassCard sx={{ textAlign: 'center' }}>
                   <DescriptionRoundedIcon sx={{ fontSize: 28, color: 'primary.main' }} />

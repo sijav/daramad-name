@@ -40,6 +40,9 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
       glassBorder: c.glassBorder,
       brandPrimary: c.brandPrimary,
       brandPrimarySubtle: c.brandPrimarySubtle,
+      borderDefault: c.borderDefault,
+      surfaceSubtle: c.surfaceSubtle,
+      chartSeries: c.chartSeries,
     },
     typography: {
       fontFamily,
@@ -49,6 +52,8 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
       h2: typeScale.headingMedium,
       h3: typeScale.titleMedium,
       h4: typeScale.titleLarge,
+      h5: typeScale.titleSmall,
+      subtitle1: typeScale.labelMedium,
       body1: typeScale.bodyLarge,
       body2: typeScale.bodyMedium,
       subtitle2: typeScale.labelLarge,

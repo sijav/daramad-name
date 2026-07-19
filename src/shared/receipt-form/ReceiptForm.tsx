@@ -47,7 +47,7 @@ export const ReceiptForm = ({ form, submitLabel, pending = false, onSubmit, onSu
       }}
     >
       <AmountField
-        label={t`مبلغ دریافتی`}
+        label={t`Amount received`}
         value={state.amountOriginal}
         currency={state.currency}
         onValueChange={(value) => patch('amountOriginal', value)}
@@ -69,13 +69,13 @@ export const ReceiptForm = ({ form, submitLabel, pending = false, onSubmit, onSu
         }}
       />
 
-      <DateField label={t`تاریخ دریافت`} value={state.occurredAt} onValueChange={(iso) => patch('occurredAt', iso)} />
+      <DateField label={t`Date received`} value={state.occurredAt} onValueChange={(iso) => patch('occurredAt', iso)} />
 
       {needsRate ? (
         <Stack spacing={1.5}>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
             <Field
-              label={isBackdated ? t`نرخ تبدیل در همان تاریخ (تومان)` : t`نرخ تبدیل روز (تومان)`}
+              label={isBackdated ? t`Exchange rate on that date (Toman)` : t`Today's exchange rate (Toman)`}
               error={showErrors && Boolean(errors.rate)}
               helperText={showErrors ? errors.rate : undefined}
             >
@@ -87,7 +87,7 @@ export const ReceiptForm = ({ form, submitLabel, pending = false, onSubmit, onSu
               />
             </Field>
 
-            <Field label={t`معادل تومانی`}>
+            <Field label={t`Toman equivalent`}>
               <Box
                 sx={(theme) => ({
                   display: 'flex',
@@ -106,37 +106,37 @@ export const ReceiptForm = ({ form, submitLabel, pending = false, onSubmit, onSu
           {isBackdated ? (
             <Alert severity="info" sx={{ borderRadius: `${radius.md}px` }}>
               <Trans>
-                این دریافتی تاریخ گذشته داره. نرخ همون روز رو وارد کن، نه نرخ امروز — این مبلغ برای همیشه ثبت می‌شه و بعداً با تغییر قیمت
-                عوض نمی‌شه.
+                This receipt is backdated. Enter the rate from that day, not today's — the amount is frozen permanently and will not change
+                if the price moves later.
               </Trans>
             </Alert>
           ) : null}
         </Stack>
       ) : null}
 
-      <Field label={t`مشتری / پروژه`}>
+      <Field label={t`Client / project`}>
         <Autocomplete
           freeSolo
           options={clients.map((client) => client.name)}
           value={state.clientName}
           onChange={(_event, value) => patch('clientName', value ?? '')}
           onInputChange={(_event, value) => patch('clientName', value)}
-          renderInput={(params) => <TextField {...params} placeholder={t`اسم مشتری را بنویس یا انتخاب کن`} />}
+          renderInput={(params) => <TextField {...params} placeholder={t`Type or pick a client name`} />}
         />
       </Field>
 
       <ChipSelect<Channel>
-        label={t`کانال دریافت`}
+        label={t`Payment channel`}
         value={state.channel}
         options={CHANNELS.map((channel) => ({ value: channel, label: i18n._(CHANNEL_LABELS[channel]) }))}
         onValueChange={(channel) => patch('channel', channel)}
       />
 
-      <Field label={t`یادداشت (اختیاری)`}>
+      <Field label={t`Note (optional)`}>
         <TextField
           value={state.note}
           onChange={(event) => patch('note', event.target.value)}
-          placeholder={t`مثلاً: پیش‌پرداخت فاز اول طراحی`}
+          placeholder={t`e.g. deposit for design phase one`}
           fullWidth
         />
       </Field>
@@ -147,7 +147,7 @@ export const ReceiptForm = ({ form, submitLabel, pending = false, onSubmit, onSu
         </Button>
         {onSubmitAndNext ? (
           <Button variant="outlined" disabled={pending} onClick={onSubmitAndNext} sx={{ minWidth: 180 }}>
-            <Trans>ذخیره و بعدی</Trans>
+            <Trans>Save and next</Trans>
           </Button>
         ) : null}
       </Stack>

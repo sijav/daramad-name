@@ -36,6 +36,9 @@ export const db = new DaramadnameDb()
 
 export const defaultSettings: Settings = {
   calendar: 'JALALI',
+  // Persian by default — the product is for Iranian freelancers. English is
+  // opt-in from Settings and persists across reloads.
+  locale: 'fa-IR',
   profile: { fullName: '', nationalId: '', phone: '', address: '' },
 }
 

@@ -1,4 +1,5 @@
 import js from '@eslint/js'
+import lingui from 'eslint-plugin-lingui'
 import prettierRecommended from 'eslint-plugin-prettier/recommended'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
@@ -22,14 +23,22 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2023,
       globals: { ...globals.browser },
+      // Type information lets `lingui/no-unlocalized-strings` skip any string
+      // assigned to a union type — MUI prop unions, sx values and our own
+      // enums — which is what keeps the rule to real copy instead of noise.
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      lingui,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -50,27 +59,92 @@ export default tseslint.config(
         'atob',
         'Blob',
       ],
-      // Every user-facing string must go through lingui. The `t` and `msg`
-      // macros are tagged template literals and `<Trans>` wraps JSX text, so
-      // anything Persian left in a plain string literal or bare JSX text has
-      // escaped translation. Comments are not AST literals and are unaffected.
-      'no-restricted-syntax': [
+      // Every user-facing string goes through lingui. This is the real rule —
+      // it catches ANY unlocalized string, not just Persian ones, so writing a
+      // bare English label fails exactly the same way.
+      'lingui/no-unlocalized-strings': [
         'error',
         {
-          selector: 'Literal[value=/[\\u0600-\\u06FF]/]',
-          message: 'Persian string literal must go through lingui — use the t`` macro (or msg`` outside components).',
-        },
-        {
-          // Any Trans ANCESTOR counts, not just a direct parent — nesting an
-          // inline element inside <Trans> (a link, <strong>) is idiomatic lingui.
-          selector: "JSXText[value=/[\\u0600-\\u06FF]/]:not(JSXElement[openingElement.name.name='Trans'] JSXText)",
-          message: 'Persian JSX text must be wrapped in <Trans>…</Trans>.',
-        },
-        {
-          selector: 'TemplateLiteral[quasis.0.value.raw=/[\\u0600-\\u06FF]/]:not(TaggedTemplateExpression > TemplateLiteral)',
-          message: 'Persian template literal must be tagged with the t`` or msg`` macro.',
+          useTsTypes: true,
+          // Strings with no letters at all (ids, hex, symbols, format patterns)
+          // and single lowercase tokens are never user-facing copy.
+          ignore: [
+            // No letters at all: ids, hex colours, symbols, format patterns.
+            '^[^A-Za-z]*$',
+            '^[a-z0-9_.:/#-]+$',
+            // BCP-47 locale tags, brand and format constants.
+            '^[a-z]{2}-[A-Z]{2}$',
+            '^(Vazirmatn|Daramadname|A4|TOMAN|USD|USDT|JALALI|GREGORIAN)$',
+            // Asset filenames.
+            '[.](ttf|woff2?|json|png|svg|pdf)$',
+            // Dexie index declarations: 'id, occurredAt, clientId'.
+            '^[&A-Za-z0-9_]+(, ?[&A-Za-z0-9_.]+)+$',
+            // CSS values: '1px solid #fff', 'blur(16px)', 'rgba(0,0,0,.18)'.
+            '(px|rem|em|%)\\b|^(blur|rgba?|hsla?|var|calc|url)\\(|\\b(solid|dashed|none|auto|inherit)\\b',
+          ],
+          ignoreNames: [
+            { regex: { pattern: '^(data-|aria-(?!label))', flags: 'i' } },
+            'className',
+            'key',
+            'id',
+            'name',
+            'type',
+            'component',
+            'to',
+            'href',
+            'accept',
+            'fontFamily',
+            'sx',
+            'style',
+            'format',
+            'queryKey',
+            'displayName',
+            'title$',
+            // pdfmake table layout preset, not copy.
+            'layout',
+            // Data keys and library config, never rendered to a user.
+            'field',
+            'pageSize',
+            'font',
+            'author',
+            'alignment',
+            'severity',
+          ],
+          ignoreFunctions: [
+            'console.*',
+            'i18n._',
+            'import',
+            'require',
+            // Developer-facing throw sites: these never reach a user, they
+            // fail before React mounts or indicate a programming bug.
+            'Error',
+            '*.addEventListener',
+            '*.querySelector',
+            '*.getElementById',
+            '*.toLocaleString',
+            // Dexie query builders take index names, not copy.
+            '*.stores',
+            '*.where',
+            '*.equals',
+            '*.orderBy',
+            'version',
+            // date-fns format patterns ('yyyy/MM/dd') are syntax, not copy.
+            'format',
+            'formatJalali',
+            'formatGregorian',
+            // `patch(key, value)` takes a form-state key.
+            'patch',
+          ],
+          ignoreMethodsOnTypes: ['Map.get', 'Map.has', 'Set.has'],
         },
       ],
+      'lingui/t-call-in-function': 'error',
+      'lingui/no-single-variables-to-translate': 'error',
+      // Off deliberately. It guards against message ids that shift when an
+      // expression changes, but every interpolation here is a number or an
+      // already-formatted date, and they extract as stable {0}/{1} placeholders
+      // that translators can reorder freely.
+      'lingui/no-expression-in-message': 'off',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }],
       'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
       'no-restricted-imports': [
@@ -109,6 +183,15 @@ export default tseslint.config(
     },
   },
   {
+    // Storybook config sits outside the app's tsconfig project graph, so it is
+    // linted without type information and without the localisation rule.
+    files: ['.storybook/**/*.{ts,tsx}'],
+    languageOptions: { ecmaVersion: 2023, globals: { ...globals.browser } },
+    rules: {
+      'no-restricted-imports': 'off',
+    },
+  },
+  {
     // Module augmentation must target MUI's real module path — the barrel
     // re-exports the types but `declare module` has to name the file that
     // declares them.
@@ -118,33 +201,32 @@ export default tseslint.config(
     },
   },
   {
-    // Stories are exempt from the barrel rules. They are also exempt from the
-    // lingui rule: story args are plain objects evaluated outside any React
-    // context, and a story exists to show a concrete rendering — a message id
-    // resolved through a catalog would defeat the point.
+    // Stories are exempt from the barrel rules, and from localisation: story
+    // args are plain objects evaluated outside any React context, and a story
+    // exists to show one concrete rendering.
     files: ['**/*.stories.{ts,tsx}'],
     rules: {
       'no-restricted-imports': 'off',
-      'no-restricted-syntax': 'off',
+      'lingui/no-unlocalized-strings': 'off',
       'react-refresh/only-export-components': 'off',
     },
   },
   {
-    // Tests assert on concrete rendered output, so their Persian literals are
-    // expected values, not user-facing copy.
+    // Tests assert on concrete rendered output, so their literals are expected
+    // values rather than user-facing copy.
     files: ['**/*.test.{ts,tsx}'],
     rules: {
-      'no-restricted-syntax': 'off',
+      'lingui/no-unlocalized-strings': 'off',
     },
   },
   {
     // `digits.ts` holds the Persian and Arabic-Indic codepoint tables that the
     // normalisation algorithm maps between. These are character data, not copy;
-    // routing them through a translation catalog would be meaningless and would
-    // break the conversion.
+    // routing them through a catalog would be meaningless and would break the
+    // conversion.
     files: ['src/shared/utils/digits.ts'],
     rules: {
-      'no-restricted-syntax': 'off',
+      'lingui/no-unlocalized-strings': 'off',
     },
   },
   prettierRecommended,

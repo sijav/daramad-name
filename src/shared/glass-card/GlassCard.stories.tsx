@@ -15,9 +15,9 @@ export const Default: Story = {
   args: {
     children: (
       <Stack spacing={1}>
-        <Typography variant="h2">ثبت دریافتی</Typography>
+        <Typography variant="h2">Record a receipt</Typography>
         <Typography variant="body2" color="text.secondary">
-          کمتر از ۱۵ ثانیه ثبتش کن
+          Log it in under 15 seconds
         </Typography>
       </Stack>
     ),

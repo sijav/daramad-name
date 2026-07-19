@@ -16,7 +16,7 @@ const Toggleable: Story['render'] = function Render(args) {
   return (
     <>
       <Button variant="outlined" onClick={() => setOpen(true)}>
-        باز کردن
+        Open
       </Button>
       <ConfirmDialog {...args} open={open} onClose={() => setOpen(false)} onConfirm={() => setOpen(false)} />
     </>
@@ -26,9 +26,9 @@ const Toggleable: Story['render'] = function Render(args) {
 export const DeleteReceipt: Story = {
   args: {
     open: true,
-    title: 'حذف دریافتی',
-    description: 'این دریافتی از دفتر حذف می‌شه و جمع‌ها و نمودارها به‌روز می‌شن. این کار برگشت‌پذیر نیست.',
-    confirmLabel: 'حذف کن',
+    title: 'Delete receipt',
+    description: 'This receipt is removed from the ledger and the totals and charts update. This cannot be undone.',
+    confirmLabel: 'Delete it',
     destructive: true,
     onConfirm: () => {},
     onClose: () => {},
@@ -43,10 +43,10 @@ export const DeleteReceipt: Story = {
 export const TypeToConfirm: Story = {
   args: {
     open: true,
-    title: 'پاک کردن همه‌ی داده‌ها',
-    description: 'همه‌ی دریافتی‌ها، مشتری‌ها و مشخصاتت برای همیشه پاک می‌شن. اگر بکاپ نگرفتی، برگشتی وجود نداره.',
-    confirmLabel: 'همه را پاک کن',
-    confirmationWord: 'پاک کن',
+    title: 'Erase all data',
+    description: 'Every receipt, client and personal detail is erased permanently. Without a backup there is no way back.',
+    confirmLabel: 'Erase everything',
+    confirmationWord: 'erase',
     destructive: true,
     onConfirm: () => {},
     onClose: () => {},

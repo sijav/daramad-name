@@ -24,12 +24,12 @@ export const buildIncomeReport = (
     language === 'fa' ? `${formatNumberPersian(value)} ${t.toman}` : `${formatNumberLatin(value)} ${t.toman}`
   const alignment = language === 'fa' ? 'right' : 'left'
 
-  const monthLabel = (month: number, year: number) => {
-    if (language === 'fa') {
-      return `${monthNames(calendar, i18n)[month - 1]} ${toPersianDigits(year)}`
-    }
-    return `${GREGORIAN_SHORT[month - 1]} ${year}`
-  }
+  // Month names come from the report's own catalog, so the English document
+  // reads "Farvardin 1404" rather than a second hard-coded name table that
+  // could drift from the one the charts use.
+  const months = monthNames(calendar, i18n)
+  const monthLabel = (month: number, year: number) =>
+    language === 'fa' ? `${months[month - 1]} ${toPersianDigits(year)}` : `${months[month - 1]} ${year}`
 
   return {
     pageSize: 'A4',
@@ -145,10 +145,8 @@ const identityRows = (report: IncomeReport, t: ReportStrings) => {
 
 const periodText = (report: IncomeReport, language: ReportLanguage, calendar: CalendarSystem, i18n: I18n): string =>
   language === 'fa'
-    ? `${formatDateLong(report.range.from, calendar, i18n)} ${i18n._(msg`تا`)} ${formatDateLong(report.range.to, calendar, i18n)}`
+    ? `${formatDateLong(report.range.from, calendar, i18n)} ${i18n._(msg`to`)} ${formatDateLong(report.range.to, calendar, i18n)}`
     : `${formatDateEnglish(report.range.from)} — ${formatDateEnglish(report.range.to)}`
-
-const GREGORIAN_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 /**
  * The report's labels, as lazy descriptors.
@@ -158,22 +156,22 @@ const GREGORIAN_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug',
  * English certificate while the interface stays Persian.
  */
 const REPORT_LABELS = {
-  title: msg`گواهی درآمد`,
-  subtitle: msg`گزارش درآمد ثبت‌شده‌ی فریلنسری`,
-  summary: msg`خلاصه`,
-  breakdown: msg`تفکیک ماه‌به‌ماه`,
-  period: msg`بازه‌ی گزارش`,
-  total: msg`جمع کل درآمد`,
-  average: msg`میانگین درآمد ماهانه`,
-  month: msg`ماه`,
-  count: msg`تعداد دریافتی`,
-  amount: msg`مبلغ`,
-  fullName: msg`نام و نام خانوادگی`,
-  nationalId: msg`کد ملی`,
-  phone: msg`تلفن`,
-  address: msg`نشانی`,
-  toman: msg`تومان`,
-  disclaimer: msg`این گزارش بر اساس داده‌هایی تولید شده که خودِ کاربر در برنامه‌ی درآمدنامه ثبت کرده است.`,
+  title: msg`Statement of Income`,
+  subtitle: msg`Self-recorded freelance income report`,
+  summary: msg`Summary`,
+  breakdown: msg`Month-by-month breakdown`,
+  period: msg`Reporting period`,
+  total: msg`Total income`,
+  average: msg`Average monthly income`,
+  month: msg`Month`,
+  count: msg`Receipts`,
+  amount: msg`Amount`,
+  fullName: msg`Full name`,
+  nationalId: msg`National ID`,
+  phone: msg`Phone`,
+  address: msg`Address`,
+  toman: msg`Toman`,
+  disclaimer: msg`This report was generated from records entered by the user in the Daramadname application.`,
 } satisfies Record<string, MessageDescriptor>
 
 type ReportStrings = Record<keyof typeof REPORT_LABELS, string>

@@ -12,24 +12,24 @@ type Story = StoryObj<typeof meta>
 
 /** A numeric value is rendered as money, with the unit and Persian digits. */
 export const Money: Story = {
-  args: { label: 'جمع کل', value: 649980000 },
+  args: { label: 'Total', value: 649980000 },
 }
 
 /** `emphasis` fills the tile with the primary container colour — used for the headline figure. */
 export const Emphasised: Story = {
-  args: { label: 'جمع کل', value: 649980000, emphasis: true },
+  args: { label: 'Total', value: 649980000, emphasis: true },
 }
 
 /** A string value bypasses money formatting, for counts and ratios. */
 export const Count: Story = {
-  args: { label: 'ماه‌های دارای درآمد', value: '۴ از ۱۲' },
+  args: { label: 'Months with income', value: '4 of 12' },
 }
 
 export const WithHint: Story = {
   args: {
-    label: 'میانگین درآمد ماهانه',
+    label: 'Average monthly income',
     value: 26844167,
-    hint: 'تقسیم بر تعداد ماه‌های بازه، نه فقط ماه‌های دارای درآمد',
+    hint: 'Divided by the months in the range, not only the months with income',
   },
 }
 
@@ -38,13 +38,13 @@ export const Row: Story = {
   render: () => (
     <Grid container spacing={2} sx={{ maxWidth: 800 }}>
       <Grid size={4}>
-        <StatTile label="جمع کل" value={649980000} emphasis />
+        <StatTile label="Total" value={649980000} emphasis />
       </Grid>
       <Grid size={4}>
-        <StatTile label="میانگین ماهانه" value={59089091} />
+        <StatTile label="Monthly average" value={59089091} />
       </Grid>
       <Grid size={4}>
-        <StatTile label="تعداد دریافتی" value="۱۳" />
+        <StatTile label="Receipts" value="13" />
       </Grid>
     </Grid>
   ),

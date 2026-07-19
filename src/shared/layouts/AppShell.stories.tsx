@@ -21,8 +21,8 @@ const Frame = ({ path }: { path: string }) => (
           path="*"
           element={
             <>
-              <PageHeader title="دفتر درآمد" subtitle="همه‌ی دریافتی‌هایت، با جمع دقیق" />
-              <GlassCard sx={{ minHeight: 240 }}>محتوای صفحه</GlassCard>
+              <PageHeader title="Income ledger" subtitle="Every receipt you have, with an exact total" />
+              <GlassCard sx={{ minHeight: 240 }}>Page content</GlassCard>
             </>
           }
         />

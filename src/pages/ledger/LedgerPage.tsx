@@ -7,12 +7,12 @@ import { useNavigate } from 'react-router-dom'
 import { invalidateReceiptQueries, useSettings } from 'src/core/query'
 import { ConfirmDialog } from 'src/shared/confirm-dialog'
 import { EmptyState } from 'src/shared/empty-state'
+import { useFormat } from 'src/shared/format'
 import { GlassCard } from 'src/shared/glass-card'
 import { PageHeader } from 'src/shared/page-header'
 import { deleteReceiptMutation, getLedgerQuery, getLedgerQueryKey } from 'src/shared/queries'
 import { StatTile } from 'src/shared/stat-tile'
 import type { LedgerFilter, LedgerSort, ReceiptWithClient } from 'src/shared/types'
-import { toPersianDigits } from 'src/shared/utils'
 import { EditReceiptDialog } from './EditReceiptDialog'
 import { LedgerFilters } from './LedgerFilters'
 import { LedgerTable } from './LedgerTable'
@@ -20,6 +20,7 @@ import { LedgerTable } from './LedgerTable'
 /** Scenario 2: the ledger, its filters, and a total that always matches what is on screen. */
 export const LedgerPage = () => {
   const { t } = useLingui()
+  const { digits } = useFormat()
   const navigate = useNavigate()
   const { calendar } = useSettings()
   const [filter, setFilter] = useState<LedgerFilter>({})
@@ -45,17 +46,17 @@ export const LedgerPage = () => {
 
   return (
     <Box>
-      <PageHeader title={t`دفتر درآمد`} subtitle={t`همه‌ی دریافتی‌هایت، با جمع دقیق`} />
+      <PageHeader title={t`Income ledger`} subtitle={t`Every receipt you have, with an exact total`} />
 
       <Grid container spacing={2} sx={{ mb: 3 }}>
         <Grid size={{ xs: 12, sm: 4 }}>
-          <StatTile label={t`جمع کل`} value={data?.summary.totalToman ?? 0} emphasis />
+          <StatTile label={t`Total`} value={data?.summary.totalToman ?? 0} emphasis />
         </Grid>
         <Grid size={{ xs: 6, sm: 4 }}>
-          <StatTile label={t`میانگین ماهانه`} value={data?.summary.monthlyAverageToman ?? 0} />
+          <StatTile label={t`Monthly average`} value={data?.summary.monthlyAverageToman ?? 0} />
         </Grid>
         <Grid size={{ xs: 6, sm: 4 }}>
-          <StatTile label={t`تعداد دریافتی`} value={toPersianDigits(data?.summary.receiptCount ?? 0)} />
+          <StatTile label={t`Receipts`} value={digits(data?.summary.receiptCount ?? 0)} />
         </Grid>
       </Grid>
 
@@ -78,17 +79,17 @@ export const LedgerPage = () => {
           />
         ) : isFiltered ? (
           <EmptyState
-            title={t`با این فیلترها چیزی پیدا نشد`}
-            description={t`بازه‌ی تاریخ یا مشتری را عوض کن، یا فیلترها را پاک کن تا همه‌ی دریافتی‌ها را ببینی.`}
-            actionLabel={t`پاک کردن فیلترها`}
+            title={t`Nothing matched these filters`}
+            description={t`Change the date range or client, or clear the filters to see every receipt.`}
+            actionLabel={t`Clear filters`}
             onAction={() => setFilter({})}
           />
         ) : (
           <EmptyState
             icon={<ReceiptLongRoundedIcon />}
-            title={t`هنوز دریافتی‌ای ثبت نکردی`}
-            description={t`دفتر درآمد جاییه که همه‌ی پول‌هایی که گرفتی یک‌جا جمع می‌شه — همون چیزی که موقع گزارش گرفتن لازمت می‌شه.`}
-            actionLabel={t`ثبت اولین دریافتی`}
+            title={t`You have not recorded any receipts yet`}
+            description={t`The ledger is where every payment you have received adds up in one place — exactly what you need when it is time to produce a report.`}
+            actionLabel={t`Record your first receipt`}
             onAction={() => navigate('/')}
           />
         )}
@@ -98,9 +99,9 @@ export const LedgerPage = () => {
 
       <ConfirmDialog
         open={deleting !== null}
-        title={t`حذف دریافتی`}
-        description={t`این دریافتی از دفتر حذف می‌شه و جمع‌ها و نمودارها به‌روز می‌شن. این کار برگشت‌پذیر نیست.`}
-        confirmLabel={t`حذف کن`}
+        title={t`Delete receipt`}
+        description={t`This receipt is removed from the ledger and the totals and charts update. This cannot be undone.`}
+        confirmLabel={t`Delete it`}
         destructive
         onConfirm={() => deleting && remove({ id: deleting.id })}
         onClose={() => setDeleting(null)}

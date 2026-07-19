@@ -21,27 +21,27 @@ const Controlled: Story['render'] = function Render(args) {
  * outright and would leave the field looking broken to a Persian typist.
  */
 export const Toman: Story = {
-  args: { label: 'مبلغ دریافتی', value: 2500000, onValueChange: () => {} },
+  args: { label: 'Amount received', value: 2500000, onValueChange: () => {} },
   render: Controlled,
 }
 
 /** Two decimals for USD and USDT — toman has no sub-unit. */
 export const WithDecimals: Story = {
-  args: { label: 'مبلغ دریافتی', value: 1200.5, decimals: 2, onValueChange: () => {} },
+  args: { label: 'Amount received', value: 1200.5, decimals: 2, onValueChange: () => {} },
   render: Controlled,
 }
 
 export const Empty: Story = {
-  args: { label: 'نرخ تبدیل روز (تومان)', value: null, onValueChange: () => {} },
+  args: { label: "Today's exchange rate (Toman)", value: null, onValueChange: () => {} },
   render: Controlled,
 }
 
 export const WithError: Story = {
   args: {
-    label: 'مبلغ دریافتی',
+    label: 'Amount received',
     value: null,
     error: true,
-    helperText: 'مبلغ را وارد کن؛ باید بزرگ‌تر از صفر باشه.',
+    helperText: 'Enter an amount greater than zero.',
     onValueChange: () => {},
   },
   render: Controlled,

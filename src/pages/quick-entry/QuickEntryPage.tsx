@@ -46,7 +46,7 @@ export const QuickEntryPage = () => {
 
     mutate(request, {
       onSuccess: () => {
-        setToast(t`دریافتی ثبت شد.`)
+        setToast(t`Receipt saved.`)
         if (keepClient) {
           form.resetKeepingClient()
         } else {
@@ -61,16 +61,16 @@ export const QuickEntryPage = () => {
       <GlassCard>
         <Box sx={{ mb: 3 }}>
           <Typography variant="h2">
-            <Trans>ثبت دریافتی</Trans>
+            <Trans>Record a receipt</Trans>
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-            <Trans>کمتر از ۱۵ ثانیه ثبتش کن</Trans>
+            <Trans>Log it in under 15 seconds</Trans>
           </Typography>
         </Box>
 
         <ReceiptForm
           form={form}
-          submitLabel={t`ثبت دریافتی`}
+          submitLabel={t`Record a receipt`}
           pending={isPending}
           onSubmit={() => submit(false)}
           onSubmitAndNext={() => submit(true)}

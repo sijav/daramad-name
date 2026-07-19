@@ -9,17 +9,19 @@ import { loadReportI18n } from 'src/core/i18n'
 import { useSettings } from 'src/core/query'
 import { CURRENCY_LABELS } from 'src/shared/constants'
 import { EmptyState } from 'src/shared/empty-state'
+import { useFormat } from 'src/shared/format'
 import { GlassCard } from 'src/shared/glass-card'
 import { PageHeader } from 'src/shared/page-header'
 import { buildIncomeReport, loadPdfMake, type ReportLanguage } from 'src/shared/pdf'
 import { getIncomeReportQuery, getIncomeReportQueryKey, getPopulatedYearsQuery, getPopulatedYearsQueryKey } from 'src/shared/queries'
 import { SegmentedControl } from 'src/shared/segmented-control'
 import { StatTile } from 'src/shared/stat-tile'
-import { formatDateLong, monthNames, toPersianDigits, yearOf, yearRange } from 'src/shared/utils'
+import { monthNames, yearOf, yearRange } from 'src/shared/utils'
 
 /** Scenario 3: a presentable income certificate, in Persian or English. */
 export const ReportPage = () => {
   const { t, i18n } = useLingui()
+  const { digits, number, dateLong } = useFormat()
   const { calendar, profile } = useSettings()
   const [year, setYear] = useState(() => yearOf(new Date(), calendar))
   const [language, setLanguage] = useState<ReportLanguage>('fa')
@@ -56,34 +58,34 @@ export const ReportPage = () => {
 
   return (
     <Box>
-      <PageHeader title={t`گزارش درآمد`} subtitle={t`سندی که می‌تونی به سفارت، صاحبخونه یا حسابدار بدی`} />
+      <PageHeader title={t`Income report`} subtitle={t`A document you can hand to an embassy, a landlord or an accountant`} />
 
       <Stack spacing={3}>
         <GlassCard>
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ alignItems: { md: 'flex-end' } }}>
             <TextField
               select
-              label={t`سال گزارش`}
+              label={t`Report year`}
               value={year}
               onChange={(event) => setYear(Number(event.target.value))}
               sx={{ minWidth: 160 }}
             >
               {years.map((option) => (
                 <MenuItem key={option} value={option}>
-                  {toPersianDigits(option)}
+                  {digits(option)}
                 </MenuItem>
               ))}
             </TextField>
 
             <Box sx={{ flex: 1, minWidth: 220 }}>
               <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-                <Trans>زبان سند</Trans>
+                <Trans>Document language</Trans>
               </Typography>
               <SegmentedControl<ReportLanguage>
                 value={language}
                 options={[
-                  { value: 'fa', label: t`فارسی` },
-                  { value: 'en', label: 'English' },
+                  { value: 'fa', label: t`Persian` },
+                  { value: 'en', label: t`English` },
                 ]}
                 onValueChange={setLanguage}
               />
@@ -96,15 +98,15 @@ export const ReportPage = () => {
               onClick={() => download()}
               sx={{ minWidth: 200 }}
             >
-              {isPending ? t`در حال ساخت…` : t`دانلود PDF`}
+              {isPending ? t`Generating…` : t`Download PDF`}
             </Button>
           </Stack>
 
           {profileMissing ? (
             <Alert severity="warning" sx={{ mt: 2 }}>
               <Trans>
-                اسمت هنوز ثبت نشده. بدون مشخصات فردی، این سند برای سفارت یا صاحبخونه اعتبار نداره —{' '}
-                <RouterLink to="/settings">از تنظیمات پرش کن</RouterLink>.
+                Your name is not set yet. Without personal details this document carries no weight with an embassy or a landlord —{' '}
+                <RouterLink to="/settings">fill it in from Settings</RouterLink>.
               </Trans>
             </Alert>
           ) : null}
@@ -118,32 +120,32 @@ export const ReportPage = () => {
           <GlassCard>
             <EmptyState
               icon={<DescriptionRoundedIcon />}
-              title={t`برای این سال دریافتی‌ای ثبت نشده`}
-              description={t`گزارش درآمد از روی همون دریافتی‌هایی ساخته می‌شه که ثبت کردی. اول چند تا دریافتی وارد کن، بعد از همین‌جا سند بگیر.`}
+              title={t`No receipts recorded for this year`}
+              description={t`The income report is built from the receipts you record. Add a few receipts first, then produce the document here.`}
             />
           </GlassCard>
         ) : (
           <>
             <Grid container spacing={2}>
               <Grid size={{ xs: 12, sm: 6 }}>
-                <StatTile label={t`جمع کل درآمد`} value={report?.totalToman ?? 0} emphasis />
+                <StatTile label={t`Total income`} value={report?.totalToman ?? 0} emphasis />
               </Grid>
               <Grid size={{ xs: 12, sm: 6 }}>
                 <StatTile
-                  label={t`میانگین درآمد ماهانه`}
+                  label={t`Average monthly income`}
                   value={report?.monthlyAverageToman ?? 0}
-                  hint={t`تقسیم بر تعداد ماه‌های بازه، نه فقط ماه‌های دارای درآمد`}
+                  hint={t`Divided by the months in the range, not only the months with income`}
                 />
               </Grid>
             </Grid>
 
             <GlassCard>
               <Typography variant="h3" sx={{ mb: 0.5 }}>
-                <Trans>پیش‌نمایش سند</Trans>
+                <Trans>Document preview</Trans>
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2.5 }}>
                 <Trans>
-                  {formatDateLong(range.from, calendar, i18n)} تا {formatDateLong(range.to, calendar, i18n)}
+                  {dateLong(range.from)} to {dateLong(range.to)}
                 </Trans>
               </Typography>
 
@@ -160,7 +162,7 @@ export const ReportPage = () => {
                   >
                     <Typography variant="body2">{monthNames(calendar, i18n)[month.month - 1]}</Typography>
                     <Typography variant="body2" sx={{ fontVariantNumeric: 'tabular-nums' }}>
-                      {`${toPersianDigits(month.totalToman.toLocaleString('en-US'))} ${i18n._(CURRENCY_LABELS.TOMAN)}`}
+                      {`${number(month.totalToman)} ${i18n._(CURRENCY_LABELS.TOMAN)}`}
                     </Typography>
                   </Stack>
                 ))}

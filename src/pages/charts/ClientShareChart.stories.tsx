@@ -23,10 +23,10 @@ const share = (clientName: string, totalToman: number, percentage: number): Clie
 export const Balanced: Story = {
   args: {
     shares: [
-      share('بازرگانی آریا', 120000000, 34.3),
-      share('استودیو نقش', 100000000, 28.6),
-      share('شرکت داده‌پرداز', 80000000, 22.9),
-      share('کافه رستوران هما', 50000000, 14.2),
+      share('Aria Trading', 120000000, 34.3),
+      share('Naghsh Studio', 100000000, 28.6),
+      share('Dadepardaz Co.', 80000000, 22.9),
+      share('Homa Cafe', 50000000, 14.2),
     ],
   },
   render: (args) => (
@@ -43,10 +43,10 @@ export const Balanced: Story = {
 export const Concentrated: Story = {
   args: {
     shares: [
-      share('بازرگانی آریا', 235830000, 73.2),
-      share('استودیو نقش', 54840000, 17.0),
-      share('شرکت داده‌پرداز', 22000000, 6.8),
-      share('کافه رستوران هما', 9500000, 3.0),
+      share('Aria Trading', 235830000, 73.2),
+      share('Naghsh Studio', 54840000, 17.0),
+      share('Dadepardaz Co.', 22000000, 6.8),
+      share('Homa Cafe', 9500000, 3.0),
     ],
   },
   render: (args) => (
@@ -54,7 +54,7 @@ export const Concentrated: Story = {
       <ClientShareChart {...args} />
       <InsightBanner
         sx={{ mt: 2 }}
-        message="۷۳.۲٪ درآمدت از یک مشتری است («بازرگانی آریا»). اگر این مشتری برود، بخش بزرگی از درآمدت می‌رود."
+        message="73.2% of your income comes from one client (“Aria Trading”). If they leave, a large part of your income goes with them."
       />
     </GlassCard>
   ),
@@ -63,5 +63,5 @@ export const Concentrated: Story = {
 /** A single client — the extreme concentration case. */
 export const SingleClient: Story = {
   ...Balanced,
-  args: { shares: [share('بازرگانی آریا', 235830000, 100)] },
+  args: { shares: [share('Aria Trading', 235830000, 100)] },
 }

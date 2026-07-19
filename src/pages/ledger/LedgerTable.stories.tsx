@@ -41,11 +41,11 @@ const row = (
 }
 
 const RECEIPTS = [
-  row('1', 0, 'استودیو نقش', 'CARD_TO_CARD', 'TOMAN', 18000000, null, 'ست آیکون اپلیکیشن'),
-  row('2', 0, 'بازرگانی آریا', 'TETHER', 'USDT', 500, 98500, 'پیش‌پرداخت فاز اول طراحی'),
-  row('3', 1, 'کافه رستوران هما', 'CARD_TO_CARD', 'TOMAN', 9500000, null, 'طراحی منو'),
-  row('4', 1, 'بازرگانی آریا', 'REMITTANCE', 'USD', 1200, 96200, 'تسویه فاز دوم'),
-  row('5', 2, 'شرکت داده‌پرداز', 'OTHER', 'TOMAN', 22000000, null, null),
+  row('1', 0, 'Naghsh Studio', 'CARD_TO_CARD', 'TOMAN', 18000000, null, 'App icon set'),
+  row('2', 0, 'Aria Trading', 'TETHER', 'USDT', 500, 98500, 'Deposit for design phase one'),
+  row('3', 1, 'Homa Cafe', 'CARD_TO_CARD', 'TOMAN', 9500000, null, 'Menu design'),
+  row('4', 1, 'Aria Trading', 'REMITTANCE', 'USD', 1200, 96200, 'Phase two settlement'),
+  row('5', 2, 'Dadepardaz Co.', 'OTHER', 'TOMAN', 22000000, null, null),
 ]
 
 const summary = {

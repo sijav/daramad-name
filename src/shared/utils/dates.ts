@@ -104,19 +104,20 @@ export const monthsSpanned = (range: DateRange, calendar: CalendarSystem): numbe
 }
 
 /** «۱۴۰۴/۰۵/۲۳» — the ledger's date column. */
-export const formatDate = (iso: string, calendar: CalendarSystem): string => {
+export const formatDate = (iso: string, calendar: CalendarSystem, persianDigits = true): string => {
   const date = new Date(iso)
   const formatted = calendar === 'JALALI' ? formatJalali(date, 'yyyy/MM/dd') : formatGregorian(date, 'yyyy/MM/dd')
-  return toPersianDigits(formatted)
+  return persianDigits ? toPersianDigits(formatted) : formatted
 }
 
 /** «۲۳ مرداد ۱۴۰۴» — for report headers and the receipt detail. */
-export const formatDateLong = (iso: string, calendar: CalendarSystem, i18n: I18n): string => {
+export const formatDateLong = (iso: string, calendar: CalendarSystem, i18n: I18n, persianDigits = true): string => {
   const date = new Date(iso)
   const day = calendar === 'JALALI' ? formatJalali(date, 'd') : formatGregorian(date, 'd')
   const month = monthNames(calendar, i18n)[monthIndexOf(date, calendar)]
   const year = yearOf(date, calendar)
-  return `${toPersianDigits(day)} ${month} ${toPersianDigits(year)}`
+  const digits = (value: string | number) => (persianDigits ? toPersianDigits(value) : String(value))
+  return `${digits(day)} ${month} ${digits(year)}`
 }
 
 /** Gregorian, Latin digits — the English report must not use Persian digits. */

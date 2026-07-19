@@ -8,24 +8,54 @@ touching anything.
 
 ## 1. Rules Sina set, that are not negotiable
 
-### Every user-facing string goes through lingui
+### Every user-facing string goes through lingui — written in ENGLISH
 
-No exceptions. Not in components, not in constants, not in error messages, not
-in seed/sample data, not in a "quick script".
+**Message ids are English. Persian is a translation.** English is the lingui
+source locale, so the code contains English strings and
+`src/locales/fa-IR/messages.po` holds the Persian. Never write a Persian
+string literal in a `.ts`/`.tsx` file.
 
 - Inside a component: `` t`…` `` from `useLingui()` (`@lingui/react/macro`), or
   `<Trans>…</Trans>` for JSX.
 - Outside a component (module constants, thrown errors, fixtures): `` msg`…` ``
   from `@lingui/core/macro`, resolved at the call site with `i18n._(descriptor)`.
 
-This is enforced mechanically — `no-restricted-syntax` in `eslint.config.mjs`
-fails the build on any Persian string literal, bare Persian JSX text, or
-untagged Persian template literal. Three files are exempt, each for a stated
-reason: `digits.ts` (codepoint tables, not copy), `*.test.ts` (assertions),
-`*.stories.tsx` (fixtures). Do not add exemptions without a reason that good.
+Enforced by `lingui/no-unlocalized-strings` from `eslint-plugin-lingui`. It
+catches **any** unlocalized string, English included — writing a bare English
+label fails exactly like a Persian one would. It runs with type information
+(`useTsTypes`), so strings assigned to union types (MUI prop unions, `sx`
+values, our own enums) are skipped automatically.
 
-After adding strings: `npm run i18n:extract`, then translate in
-`src/locales/en-US/messages.po` if the string can appear in the English PDF.
+Three files are exempt, each for a stated reason: `digits.ts` (codepoint
+tables), `*.test.ts` (assertions), `*.stories.tsx` (fixtures).
+
+After adding strings:
+
+```bash
+npm run i18n:extract   # adds the new English ids
+# translate them in src/locales/fa-IR/messages.po
+npm run i18n:compile
+```
+
+The fa-IR catalog must be **100% translated** — the app defaults to Persian, so
+a missing translation shows an English string to an Iranian user.
+
+### Language is a runtime setting, not a build-time one
+
+The app **defaults to Persian** and the user can switch to English in Settings;
+the choice persists in IndexedDB. Switching flips text direction too (`RtlProvider`
+swaps the Emotion cache and the MUI theme direction, and sets `dir`/`lang` on
+`<html>`).
+
+Numbers and dates follow the locale via `useFormat()` from `src/shared/format`.
+**Never call `toPersianDigits` directly in a component** — Persian numerals are
+a property of the Persian locale, and hardcoding them shows «۶۴۹,۹۸۰,۰۰۰» to an
+English reader. The date picker's Farsi-Digits font is applied on the same
+condition.
+
+The PDF report is the one exception: it takes its **own** i18n instance
+(`loadReportI18n`), so an English certificate can be produced while the
+interface stays Persian.
 
 ### Verify versions and docs from source, never from memory
 
@@ -88,7 +118,7 @@ src/
   core/          singletons — db, i18n, query client, theme
   pages/         one folder per route
   shared/        components, queries, types, utils
-  locales/       lingui catalogs (fa-IR source, en-US)
+  locales/       lingui catalogs (en-US source, fa-IR translation)
 ```
 
 Only these top-level folders. No others.
@@ -169,6 +199,10 @@ productive months inflates it and misrepresents the applicant.
 that does not exist, and restoring one file twice would silently double the
 user's income — the worst possible failure for a tool whose whole value is an
 accurate total.
+
+**English strings are longer than Persian.** The `StatTile` figure uses a
+container query and wraps, because "649,980,000 Toman" overflows a tile that
+"۶۴۹,۹۸۰,۰۰۰ تومان" fits. Check both locales before calling a layout done.
 
 **Persian digits in the date picker come from a font, not the adapter.** MUI X
 measures field sections with `formatByString(...).startsWith('0')` against ASCII

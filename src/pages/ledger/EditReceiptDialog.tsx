@@ -48,10 +48,10 @@ export const EditReceiptDialog = ({ receipt, onClose }: EditReceiptDialogProps) 
   return (
     <Dialog open onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>
-        <Trans>ویرایش دریافتی</Trans>
+        <Trans>Edit receipt</Trans>
       </DialogTitle>
       <DialogContent sx={{ pt: 1 }}>
-        <ReceiptForm form={form} submitLabel={t`ذخیره تغییرات`} pending={isPending} onSubmit={submit} />
+        <ReceiptForm form={form} submitLabel={t`Save changes`} pending={isPending} onSubmit={submit} />
       </DialogContent>
     </Dialog>
   )

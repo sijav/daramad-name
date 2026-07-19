@@ -66,10 +66,10 @@ export const useReceiptForm = (initial?: ReceiptWithClient) => {
   const errors = useMemo<ReceiptFormErrors>(() => {
     const next: ReceiptFormErrors = {}
     if (state.amountOriginal === null || state.amountOriginal <= 0) {
-      next.amountOriginal = t`مبلغ را وارد کن؛ باید بزرگ‌تر از صفر باشه.`
+      next.amountOriginal = t`Enter an amount greater than zero.`
     }
     if (needsRate && (state.rate === null || state.rate <= 0)) {
-      next.rate = t`برای ارز غیرتومانی، نرخ تبدیل لازمه.`
+      next.rate = t`A non-Toman currency needs an exchange rate.`
     }
     return next
   }, [state.amountOriginal, state.rate, needsRate, t])

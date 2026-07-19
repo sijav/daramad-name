@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSettings } from 'src/core/query'
 import { EmptyState } from 'src/shared/empty-state'
+import { useFormat } from 'src/shared/format'
 import { GlassCard } from 'src/shared/glass-card'
 import { InsightBanner } from 'src/shared/insight-banner'
 import { PageHeader } from 'src/shared/page-header'
@@ -18,13 +19,14 @@ import {
   getPopulatedYearsQueryKey,
 } from 'src/shared/queries'
 import { StatTile } from 'src/shared/stat-tile'
-import { toPersianDigits, yearOf, yearRange } from 'src/shared/utils'
+import { yearOf, yearRange } from 'src/shared/utils'
 import { ClientShareChart } from './ClientShareChart'
 import { MonthlyIncomeChart } from './MonthlyIncomeChart'
 
 /** Scenario 4: the annual picture, and the dependency warning that comes with it. */
 export const ChartsPage = () => {
   const { t } = useLingui()
+  const { digits } = useFormat()
   const navigate = useNavigate()
   const { calendar } = useSettings()
   const [year, setYear] = useState(() => yearOf(new Date(), calendar))
@@ -51,13 +53,13 @@ export const ChartsPage = () => {
   return (
     <Box>
       <PageHeader
-        title={t`نمودارها`}
-        subtitle={t`تصویر یک‌ساله‌ی درآمدت`}
+        title={t`Charts`}
+        subtitle={t`A one-year picture of your income`}
         action={
-          <TextField select value={year} onChange={(event) => setYear(Number(event.target.value))} label={t`سال`} sx={{ minWidth: 140 }}>
+          <TextField select value={year} onChange={(event) => setYear(Number(event.target.value))} label={t`Year`} sx={{ minWidth: 140 }}>
             {years.map((option) => (
               <MenuItem key={option} value={option}>
-                {toPersianDigits(option)}
+                {digits(option)}
               </MenuItem>
             ))}
           </TextField>
@@ -72,9 +74,9 @@ export const ChartsPage = () => {
         <GlassCard>
           <EmptyState
             icon={<BarChartRoundedIcon />}
-            title={t`برای این سال هنوز داده‌ای نیست`}
-            description={t`وقتی چند دریافتی ثبت کنی، اینجا می‌بینی درآمدت ماه‌به‌ماه چطور بالا و پایین شده و چقدرش به یک مشتری وابسته است.`}
-            actionLabel={t`ثبت دریافتی`}
+            title={t`No data for this year yet`}
+            description={t`Once you record a few receipts, this shows how your income rose and fell month by month, and how much of it depends on a single client.`}
+            actionLabel={t`Record a receipt`}
             onAction={() => navigate('/')}
           />
         </GlassCard>
@@ -82,35 +84,35 @@ export const ChartsPage = () => {
         <Stack spacing={3}>
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, sm: 4 }}>
-              <StatTile label={t`درآمد سال ${toPersianDigits(year)}`} value={yearTotal} emphasis />
+              <StatTile label={t`Income for ${digits(year)}`} value={yearTotal} emphasis />
             </Grid>
             <Grid size={{ xs: 6, sm: 4 }}>
-              <StatTile label={t`میانگین ماهانه`} value={Math.round(yearTotal / 12)} hint={t`تقسیم بر ۱۲ ماه سال`} />
+              <StatTile label={t`Monthly average`} value={Math.round(yearTotal / 12)} hint={t`Divided by the 12 months of the year`} />
             </Grid>
             <Grid size={{ xs: 6, sm: 4 }}>
-              <StatTile label={t`ماه‌های دارای درآمد`} value={t`${toPersianDigits(activeMonths)} از ۱۲`} />
+              <StatTile label={t`Months with income`} value={t`${digits(activeMonths)} of 12`} />
             </Grid>
           </Grid>
 
           <GlassCard>
             <Typography variant="h3" sx={{ mb: 2 }}>
-              <Trans>درآمد ۱۲ ماه</Trans>
+              <Trans>Income over 12 months</Trans>
             </Typography>
             <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
-              <Trans>ارقام محور عمودی به میلیون تومان است.</Trans>
+              <Trans>Vertical axis figures are in millions of Toman.</Trans>
             </Typography>
             <MonthlyIncomeChart months={months ?? []} calendar={calendar} />
           </GlassCard>
 
           <GlassCard>
             <Typography variant="h3" sx={{ mb: 2 }}>
-              <Trans>سهم مشتری‌ها</Trans>
+              <Trans>Client share</Trans>
             </Typography>
             <ClientShareChart shares={shareData?.shares ?? []} />
             {shareData?.insight ? (
               <InsightBanner
                 sx={{ mt: 2 }}
-                message={t`${toPersianDigits(shareData.insight.percentage)}٪ درآمدت از یک مشتری است («${shareData.insight.clientName}»). اگر این مشتری برود، بخش بزرگی از درآمدت می‌رود.`}
+                message={t`${digits(shareData.insight.percentage)}% of your income comes from one client (“${shareData.insight.clientName}”). If they leave, a large part of your income goes with them.`}
               />
             ) : null}
           </GlassCard>

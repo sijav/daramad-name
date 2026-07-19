@@ -25,12 +25,12 @@ const Controlled: Story['render'] = function Render(args) {
  * from Vazirmatn's Farsi-Digits cut rather than from the adapter.
  */
 export const Jalali: Story = {
-  args: { label: 'تاریخ دریافت', value: new Date().toISOString(), onValueChange: () => {} },
+  args: { label: 'Date received', value: new Date().toISOString(), onValueChange: () => {} },
   render: Controlled,
 }
 
 /** Filters allow future dates; the receipt form does not. */
 export const AllowsFuture: Story = {
-  args: { label: 'تا تاریخ', value: new Date().toISOString(), disableFuture: false, onValueChange: () => {} },
+  args: { label: 'To date', value: new Date().toISOString(), disableFuture: false, onValueChange: () => {} },
   render: Controlled,
 }

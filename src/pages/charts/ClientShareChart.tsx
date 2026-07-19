@@ -2,8 +2,8 @@ import { useLingui } from '@lingui/react/macro'
 import { useTheme } from '@mui/material'
 import { PieChart } from '@mui/x-charts/PieChart'
 import { CURRENCY_LABELS } from 'src/shared/constants'
+import { useFormat } from 'src/shared/format'
 import type { ClientShare } from 'src/shared/types'
-import { formatNumberPersian, toPersianDigits } from 'src/shared/utils'
 
 export interface ClientShareChartProps {
   shares: ClientShare[]
@@ -15,7 +15,8 @@ export interface ClientShareChartProps {
  * chart stays legible for colour-blind viewers.
  */
 export const ClientShareChart = ({ shares }: ClientShareChartProps) => {
-  const { i18n } = useLingui()
+  const { t, i18n } = useLingui()
+  const { number, digits } = useFormat()
   const theme = useTheme()
   const toman = i18n._(CURRENCY_LABELS.TOMAN)
 
@@ -35,8 +36,8 @@ export const ClientShareChart = ({ shares }: ClientShareChartProps) => {
             label: share.clientName,
             color: palette[index % palette.length],
           })),
-          valueFormatter: (item) => `${formatNumberPersian(item.value)} ${toman}`,
-          arcLabel: (item) => `${toPersianDigits(String(Math.round((item.value / total(shares)) * 100)))}٪`,
+          valueFormatter: (item) => `${number(item.value)} ${toman}`,
+          arcLabel: (item) => t`${digits(Math.round((item.value / total(shares)) * 100))}%`,
           arcLabelMinAngle: 25,
         },
       ]}

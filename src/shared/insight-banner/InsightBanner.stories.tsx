@@ -11,5 +11,7 @@ type Story = StoryObj<typeof meta>
 
 /** Fires above 50%. Scenario 4's «۷۰٪» is one instance of that rule, not a second threshold. */
 export const ClientConcentration: Story = {
-  args: { message: '۷۳.۲٪ درآمدت از یک مشتری است («بازرگانی آریا»). اگر این مشتری برود، بخش بزرگی از درآمدت می‌رود.' },
+  args: {
+    message: '73.2% of your income comes from one client (“Aria Trading”). If they leave, a large part of your income goes with them.',
+  },
 }

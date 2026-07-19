@@ -36,7 +36,9 @@ export interface DateFieldProps {
  * font whose 0-9 glyphs are Persian satisfies both sides.
  */
 export const DateField = ({ label, value, onValueChange, disableFuture = true, error, helperText, fullWidth = true }: DateFieldProps) => {
-  const { calendar } = useSettings()
+  const { calendar, locale } = useSettings()
+  // Persian numerals are a property of the Persian locale, not of the picker.
+  const digitFont = locale === 'fa-IR' ? fontFamilyFarsiDigits : undefined
 
   return (
     <Field label={label} error={error} helperText={helperText}>
@@ -61,13 +63,13 @@ export const DateField = ({ label, value, onValueChange, disableFuture = true, e
                   '& .MuiPickersSectionList-sectionContent',
                   '& input',
                 ].join(', ')]: {
-                  fontFamily: fontFamilyFarsiDigits,
+                  fontFamily: digitFont,
                 },
               },
             },
             // The calendar popup's day cells need the same treatment.
-            desktopPaper: { sx: { fontFamily: fontFamilyFarsiDigits } },
-            mobilePaper: { sx: { fontFamily: fontFamilyFarsiDigits } },
+            desktopPaper: { sx: { fontFamily: digitFont } },
+            mobilePaper: { sx: { fontFamily: digitFont } },
           }}
         />
       </LocalizationProvider>

@@ -7,6 +7,14 @@ export type Channel = 'CARD_TO_CARD' | 'REMITTANCE' | 'TETHER' | 'OTHER'
 
 export type CalendarSystem = 'JALALI' | 'GREGORIAN'
 
+/**
+ * Interface language. Persian is the product's default; English exists because
+ * the audience deals with embassies and foreign clients.
+ */
+export type AppLocale = 'fa-IR' | 'en-US'
+
+export const APP_LOCALES: readonly AppLocale[] = ['fa-IR', 'en-US']
+
 export const CURRENCIES: readonly Currency[] = ['TOMAN', 'USD', 'USDT']
 export const CHANNELS: readonly Channel[] = ['CARD_TO_CARD', 'REMITTANCE', 'TETHER', 'OTHER']
 
@@ -59,6 +67,8 @@ export interface Profile {
 
 export interface Settings {
   calendar: CalendarSystem
+  /** Persisted so the choice survives a reload; defaults to Persian. */
+  locale: AppLocale
   profile: Profile
 }
 

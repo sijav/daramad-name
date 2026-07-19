@@ -10,17 +10,17 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const TitleOnly: Story = { args: { title: 'تنظیمات' } }
+export const TitleOnly: Story = { args: { title: 'Settings' } }
 
 export const WithSubtitle: Story = {
-  args: { title: 'دفتر درآمد', subtitle: 'همه‌ی دریافتی‌هایت، با جمع دقیق' },
+  args: { title: 'Income ledger', subtitle: 'Every receipt you have, with an exact total' },
 }
 
 /** The action slot holds the year picker on the charts and report pages. */
 export const WithAction: Story = {
   args: {
-    title: 'نمودارها',
-    subtitle: 'تصویر یک‌ساله‌ی درآمدت',
-    action: <Button variant="outlined">۱۴۰۵</Button>,
+    title: 'Charts',
+    subtitle: 'A one-year picture of your income',
+    action: <Button variant="outlined">1405</Button>,
   },
 }

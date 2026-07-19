@@ -34,6 +34,11 @@ const RAIL_WIDTH = 248
 export const AppShell = () => {
   const { t, i18n } = useLingui()
   const theme = useTheme()
+  // The rail follows reading order: trailing edge in RTL, leading edge in LTR.
+  // Hardcoding `right` leaves it overlapping the content once the user switches
+  // to English.
+  const isRtl = theme.direction === 'rtl'
+  const railAnchor = isRtl ? 'right' : 'left'
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'))
   const [drawerOpen, setDrawerOpen] = useState(false)
   const navigate = useNavigate()
@@ -89,17 +94,17 @@ export const AppShell = () => {
       >
         <Toolbar sx={{ gap: 1 }}>
           {!isDesktop ? (
-            <IconButton edge="start" onClick={() => setDrawerOpen(true)} aria-label={t`باز کردن منو`}>
+            <IconButton edge="start" onClick={() => setDrawerOpen(true)} aria-label={t`Open menu`}>
               <MenuRoundedIcon />
             </IconButton>
           ) : null}
 
           <Stack direction="row" spacing={1} sx={{ alignItems: 'baseline' }}>
             <Typography variant="h3" component="h1">
-              <Trans>درآمدنامه</Trans>
+              <Trans>Daramadname</Trans>
             </Typography>
             <Typography variant="caption" color="text.secondary" sx={{ display: { xs: 'none', sm: 'block' } }}>
-              <Trans>دفتر دریافتی‌ها و گزارش درآمد</Trans>
+              <Trans>Receipts ledger and income report</Trans>
             </Typography>
           </Stack>
         </Toolbar>
@@ -108,7 +113,7 @@ export const AppShell = () => {
       {isDesktop ? (
         <Drawer
           variant="permanent"
-          anchor="right"
+          anchor={railAnchor}
           sx={{
             width: RAIL_WIDTH,
             flexShrink: 0,
@@ -116,7 +121,7 @@ export const AppShell = () => {
               width: RAIL_WIDTH,
               boxSizing: 'border-box',
               border: 0,
-              borderLeft: `1px solid ${theme.palette.outlineVariant}`,
+              [isRtl ? 'borderLeft' : 'borderRight']: `1px solid ${theme.palette.outlineVariant}`,
               backgroundColor: 'transparent',
               backdropFilter: 'none',
             },
@@ -126,7 +131,7 @@ export const AppShell = () => {
           {railContent}
         </Drawer>
       ) : (
-        <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+        <Drawer anchor={railAnchor} open={drawerOpen} onClose={() => setDrawerOpen(false)}>
           <Box sx={{ width: RAIL_WIDTH }}>
             <Toolbar />
             {railContent}

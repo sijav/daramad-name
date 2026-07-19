@@ -26,14 +26,14 @@ export const LedgerFilters = ({ filter, onFilterChange }: LedgerFiltersProps) =>
   return (
     <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.5} sx={{ mb: 2.5, alignItems: { md: 'center' } }}>
       <DateField
-        label={t`از تاریخ`}
+        label={t`From date`}
         value={filter.range?.from ?? new Date().toISOString()}
         onValueChange={(iso) => patchRange('from', iso)}
         disableFuture={false}
       />
 
       <DateField
-        label={t`تا تاریخ`}
+        label={t`To date`}
         value={filter.range?.to ?? new Date().toISOString()}
         onValueChange={(iso) => patchRange('to', iso)}
         disableFuture={false}
@@ -42,11 +42,11 @@ export const LedgerFilters = ({ filter, onFilterChange }: LedgerFiltersProps) =>
       <TextField
         select
         fullWidth
-        label={t`مشتری`}
+        label={t`Client`}
         value={filter.clientId ?? ''}
         onChange={(event) => onFilterChange({ ...filter, clientId: event.target.value || undefined })}
       >
-        <MenuItem value="">{t`همه‌ی مشتری‌ها`}</MenuItem>
+        <MenuItem value="">{t`All clients`}</MenuItem>
         {clients.map((client) => (
           <MenuItem key={client.id} value={client.id}>
             {client.name}
@@ -57,11 +57,11 @@ export const LedgerFilters = ({ filter, onFilterChange }: LedgerFiltersProps) =>
       <TextField
         select
         fullWidth
-        label={t`کانال`}
+        label={t`Channel`}
         value={filter.channel ?? ''}
         onChange={(event) => onFilterChange({ ...filter, channel: (event.target.value as Channel) || undefined })}
       >
-        <MenuItem value="">{t`همه‌ی کانال‌ها`}</MenuItem>
+        <MenuItem value="">{t`All channels`}</MenuItem>
         {CHANNELS.map((channel) => (
           <MenuItem key={channel} value={channel}>
             {i18n._(CHANNEL_LABELS[channel])}
@@ -70,7 +70,7 @@ export const LedgerFilters = ({ filter, onFilterChange }: LedgerFiltersProps) =>
       </TextField>
 
       <Button variant="outlined" disabled={!hasFilters} onClick={() => onFilterChange({})} sx={{ flexShrink: 0 }}>
-        {t`پاک کردن فیلترها`}
+        {t`Clear filters`}
       </Button>
     </Stack>
   )

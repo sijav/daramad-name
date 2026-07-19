@@ -15,9 +15,9 @@ export const Currency: Story = {
   args: {
     value: 'USDT',
     options: [
-      { value: 'USDT', label: 'تتر' },
-      { value: 'USD', label: 'دلار' },
-      { value: 'TOMAN', label: 'تومان' },
+      { value: 'USDT', label: 'Tether' },
+      { value: 'USD', label: 'USD' },
+      { value: 'TOMAN', label: 'Toman' },
     ],
     onValueChange: () => {},
   },
@@ -33,7 +33,7 @@ export const TwoOptions: Story = {
   args: {
     value: 'fa',
     options: [
-      { value: 'fa', label: 'فارسی' },
+      { value: 'fa', label: 'Persian' },
       { value: 'en', label: 'English' },
     ],
     onValueChange: () => {},

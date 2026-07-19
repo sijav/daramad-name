@@ -80,7 +80,7 @@ const ConfirmDialogBody = ({
             fullWidth
             value={typed}
             onChange={(event) => setTyped(event.target.value)}
-            label={t`برای تأیید، «${confirmationWord}» را بنویس`}
+            label={t`Type “${confirmationWord}” to confirm`}
             sx={{ mt: 2.5 }}
           />
         ) : null}
@@ -88,7 +88,7 @@ const ConfirmDialogBody = ({
 
       <DialogActions sx={{ px: 3, pb: 2.5, gap: 1 }}>
         <Button onClick={onClose} variant="outlined">
-          {cancelLabel ?? t`انصراف`}
+          {cancelLabel ?? t`Cancel`}
         </Button>
         <Button onClick={onConfirm} variant="contained" color={destructive ? 'error' : 'primary'} disabled={confirmDisabled}>
           {confirmLabel}

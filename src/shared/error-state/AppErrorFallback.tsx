@@ -16,13 +16,13 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
       <ErrorOutlineRoundedIcon sx={{ fontSize: 48, color: 'error.main' }} />
 
       <Typography variant="h2">
-        <Trans>یه جای کار خطا خورد</Trans>
+        <Trans>Something went wrong</Trans>
       </Typography>
 
       <Typography variant="body2" color="text.secondary">
         <Trans>
-          داده‌هایت سر جاشه و پاک نشده — این خطا فقط مربوط به نمایش صفحه‌ست. دوباره امتحان کن؛ اگر باز هم تکرار شد، از تنظیمات بکاپ بگیر و
-          صفحه را ببند و باز کن.
+          Your data is safe and has not been erased — this error only affects rendering. Try again; if it keeps happening, take a backup
+          from Settings, then close and reopen the page.
         </Trans>
       </Typography>
 
@@ -43,7 +43,7 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
       </Typography>
 
       <Button variant="contained" onClick={resetErrorBoundary}>
-        <Trans>دوباره امتحان کن</Trans>
+        <Trans>Try again</Trans>
       </Button>
     </Stack>
   </Box>

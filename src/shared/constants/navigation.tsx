@@ -15,9 +15,9 @@ export interface NavItem {
 
 /** The five pages the brief specifies, in the order of the freelancer's workflow. */
 export const NAV_ITEMS: NavItem[] = [
-  { to: '/', label: msg`ثبت سریع`, icon: <ReceiptLongRoundedIcon /> },
-  { to: '/ledger', label: msg`دفتر درآمد`, icon: <TableRowsRoundedIcon /> },
-  { to: '/charts', label: msg`نمودارها`, icon: <BarChartRoundedIcon /> },
-  { to: '/report', label: msg`گزارش درآمد`, icon: <DescriptionRoundedIcon /> },
-  { to: '/settings', label: msg`تنظیمات`, icon: <SettingsRoundedIcon /> },
+  { to: '/', label: msg`Quick entry`, icon: <ReceiptLongRoundedIcon /> },
+  { to: '/ledger', label: msg`Income ledger`, icon: <TableRowsRoundedIcon /> },
+  { to: '/charts', label: msg`Charts`, icon: <BarChartRoundedIcon /> },
+  { to: '/report', label: msg`Income report`, icon: <DescriptionRoundedIcon /> },
+  { to: '/settings', label: msg`Settings`, icon: <SettingsRoundedIcon /> },
 ]

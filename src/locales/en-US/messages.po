@@ -1,762 +1,787 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2026-07-19 12:22+0200\n"
+"POT-Creation-Date: 2026-07-19 12:41+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en-US\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 
 #. placeholder {0}: toPersianDigits(activeMonths)
 #: src/pages/charts/ChartsPage.tsx
-msgid "{0} از ۱۲"
-msgstr ""
+msgid "{0} of 12"
+msgstr "{0} of 12"
+
+#. placeholder {0}: data.receipts.length
+#: src/pages/settings/SettingsPage.tsx
+msgid "{0} receipts restored."
+msgstr "{0} receipts restored."
 
 #. placeholder {0}: formatDateLong(range.from, calendar, i18n)
 #. placeholder {1}: formatDateLong(range.to, calendar, i18n)
 #: src/pages/report/ReportPage.tsx
-msgid "{0} تا {1}"
-msgstr ""
+msgid "{0} to {1}"
+msgstr "{0} to {1}"
 
-#. placeholder {0}: data.receipts.length
-#: src/pages/settings/SettingsPage.tsx
-msgid "{0} دریافتی بازیابی شد."
-msgstr ""
+#. placeholder {0}: toPersianDigits(String(Math.round((item.value / total(shares)) * 100)))
+#: src/pages/charts/ClientShareChart.tsx
+msgid "{0}%"
+msgstr "{0}%"
 
 #. placeholder {0}: toPersianDigits(shareData.insight.percentage)
 #. placeholder {1}: shareData.insight.clientName
 #: src/pages/charts/ChartsPage.tsx
-msgid "{0}٪ درآمدت از یک مشتری است («{1}»). اگر این مشتری برود، بخش بزرگی از درآمدت می‌رود."
-msgstr ""
+msgid "{0}% of your income comes from one client (“{1}”). If they leave, a large part of your income goes with them."
+msgstr "{0}% of your income comes from one client (“{1}”). If they leave, a large part of your income goes with them."
 
 #: src/pages/settings/SettingsPage.tsx
-msgid "{count} دریافتی نمونه اضافه شد."
-msgstr ""
-
-#: src/shared/constants/labels.ts
-msgid "آبان"
-msgstr "Aban"
-
-#: src/shared/constants/labels.ts
-msgid "آذر"
-msgstr "Azar"
-
-#: src/shared/constants/labels.ts
-msgid "آوریل"
-msgstr "April"
-
-#: src/shared/constants/labels.ts
-msgid "اردیبهشت"
-msgstr "Ordibehesht"
-
-#: src/pages/charts/ChartsPage.tsx
-msgid "ارقام محور عمودی به میلیون تومان است."
-msgstr ""
-
-#: src/pages/ledger/LedgerFilters.tsx
-msgid "از تاریخ"
-msgstr ""
-
-#: src/shared/queries/seedSampleData.mutation.ts
-msgid "استودیو نقش"
-msgstr ""
-
-#: src/shared/constants/labels.ts
-msgid "اسفند"
-msgstr "Esfand"
-
-#: src/shared/receipt-form/ReceiptForm.tsx
-msgid "اسم مشتری را بنویس یا انتخاب کن"
-msgstr ""
+msgid "{count} sample receipts added."
+msgstr "{count} sample receipts added."
 
 #: src/pages/report/ReportPage.tsx
-msgid "اسمت هنوز ثبت نشده. بدون مشخصات فردی، این سند برای سفارت یا صاحبخونه اعتبار نداره — <0>از تنظیمات پرش کن</0>."
-msgstr ""
-
-#: src/shared/queries/seedSampleData.mutation.ts
-msgid "اصلاحات نهایی"
-msgstr ""
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "افزودن داده‌ی نمونه"
-msgstr ""
-
-#: src/shared/constants/labels.ts
-msgid "اکتبر"
-msgstr "October"
-
-#: src/shared/confirm-dialog/ConfirmDialog.tsx
-msgid "انصراف"
-msgstr ""
-
-#: src/shared/constants/labels.ts
-msgid "اوت"
-msgstr "August"
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "این اطلاعات بالای گزارش درآمد چاپ می‌شه. بدون اسم، سند برای سفارت یا صاحبخونه اعتباری نداره."
-msgstr ""
-
-#: src/pages/ledger/LedgerPage.tsx
-msgid "این دریافتی از دفتر حذف می‌شه و جمع‌ها و نمودارها به‌روز می‌شن. این کار برگشت‌پذیر نیست."
-msgstr ""
-
-#: src/shared/queries/updateReceipt.mutation.ts
-msgid "این دریافتی پیدا نشد؛ ممکنه قبلاً حذفش کرده باشی."
-msgstr ""
-
-#: src/shared/receipt-form/ReceiptForm.tsx
-msgid "این دریافتی تاریخ گذشته داره. نرخ همون روز رو وارد کن، نه نرخ امروز — این مبلغ برای همیشه ثبت می‌شه و بعداً با تغییر قیمت عوض نمی‌شه."
-msgstr ""
-
-#: src/shared/queries/restoreBackup.mutation.ts
-msgid "این فایل JSON معتبر نیست. مطمئن شو همون فایلی رو انتخاب کردی که از «بکاپ» گرفته بودی."
-msgstr ""
-
-#: src/shared/queries/restoreBackup.mutation.ts
-msgid "این فایل مال درآمدنامه نیست. فایل بکاپ یه ابزار دیگه رو انتخاب کردی؟"
-msgstr ""
-
-#: src/shared/pdf/buildIncomeReport.ts
-msgid "این گزارش بر اساس داده‌هایی تولید شده که خودِ کاربر در برنامه‌ی درآمدنامه ثبت کرده است."
-msgstr "This report was generated from records entered by the user in the Daramadname application."
-
-#: src/pages/ledger/LedgerPage.tsx
-msgid "با این فیلترها چیزی پیدا نشد"
-msgstr ""
-
-#: src/shared/layouts/AppShell.tsx
-msgid "باز کردن منو"
-msgstr ""
-
-#: src/shared/queries/seedSampleData.mutation.ts
-msgid "بازرگانی آریا"
-msgstr ""
-
-#: src/shared/queries/seedSampleData.mutation.ts
-msgid "بازطراحی هویت بصری"
-msgstr ""
-
-#: src/pages/ledger/LedgerPage.tsx
-msgid "بازه‌ی تاریخ یا مشتری را عوض کن، یا فیلترها را پاک کن تا همه‌ی دریافتی‌ها را ببینی."
-msgstr ""
-
-#: src/shared/pdf/buildIncomeReport.ts
-msgid "بازه‌ی گزارش"
-msgstr "Reporting period"
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "بازیابی از فایل"
-msgstr ""
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "بازیابی کن"
-msgstr ""
-
-#: src/shared/queries/getClientShares.query.ts
-msgid "بدون مشتری"
-msgstr ""
+msgid "A document you can hand to an embassy, a landlord or an accountant"
+msgstr "A document you can hand to an embassy, a landlord or an accountant"
 
 #: src/shared/receipt-form/useReceiptForm.ts
-msgid "برای ارز غیرتومانی، نرخ تبدیل لازمه."
-msgstr ""
-
-#: src/pages/report/ReportPage.tsx
-msgid "برای این سال دریافتی‌ای ثبت نشده"
-msgstr ""
+msgid "A non-Toman currency needs an exchange rate."
+msgstr "A non-Toman currency needs an exchange rate."
 
 #: src/pages/charts/ChartsPage.tsx
-msgid "برای این سال هنوز داده‌ای نیست"
-msgstr ""
-
-#: src/shared/confirm-dialog/ConfirmDialog.tsx
-msgid "برای تأیید، «{confirmationWord}» را بنویس"
-msgstr ""
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "بکاپ (دانلود JSON)"
-msgstr ""
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "بکاپ و بازیابی"
-msgstr ""
-
-#: src/shared/queries/seedSampleData.mutation.ts
-msgid "بنر و پست شبکه اجتماعی"
-msgstr ""
+msgid "A one-year picture of your income"
+msgstr "A one-year picture of your income"
 
 #: src/shared/constants/labels.ts
-msgid "بهمن"
+msgid "Aban"
+msgstr "Aban"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Add sample data"
+msgstr "Add sample data"
+
+#: src/pages/settings/SettingsPage.tsx
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "Address"
+msgstr "Address"
+
+#: src/pages/ledger/LedgerFilters.tsx
+msgid "All channels"
+msgstr "All channels"
+
+#: src/pages/ledger/LedgerFilters.tsx
+msgid "All clients"
+msgstr "All clients"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "All data was erased."
+msgstr "All data was erased."
+
+#: src/shared/privacy-footer/PrivacyFooter.tsx
+msgid "All your data stays in your own browser and is never sent anywhere."
+msgstr "All your data stays in your own browser and is never sent anywhere."
+
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "Amount"
+msgstr "Amount"
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "Amount received"
+msgstr "Amount received"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Analytics dashboard"
+msgstr "Analytics dashboard"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "App icon set"
+msgstr "App icon set"
+
+#: src/shared/constants/labels.ts
+msgid "April"
+msgstr "April"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Aria Trading"
+msgstr "Aria Trading"
+
+#: src/shared/constants/labels.ts
+msgid "August"
+msgstr "August"
+
+#: src/pages/report/ReportPage.tsx
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "Average monthly income"
+msgstr "Average monthly income"
+
+#: src/shared/constants/labels.ts
+msgid "Azar"
+msgstr "Azar"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Back up (download JSON)"
+msgstr "Back up (download JSON)"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Backup and restore"
+msgstr "Backup and restore"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Backup file downloaded."
+msgstr "Backup file downloaded."
+
+#: src/shared/constants/labels.ts
+msgid "Bahman"
 msgstr "Bahman"
 
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Banner and social posts"
+msgstr "Banner and social posts"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Calendar"
+msgstr "Calendar"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Campaign landing page"
+msgstr "Campaign landing page"
+
+#: src/shared/confirm-dialog/ConfirmDialog.tsx
+msgid "Cancel"
+msgstr "Cancel"
+
+#: src/shared/constants/labels.ts
+msgid "Card to card"
+msgstr "Card to card"
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "Change the date range or client, or clear the filters to see every receipt."
+msgstr "Change the date range or client, or clear the filters to see every receipt."
+
+#: src/pages/ledger/LedgerFilters.tsx
+#: src/pages/ledger/LedgerTable.tsx
+msgid "Channel"
+msgstr "Channel"
+
+#: src/pages/charts/ChartsPage.tsx
+#: src/shared/constants/navigation.tsx
+msgid "Charts"
+msgstr "Charts"
+
 #: src/pages/ledger/LedgerFilters.tsx
 #: src/pages/ledger/LedgerPage.tsx
-msgid "پاک کردن فیلترها"
-msgstr ""
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "پاک کردن همه‌ی داده‌ها"
-msgstr ""
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "پاک کن"
-msgstr ""
-
-#: src/shared/queries/seedSampleData.mutation.ts
-msgid "پروژه کوچک تصویرسازی"
-msgstr ""
-
-#: src/shared/queries/seedSampleData.mutation.ts
-msgid "پیش‌پرداخت فاز اول طراحی"
-msgstr ""
-
-#: src/pages/report/ReportPage.tsx
-msgid "پیش‌نمایش سند"
-msgstr ""
-
-#: src/shared/pdf/buildIncomeReport.ts
-msgid "تا"
-msgstr "to"
+msgid "Clear filters"
+msgstr "Clear filters"
 
 #: src/pages/ledger/LedgerFilters.tsx
-msgid "تا تاریخ"
-msgstr ""
-
 #: src/pages/ledger/LedgerTable.tsx
-msgid "تاریخ"
-msgstr ""
+msgid "Client"
+msgstr "Client"
 
 #: src/shared/receipt-form/ReceiptForm.tsx
-msgid "تاریخ دریافت"
-msgstr ""
+msgid "Client / project"
+msgstr "Client / project"
 
-#: src/shared/constants/labels.ts
-msgid "تتر"
-msgstr "USDT"
+#: src/pages/charts/ChartsPage.tsx
+msgid "Client share"
+msgstr "Client share"
 
 #: src/shared/queries/seedSampleData.mutation.ts
-msgid "تسویه فاز دوم"
-msgstr ""
-
-#: src/pages/charts/ChartsPage.tsx
-msgid "تصویر یک‌ساله‌ی درآمدت"
-msgstr ""
-
-#: src/pages/ledger/LedgerPage.tsx
-#: src/shared/pdf/buildIncomeReport.ts
-msgid "تعداد دریافتی"
-msgstr "Payments"
-
-#: src/shared/pdf/buildIncomeReport.ts
-msgid "تفکیک ماه‌به‌ماه"
-msgstr "Month-by-month breakdown"
-
-#: src/pages/charts/ChartsPage.tsx
-msgid "تقسیم بر ۱۲ ماه سال"
-msgstr ""
-
-#: src/pages/report/ReportPage.tsx
-msgid "تقسیم بر تعداد ماه‌های بازه، نه فقط ماه‌های دارای درآمد"
-msgstr ""
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "تقویم"
-msgstr ""
-
-#: src/pages/settings/SettingsPage.tsx
-#: src/shared/pdf/buildIncomeReport.ts
-msgid "تلفن"
-msgstr "Phone"
-
-#: src/pages/settings/SettingsPage.tsx
-#: src/shared/constants/navigation.tsx
-msgid "تنظیمات"
-msgstr ""
-
-#: src/shared/constants/labels.ts
-#: src/shared/pdf/buildIncomeReport.ts
-msgid "تومان"
-msgstr "Toman"
-
-#: src/shared/constants/labels.ts
-msgid "تیر"
-msgstr "Tir"
-
-#: src/pages/ledger/LedgerPage.tsx
-msgid "ثبت اولین دریافتی"
-msgstr ""
-
-#: src/pages/charts/ChartsPage.tsx
-#: src/pages/quick-entry/QuickEntryPage.tsx
-msgid "ثبت دریافتی"
-msgstr ""
-
-#: src/shared/constants/navigation.tsx
-msgid "ثبت سریع"
-msgstr ""
-
-#: src/pages/ledger/LedgerPage.tsx
-msgid "جمع کل"
-msgstr ""
-
-#. placeholder {0}: toPersianDigits(receipts.length)
-#: src/pages/ledger/LedgerTable.tsx
-msgid "جمع کل ({0} دریافتی)"
-msgstr ""
-
-#: src/pages/report/ReportPage.tsx
-#: src/shared/pdf/buildIncomeReport.ts
-msgid "جمع کل درآمد"
-msgstr "Total income"
-
-#: src/pages/ledger/LedgerTable.tsx
-msgid "حذف"
-msgstr ""
-
-#: src/pages/ledger/LedgerPage.tsx
-msgid "حذف دریافتی"
-msgstr ""
-
-#: src/pages/ledger/LedgerPage.tsx
-msgid "حذف کن"
-msgstr ""
-
-#: src/shared/constants/labels.ts
-msgid "حواله"
-msgstr ""
-
-#: src/shared/constants/labels.ts
-msgid "خرداد"
-msgstr "Khordad"
-
-#: src/shared/pdf/buildIncomeReport.ts
-msgid "خلاصه"
-msgstr "Summary"
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "داده‌های فعلی کاملاً با محتوای این فایل جایگزین می‌شن. اگر الان دریافتی ثبت‌شده داری، اول ازش بکاپ بگیر."
-msgstr ""
-
-#: src/shared/error-state/AppErrorFallback.tsx
-msgid "داده‌هایت سر جاشه و پاک نشده — این خطا فقط مربوط به نمایش صفحه‌ست. دوباره امتحان کن؛ اگر باز هم تکرار شد، از تنظیمات بکاپ بگیر و صفحه را ببند و باز کن."
-msgstr ""
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "داده‌هایت فقط روی همین مرورگره. اگر مرورگر رو پاک کنی، بدون بکاپ همه‌چیز از دست می‌ره."
-msgstr ""
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "داده‌ی نمونه برای تست و اسکرین‌شاته. برای دموی واقعی، دیتای خودت رو ثبت کن."
-msgstr ""
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "داده‌ی نمونه و پاک‌سازی"
-msgstr ""
-
-#: src/shared/queries/seedSampleData.mutation.ts
-msgid "داشبورد تحلیلی"
-msgstr ""
-
-#: src/pages/report/ReportPage.tsx
-msgid "دانلود PDF"
-msgstr ""
-
-#: src/pages/report/ReportPage.tsx
-msgid "در حال ساخت…"
-msgstr ""
-
-#: src/pages/charts/ChartsPage.tsx
-msgid "درآمد ۱۲ ماه"
-msgstr ""
-
-#. placeholder {0}: toPersianDigits(year)
-#: src/pages/charts/ChartsPage.tsx
-msgid "درآمد سال {0}"
-msgstr ""
-
-#: src/pages/charts/MonthlyIncomeChart.tsx
-msgid "درآمد ماهانه"
-msgstr ""
+msgid "Dadepardaz Co."
+msgstr "Dadepardaz Co."
 
 #: src/shared/layouts/AppShell.tsx
-msgid "درآمدنامه"
-msgstr ""
+msgid "Daramadname"
+msgstr "Daramadname"
 
-#: src/pages/quick-entry/QuickEntryPage.tsx
-msgid "دریافتی ثبت شد."
-msgstr ""
+#: src/pages/ledger/LedgerTable.tsx
+msgid "Date"
+msgstr "Date"
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "Date received"
+msgstr "Date received"
 
 #: src/shared/constants/labels.ts
-msgid "دسامبر"
+msgid "December"
 msgstr "December"
 
-#: src/pages/ledger/LedgerPage.tsx
-#: src/shared/constants/navigation.tsx
-msgid "دفتر درآمد"
-msgstr ""
+#: src/pages/ledger/LedgerTable.tsx
+msgid "Delete"
+msgstr "Delete"
 
 #: src/pages/ledger/LedgerPage.tsx
-msgid "دفتر درآمد جاییه که همه‌ی پول‌هایی که گرفتی یک‌جا جمع می‌شه — همون چیزی که موقع گزارش گرفتن لازمت می‌شه."
-msgstr ""
+msgid "Delete it"
+msgstr "Delete it"
 
-#: src/shared/layouts/AppShell.tsx
-msgid "دفتر دریافتی‌ها و گزارش درآمد"
-msgstr ""
+#: src/pages/ledger/LedgerPage.tsx
+msgid "Delete receipt"
+msgstr "Delete receipt"
 
-#: src/shared/constants/labels.ts
-msgid "دلار"
-msgstr "USD"
-
-#: src/shared/error-state/AppErrorFallback.tsx
-msgid "دوباره امتحان کن"
-msgstr ""
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Deposit for design phase one"
+msgstr "Deposit for design phase one"
 
 #: src/shared/constants/labels.ts
-msgid "دی"
+msgid "Dey"
 msgstr "Dey"
 
-#: src/shared/constants/labels.ts
-msgid "دیگر"
-msgstr ""
+#: src/pages/charts/ChartsPage.tsx
+msgid "Divided by the 12 months of the year"
+msgstr "Divided by the 12 months of the year"
 
-#: src/pages/ledger/EditReceiptDialog.tsx
-msgid "ذخیره تغییرات"
-msgstr ""
+#: src/pages/report/ReportPage.tsx
+msgid "Divided by the months in the range, not only the months with income"
+msgstr "Divided by the months in the range, not only the months with income"
 
-#: src/pages/settings/SettingsPage.tsx
-msgid "ذخیره مشخصات"
-msgstr ""
+#: src/pages/report/ReportPage.tsx
+msgid "Document language"
+msgstr "Document language"
+
+#: src/pages/report/ReportPage.tsx
+msgid "Document preview"
+msgstr "Document preview"
+
+#: src/pages/report/ReportPage.tsx
+msgid "Download PDF"
+msgstr "Download PDF"
 
 #: src/shared/receipt-form/ReceiptForm.tsx
-msgid "ذخیره و بعدی"
-msgstr ""
+msgid "e.g. deposit for design phase one"
+msgstr "e.g. deposit for design phase one"
 
-#: src/shared/queries/seedSampleData.mutation.ts
-msgid "ری‌دیزاین صفحه محصول"
-msgstr ""
+#: src/pages/ledger/LedgerTable.tsx
+msgid "Edit"
+msgstr "Edit"
 
-#: src/pages/report/ReportPage.tsx
-msgid "زبان سند"
-msgstr ""
-
-#: src/shared/constants/labels.ts
-msgid "ژانویه"
-msgstr "January"
-
-#: src/shared/constants/labels.ts
-msgid "ژوئن"
-msgstr "June"
-
-#: src/shared/constants/labels.ts
-msgid "ژوئیه"
-msgstr "July"
-
-#: src/shared/queries/restoreBackup.mutation.ts
-msgid "ساختار فایل بکاپ ناقصه؛ فهرست دریافتی‌ها یا مشتری‌ها توش نیست."
-msgstr ""
-
-#: src/pages/charts/ChartsPage.tsx
-msgid "سال"
-msgstr ""
+#: src/pages/ledger/EditReceiptDialog.tsx
+msgid "Edit receipt"
+msgstr "Edit receipt"
 
 #: src/pages/report/ReportPage.tsx
-msgid "سال گزارش"
-msgstr ""
+#: src/pages/settings/SettingsPage.tsx
+msgid "English"
+msgstr "English"
 
-#: src/shared/constants/labels.ts
-msgid "سپتامبر"
-msgstr "September"
-
-#: src/shared/queries/seedSampleData.mutation.ts
-msgid "ست آیکون اپلیکیشن"
-msgstr ""
-
-#: src/pages/report/ReportPage.tsx
-msgid "سندی که می‌تونی به سفارت، صاحبخونه یا حسابدار بدی"
-msgstr ""
-
-#: src/pages/charts/ChartsPage.tsx
-msgid "سهم مشتری‌ها"
-msgstr ""
-
-#: src/shared/queries/seedSampleData.mutation.ts
-msgid "شرکت داده‌پرداز"
-msgstr ""
+#: src/shared/receipt-form/useReceiptForm.ts
+msgid "Enter an amount greater than zero."
+msgstr "Enter an amount greater than zero."
 
 #: src/pages/settings/SettingsPage.tsx
-msgid "شمسی"
-msgstr ""
-
-#: src/shared/constants/labels.ts
-msgid "شهریور"
-msgstr "Shahrivar"
-
-#: src/shared/queries/seedSampleData.mutation.ts
-msgid "طراحی منو"
-msgstr ""
-
-#: src/pages/report/ReportPage.tsx
-msgid "فارسی"
-msgstr ""
+msgid "erase"
+msgstr "erase"
 
 #: src/pages/settings/SettingsPage.tsx
-msgid "فایل بکاپ دانلود شد."
-msgstr ""
+msgid "Erase all data"
+msgstr "Erase all data"
 
 #: src/pages/settings/SettingsPage.tsx
-msgid "فایل خوانده نشد. مطمئن شو فایل سالمه و دوباره انتخابش کن."
-msgstr ""
+msgid "Erase everything"
+msgstr "Erase everything"
 
 #: src/shared/constants/labels.ts
-msgid "فروردین"
+msgid "Esfand"
+msgstr "Esfand"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Every date and monthly total is shown in this calendar. Your data itself does not change."
+msgstr "Every date and monthly total is shown in this calendar. Your data itself does not change."
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "Every receipt you have, with an exact total"
+msgstr "Every receipt you have, with an exact total"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Every receipt, client and personal detail is erased permanently. Without a backup there is no way back."
+msgstr "Every receipt, client and personal detail is erased permanently. Without a backup there is no way back."
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "Exchange rate on that date (Toman)"
+msgstr "Exchange rate on that date (Toman)"
+
+#: src/shared/constants/labels.ts
+msgid "Farvardin"
 msgstr "Farvardin"
 
 #: src/shared/constants/labels.ts
-msgid "فوریه"
+msgid "February"
 msgstr "February"
 
-#: src/shared/pdf/loadPdfMake.ts
-msgid "فونت فارسی گزارش بارگذاری نشد. صفحه را دوباره باز کن."
-msgstr ""
-
 #: src/shared/queries/seedSampleData.mutation.ts
-msgid "قرارداد سه‌ماهه"
-msgstr ""
-
-#: src/shared/constants/labels.ts
-msgid "کارت به کارت"
-msgstr ""
-
-#: src/shared/queries/seedSampleData.mutation.ts
-msgid "کافه رستوران هما"
-msgstr ""
+msgid "Final revisions"
+msgstr "Final revisions"
 
 #: src/pages/ledger/LedgerFilters.tsx
-#: src/pages/ledger/LedgerTable.tsx
-msgid "کانال"
-msgstr ""
-
-#: src/shared/receipt-form/ReceiptForm.tsx
-msgid "کانال دریافت"
-msgstr ""
+msgid "From date"
+msgstr "From date"
 
 #: src/pages/settings/SettingsPage.tsx
 #: src/shared/pdf/buildIncomeReport.ts
-msgid "کد ملی"
-msgstr "National ID"
+msgid "Full name"
+msgstr "Full name"
 
-#: src/pages/quick-entry/QuickEntryPage.tsx
-msgid "کمتر از ۱۵ ثانیه ثبتش کن"
-msgstr ""
+#: src/pages/report/ReportPage.tsx
+msgid "Generating…"
+msgstr "Generating…"
 
 #: src/pages/settings/SettingsPage.tsx
-msgid "گرفتن بکاپ ناموفق بود. دوباره امتحان کن."
-msgstr ""
+msgid "Gregorian"
+msgstr "Gregorian"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Homa Cafe"
+msgstr "Homa Cafe"
+
+#. placeholder {0}: toPersianDigits(year)
+#: src/pages/charts/ChartsPage.tsx
+msgid "Income for {0}"
+msgstr "Income for {0}"
+
+#: src/pages/ledger/LedgerPage.tsx
+#: src/shared/constants/navigation.tsx
+msgid "Income ledger"
+msgstr "Income ledger"
+
+#: src/pages/charts/ChartsPage.tsx
+msgid "Income over 12 months"
+msgstr "Income over 12 months"
 
 #: src/pages/report/ReportPage.tsx
 #: src/shared/constants/navigation.tsx
-msgid "گزارش درآمد"
-msgstr ""
+msgid "Income report"
+msgstr "Income report"
 
-#: src/pages/report/ReportPage.tsx
-msgid "گزارش درآمد از روی همون دریافتی‌هایی ساخته می‌شه که ثبت کردی. اول چند تا دریافتی وارد کن، بعد از همین‌جا سند بگیر."
-msgstr ""
-
-#: src/shared/pdf/buildIncomeReport.ts
-msgid "گزارش درآمد ثبت‌شده‌ی فریلنسری"
-msgstr "Self-recorded freelance income report"
-
-#: src/shared/pdf/buildIncomeReport.ts
-msgid "گواهی درآمد"
-msgstr "Statement of Income"
-
-#: src/shared/queries/seedSampleData.mutation.ts
-msgid "لندینگ کمپین"
-msgstr ""
+#: src/pages/settings/SettingsPage.tsx
+msgid "Jalali"
+msgstr "Jalali"
 
 #: src/shared/constants/labels.ts
-msgid "مارس"
+msgid "January"
+msgstr "January"
+
+#: src/shared/constants/labels.ts
+msgid "July"
+msgstr "July"
+
+#: src/shared/constants/labels.ts
+msgid "June"
+msgstr "June"
+
+#: src/shared/constants/labels.ts
+msgid "Khordad"
+msgstr "Khordad"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Language"
+msgstr "Language"
+
+#: src/pages/quick-entry/QuickEntryPage.tsx
+msgid "Log it in under 15 seconds"
+msgstr "Log it in under 15 seconds"
+
+#: src/shared/constants/labels.ts
+msgid "March"
 msgstr "March"
 
-#: src/shared/pdf/buildIncomeReport.ts
-msgid "ماه"
-msgstr "Month"
-
-#: src/pages/charts/ChartsPage.tsx
-msgid "ماه‌های دارای درآمد"
-msgstr ""
-
-#: src/shared/pdf/buildIncomeReport.ts
-msgid "مبلغ"
-msgstr "Amount"
-
-#: src/pages/ledger/LedgerTable.tsx
-msgid "مبلغ اصلی"
-msgstr ""
-
-#: src/shared/receipt-form/ReceiptForm.tsx
-msgid "مبلغ دریافتی"
-msgstr ""
-
-#: src/shared/receipt-form/useReceiptForm.ts
-msgid "مبلغ را وارد کن؛ باید بزرگ‌تر از صفر باشه."
-msgstr ""
-
-#: src/shared/receipt-form/ReceiptForm.tsx
-msgid "مثلاً: پیش‌پرداخت فاز اول طراحی"
-msgstr ""
-
-#: src/shared/queries/restoreBackup.mutation.ts
-msgid "محتوای فایل خالی یا خراب است."
-msgstr ""
-
 #: src/shared/constants/labels.ts
-msgid "مرداد"
-msgstr "Mordad"
-
-#: src/shared/queries/seedSampleData.mutation.ts
-msgid "مشاوره UX"
-msgstr ""
-
-#: src/pages/ledger/LedgerFilters.tsx
-#: src/pages/ledger/LedgerTable.tsx
-msgid "مشتری"
-msgstr ""
-
-#: src/shared/receipt-form/ReceiptForm.tsx
-msgid "مشتری / پروژه"
-msgstr ""
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "مشخصات فردی"
-msgstr ""
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "مشخصاتت ذخیره شد."
-msgstr ""
-
-#: src/pages/ledger/LedgerTable.tsx
-#: src/shared/receipt-form/ReceiptForm.tsx
-msgid "معادل تومانی"
-msgstr ""
-
-#: src/shared/constants/labels.ts
-msgid "مه"
+msgid "May"
 msgstr "May"
 
 #: src/shared/constants/labels.ts
-msgid "مهر"
+msgid "Mehr"
 msgstr "Mehr"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Menu design"
+msgstr "Menu design"
+
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "Month"
+msgstr "Month"
+
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "Month-by-month breakdown"
+msgstr "Month-by-month breakdown"
+
+#: src/pages/charts/ChartsPage.tsx
+#: src/pages/ledger/LedgerPage.tsx
+msgid "Monthly average"
+msgstr "Monthly average"
+
+#: src/pages/charts/MonthlyIncomeChart.tsx
+msgid "Monthly income"
+msgstr "Monthly income"
+
+#: src/pages/charts/ChartsPage.tsx
+msgid "Months with income"
+msgstr "Months with income"
+
+#: src/shared/constants/labels.ts
+msgid "Mordad"
+msgstr "Mordad"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Naghsh Studio"
+msgstr "Naghsh Studio"
+
+#: src/pages/settings/SettingsPage.tsx
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "National ID"
+msgstr "National ID"
+
+#: src/shared/queries/getClientShares.query.ts
+msgid "No client"
+msgstr "No client"
+
+#: src/pages/charts/ChartsPage.tsx
+msgid "No data for this year yet"
+msgstr "No data for this year yet"
+
+#: src/pages/report/ReportPage.tsx
+msgid "No receipts recorded for this year"
+msgstr "No receipts recorded for this year"
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "Note (optional)"
+msgstr "Note (optional)"
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "Nothing matched these filters"
+msgstr "Nothing matched these filters"
+
+#: src/shared/constants/labels.ts
+msgid "November"
+msgstr "November"
+
+#: src/shared/constants/labels.ts
+msgid "October"
+msgstr "October"
+
+#: src/pages/charts/ChartsPage.tsx
+msgid "Once you record a few receipts, this shows how your income rose and fell month by month, and how much of it depends on a single client."
+msgstr "Once you record a few receipts, this shows how your income rose and fell month by month, and how much of it depends on a single client."
+
+#: src/shared/queries/restoreBackup.mutation.ts
+msgid "One of the clients in the file is incomplete and cannot be restored."
+msgstr "One of the clients in the file is incomplete and cannot be restored."
+
+#: src/shared/queries/restoreBackup.mutation.ts
+msgid "One of the receipts in the file is incomplete and cannot be restored."
+msgstr "One of the receipts in the file is incomplete and cannot be restored."
+
+#: src/shared/layouts/AppShell.tsx
+msgid "Open menu"
+msgstr "Open menu"
+
+#: src/shared/constants/labels.ts
+msgid "Ordibehesht"
+msgstr "Ordibehesht"
+
+#: src/pages/ledger/LedgerTable.tsx
+msgid "Original amount"
+msgstr "Original amount"
+
+#: src/shared/constants/labels.ts
+msgid "Other"
+msgstr "Other"
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "Payment channel"
+msgstr "Payment channel"
+
+#: src/pages/report/ReportPage.tsx
+#: src/pages/settings/SettingsPage.tsx
+msgid "Persian"
+msgstr "Persian"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Personal details"
+msgstr "Personal details"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Phase two settlement"
+msgstr "Phase two settlement"
+
+#: src/pages/settings/SettingsPage.tsx
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "Phone"
+msgstr "Phone"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Product page redesign"
+msgstr "Product page redesign"
+
+#: src/shared/constants/navigation.tsx
+msgid "Quick entry"
+msgstr "Quick entry"
+
+#: src/pages/quick-entry/QuickEntryPage.tsx
+msgid "Receipt saved."
+msgstr "Receipt saved."
+
+#: src/pages/ledger/LedgerPage.tsx
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "Receipts"
+msgstr "Receipts"
+
+#: src/shared/layouts/AppShell.tsx
+msgid "Receipts ledger and income report"
+msgstr "Receipts ledger and income report"
+
+#: src/pages/charts/ChartsPage.tsx
+#: src/pages/quick-entry/QuickEntryPage.tsx
+msgid "Record a receipt"
+msgstr "Record a receipt"
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "Record your first receipt"
+msgstr "Record your first receipt"
+
+#: src/pages/report/ReportPage.tsx
+msgid "Report year"
+msgstr "Report year"
+
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "Reporting period"
+msgstr "Reporting period"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Restore"
+msgstr "Restore"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Restore from file"
+msgstr "Restore from file"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Sample data and reset"
+msgstr "Sample data and reset"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Sample data is for testing and screenshots. For a real demo, record your own data."
+msgstr "Sample data is for testing and screenshots. For a real demo, record your own data."
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "Save and next"
+msgstr "Save and next"
+
+#: src/pages/ledger/EditReceiptDialog.tsx
+msgid "Save changes"
+msgstr "Save changes"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Save details"
+msgstr "Save details"
+
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "Self-recorded freelance income report"
+msgstr "Self-recorded freelance income report"
+
+#: src/shared/constants/labels.ts
+msgid "September"
+msgstr "September"
+
+#: src/pages/settings/SettingsPage.tsx
+#: src/shared/constants/navigation.tsx
+msgid "Settings"
+msgstr "Settings"
+
+#: src/shared/constants/labels.ts
+msgid "Shahrivar"
+msgstr "Shahrivar"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Small illustration project"
+msgstr "Small illustration project"
+
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Something went wrong"
+msgstr "Something went wrong"
+
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "Statement of Income"
+msgstr "Statement of Income"
+
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "Summary"
+msgstr "Summary"
+
+#: src/shared/constants/labels.ts
+msgid "Tether"
+msgstr "Tether"
+
+#: src/shared/queries/updateReceipt.mutation.ts
+msgid "That receipt was not found — you may have already deleted it."
+msgstr "That receipt was not found — you may have already deleted it."
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "The backup failed. Try again."
+msgstr "The backup failed. Try again."
+
+#: src/shared/queries/restoreBackup.mutation.ts
+msgid "The backup file is incomplete — it has no receipts or clients list."
+msgstr "The backup file is incomplete — it has no receipts or clients list."
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "The file could not be read. Make sure it is intact and pick it again."
+msgstr "The file could not be read. Make sure it is intact and pick it again."
+
+#: src/shared/queries/restoreBackup.mutation.ts
+msgid "The file is empty or corrupt."
+msgstr "The file is empty or corrupt."
+
+#: src/pages/report/ReportPage.tsx
+msgid "The income report is built from the receipts you record. Add a few receipts first, then produce the document here."
+msgstr "The income report is built from the receipts you record. Add a few receipts first, then produce the document here."
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "The ledger is where every payment you have received adds up in one place — exactly what you need when it is time to produce a report."
+msgstr "The ledger is where every payment you have received adds up in one place — exactly what you need when it is time to produce a report."
+
+#: src/shared/pdf/loadPdfMake.ts
+msgid "The report's Persian font failed to load. Reload the page."
+msgstr "The report's Persian font failed to load. Reload the page."
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "The whole interface switches, including text direction. Your data is untouched."
+msgstr "The whole interface switches, including text direction. Your data is untouched."
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "These details are printed at the top of the income report. Without a name the document carries no weight with an embassy or a landlord."
+msgstr "These details are printed at the top of the income report. Without a name the document carries no weight with an embassy or a landlord."
+
+#: src/shared/queries/restoreBackup.mutation.ts
+msgid "This backup file's version is not supported. It was made by a newer version of the app."
+msgstr "This backup file's version is not supported. It was made by a newer version of the app."
+
+#: src/shared/queries/restoreBackup.mutation.ts
+msgid "This file is not from Daramadname. Did you pick a backup from another tool?"
+msgstr "This file is not from Daramadname. Did you pick a backup from another tool?"
+
+#: src/shared/queries/restoreBackup.mutation.ts
+msgid "This is not valid JSON. Make sure you picked the file you downloaded from Back up."
+msgstr "This is not valid JSON. Make sure you picked the file you downloaded from Back up."
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "This receipt is backdated. Enter the rate from that day, not today's — the amount is frozen permanently and will not change if the price moves later."
+msgstr "This receipt is backdated. Enter the rate from that day, not today's — the amount is frozen permanently and will not change if the price moves later."
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "This receipt is removed from the ledger and the totals and charts update. This cannot be undone."
+msgstr "This receipt is removed from the ledger and the totals and charts update. This cannot be undone."
+
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "This report was generated from records entered by the user in the Daramadname application."
+msgstr "This report was generated from records entered by the user in the Daramadname application."
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Three-month contract"
+msgstr "Three-month contract"
+
+#: src/shared/constants/labels.ts
+msgid "Tir"
+msgstr "Tir"
+
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "to"
+msgstr "to"
+
+#: src/pages/ledger/LedgerFilters.tsx
+msgid "To date"
+msgstr "To date"
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "Today's exchange rate (Toman)"
+msgstr "Today's exchange rate (Toman)"
+
+#: src/shared/constants/labels.ts
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "Toman"
+msgstr "Toman"
+
+#: src/pages/ledger/LedgerTable.tsx
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "Toman equivalent"
+msgstr "Toman equivalent"
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "Total"
+msgstr "Total"
+
+#. placeholder {0}: toPersianDigits(receipts.length)
+#: src/pages/ledger/LedgerTable.tsx
+msgid "Total ({0} receipts)"
+msgstr "Total ({0} receipts)"
 
 #: src/pages/report/ReportPage.tsx
 #: src/shared/pdf/buildIncomeReport.ts
-msgid "میانگین درآمد ماهانه"
-msgstr "Average monthly income"
-
-#: src/pages/charts/ChartsPage.tsx
-#: src/pages/ledger/LedgerPage.tsx
-msgid "میانگین ماهانه"
-msgstr ""
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "میلادی"
-msgstr ""
-
-#: src/pages/settings/SettingsPage.tsx
-#: src/shared/pdf/buildIncomeReport.ts
-msgid "نام و نام خانوادگی"
-msgstr "Full name"
-
-#: src/shared/queries/getClientShares.query.ts
-msgid "نامشخص"
-msgstr ""
-
-#: src/shared/receipt-form/ReceiptForm.tsx
-msgid "نرخ تبدیل در همان تاریخ (تومان)"
-msgstr ""
-
-#: src/shared/receipt-form/ReceiptForm.tsx
-msgid "نرخ تبدیل روز (تومان)"
-msgstr ""
-
-#: src/shared/queries/restoreBackup.mutation.ts
-msgid "نسخه‌ی این فایل بکاپ پشتیبانی نمی‌شه. با نسخه‌ی جدیدتر برنامه ساخته شده."
-msgstr ""
-
-#: src/pages/settings/SettingsPage.tsx
-#: src/shared/pdf/buildIncomeReport.ts
-msgid "نشانی"
-msgstr "Address"
-
-#: src/pages/charts/ChartsPage.tsx
-#: src/shared/constants/navigation.tsx
-msgid "نمودارها"
-msgstr ""
-
-#: src/shared/constants/labels.ts
-msgid "نوامبر"
-msgstr "November"
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "همه را پاک کن"
-msgstr ""
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "همه‌ی تاریخ‌ها و جمع‌بندی‌های ماهانه با این تقویم نمایش داده می‌شن. داده‌هایت تغییری نمی‌کنن."
-msgstr ""
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "همه‌ی داده‌ها پاک شد."
-msgstr ""
-
-#: src/shared/privacy-footer/PrivacyFooter.tsx
-msgid "همه‌ی داده‌ها فقط روی مرورگر خودت می‌مونه و هیچ‌جا ارسال نمی‌شه."
-msgstr ""
-
-#: src/pages/settings/SettingsPage.tsx
-msgid "همه‌ی دریافتی‌ها، مشتری‌ها و مشخصاتت برای همیشه پاک می‌شن. اگر بکاپ نگرفتی، برگشتی وجود نداره."
-msgstr ""
-
-#: src/pages/ledger/LedgerPage.tsx
-msgid "همه‌ی دریافتی‌هایت، با جمع دقیق"
-msgstr ""
-
-#: src/pages/ledger/LedgerFilters.tsx
-msgid "همه‌ی کانال‌ها"
-msgstr ""
-
-#: src/pages/ledger/LedgerFilters.tsx
-msgid "همه‌ی مشتری‌ها"
-msgstr ""
-
-#: src/pages/ledger/LedgerPage.tsx
-msgid "هنوز دریافتی‌ای ثبت نکردی"
-msgstr ""
-
-#: src/pages/charts/ChartsPage.tsx
-msgid "وقتی چند دریافتی ثبت کنی، اینجا می‌بینی درآمدت ماه‌به‌ماه چطور بالا و پایین شده و چقدرش به یک مشتری وابسته است."
-msgstr ""
-
-#: src/pages/ledger/LedgerTable.tsx
-msgid "ویرایش"
-msgstr ""
-
-#: src/pages/ledger/EditReceiptDialog.tsx
-msgid "ویرایش دریافتی"
-msgstr ""
-
-#: src/shared/receipt-form/ReceiptForm.tsx
-msgid "یادداشت (اختیاری)"
-msgstr ""
-
-#: src/shared/queries/restoreBackup.mutation.ts
-msgid "یکی از دریافتی‌های داخل فایل ناقصه و قابل بازیابی نیست."
-msgstr ""
-
-#: src/shared/queries/restoreBackup.mutation.ts
-msgid "یکی از مشتری‌های داخل فایل ناقصه و قابل بازیابی نیست."
-msgstr ""
+msgid "Total income"
+msgstr "Total income"
 
 #: src/shared/error-state/AppErrorFallback.tsx
-msgid "یه جای کار خطا خورد"
-msgstr ""
+msgid "Try again"
+msgstr "Try again"
+
+#: src/shared/confirm-dialog/ConfirmDialog.tsx
+msgid "Type “{confirmationWord}” to confirm"
+msgstr "Type “{confirmationWord}” to confirm"
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "Type or pick a client name"
+msgstr "Type or pick a client name"
+
+#: src/shared/queries/getClientShares.query.ts
+msgid "Unknown"
+msgstr "Unknown"
+
+#: src/shared/constants/labels.ts
+msgid "USD"
+msgstr "USD"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "UX consulting"
+msgstr "UX consulting"
+
+#: src/pages/charts/ChartsPage.tsx
+msgid "Vertical axis figures are in millions of Toman."
+msgstr "Vertical axis figures are in millions of Toman."
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Visual identity redesign"
+msgstr "Visual identity redesign"
+
+#: src/shared/constants/labels.ts
+msgid "Wire transfer"
+msgstr "Wire transfer"
+
+#: src/pages/charts/ChartsPage.tsx
+msgid "Year"
+msgstr "Year"
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "You have not recorded any receipts yet"
+msgstr "You have not recorded any receipts yet"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Your current data is replaced entirely by the contents of this file. If you have receipts recorded now, back them up first."
+msgstr "Your current data is replaced entirely by the contents of this file. If you have receipts recorded now, back them up first."
+
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Your data is safe and has not been erased — this error only affects rendering. Try again; if it keeps happening, take a backup from Settings, then close and reopen the page."
+msgstr "Your data is safe and has not been erased — this error only affects rendering. Try again; if it keeps happening, take a backup from Settings, then close and reopen the page."
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Your data lives only in this browser. If you clear the browser, everything is lost without a backup."
+msgstr "Your data lives only in this browser. If you clear the browser, everything is lost without a backup."
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Your details were saved."
+msgstr "Your details were saved."
+
+#: src/pages/report/ReportPage.tsx
+msgid "Your name is not set yet. Without personal details this document carries no weight with an embassy or a landlord — <0>fill it in from Settings</0>."
+msgstr "Your name is not set yet. Without personal details this document carries no weight with an embassy or a landlord — <0>fill it in from Settings</0>."

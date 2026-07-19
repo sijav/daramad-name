@@ -12,8 +12,9 @@ if (!container) {
   throw new Error('Root element not found')
 }
 
-// The catalog is activated before the first render so no component ever paints
-// with untranslated message ids.
+// Activate the default catalog before the first paint. `useLocaleSync` then
+// switches to the persisted choice once Settings loads from IndexedDB — this
+// only avoids a flash of English message ids on a cold start.
 await activateLocale(DEFAULT_LOCALE)
 
 createRoot(container).render(

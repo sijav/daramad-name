@@ -14,9 +14,10 @@ import {
   Typography,
 } from '@mui/material'
 import { CHANNEL_LABELS, CURRENCY_LABELS } from 'src/shared/constants'
+import { useFormat } from 'src/shared/format'
 import { MoneyText } from 'src/shared/money-text'
 import type { CalendarSystem, LedgerSort, LedgerSortField, LedgerSummary, ReceiptWithClient } from 'src/shared/types'
-import { formatDate, toPersianDigits } from 'src/shared/utils'
+import { formatDate } from 'src/shared/utils'
 
 export interface LedgerTableProps {
   receipts: ReceiptWithClient[]
@@ -37,14 +38,17 @@ export interface LedgerTableProps {
  */
 export const LedgerTable = ({ receipts, summary, sort, calendar, onSortChange, onEdit, onDelete }: LedgerTableProps) => {
   const { t, i18n } = useLingui()
+  // `calendar` stays a prop so the component remains presentational and a
+  // story can demo either calendar; only the digit style follows the locale.
+  const { digits, persian } = useFormat()
 
   // Built inside the component so the labels follow the active locale.
   const columns: { field: LedgerSortField | null; label: string; numeric?: boolean }[] = [
-    { field: 'occurredAt', label: t`تاریخ` },
-    { field: 'client', label: t`مشتری` },
-    { field: 'channel', label: t`کانال` },
-    { field: null, label: t`مبلغ اصلی`, numeric: true },
-    { field: 'amountToman', label: t`معادل تومانی`, numeric: true },
+    { field: 'occurredAt', label: t`Date` },
+    { field: 'client', label: t`Client` },
+    { field: 'channel', label: t`Channel` },
+    { field: null, label: t`Original amount`, numeric: true },
+    { field: 'amountToman', label: t`Toman equivalent`, numeric: true },
     { field: null, label: '' },
   ]
 
@@ -81,7 +85,7 @@ export const LedgerTable = ({ receipts, summary, sort, calendar, onSortChange, o
           {receipts.map((receipt) => (
             <TableRow key={receipt.id} hover>
               <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
-                {formatDate(receipt.occurredAt, calendar)}
+                {formatDate(receipt.occurredAt, calendar, persian)}
               </TableCell>
 
               <TableCell align="right">
@@ -108,10 +112,10 @@ export const LedgerTable = ({ receipts, summary, sort, calendar, onSortChange, o
 
               <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
                 <Stack direction="row" spacing={0.5}>
-                  <IconButton size="small" onClick={() => onEdit(receipt)} aria-label={t`ویرایش`}>
+                  <IconButton size="small" onClick={() => onEdit(receipt)} aria-label={t`Edit`}>
                     <EditRoundedIcon fontSize="small" />
                   </IconButton>
-                  <IconButton size="small" onClick={() => onDelete(receipt)} aria-label={t`حذف`}>
+                  <IconButton size="small" onClick={() => onDelete(receipt)} aria-label={t`Delete`}>
                     <DeleteOutlineRoundedIcon fontSize="small" />
                   </IconButton>
                 </Stack>
@@ -127,7 +131,7 @@ export const LedgerTable = ({ receipts, summary, sort, calendar, onSortChange, o
               align="right"
               sx={(theme) => ({ borderTop: `2px solid ${theme.palette.outlineVariant}`, fontWeight: 600 })}
             >
-              {t`جمع کل (${toPersianDigits(receipts.length)} دریافتی)`}
+              {t`Total (${digits(receipts.length)} receipts)`}
             </TableCell>
             <TableCell colSpan={2} align="left" sx={(theme) => ({ borderTop: `2px solid ${theme.palette.outlineVariant}` })}>
               <MoneyText value={summary.totalToman} variant="h3" color="primary.main" />

@@ -2,8 +2,9 @@ import { useLingui } from '@lingui/react/macro'
 import { useTheme } from '@mui/material'
 import { BarChart } from '@mui/x-charts/BarChart'
 import { CURRENCY_LABELS } from 'src/shared/constants'
+import { useFormat } from 'src/shared/format'
 import type { CalendarSystem, MonthlyTotal } from 'src/shared/types'
-import { formatNumberPersian, monthNames, toPersianDigits } from 'src/shared/utils'
+import { monthNames } from 'src/shared/utils'
 
 export interface MonthlyIncomeChartProps {
   months: MonthlyTotal[]
@@ -20,6 +21,7 @@ export interface MonthlyIncomeChartProps {
  */
 export const MonthlyIncomeChart = ({ months, calendar }: MonthlyIncomeChartProps) => {
   const { t, i18n } = useLingui()
+  const { number, digits } = useFormat()
   const theme = useTheme()
   const labels = monthNames(calendar, i18n)
   const toman = i18n._(CURRENCY_LABELS.TOMAN)
@@ -30,9 +32,9 @@ export const MonthlyIncomeChart = ({ months, calendar }: MonthlyIncomeChartProps
       series={[
         {
           data: months.map((month) => month.totalToman),
-          label: t`درآمد ماهانه`,
+          label: t`Monthly income`,
           color: theme.palette.primary.main,
-          valueFormatter: (value) => (value === null ? '—' : `${formatNumberPersian(value)} ${toman}`),
+          valueFormatter: (value) => (value === null ? '—' : `${number(value)} ${toman}`),
         },
       ]}
       xAxis={[
@@ -44,7 +46,7 @@ export const MonthlyIncomeChart = ({ months, calendar }: MonthlyIncomeChartProps
       yAxis={[
         {
           // Millions, so the axis stays readable instead of printing nine digits.
-          valueFormatter: (value: number) => toPersianDigits(Math.round(value / 1_000_000).toString()),
+          valueFormatter: (value: number) => digits(Math.round(value / 1_000_000)),
         },
       ]}
       margin={{ right: 16 }}

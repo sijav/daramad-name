@@ -27,7 +27,7 @@ interface PdfMakeModule {
 const fetchAsBase64 = async (url: string): Promise<string> => {
   const response = await window.fetch(url)
   if (!response.ok) {
-    throw new Error(i18n._(msg`فونت فارسی گزارش بارگذاری نشد. صفحه را دوباره باز کن.`))
+    throw new Error(i18n._(msg`The report's Persian font failed to load. Reload the page.`))
   }
   const buffer = await response.arrayBuffer()
   const bytes = new Uint8Array(buffer)

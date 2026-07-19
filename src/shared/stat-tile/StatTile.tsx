@@ -17,6 +17,7 @@ export const StatTile = ({ label, value, hint, emphasis = false }: StatTileProps
     sx={(theme) => ({
       p: 2.5,
       height: '100%',
+      containerType: 'inline-size',
       ...(emphasis && {
         backgroundColor: theme.palette.primary.light,
         borderColor: theme.palette.primary.main,
@@ -29,7 +30,13 @@ export const StatTile = ({ label, value, hint, emphasis = false }: StatTileProps
       </Typography>
 
       {typeof value === 'number' ? (
-        <MoneyText value={value} variant="h3" sx={{ display: 'block' }} />
+        // English labels are longer than Persian, so the figure has to be allowed
+        // to shrink rather than overflow the tile.
+        <MoneyText
+          value={value}
+          variant="h3"
+          sx={{ display: 'block', whiteSpace: 'normal', overflowWrap: 'anywhere', fontSize: 'clamp(1rem, 4.2cqw, 1.25rem)' }}
+        />
       ) : (
         <Typography variant="h3">{value}</Typography>
       )}

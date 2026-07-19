@@ -17,7 +17,7 @@ const Harness = ({ initial }: { initial?: ReceiptWithClient }) => {
   const form = useReceiptForm(initial)
   return (
     <GlassCard sx={{ maxWidth: 560 }}>
-      <ReceiptForm form={form} submitLabel="ثبت دریافتی" onSubmit={() => {}} onSubmitAndNext={() => {}} />
+      <ReceiptForm form={form} submitLabel="Record a receipt" onSubmit={() => {}} onSubmitAndNext={() => {}} />
     </GlassCard>
   )
 }
@@ -30,7 +30,7 @@ const receipt = (overrides: Partial<ReceiptWithClient>): ReceiptWithClient => ({
   rate: null,
   amountToman: 2500000,
   clientId: null,
-  clientName: 'بازرگانی آریا',
+  clientName: 'Aria Trading',
   channel: 'CARD_TO_CARD',
   note: null,
   createdAt: new Date().toISOString(),

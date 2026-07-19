@@ -1,13 +1,16 @@
 import type { LinguiConfig } from '@lingui/conf'
 import { formatter } from '@lingui/format-po'
 
-// The interface is Persian. English exists only for the report's English
-// variant (scenario 3 — the embassy copy), so `fa-IR` is the source locale
-// and message ids are the Persian strings themselves.
+// English is the source locale, so message ids in the code are English strings
+// and Persian lives in `src/locales/fa-IR/messages.po` as a translation.
+//
+// The app still *defaults* to Persian at runtime — that is a user-facing
+// default stored in Settings, independent of which language the code is
+// authored in.
 const config: LinguiConfig = {
-  locales: ['fa-IR', 'en-US'],
-  sourceLocale: 'fa-IR',
-  fallbackLocales: { default: 'fa-IR' },
+  locales: ['en-US', 'fa-IR'],
+  sourceLocale: 'en-US',
+  fallbackLocales: { default: 'en-US' },
   catalogs: [
     {
       path: '<rootDir>/src/locales/{locale}/messages',

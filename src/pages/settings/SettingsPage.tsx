@@ -12,11 +12,12 @@ import {
   restoreBackupMutation,
   seedSampleDataMutation,
   setCalendarMutation,
+  setLocaleMutation,
   settingsQueryKey,
   updateProfileMutation,
 } from 'src/shared/queries'
 import { SegmentedControl } from 'src/shared/segmented-control'
-import type { CalendarSystem, Profile } from 'src/shared/types'
+import type { AppLocale, CalendarSystem, Profile } from 'src/shared/types'
 
 export const SettingsPage = () => {
   const { t } = useLingui()
@@ -45,7 +46,7 @@ export const SettingsPage = () => {
     mutationFn: updateProfileMutation,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: settingsQueryKey })
-      setToast(t`مشخصاتت ذخیره شد.`)
+      setToast(t`Your details were saved.`)
     },
   })
 
@@ -54,10 +55,15 @@ export const SettingsPage = () => {
     onSuccess: refreshAll,
   })
 
+  const changeLocale = useMutation({
+    mutationFn: setLocaleMutation,
+    onSuccess: refreshAll,
+  })
+
   const backup = useMutation({
     mutationFn: exportBackupMutation,
-    onSuccess: () => setToast(t`فایل بکاپ دانلود شد.`),
-    onError: () => setError(t`گرفتن بکاپ ناموفق بود. دوباره امتحان کن.`),
+    onSuccess: () => setToast(t`Backup file downloaded.`),
+    onError: () => setError(t`The backup failed. Try again.`),
   })
 
   const restore = useMutation({
@@ -65,7 +71,7 @@ export const SettingsPage = () => {
     onSuccess: async (data) => {
       await refreshAll()
       setPendingRestore(null)
-      setToast(t`${data.receipts.length} دریافتی بازیابی شد.`)
+      setToast(t`${data.receipts.length} receipts restored.`)
     },
     onError: (cause: Error) => {
       setPendingRestore(null)
@@ -77,7 +83,7 @@ export const SettingsPage = () => {
     mutationFn: seedSampleDataMutation,
     onSuccess: async (count) => {
       await invalidateReceiptQueries()
-      setToast(t`${count} دریافتی نمونه اضافه شد.`)
+      setToast(t`${count} sample receipts added.`)
     },
   })
 
@@ -86,7 +92,7 @@ export const SettingsPage = () => {
     onSuccess: async () => {
       await refreshAll()
       setConfirmClear(false)
-      setToast(t`همه‌ی داده‌ها پاک شد.`)
+      setToast(t`All data was erased.`)
     },
   })
 
@@ -97,44 +103,47 @@ export const SettingsPage = () => {
     try {
       setPendingRestore(await file.text())
     } catch {
-      setError(t`فایل خوانده نشد. مطمئن شو فایل سالمه و دوباره انتخابش کن.`)
+      setError(t`The file could not be read. Make sure it is intact and pick it again.`)
     }
   }
 
   return (
     <Box sx={{ maxWidth: 720 }}>
-      <PageHeader title={t`تنظیمات`} />
+      <PageHeader title={t`Settings`} />
 
       <Stack spacing={3}>
         <GlassCard>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
-            <Trans>مشخصات فردی</Trans>
+            <Trans>Personal details</Trans>
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2.5 }}>
-            <Trans>این اطلاعات بالای گزارش درآمد چاپ می‌شه. بدون اسم، سند برای سفارت یا صاحبخونه اعتباری نداره.</Trans>
+            <Trans>
+              These details are printed at the top of the income report. Without a name the document carries no weight with an embassy or a
+              landlord.
+            </Trans>
           </Typography>
 
           <Stack spacing={2}>
             <TextField
-              label={t`نام و نام خانوادگی`}
+              label={t`Full name`}
               value={profile.fullName}
               onChange={(event) => setProfile({ ...profile, fullName: event.target.value })}
               fullWidth
             />
             <TextField
-              label={t`کد ملی`}
+              label={t`National ID`}
               value={profile.nationalId}
               onChange={(event) => setProfile({ ...profile, nationalId: event.target.value })}
               fullWidth
             />
             <TextField
-              label={t`تلفن`}
+              label={t`Phone`}
               value={profile.phone}
               onChange={(event) => setProfile({ ...profile, phone: event.target.value })}
               fullWidth
             />
             <TextField
-              label={t`نشانی`}
+              label={t`Address`}
               value={profile.address}
               onChange={(event) => setProfile({ ...profile, address: event.target.value })}
               multiline
@@ -142,23 +151,40 @@ export const SettingsPage = () => {
               fullWidth
             />
             <Button variant="contained" onClick={() => saveProfile.mutate(profile)} disabled={saveProfile.isPending}>
-              <Trans>ذخیره مشخصات</Trans>
+              <Trans>Save details</Trans>
             </Button>
           </Stack>
         </GlassCard>
 
         <GlassCard>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
-            <Trans>تقویم</Trans>
+            <Trans>Language</Trans>
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            <Trans>همه‌ی تاریخ‌ها و جمع‌بندی‌های ماهانه با این تقویم نمایش داده می‌شن. داده‌هایت تغییری نمی‌کنن.</Trans>
+            <Trans>The whole interface switches, including text direction. Your data is untouched.</Trans>
+          </Typography>
+          <SegmentedControl<AppLocale>
+            value={settings.locale}
+            options={[
+              { value: 'fa-IR', label: t`Persian` },
+              { value: 'en-US', label: t`English` },
+            ]}
+            onValueChange={(locale) => changeLocale.mutate({ locale })}
+          />
+        </GlassCard>
+
+        <GlassCard>
+          <Typography variant="h3" sx={{ mb: 0.5 }}>
+            <Trans>Calendar</Trans>
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            <Trans>Every date and monthly total is shown in this calendar. Your data itself does not change.</Trans>
           </Typography>
           <SegmentedControl<CalendarSystem>
             value={settings.calendar}
             options={[
-              { value: 'JALALI', label: t`شمسی` },
-              { value: 'GREGORIAN', label: t`میلادی` },
+              { value: 'JALALI', label: t`Jalali` },
+              { value: 'GREGORIAN', label: t`Gregorian` },
             ]}
             onValueChange={(calendar) => changeCalendar.mutate({ calendar })}
           />
@@ -166,18 +192,18 @@ export const SettingsPage = () => {
 
         <GlassCard>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
-            <Trans>بکاپ و بازیابی</Trans>
+            <Trans>Backup and restore</Trans>
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2.5 }}>
-            <Trans>داده‌هایت فقط روی همین مرورگره. اگر مرورگر رو پاک کنی، بدون بکاپ همه‌چیز از دست می‌ره.</Trans>
+            <Trans>Your data lives only in this browser. If you clear the browser, everything is lost without a backup.</Trans>
           </Typography>
 
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
             <Button variant="contained" onClick={() => backup.mutate()} disabled={backup.isPending}>
-              <Trans>بکاپ (دانلود JSON)</Trans>
+              <Trans>Back up (download JSON)</Trans>
             </Button>
             <Button variant="outlined" onClick={() => fileInput.current?.click()}>
-              <Trans>بازیابی از فایل</Trans>
+              <Trans>Restore from file</Trans>
             </Button>
             <input
               ref={fileInput}
@@ -195,18 +221,18 @@ export const SettingsPage = () => {
 
         <GlassCard>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
-            <Trans>داده‌ی نمونه و پاک‌سازی</Trans>
+            <Trans>Sample data and reset</Trans>
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2.5 }}>
-            <Trans>داده‌ی نمونه برای تست و اسکرین‌شاته. برای دموی واقعی، دیتای خودت رو ثبت کن.</Trans>
+            <Trans>Sample data is for testing and screenshots. For a real demo, record your own data.</Trans>
           </Typography>
 
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
             <Button variant="outlined" onClick={() => seed.mutate()} disabled={seed.isPending}>
-              <Trans>افزودن داده‌ی نمونه</Trans>
+              <Trans>Add sample data</Trans>
             </Button>
             <Button variant="outlined" color="error" onClick={() => setConfirmClear(true)}>
-              <Trans>پاک کردن همه‌ی داده‌ها</Trans>
+              <Trans>Erase all data</Trans>
             </Button>
           </Stack>
         </GlassCard>
@@ -214,10 +240,10 @@ export const SettingsPage = () => {
 
       <ConfirmDialog
         open={confirmClear}
-        title={t`پاک کردن همه‌ی داده‌ها`}
-        description={t`همه‌ی دریافتی‌ها، مشتری‌ها و مشخصاتت برای همیشه پاک می‌شن. اگر بکاپ نگرفتی، برگشتی وجود نداره.`}
-        confirmLabel={t`همه را پاک کن`}
-        confirmationWord={t`پاک کن`}
+        title={t`Erase all data`}
+        description={t`Every receipt, client and personal detail is erased permanently. Without a backup there is no way back.`}
+        confirmLabel={t`Erase everything`}
+        confirmationWord={t`erase`}
         destructive
         onConfirm={() => clearAll.mutate()}
         onClose={() => setConfirmClear(false)}
@@ -225,9 +251,9 @@ export const SettingsPage = () => {
 
       <ConfirmDialog
         open={pendingRestore !== null}
-        title={t`بازیابی از فایل`}
-        description={t`داده‌های فعلی کاملاً با محتوای این فایل جایگزین می‌شن. اگر الان دریافتی ثبت‌شده داری، اول ازش بکاپ بگیر.`}
-        confirmLabel={t`بازیابی کن`}
+        title={t`Restore from file`}
+        description={t`Your current data is replaced entirely by the contents of this file. If you have receipts recorded now, back them up first.`}
+        confirmLabel={t`Restore`}
         destructive
         onConfirm={() => pendingRestore && restore.mutate({ json: pendingRestore })}
         onClose={() => setPendingRestore(null)}

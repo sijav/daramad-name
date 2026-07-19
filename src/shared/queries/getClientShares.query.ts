@@ -41,7 +41,7 @@ export const getClientSharesQuery = async ({
   const shares: ClientShare[] = [...totals.entries()]
     .map(([clientId, totalToman]) => ({
       clientId,
-      clientName: clientId === UNASSIGNED_ID ? i18n._(msg`بدون مشتری`) : (namesById.get(clientId) ?? i18n._(msg`نامشخص`)),
+      clientName: clientId === UNASSIGNED_ID ? i18n._(msg`No client`) : (namesById.get(clientId) ?? i18n._(msg`Unknown`)),
       totalToman,
       percentage: Math.round((totalToman / grandTotal) * 1000) / 10,
     }))

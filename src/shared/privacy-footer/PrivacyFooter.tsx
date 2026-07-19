@@ -11,7 +11,7 @@ export const PrivacyFooter = () => (
   <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifyContent: 'center', mt: 6, pt: 3, opacity: 0.75 }}>
     <LockRoundedIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
     <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'center' }}>
-      <Trans>همه‌ی داده‌ها فقط روی مرورگر خودت می‌مونه و هیچ‌جا ارسال نمی‌شه.</Trans>
+      <Trans>All your data stays in your own browser and is never sent anywhere.</Trans>
     </Typography>
   </Stack>
 )

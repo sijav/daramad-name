@@ -1,15 +1,17 @@
 import { i18n, type I18n } from '@lingui/core'
+import type { AppLocale } from 'src/shared/types'
 
-// The interface locale is Persian and does not change at runtime — the brief
-// specifies a Persian-only UI. English exists solely for the income report's
-// English variant (scenario 3, the embassy copy), which is rendered by pdfmake
-// rather than React and therefore uses its own isolated i18n instance.
+// English is the source locale — message ids in the code are English strings —
+// but the app DEFAULTS to Persian at runtime, because that is who it is for.
+// The choice is persisted in Settings.
 
-export const DEFAULT_LOCALE = 'fa-IR'
-export type AppLocale = 'fa-IR' | 'en-US'
+export const DEFAULT_LOCALE: AppLocale = 'fa-IR'
 
 /** Loads a compiled catalog and activates it on the shared i18n instance. */
 export const activateLocale = async (locale: AppLocale): Promise<void> => {
+  if (i18n.locale === locale) {
+    return
+  }
   const { messages } = await import(`src/locales/${locale}/messages.ts`)
   i18n.loadAndActivate({ locale, messages })
 }

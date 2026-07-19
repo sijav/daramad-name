@@ -33,35 +33,35 @@ const parseBackup = (json: string): BackupFile => {
   try {
     parsed = JSON.parse(json)
   } catch {
-    throw new Error(i18n._(msg`این فایل JSON معتبر نیست. مطمئن شو همون فایلی رو انتخاب کردی که از «بکاپ» گرفته بودی.`))
+    throw new Error(i18n._(msg`This is not valid JSON. Make sure you picked the file you downloaded from Back up.`))
   }
 
   if (typeof parsed !== 'object' || parsed === null) {
-    throw new Error(i18n._(msg`محتوای فایل خالی یا خراب است.`))
+    throw new Error(i18n._(msg`The file is empty or corrupt.`))
   }
 
   const candidate = parsed as Partial<BackupFile>
 
   if (candidate.app !== 'daramadname') {
-    throw new Error(i18n._(msg`این فایل مال درآمدنامه نیست. فایل بکاپ یه ابزار دیگه رو انتخاب کردی؟`))
+    throw new Error(i18n._(msg`This file is not from Daramadname. Did you pick a backup from another tool?`))
   }
   if (candidate.version !== 1) {
-    throw new Error(i18n._(msg`نسخه‌ی این فایل بکاپ پشتیبانی نمی‌شه. با نسخه‌ی جدیدتر برنامه ساخته شده.`))
+    throw new Error(i18n._(msg`This backup file's version is not supported. It was made by a newer version of the app.`))
   }
   if (!Array.isArray(candidate.receipts) || !Array.isArray(candidate.clients)) {
-    throw new Error(i18n._(msg`ساختار فایل بکاپ ناقصه؛ فهرست دریافتی‌ها یا مشتری‌ها توش نیست.`))
+    throw new Error(i18n._(msg`The backup file is incomplete — it has no receipts or clients list.`))
   }
 
   // Guard the fields the whole app relies on. A receipt without a stored
   // `amountToman` would quietly contribute zero to every total.
   for (const receipt of candidate.receipts as Receipt[]) {
     if (typeof receipt.id !== 'string' || typeof receipt.occurredAt !== 'string' || typeof receipt.amountToman !== 'number') {
-      throw new Error(i18n._(msg`یکی از دریافتی‌های داخل فایل ناقصه و قابل بازیابی نیست.`))
+      throw new Error(i18n._(msg`One of the receipts in the file is incomplete and cannot be restored.`))
     }
   }
   for (const client of candidate.clients as Client[]) {
     if (typeof client.id !== 'string' || typeof client.name !== 'string') {
-      throw new Error(i18n._(msg`یکی از مشتری‌های داخل فایل ناقصه و قابل بازیابی نیست.`))
+      throw new Error(i18n._(msg`One of the clients in the file is incomplete and cannot be restored.`))
     }
   }
 

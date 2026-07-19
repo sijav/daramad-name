@@ -1,3 +1,4 @@
+import { useLingui } from '@lingui/react/macro'
 import { Stack } from '@mui/material'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { FilterChip } from './FilterChip'
@@ -6,16 +7,23 @@ const meta = { title: 'Shared/FilterChip', component: FilterChip } satisfies Met
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Client: Story = { args: { field: 'مشتری', value: 'بازرگانی آریا', onDelete: () => {} } }
+const Single = () => {
+  const { t } = useLingui()
+  return <FilterChip field={t`Client`} value="Aria Trading" onDelete={() => {}} />
+}
 
 /** Together these are the only visible evidence of what the popover applied. */
-export const Row: Story = {
-  args: { field: '', value: '' },
-  render: () => (
+const Row = () => {
+  const { t } = useLingui()
+  return (
     <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
-      <FilterChip field="بازه" value="۱ فروردین ۱۴۰۵ – ۲۹ اسفند ۱۴۰۵" onDelete={() => {}} />
-      <FilterChip field="مشتری" value="بازرگانی آریا" onDelete={() => {}} />
-      <FilterChip field="کانال" value="تتر" onDelete={() => {}} />
+      <FilterChip field={t`Client`} value="Aria Trading" onDelete={() => {}} />
+      <FilterChip field={t`Channel`} value={t`Tether`} onDelete={() => {}} />
     </Stack>
-  ),
+  )
 }
+
+const base = { field: '', value: '' }
+
+export const Client: Story = { args: base, render: () => <Single /> }
+export const ActiveFilters: Story = { args: base, render: () => <Row /> }

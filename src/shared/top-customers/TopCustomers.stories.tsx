@@ -1,18 +1,10 @@
+import { useLingui } from '@lingui/react/macro'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { GlassCard } from 'src/shared/glass-card'
 import type { ClientShare } from 'src/shared/types'
 import { TopCustomers } from './TopCustomers'
 
-const meta = {
-  title: 'Shared/TopCustomers',
-  component: TopCustomers,
-  render: (args) => (
-    <GlassCard sx={{ maxWidth: 440 }}>
-      <TopCustomers {...args} />
-    </GlassCard>
-  ),
-} satisfies Meta<typeof TopCustomers>
-
+const meta = { title: 'Shared/TopCustomers', component: TopCustomers } satisfies Meta<typeof TopCustomers>
 export default meta
 type Story = StoryObj<typeof meta>
 
@@ -23,38 +15,35 @@ const share = (clientName: string, totalToman: number, percentage: number): Clie
   percentage,
 })
 
-/** Complements the donut: legible at any share, and exact figures beside each name. */
-export const Ranked: Story = {
-  args: {
-    othersLabel: 'بقیه',
-    shares: [
-      share('بازرگانی آریا', 235830000, 54),
-      share('استودیو نقش', 91700000, 21),
-      share('Mr. Chen', 69860000, 16),
-      share('کافه رستوران هما', 39300000, 9),
-    ],
-  },
+const RANKED = [
+  share('Aria Trading', 235830000, 54),
+  share('Naghsh Studio', 91700000, 21),
+  share('Mr. Chen', 69860000, 16),
+  share('Homa Cafe', 39300000, 9),
+]
+
+const View = ({ shares, limit }: { shares: ClientShare[]; limit?: number }) => {
+  const { t } = useLingui()
+  return (
+    <GlassCard sx={{ maxWidth: 440 }}>
+      <TopCustomers shares={shares} limit={limit} othersLabel={t`Others`} />
+    </GlassCard>
+  )
 }
+
+const base = { shares: [], othersLabel: '' }
+
+/** Complements the donut: legible at any share, with exact figures beside each name. */
+export const Ranked: Story = { args: base, render: () => <View shares={RANKED} /> }
 
 /** Anything past the limit folds into an "others" row rather than being dropped. */
 export const WithOthers: Story = {
-  args: {
-    othersLabel: 'بقیه',
-    limit: 3,
-    shares: [
-      share('بازرگانی آریا', 235830000, 54),
-      share('استودیو نقش', 91700000, 21),
-      share('Mr. Chen', 69860000, 16),
-      share('کافه رستوران هما', 26200000, 6),
-      share('شرکت داده‌پرداز', 13100000, 3),
-    ],
-  },
+  args: base,
+  render: () => <View shares={[...RANKED, share('Dadepardaz Co.', 13100000, 3)]} limit={3} />,
 }
 
 /** A long client name must truncate rather than push the figure off the row. */
 export const LongName: Story = {
-  args: {
-    othersLabel: 'بقیه',
-    shares: [share('شرکت مهندسی نرم‌افزار داده‌پرداز پارس و همکاران', 235830000, 100)],
-  },
+  args: base,
+  render: () => <View shares={[share('Dadepardaz Pars Software Engineering & Partners', 235830000, 100)]} />,
 }

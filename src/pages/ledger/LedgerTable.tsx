@@ -33,13 +33,15 @@ export const LedgerTable = ({ receipts, summary, sort, calendar, onSortChange, o
   const { digits, persian } = useFormat()
 
   // Built inside the component so the labels follow the active locale.
-  const columns: { field: LedgerSortField | null; label: string; numeric?: boolean }[] = [
-    { field: 'occurredAt', label: t`Date` },
-    { field: 'client', label: t`Client` },
-    { field: 'channel', label: t`Channel` },
-    { field: null, label: t`Original amount`, numeric: true },
-    { field: 'amountToman', label: t`Toman equivalent`, numeric: true },
-    { field: null, label: t`Actions` },
+  // Widths are explicit because English headers are wider than Persian and were
+  // squeezing the client column into a two-line wrap.
+  const columns: { field: LedgerSortField | null; label: string; numeric?: boolean; width?: number | string }[] = [
+    { field: 'occurredAt', label: t`Date`, width: 120 },
+    { field: 'client', label: t`Client`, width: '30%' },
+    { field: 'channel', label: t`Channel`, width: 130 },
+    { field: null, label: t`Original amount`, numeric: true, width: 150 },
+    { field: 'amountToman', label: t`Toman equivalent`, numeric: true, width: 160 },
+    { field: null, label: t`Actions`, width: 72 },
   ]
 
   const toggleSort = (field: LedgerSortField) =>
@@ -50,11 +52,11 @@ export const LedgerTable = ({ receipts, summary, sort, calendar, onSortChange, o
 
   return (
     <TableContainer sx={{ overflowX: 'auto' }}>
-      <Table stickyHeader size="small" sx={{ minWidth: 720 }}>
+      <Table stickyHeader size="small" sx={{ minWidth: 860, tableLayout: 'fixed' }}>
         <TableHead>
           <TableRow>
             {columns.map((column, index) => (
-              <TableCell key={index} align={column.numeric ? 'left' : 'right'} sx={{ whiteSpace: 'nowrap' }}>
+              <TableCell key={index} align={column.numeric ? 'left' : 'right'} sx={{ whiteSpace: 'nowrap', width: column.width }}>
                 {column.field ? (
                   <TableSortLabel
                     active={sort.field === column.field}

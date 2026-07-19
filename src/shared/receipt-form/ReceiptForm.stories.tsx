@@ -1,3 +1,4 @@
+import { useLingui } from '@lingui/react/macro'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { GlassCard } from 'src/shared/glass-card'
 import type { ReceiptWithClient } from 'src/shared/types'
@@ -13,11 +14,17 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
+/**
+ * Story copy goes through the catalog like the app's does, so switching the
+ * Language toolbar to Persian does not leave an English button in an otherwise
+ * Persian form.
+ */
 const Harness = ({ initial }: { initial?: ReceiptWithClient }) => {
+  const { t } = useLingui()
   const form = useReceiptForm(initial)
   return (
     <GlassCard sx={{ maxWidth: 560 }}>
-      <ReceiptForm form={form} submitLabel="Record a receipt" onSubmit={() => {}} onSubmitAndNext={() => {}} />
+      <ReceiptForm form={form} submitLabel={t`Record a receipt`} onSubmit={() => {}} onSubmitAndNext={() => {}} />
     </GlassCard>
   )
 }
@@ -51,8 +58,8 @@ export const ForeignCurrency: Story = {
 }
 
 /**
- * The backdating case. With a past date the rate field relabels to «نرخ تبدیل در
- * همان تاریخ» and warns, because the toman value freezes permanently — entering
+ * The backdating case. With a past date the rate field relabels to "the rate on
+ * that date" and warns, because the toman value freezes permanently — entering
  * today's rate against a two-month-old receipt would be silently wrong forever.
  */
 export const Backdated: Story = {

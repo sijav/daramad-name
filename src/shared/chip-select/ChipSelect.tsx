@@ -39,6 +39,8 @@ export const ChipSelect = <T extends string>({ label, value, options, onValueCha
             onClick={() => onValueChange(option.value)}
             sx={(theme) => ({
               ...theme.typography.caption,
+              // The design sets chip text in Medium; `caption` is Regular.
+              fontWeight: 500,
               ...(selected
                 ? {
                     backgroundColor: theme.palette.primary.light,

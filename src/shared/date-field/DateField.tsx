@@ -2,7 +2,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { faIR } from 'date-fns-jalali/locale'
+import { enUS as enUSJalali, faIR } from 'date-fns-jalali/locale'
 import { useSettings } from 'src/core/query'
 import { fontFamilyFarsiDigits } from 'src/core/theme'
 import { Field } from 'src/shared/field'
@@ -38,11 +38,12 @@ export interface DateFieldProps {
 export const DateField = ({ label, value, onValueChange, disableFuture = true, error, helperText, fullWidth = true }: DateFieldProps) => {
   const { calendar, locale } = useSettings()
   // Persian numerals are a property of the Persian locale, not of the picker.
-  const digitFont = locale === 'fa-IR' ? fontFamilyFarsiDigits : undefined
+  const isPersian = locale === 'fa-IR'
+  const digitFont = isPersian ? fontFamilyFarsiDigits : undefined
 
   return (
     <Field label={label} error={error} helperText={helperText}>
-      <LocalizationProvider {...adapterProps(calendar)}>
+      <LocalizationProvider {...adapterProps(calendar, isPersian)}>
         <DatePicker
           value={new Date(value)}
           disableFuture={disableFuture}
@@ -77,5 +78,13 @@ export const DateField = ({ label, value, onValueChange, disableFuture = true, e
   )
 }
 
-const adapterProps = (calendar: CalendarSystem) =>
-  calendar === 'JALALI' ? { dateAdapter: AdapterDateFnsJalali, adapterLocale: faIR } : { dateAdapter: AdapterDateFns }
+/**
+ * The Jalali adapter still drives the calendar in English — the calendar system
+ * is a separate setting from the language — but with `date-fns-jalali`'s enUS
+ * locale, which transliterates the month names ("28 Tir 1405") instead of
+ * printing them in Persian script an English reader cannot parse.
+ */
+const adapterProps = (calendar: CalendarSystem, isPersian: boolean) =>
+  calendar === 'JALALI'
+    ? { dateAdapter: AdapterDateFnsJalali, adapterLocale: isPersian ? faIR : enUSJalali }
+    : { dateAdapter: AdapterDateFns }

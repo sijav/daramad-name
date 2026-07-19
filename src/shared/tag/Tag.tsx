@@ -20,6 +20,7 @@ export const Tag = ({ tone = 'neutral', sx, ...props }: TagProps) => (
     sx={[
       (theme: Theme) => ({
         ...theme.typography.caption,
+        fontWeight: 500,
         height: 26,
         borderRadius: `${radius.full}px`,
         ...toneStyles(tone, theme),

@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from '@mui/material'
+import { Box, Stack, Typography, useTheme, type Theme } from '@mui/material'
 import { radius } from 'src/core/theme'
 
 export type InsightTone = 'warning' | 'info' | 'positive'
@@ -16,40 +16,44 @@ export interface InsightCalloutProps {
  * naming, not an error the user made, and an alert triangle over their own
  * income chart reads as an accusation.
  */
-export const InsightCallout = ({ message, tone = 'warning' }: InsightCalloutProps) => (
-  <Stack
-    direction="row"
-    spacing={1.5}
-    sx={(theme) => ({
-      alignItems: 'center',
-      px: 2,
-      py: 1.5,
-      borderRadius: `${radius.md}px`,
-      backgroundColor: theme.palette.surfaceContainerHigh,
-      border: `1px solid ${theme.palette.outlineVariant}`,
-    })}
-  >
-    <Box
-      sx={{
-        flexShrink: 0,
-        width: 10,
-        height: 10,
-        borderRadius: '50%',
-        backgroundColor: dotColour(tone),
-      }}
-    />
-    <Typography variant="body2">{message}</Typography>
-  </Stack>
-)
+export const InsightCallout = ({ message, tone = 'warning' }: InsightCalloutProps) => {
+  const theme = useTheme()
 
-const dotColour = (tone: InsightTone): string => {
+  return (
+    <Stack
+      direction="row"
+      spacing={1.5}
+      sx={(theme) => ({
+        alignItems: 'center',
+        px: 2,
+        py: 1.5,
+        borderRadius: `${radius.md}px`,
+        backgroundColor: theme.palette.surfaceContainerHigh,
+        border: `1px solid ${theme.palette.outlineVariant}`,
+      })}
+    >
+      <Box
+        sx={{
+          flexShrink: 0,
+          width: 10,
+          height: 10,
+          borderRadius: '50%',
+          backgroundColor: dotColour(tone, theme),
+        }}
+      />
+      <Typography variant="body2">{message}</Typography>
+    </Stack>
+  )
+}
+
+const dotColour = (tone: InsightTone, theme: Theme): string => {
   switch (tone) {
     case 'info':
-      return '#3b6ef5'
+      return theme.palette.primary.main
     case 'positive':
-      return '#1f6f43'
+      return theme.palette.success.main
     case 'warning':
     default:
-      return '#e0a800'
+      return theme.palette.warning.main
   }
 }

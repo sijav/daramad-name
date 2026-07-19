@@ -15,6 +15,11 @@ export type AppLocale = 'fa-IR' | 'en-US'
 
 export const APP_LOCALES: readonly AppLocale[] = ['fa-IR', 'en-US']
 
+/** Colour-scheme preference. `system` follows the OS and keeps following it. */
+export type ThemePreference = 'light' | 'dark' | 'system'
+
+export const THEME_PREFERENCES: readonly ThemePreference[] = ['light', 'dark', 'system']
+
 export const CURRENCIES: readonly Currency[] = ['TOMAN', 'USD', 'USDT']
 export const CHANNELS: readonly Channel[] = ['CARD_TO_CARD', 'REMITTANCE', 'TETHER', 'OTHER']
 
@@ -69,6 +74,8 @@ export interface Settings {
   calendar: CalendarSystem
   /** Persisted so the choice survives a reload; defaults to Persian. */
   locale: AppLocale
+  /** Persisted colour scheme; defaults to following the OS. */
+  themePreference: ThemePreference
   profile: Profile
 }
 

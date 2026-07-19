@@ -13,11 +13,12 @@ import {
   seedSampleDataMutation,
   setCalendarMutation,
   setLocaleMutation,
+  setThemePreferenceMutation,
   settingsQueryKey,
   updateProfileMutation,
 } from 'src/shared/queries'
 import { SegmentedControl } from 'src/shared/segmented-control'
-import type { AppLocale, CalendarSystem, Profile } from 'src/shared/types'
+import type { AppLocale, CalendarSystem, Profile, ThemePreference } from 'src/shared/types'
 
 export const SettingsPage = () => {
   const { t } = useLingui()
@@ -57,6 +58,11 @@ export const SettingsPage = () => {
 
   const changeLocale = useMutation({
     mutationFn: setLocaleMutation,
+    onSuccess: refreshAll,
+  })
+
+  const changeTheme = useMutation({
+    mutationFn: setThemePreferenceMutation,
     onSuccess: refreshAll,
   })
 
@@ -170,6 +176,24 @@ export const SettingsPage = () => {
               { value: 'en-US', label: t`English` },
             ]}
             onValueChange={(locale) => changeLocale.mutate({ locale })}
+          />
+        </GlassCard>
+
+        <GlassCard>
+          <Typography variant="h3" sx={{ mb: 0.5 }}>
+            <Trans>Appearance</Trans>
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            <Trans>Choose a colour scheme, or let it follow your device.</Trans>
+          </Typography>
+          <SegmentedControl<ThemePreference>
+            value={settings.themePreference}
+            options={[
+              { value: 'light', label: t`Light` },
+              { value: 'dark', label: t`Dark` },
+              { value: 'system', label: t`System` },
+            ]}
+            onValueChange={(themePreference) => changeTheme.mutate({ themePreference })}
           />
         </GlassCard>
 

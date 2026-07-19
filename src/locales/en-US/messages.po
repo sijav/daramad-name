@@ -131,6 +131,10 @@ msgstr "Analytics dashboard"
 msgid "App icon set"
 msgstr "App icon set"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Appearance"
+msgstr "Appearance"
+
 #: src/pages/ledger/LedgerFilterPopover.tsx
 msgid "Apply filters"
 msgstr "Apply filters"
@@ -215,6 +219,10 @@ msgstr "Channel"
 msgid "Charts"
 msgstr "Charts"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Choose a colour scheme, or let it follow your device."
+msgstr "Choose a colour scheme, or let it follow your device."
+
 #: src/shared/ledger-state/LedgerState.tsx
 msgid "Clear filters"
 msgstr "Clear filters"
@@ -261,6 +269,10 @@ msgstr "Dadepardaz Co."
 #: src/shared/layouts/AppShell.tsx
 msgid "Daramadname"
 msgstr "Daramadname"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Dark"
+msgstr "Dark"
 
 #: src/pages/ledger/LedgerTable.tsx
 msgid "Date"
@@ -469,6 +481,10 @@ msgstr "Language"
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Latest receipts"
 msgstr "Latest receipts"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Light"
+msgstr "Light"
 
 #: src/pages/quick-entry/QuickEntryPage.tsx
 msgid "Log it in under 15 seconds"
@@ -770,6 +786,10 @@ msgstr "Statement of Income"
 #: src/shared/pdf/buildIncomeReport.ts
 msgid "Summary"
 msgstr "Summary"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "System"
+msgstr "System"
 
 #: src/shared/constants/labels.ts
 msgid "Tether"

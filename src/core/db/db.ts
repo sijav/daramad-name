@@ -39,6 +39,8 @@ export const defaultSettings: Settings = {
   // Persian by default — the product is for Iranian freelancers. English is
   // opt-in from Settings and persists across reloads.
   locale: 'fa-IR',
+  // Following the OS is the least surprising default; the user can pin it.
+  themePreference: 'system',
   profile: { fullName: '', nationalId: '', phone: '', address: '' },
 }
 

@@ -11,17 +11,25 @@ import '@mui/material/styles'
 declare module '@mui/material/styles' {
   interface Palette {
     surfaceContainerHigh: string
+    surfaceContainerHighest: string
+    surfaceDefault: string
     outlineVariant: string
     outline: string
     glassSurface: string
     glassBorder: string
+    brandPrimary: string
+    brandPrimarySubtle: string
   }
 
   interface PaletteOptions {
     surfaceContainerHigh?: string
+    surfaceContainerHighest?: string
+    surfaceDefault?: string
     outlineVariant?: string
     outline?: string
     glassSurface?: string
     glassBorder?: string
+    brandPrimary?: string
+    brandPrimarySubtle?: string
   }
 }

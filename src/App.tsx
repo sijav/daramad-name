@@ -6,7 +6,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { Route, Routes } from 'react-router-dom'
 import { i18n, useLocaleSync } from 'src/core/i18n'
 import { queryClient, useSettings } from 'src/core/query'
-import { RtlProvider } from 'src/core/theme'
+import { AppThemeProvider } from 'src/core/theme'
 import { DashboardPage } from 'src/pages/dashboard'
 import { AppErrorFallback } from 'src/shared/error-state'
 import { AppShell } from 'src/shared/layouts'
@@ -32,12 +32,12 @@ const PageLoader = () => (
  * direction are read from persisted Settings — which is itself a query.
  */
 const LocalisedApp = () => {
-  const { locale } = useSettings()
+  const { locale, themePreference } = useSettings()
   const localeReady = useLocaleSync()
 
   return (
     <I18nProvider i18n={i18n}>
-      <RtlProvider locale={locale}>
+      <AppThemeProvider locale={locale} themePreference={themePreference}>
         {localeReady ? (
           <ErrorBoundary FallbackComponent={AppErrorFallback}>
             <Suspense fallback={<PageLoader />}>
@@ -58,7 +58,7 @@ const LocalisedApp = () => {
         ) : (
           <PageLoader />
         )}
-      </RtlProvider>
+      </AppThemeProvider>
     </I18nProvider>
   )
 }

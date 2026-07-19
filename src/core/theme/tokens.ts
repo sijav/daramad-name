@@ -1,38 +1,127 @@
-// Design tokens lifted verbatim from the Figma design system
+// Design tokens from the Figma design system
 // (DaramadName — Design system, file yW364nD8qVYhXKiOxNBShA).
 //
-// The design is Material Design 3, so the names below mirror the `--md-sys-color-*`
-// custom properties in the Figma file rather than MUI's own palette vocabulary.
-// `src/core/theme/theme.ts` maps these onto MUI's palette; nothing else should
-// read raw hex values.
+// The design is Material Design 3, so the names below mirror the
+// `--md-sys-color-*` custom properties in the Figma file rather than MUI's own
+// palette vocabulary. `theme.ts` maps these onto MUI; nothing else should read
+// raw hex values.
 
-export const mdSysColor = {
+/** Every colour role the theme consumes. Both palettes must satisfy it. */
+export interface ColorPalette {
+  primary: string
+  onPrimary: string
+  primaryContainer: string
+  onPrimaryContainer: string
+  brandPrimary: string
+  brandPrimarySubtle: string
+  secondaryContainer: string
+  onSecondaryContainer: string
+  surface: string
+  surfaceDefault: string
+  surfaceContainerHigh: string
+  surfaceContainerHighest: string
+  onSurface: string
+  onSurfaceVariant: string
+  textSecondary: string
+  outline: string
+  outlineVariant: string
+  neutralVariant: string
+  glassSurface: string
+  glassBorder: string
+  success: string
+  successContainer: string
+  warning: string
+  warningContainer: string
+  error: string
+  onError: string
+  errorContainer: string
+  onErrorContainer: string
+}
+
+/** Light palette, taken verbatim from the Figma variables. */
+export const lightColors: ColorPalette = {
   primary: '#3b6ef5',
   onPrimary: '#ffffff',
   primaryContainer: '#dee7fd',
   onPrimaryContainer: '#0f1c3d',
+  /** `--brand-primary`: a deeper blue the design uses for emphasis, distinct from `primary`. */
+  brandPrimary: '#3460d6',
+  brandPrimarySubtle: '#eff3fe',
 
-  surface: '#f7f8fa',
+  secondaryContainer: '#e2e4e9',
+  onSecondaryContainer: '#2f3236',
+
+  surface: '#f8f9fb',
+  surfaceDefault: '#fdfeff',
   surfaceContainerHigh: '#e9eaec',
+  surfaceContainerHighest: '#e4e5e7',
   onSurface: '#18191b',
   onSurfaceVariant: '#494b50',
+  textSecondary: '#626569',
 
   outline: '#7c7e83',
   outlineVariant: '#c8cbcf',
+  neutralVariant: '#95989c',
 
-  // The record card and nav rail float on a blurred translucent pane.
   glassSurface: 'rgba(255, 255, 255, 0.6)',
   glassBorder: 'rgba(255, 255, 255, 0.7)',
 
-  // Not present in the Figma file, but every app needs them. Chosen to sit
-  // beside the primary blue without competing with it.
+  success: '#2e9e5b',
+  successContainer: '#e6f5ec',
+  warning: '#e2a400',
+  warningContainer: '#fdf7ea',
   error: '#b3261e',
   onError: '#ffffff',
   errorContainer: '#f9dedc',
   onErrorContainer: '#410e0b',
-  success: '#1f6f43',
-  successContainer: '#d7f0e0',
-} as const
+}
+
+/**
+ * Dark palette.
+ *
+ * NOT in the Figma file — the design system only defines light values, so this
+ * is derived here following MD3's dark guidance: the primary is lightened so it
+ * still passes contrast on a dark surface (a #3b6ef5 button on near-black is
+ * uncomfortably heavy), containers become dark tones of the same hue, and the
+ * surface ramp inverts. Replace these wholesale if the design later ships real
+ * dark tokens.
+ */
+export const darkColors: ColorPalette = {
+  primary: '#a8c4ff',
+  onPrimary: '#0a2472',
+  primaryContainer: '#24427f',
+  onPrimaryContainer: '#dbe4ff',
+  brandPrimary: '#8fb0ff',
+  brandPrimarySubtle: '#1a2440',
+
+  secondaryContainer: '#2f3236',
+  onSecondaryContainer: '#e2e4e9',
+
+  surface: '#121316',
+  surfaceDefault: '#16171a',
+  surfaceContainerHigh: '#26282c',
+  surfaceContainerHighest: '#303237',
+  onSurface: '#e4e5e7',
+  onSurfaceVariant: '#c4c6ca',
+  textSecondary: '#a8abaf',
+
+  outline: '#8e9195',
+  outlineVariant: '#44474b',
+  neutralVariant: '#6b6e72',
+
+  // The glass treatment inverts: a light film on dark, not a white one.
+  glassSurface: 'rgba(38, 40, 44, 0.6)',
+  glassBorder: 'rgba(255, 255, 255, 0.08)',
+
+  success: '#6edb9b',
+  successContainer: '#12351f',
+  warning: '#f5ca4a',
+  warningContainer: '#3a2f14',
+  error: '#f2b8b5',
+  onError: '#601410',
+  errorContainer: '#8c1d18',
+  onErrorContainer: '#f9dedc',
+}
 
 export const radius = {
   sm: 8,
@@ -46,8 +135,15 @@ export const radius = {
 // The Figma file uses an 8pt grid; MUI's spacing(1) === 8px matches it exactly.
 export const spacingUnit = 8
 
+export const controlHeight = {
+  medium: 40,
+  large: 48,
+} as const
+
 export const elevation = {
-  // shadow-[0px_16px_48px_0px_rgba(0,0,0,0.18)] on the record card
+  // Elevation/1 from the design system.
+  level1: '0px 1px 2px 0px rgba(0,0,0,0.06), 0px 1px 3px 0px rgba(0,0,0,0.10)',
+  // The record card's drop shadow.
   card: '0px 16px 48px 0px rgba(0, 0, 0, 0.18)',
   glassBlur: 'blur(16px)',
 } as const
@@ -60,3 +156,18 @@ export const fontFamily = "'Vazirmatn Variable', 'Vazirmatn', system-ui, sans-se
  * chiefly the date picker, whose internals parse ASCII digits.
  */
 export const fontFamilyFarsiDigits = "'Vazirmatn FD', 'Vazirmatn Variable', system-ui, sans-serif"
+
+/** The design's FA type ramp, mapped to the MUI variants that use each one. */
+export const typeScale = {
+  numberLarge: { fontSize: 32, fontWeight: 700, lineHeight: 44 / 32 },
+  headingMedium: { fontSize: 28, fontWeight: 700, lineHeight: 42 / 28 },
+  titleLarge: { fontSize: 22, fontWeight: 600, lineHeight: 32 / 22 },
+  titleMedium: { fontSize: 18, fontWeight: 600, lineHeight: 30 / 18 },
+  labelLarge: { fontSize: 14, fontWeight: 600, lineHeight: 22 / 14 },
+  bodyLarge: { fontSize: 16, fontWeight: 400, lineHeight: 26 / 16 },
+  bodyMedium: { fontSize: 14, fontWeight: 400, lineHeight: 24 / 14 },
+  caption: { fontSize: 12, fontWeight: 400, lineHeight: 20 / 12 },
+} as const
+
+/** Back-compat alias: `mdSysColor` was the light palette before dark mode existed. */
+export const mdSysColor = lightColors

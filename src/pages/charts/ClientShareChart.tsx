@@ -1,5 +1,5 @@
 import { useLingui } from '@lingui/react/macro'
-import { useTheme } from '@mui/material'
+import { alpha, useTheme } from '@mui/material'
 import { PieChart } from '@mui/x-charts/PieChart'
 import { CURRENCY_LABELS } from 'src/shared/constants'
 import { useFormat } from 'src/shared/format'
@@ -20,7 +20,17 @@ export const ClientShareChart = ({ shares }: ClientShareChartProps) => {
   const theme = useTheme()
   const toman = i18n._(CURRENCY_LABELS.TOMAN)
 
-  const palette = [theme.palette.primary.main, '#6b93f7', '#8facf9', '#b0c6fb', '#c9d8fc', theme.palette.outline]
+  // A single-hue ramp stepped from the theme's primary, so the largest slice
+  // reads as most saturated and the whole set inverts correctly in dark mode.
+  // Hardcoded blues looked right on white and muddy on near-black.
+  const palette = [
+    theme.palette.primary.main,
+    alpha(theme.palette.primary.main, 0.78),
+    alpha(theme.palette.primary.main, 0.58),
+    alpha(theme.palette.primary.main, 0.4),
+    alpha(theme.palette.primary.main, 0.26),
+    theme.palette.outline,
+  ]
 
   return (
     <PieChart

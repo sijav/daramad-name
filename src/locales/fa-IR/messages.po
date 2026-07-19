@@ -131,6 +131,10 @@ msgstr "داشبورد تحلیلی"
 msgid "App icon set"
 msgstr "ست آیکون اپلیکیشن"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Appearance"
+msgstr "ظاهر"
+
 #: src/pages/ledger/LedgerFilterPopover.tsx
 msgid "Apply filters"
 msgstr "اعمال فیلترها"
@@ -215,6 +219,10 @@ msgstr "کانال"
 msgid "Charts"
 msgstr "نمودارها"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Choose a colour scheme, or let it follow your device."
+msgstr "یک طرح رنگ انتخاب کن، یا بگذار از دستگاهت پیروی کند."
+
 #: src/shared/ledger-state/LedgerState.tsx
 msgid "Clear filters"
 msgstr "پاک کردن فیلترها"
@@ -261,6 +269,10 @@ msgstr "شرکت داده‌پرداز"
 #: src/shared/layouts/AppShell.tsx
 msgid "Daramadname"
 msgstr "درآمدنامه"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Dark"
+msgstr "تیره"
 
 #: src/pages/ledger/LedgerTable.tsx
 msgid "Date"
@@ -469,6 +481,10 @@ msgstr "زبان"
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Latest receipts"
 msgstr "آخرین دریافتی‌ها"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Light"
+msgstr "روشن"
 
 #: src/pages/quick-entry/QuickEntryPage.tsx
 msgid "Log it in under 15 seconds"
@@ -770,6 +786,10 @@ msgstr "گواهی درآمد"
 #: src/shared/pdf/buildIncomeReport.ts
 msgid "Summary"
 msgstr "خلاصه"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "System"
+msgstr "سیستم"
 
 #: src/shared/constants/labels.ts
 msgid "Tether"

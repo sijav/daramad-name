@@ -37,9 +37,7 @@ const toneStyles = (tone: TagTone, theme: Theme) => {
     case 'success':
       return { backgroundColor: theme.palette.success.light, color: theme.palette.success.main }
     case 'warning':
-      // No warning container in the Figma palette; this pairs with the amber
-      // used by the backdating alert.
-      return { backgroundColor: '#fdf0d5', color: '#7a5200' }
+      return { backgroundColor: theme.palette.warning.light, color: theme.palette.warning.main }
     case 'neutral':
     default:
       return {

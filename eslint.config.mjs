@@ -134,6 +134,8 @@ export default tseslint.config(
             'formatGregorian',
             // `patch(key, value)` takes a form-state key.
             'patch',
+            // CSS media query strings are syntax, not copy.
+            'useMediaQuery',
           ],
           ignoreMethodsOnTypes: ['Map.get', 'Map.has', 'Set.has'],
         },

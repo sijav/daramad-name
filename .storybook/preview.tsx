@@ -3,9 +3,11 @@ import { I18nProvider } from '@lingui/react'
 import type { Decorator, Preview } from '@storybook/react-vite'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
+import { MemoryRouter } from 'react-router-dom'
 import { i18n } from 'src/core/i18n'
 import { AppThemeProvider } from 'src/core/theme'
 import { settingsQueryKey } from 'src/shared/queries'
+import { seedPageData } from 'src/shared/story-fixtures'
 import type { AppLocale, Settings, ThemePreference } from 'src/shared/types'
 
 // Stories render through the same providers as the app: lingui for copy,
@@ -46,7 +48,7 @@ const useCatalog = (locale: AppLocale): boolean => {
  * query cache makes the toolbar control those too; without it the labels switch
  * to English while the figures stay Persian.
  */
-const seededClient = (locale: AppLocale, themePreference: ThemePreference): QueryClient => {
+const seededClient = (locale: AppLocale, themePreference: ThemePreference, pageData?: 'full' | 'empty'): QueryClient => {
   // `staleTime: Infinity` matters: with the app's default of 0 the query
   // refetches from IndexedDB the moment it mounts and overwrites the seed,
   // leaving English labels beside Persian numerals.
@@ -58,26 +60,40 @@ const seededClient = (locale: AppLocale, themePreference: ThemePreference): Quer
     profile: { fullName: 'رها موسوی', nationalId: '', phone: '', address: '' },
   }
   client.setQueryData(settingsQueryKey, settings)
+
+  // Page stories additionally seed every query their page issues, so a whole
+  // page renders from the cache with no IndexedDB involved.
+  if (pageData) {
+    seedPageData(client, { empty: pageData === 'empty' })
+  }
+
   return client
 }
 
 const withProviders: Decorator = (Story, context) => {
   const locale = (context.globals.locale ?? 'fa-IR') as AppLocale
   const themePreference = (context.globals.theme ?? 'light') as ThemePreference
+  const page = context.parameters.page as { data?: 'full' | 'empty'; route?: string } | undefined
   const ready = useCatalog(locale)
 
   if (!ready) {
     return <div />
   }
 
+  // Pages call `useNavigate`, so they need a router. It is only added when a
+  // story asks for it — AppShell supplies its own, and nesting two routers
+  // would make the inner one unreachable.
+  const content = (
+    <div style={{ padding: 24, minHeight: '100vh' }}>
+      <Story />
+    </div>
+  )
+
   return (
     <I18nProvider i18n={i18n}>
-      <QueryClientProvider client={seededClient(locale, themePreference)}>
+      <QueryClientProvider client={seededClient(locale, themePreference, page?.data)}>
         <AppThemeProvider locale={locale} themePreference={themePreference}>
-          {/* Matches the app's page surface so glass cards are visible. */}
-          <div style={{ padding: 24, minHeight: '100vh', background: 'var(--sb-surface, transparent)' }}>
-            <Story />
-          </div>
+          {page ? <MemoryRouter initialEntries={[page.route ?? '/']}>{content}</MemoryRouter> : content}
         </AppThemeProvider>
       </QueryClientProvider>
     </I18nProvider>

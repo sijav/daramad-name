@@ -214,6 +214,15 @@ export default tseslint.config(
     },
   },
   {
+    // Story fixtures are sample data for Storybook only — never bundled into
+    // the app, and not user-facing copy. Same reasoning as the stories that
+    // consume them.
+    files: ['src/shared/story-fixtures/**'],
+    rules: {
+      'lingui/no-unlocalized-strings': 'off',
+    },
+  },
+  {
     // Tests assert on concrete rendered output, so their literals are expected
     // values rather than user-facing copy.
     files: ['**/*.test.{ts,tsx}'],

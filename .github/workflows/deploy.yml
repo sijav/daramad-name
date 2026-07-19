@@ -50,6 +50,12 @@ jobs:
       - name: Add SPA fallback
         run: cp dist/index.html dist/404.html
 
+      # Storybook ships alongside the app at /storybook/, so the component
+      # library is reviewable from the same URL as the demo. Built into dist
+      # after the SPA fallback, so the fallback copy does not include it.
+      - name: Build Storybook into the site
+        run: npm run build-storybook -- --output-dir dist/storybook --quiet
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

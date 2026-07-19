@@ -66,6 +66,7 @@ export const Default: Story = {
     sort: { field: 'occurredAt', direction: 'desc' },
     calendar: 'JALALI',
     onSortChange: () => {},
+    onView: () => {},
     onEdit: () => {},
     onDelete: () => {},
   },

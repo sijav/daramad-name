@@ -13,28 +13,44 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#. placeholder {0}: toPersianDigits(activeMonths)
+#. placeholder {0}: digits(activeMonths)
 #: src/pages/charts/ChartsPage.tsx
+#: src/pages/dashboard/DashboardPage.tsx
 msgid "{0} of 12"
 msgstr "{0} of 12"
+
+#. placeholder {0}: digits(paged.matchedCount)
+#: src/pages/ledger/LedgerPage.tsx
+msgid "{0} receipts in the selected range"
+msgstr "{0} receipts in the selected range"
 
 #. placeholder {0}: data.receipts.length
 #: src/pages/settings/SettingsPage.tsx
 msgid "{0} receipts restored."
 msgstr "{0} receipts restored."
 
-#. placeholder {0}: formatDateLong(range.from, calendar, i18n)
-#. placeholder {1}: formatDateLong(range.to, calendar, i18n)
+#. placeholder {0}: digits(paged.matchedCount)
+#: src/pages/ledger/LedgerPage.tsx
+msgid "{0} results based on the active filters"
+msgstr "{0} results based on the active filters"
+
+#. placeholder {0}: dateLong(range.from)
+#. placeholder {1}: dateLong(range.to)
 #: src/pages/report/ReportPage.tsx
 msgid "{0} to {1}"
 msgstr "{0} to {1}"
 
-#. placeholder {0}: toPersianDigits(String(Math.round((item.value / total(shares)) * 100)))
+#. placeholder {0}: digits(Math.round((item.value / total(shares)) * 100))
 #: src/pages/charts/ClientShareChart.tsx
 msgid "{0}%"
 msgstr "{0}%"
 
-#. placeholder {0}: toPersianDigits(shareData.insight.percentage)
+#. placeholder {0}: digits(shareData.insight.percentage)
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "{0}% of your income comes from a single client."
+msgstr "{0}% of your income comes from a single client."
+
+#. placeholder {0}: digits(shareData.insight.percentage)
 #. placeholder {1}: shareData.insight.clientName
 #: src/pages/charts/ChartsPage.tsx
 msgid "{0}% of your income comes from one client (“{1}”). If they leave, a large part of your income goes with them."
@@ -56,9 +72,19 @@ msgstr "A non-Toman currency needs an exchange rate."
 msgid "A one-year picture of your income"
 msgstr "A one-year picture of your income"
 
+#. placeholder {0}: digits(year)
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "A summary of the income and receipts recorded in {0}"
+msgstr "A summary of the income and receipts recorded in {0}"
+
 #: src/shared/constants/labels.ts
 msgid "Aban"
 msgstr "Aban"
+
+#: src/pages/ledger/LedgerTable.tsx
+#: src/shared/row-actions-menu/RowActionsMenu.tsx
+msgid "Actions"
+msgstr "Actions"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Add sample data"
@@ -69,11 +95,11 @@ msgstr "Add sample data"
 msgid "Address"
 msgstr "Address"
 
-#: src/pages/ledger/LedgerFilters.tsx
+#: src/pages/ledger/LedgerFilterPopover.tsx
 msgid "All channels"
 msgstr "All channels"
 
-#: src/pages/ledger/LedgerFilters.tsx
+#: src/pages/ledger/LedgerFilterPopover.tsx
 msgid "All clients"
 msgstr "All clients"
 
@@ -93,6 +119,10 @@ msgstr "Amount"
 msgid "Amount received"
 msgstr "Amount received"
 
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "An income report ready to present"
+msgstr "An income report ready to present"
+
 #: src/shared/queries/seedSampleData.mutation.ts
 msgid "Analytics dashboard"
 msgstr "Analytics dashboard"
@@ -100,6 +130,10 @@ msgstr "Analytics dashboard"
 #: src/shared/queries/seedSampleData.mutation.ts
 msgid "App icon set"
 msgstr "App icon set"
+
+#: src/pages/ledger/LedgerFilterPopover.tsx
+msgid "Apply filters"
+msgstr "Apply filters"
 
 #: src/shared/constants/labels.ts
 msgid "April"
@@ -142,6 +176,10 @@ msgstr "Bahman"
 msgid "Banner and social posts"
 msgstr "Banner and social posts"
 
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "Based on the income recorded this year"
+msgstr "Based on the income recorded this year"
+
 #: src/pages/settings/SettingsPage.tsx
 msgid "Calendar"
 msgstr "Calendar"
@@ -154,15 +192,20 @@ msgstr "Campaign landing page"
 msgid "Cancel"
 msgstr "Cancel"
 
+#: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
+msgid "Captured when the receipt was recorded. Later rate changes do not affect this amount."
+msgstr "Captured when the receipt was recorded. Later rate changes do not affect this amount."
+
 #: src/shared/constants/labels.ts
 msgid "Card to card"
 msgstr "Card to card"
 
-#: src/pages/ledger/LedgerPage.tsx
+#: src/shared/ledger-state/LedgerState.tsx
 msgid "Change the date range or client, or clear the filters to see every receipt."
 msgstr "Change the date range or client, or clear the filters to see every receipt."
 
-#: src/pages/ledger/LedgerFilters.tsx
+#: src/pages/ledger/LedgerFilterPopover.tsx
+#: src/pages/ledger/LedgerPage.tsx
 #: src/pages/ledger/LedgerTable.tsx
 msgid "Channel"
 msgstr "Channel"
@@ -172,16 +215,21 @@ msgstr "Channel"
 msgid "Charts"
 msgstr "Charts"
 
-#: src/pages/ledger/LedgerFilters.tsx
-#: src/pages/ledger/LedgerPage.tsx
+#: src/shared/ledger-state/LedgerState.tsx
 msgid "Clear filters"
 msgstr "Clear filters"
 
-#: src/pages/ledger/LedgerFilters.tsx
+#: src/shared/search-field/SearchField.tsx
+msgid "Clear search"
+msgstr "Clear search"
+
+#: src/pages/ledger/LedgerFilterPopover.tsx
+#: src/pages/ledger/LedgerPage.tsx
 #: src/pages/ledger/LedgerTable.tsx
 msgid "Client"
 msgstr "Client"
 
+#: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
 #: src/shared/receipt-form/ReceiptForm.tsx
 msgid "Client / project"
 msgstr "Client / project"
@@ -189,6 +237,22 @@ msgstr "Client / project"
 #: src/pages/charts/ChartsPage.tsx
 msgid "Client share"
 msgstr "Client share"
+
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "Client share of income"
+msgstr "Client share of income"
+
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "Clients"
+msgstr "Clients"
+
+#: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
+msgid "Close"
+msgstr "Close"
+
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "Create report"
+msgstr "Create report"
 
 #: src/shared/queries/seedSampleData.mutation.ts
 msgid "Dadepardaz Co."
@@ -202,6 +266,7 @@ msgstr "Daramadname"
 msgid "Date"
 msgstr "Date"
 
+#: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
 #: src/shared/receipt-form/ReceiptForm.tsx
 msgid "Date received"
 msgstr "Date received"
@@ -210,7 +275,8 @@ msgstr "Date received"
 msgid "December"
 msgstr "December"
 
-#: src/pages/ledger/LedgerTable.tsx
+#: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
+#: src/shared/row-actions-menu/RowActionsMenu.tsx
 msgid "Delete"
 msgstr "Delete"
 
@@ -254,7 +320,8 @@ msgstr "Download PDF"
 msgid "e.g. deposit for design phase one"
 msgstr "e.g. deposit for design phase one"
 
-#: src/pages/ledger/LedgerTable.tsx
+#: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
+#: src/shared/row-actions-menu/RowActionsMenu.tsx
 msgid "Edit"
 msgstr "Edit"
 
@@ -292,12 +359,16 @@ msgid "Every date and monthly total is shown in this calendar. Your data itself 
 msgstr "Every date and monthly total is shown in this calendar. Your data itself does not change."
 
 #: src/pages/ledger/LedgerPage.tsx
-msgid "Every receipt you have, with an exact total"
-msgstr "Every receipt you have, with an exact total"
+#~ msgid "Every receipt you have, with an exact total"
+#~ msgstr "Every receipt you have, with an exact total"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Every receipt, client and personal detail is erased permanently. Without a backup there is no way back."
 msgstr "Every receipt, client and personal detail is erased permanently. Without a backup there is no way back."
+
+#: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
+msgid "Exchange rate at the time"
+msgstr "Exchange rate at the time"
 
 #: src/shared/receipt-form/ReceiptForm.tsx
 msgid "Exchange rate on that date (Toman)"
@@ -311,13 +382,21 @@ msgstr "Farvardin"
 msgid "February"
 msgstr "February"
 
+#: src/shared/filter-button/FilterButton.tsx
+msgid "Filters"
+msgstr "Filters"
+
 #: src/shared/queries/seedSampleData.mutation.ts
 msgid "Final revisions"
 msgstr "Final revisions"
 
-#: src/pages/ledger/LedgerFilters.tsx
+#: src/pages/ledger/LedgerFilterPopover.tsx
 msgid "From date"
 msgstr "From date"
+
+#: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
+msgid "Frozen"
+msgstr "Frozen"
 
 #: src/pages/settings/SettingsPage.tsx
 #: src/shared/pdf/buildIncomeReport.ts
@@ -336,7 +415,11 @@ msgstr "Gregorian"
 msgid "Homa Cafe"
 msgstr "Homa Cafe"
 
-#. placeholder {0}: toPersianDigits(year)
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "Income by month"
+msgstr "Income by month"
+
+#. placeholder {0}: digits(year)
 #: src/pages/charts/ChartsPage.tsx
 msgid "Income for {0}"
 msgstr "Income for {0}"
@@ -349,6 +432,10 @@ msgstr "Income ledger"
 #: src/pages/charts/ChartsPage.tsx
 msgid "Income over 12 months"
 msgstr "Income over 12 months"
+
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "Income overview"
+msgstr "Income overview"
 
 #: src/pages/report/ReportPage.tsx
 #: src/shared/constants/navigation.tsx
@@ -379,6 +466,10 @@ msgstr "Khordad"
 msgid "Language"
 msgstr "Language"
 
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "Latest receipts"
+msgstr "Latest receipts"
+
 #: src/pages/quick-entry/QuickEntryPage.tsx
 msgid "Log it in under 15 seconds"
 msgstr "Log it in under 15 seconds"
@@ -408,6 +499,7 @@ msgid "Month-by-month breakdown"
 msgstr "Month-by-month breakdown"
 
 #: src/pages/charts/ChartsPage.tsx
+#: src/pages/dashboard/DashboardPage.tsx
 #: src/pages/ledger/LedgerPage.tsx
 msgid "Monthly average"
 msgstr "Monthly average"
@@ -417,6 +509,7 @@ msgid "Monthly income"
 msgstr "Monthly income"
 
 #: src/pages/charts/ChartsPage.tsx
+#: src/pages/dashboard/DashboardPage.tsx
 msgid "Months with income"
 msgstr "Months with income"
 
@@ -441,17 +534,29 @@ msgstr "No client"
 msgid "No data for this year yet"
 msgstr "No data for this year yet"
 
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "No income recorded for this year yet"
+msgstr "No income recorded for this year yet"
+
 #: src/pages/report/ReportPage.tsx
 msgid "No receipts recorded for this year"
 msgstr "No receipts recorded for this year"
+
+#: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
+msgid "Note"
+msgstr "Note"
 
 #: src/shared/receipt-form/ReceiptForm.tsx
 msgid "Note (optional)"
 msgstr "Note (optional)"
 
-#: src/pages/ledger/LedgerPage.tsx
+#: src/shared/ledger-state/LedgerState.tsx
 msgid "Nothing matched these filters"
 msgstr "Nothing matched these filters"
+
+#: src/pages/dashboard/RecentReceipts.tsx
+msgid "Nothing recorded in this range yet."
+msgstr "Nothing recorded in this range yet."
 
 #: src/shared/constants/labels.ts
 msgid "November"
@@ -473,6 +578,10 @@ msgstr "One of the clients in the file is incomplete and cannot be restored."
 msgid "One of the receipts in the file is incomplete and cannot be restored."
 msgstr "One of the receipts in the file is incomplete and cannot be restored."
 
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "Open ledger"
+msgstr "Open ledger"
+
 #: src/shared/layouts/AppShell.tsx
 msgid "Open menu"
 msgstr "Open menu"
@@ -482,6 +591,7 @@ msgid "Ordibehesht"
 msgstr "Ordibehesht"
 
 #: src/pages/ledger/LedgerTable.tsx
+#: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
 msgid "Original amount"
 msgstr "Original amount"
 
@@ -489,6 +599,15 @@ msgstr "Original amount"
 msgid "Other"
 msgstr "Other"
 
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "Others"
+msgstr "Others"
+
+#: src/shared/constants/navigation.tsx
+msgid "Overview"
+msgstr "Overview"
+
+#: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
 #: src/shared/receipt-form/ReceiptForm.tsx
 msgid "Payment channel"
 msgstr "Payment channel"
@@ -511,6 +630,10 @@ msgstr "Phase two settlement"
 msgid "Phone"
 msgstr "Phone"
 
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "Produce an official income document for any range, in Persian or English."
+msgstr "Produce an official income document for any range, in Persian or English."
+
 #: src/shared/queries/seedSampleData.mutation.ts
 msgid "Product page redesign"
 msgstr "Product page redesign"
@@ -518,6 +641,14 @@ msgstr "Product page redesign"
 #: src/shared/constants/navigation.tsx
 msgid "Quick entry"
 msgstr "Quick entry"
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "Range"
+msgstr "Range"
+
+#: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
+msgid "Receipt details"
+msgstr "Receipt details"
 
 #: src/pages/quick-entry/QuickEntryPage.tsx
 msgid "Receipt saved."
@@ -532,14 +663,25 @@ msgstr "Receipts"
 msgid "Receipts ledger and income report"
 msgstr "Receipts ledger and income report"
 
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "Record a few receipts and this page will show your year at a glance — month by month, and which clients it came from."
+msgstr "Record a few receipts and this page will show your year at a glance — month by month, and which clients it came from."
+
 #: src/pages/charts/ChartsPage.tsx
+#: src/pages/dashboard/DashboardPage.tsx
+#: src/pages/ledger/LedgerPage.tsx
 #: src/pages/quick-entry/QuickEntryPage.tsx
 msgid "Record a receipt"
 msgstr "Record a receipt"
 
-#: src/pages/ledger/LedgerPage.tsx
+#: src/shared/ledger-state/LedgerState.tsx
 msgid "Record your first receipt"
 msgstr "Record your first receipt"
+
+#. placeholder {0}: digits(year)
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "Report range: {0}"
+msgstr "Report range: {0}"
 
 #: src/pages/report/ReportPage.tsx
 msgid "Report year"
@@ -549,6 +691,10 @@ msgstr "Report year"
 msgid "Reporting period"
 msgstr "Reporting period"
 
+#: src/pages/ledger/LedgerFilterPopover.tsx
+msgid "Reset"
+msgstr "Reset"
+
 #: src/pages/settings/SettingsPage.tsx
 msgid "Restore"
 msgstr "Restore"
@@ -556,6 +702,10 @@ msgstr "Restore"
 #: src/pages/settings/SettingsPage.tsx
 msgid "Restore from file"
 msgstr "Restore from file"
+
+#: src/shared/page-control/PageControl.tsx
+msgid "Rows"
+msgstr "Rows"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Sample data and reset"
@@ -577,6 +727,10 @@ msgstr "Save changes"
 msgid "Save details"
 msgstr "Save details"
 
+#: src/shared/search-field/SearchField.tsx
+msgid "Search by client, note or amount"
+msgstr "Search by client, note or amount"
+
 #: src/shared/pdf/buildIncomeReport.ts
 msgid "Self-recorded freelance income report"
 msgstr "Self-recorded freelance income report"
@@ -593,6 +747,13 @@ msgstr "Settings"
 #: src/shared/constants/labels.ts
 msgid "Shahrivar"
 msgstr "Shahrivar"
+
+#. placeholder {0}: digits(firstRow)
+#. placeholder {1}: digits(lastRow)
+#. placeholder {2}: digits(totalCount)
+#: src/shared/page-control/PageControl.tsx
+msgid "Showing {0}–{1} of {2}"
+msgstr "Showing {0}–{1} of {2}"
 
 #: src/shared/queries/seedSampleData.mutation.ts
 msgid "Small illustration project"
@@ -638,7 +799,11 @@ msgstr "The file is empty or corrupt."
 msgid "The income report is built from the receipts you record. Add a few receipts first, then produce the document here."
 msgstr "The income report is built from the receipts you record. Add a few receipts first, then produce the document here."
 
-#: src/pages/ledger/LedgerPage.tsx
+#: src/shared/ledger-state/LedgerState.tsx
+msgid "The ledger could not be loaded"
+msgstr "The ledger could not be loaded"
+
+#: src/shared/ledger-state/LedgerState.tsx
 msgid "The ledger is where every payment you have received adds up in one place — exactly what you need when it is time to produce a report."
 msgstr "The ledger is where every payment you have received adds up in one place — exactly what you need when it is time to produce a report."
 
@@ -690,7 +855,7 @@ msgstr "Tir"
 msgid "to"
 msgstr "to"
 
-#: src/pages/ledger/LedgerFilters.tsx
+#: src/pages/ledger/LedgerFilterPopover.tsx
 msgid "To date"
 msgstr "To date"
 
@@ -704,25 +869,32 @@ msgid "Toman"
 msgstr "Toman"
 
 #: src/pages/ledger/LedgerTable.tsx
+#: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
 #: src/shared/receipt-form/ReceiptForm.tsx
 msgid "Toman equivalent"
 msgstr "Toman equivalent"
+
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "Top clients"
+msgstr "Top clients"
 
 #: src/pages/ledger/LedgerPage.tsx
 msgid "Total"
 msgstr "Total"
 
-#. placeholder {0}: toPersianDigits(receipts.length)
+#. placeholder {0}: digits(receipts.length)
 #: src/pages/ledger/LedgerTable.tsx
 msgid "Total ({0} receipts)"
 msgstr "Total ({0} receipts)"
 
+#: src/pages/dashboard/DashboardPage.tsx
 #: src/pages/report/ReportPage.tsx
 #: src/shared/pdf/buildIncomeReport.ts
 msgid "Total income"
 msgstr "Total income"
 
 #: src/shared/error-state/AppErrorFallback.tsx
+#: src/shared/ledger-state/LedgerState.tsx
 msgid "Try again"
 msgstr "Try again"
 
@@ -734,6 +906,7 @@ msgstr "Type “{confirmationWord}” to confirm"
 msgid "Type or pick a client name"
 msgstr "Type or pick a client name"
 
+#: src/pages/ledger/LedgerPage.tsx
 #: src/shared/queries/getClientShares.query.ts
 msgid "Unknown"
 msgstr "Unknown"
@@ -750,6 +923,10 @@ msgstr "UX consulting"
 msgid "Vertical axis figures are in millions of Toman."
 msgstr "Vertical axis figures are in millions of Toman."
 
+#: src/shared/row-actions-menu/RowActionsMenu.tsx
+msgid "View details"
+msgstr "View details"
+
 #: src/shared/queries/seedSampleData.mutation.ts
 msgid "Visual identity redesign"
 msgstr "Visual identity redesign"
@@ -762,7 +939,7 @@ msgstr "Wire transfer"
 msgid "Year"
 msgstr "Year"
 
-#: src/pages/ledger/LedgerPage.tsx
+#: src/shared/ledger-state/LedgerState.tsx
 msgid "You have not recorded any receipts yet"
 msgstr "You have not recorded any receipts yet"
 
@@ -773,6 +950,10 @@ msgstr "Your current data is replaced entirely by the contents of this file. If 
 #: src/shared/error-state/AppErrorFallback.tsx
 msgid "Your data is safe and has not been erased — this error only affects rendering. Try again; if it keeps happening, take a backup from Settings, then close and reopen the page."
 msgstr "Your data is safe and has not been erased — this error only affects rendering. Try again; if it keeps happening, take a backup from Settings, then close and reopen the page."
+
+#: src/shared/ledger-state/LedgerState.tsx
+msgid "Your data is safe and has not been erased. Try again."
+msgstr "Your data is safe and has not been erased. Try again."
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Your data lives only in this browser. If you clear the browser, everything is lost without a backup."

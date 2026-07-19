@@ -42,12 +42,21 @@ export const defaultSettings: Settings = {
   profile: { fullName: '', nationalId: '', phone: '', address: '' },
 }
 
-/** Reads settings, seeding the single row on first run so callers never handle undefined. */
+/**
+ * Reads settings, seeding the single row on first run so callers never handle
+ * undefined.
+ *
+ * The stored row is merged OVER the defaults rather than returned as-is. A row
+ * written by an earlier version has no `locale` field, and returning it raw
+ * hands `undefined` to `Intl.NumberFormat`, which silently falls back to the
+ * system locale — an Iranian user would see Latin digits with no way to tell
+ * why. Merging makes every added setting self-migrating.
+ */
 export const readSettings = async (): Promise<Settings> => {
   const row = await db.settings.get('settings')
   if (row) {
-    const { key: _key, ...settings } = row
-    return settings
+    const { key: _key, ...stored } = row
+    return { ...defaultSettings, ...stored, profile: { ...defaultSettings.profile, ...stored.profile } }
   }
   await db.settings.put({ key: 'settings', ...defaultSettings })
   return defaultSettings

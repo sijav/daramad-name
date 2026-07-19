@@ -1,8 +1,8 @@
 import type { I18n, MessageDescriptor } from '@lingui/core'
 import { msg } from '@lingui/core/macro'
 import type { TDocumentDefinitions } from 'pdfmake/interfaces'
-import type { CalendarSystem, IncomeReport } from 'src/shared/types'
-import { formatDateEnglish, formatDateLong, formatNumberLatin, formatNumberPersian, monthNames, toPersianDigits } from 'src/shared/utils'
+import type { AppLocale, CalendarSystem, IncomeReport } from 'src/shared/types'
+import { formatDateEnglish, formatDateLong, formatNumber, monthNames, toPersianDigits } from 'src/shared/utils'
 
 export type ReportLanguage = 'fa' | 'en'
 
@@ -20,8 +20,10 @@ export const buildIncomeReport = (
   i18n: I18n,
 ): TDocumentDefinitions => {
   const t = resolveLabels(i18n)
-  const money = (value: number) =>
-    language === 'fa' ? `${formatNumberPersian(value)} ${t.toman}` : `${formatNumberLatin(value)} ${t.toman}`
+  // The document's own numbering system, independent of the interface locale:
+  // an English certificate must read «147,750,000» even while the UI is Persian.
+  const numberLocale: AppLocale = language === 'fa' ? 'fa-IR' : 'en-US'
+  const money = (value: number) => `${formatNumber(value, numberLocale)} ${t.toman}`
   const alignment = language === 'fa' ? 'right' : 'left'
 
   // Month names come from the report's own catalog, so the English document

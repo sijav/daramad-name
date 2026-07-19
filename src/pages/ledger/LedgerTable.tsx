@@ -1,21 +1,10 @@
 import { useLingui } from '@lingui/react/macro'
-import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded'
-import EditRoundedIcon from '@mui/icons-material/EditRounded'
-import {
-  IconButton,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableSortLabel,
-  Typography,
-} from '@mui/material'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, Typography } from '@mui/material'
 import { CHANNEL_LABELS, CURRENCY_LABELS } from 'src/shared/constants'
 import { useFormat } from 'src/shared/format'
 import { MoneyText } from 'src/shared/money-text'
+import { RowActionsMenu } from 'src/shared/row-actions-menu'
+import { Tag } from 'src/shared/tag'
 import type { CalendarSystem, LedgerSort, LedgerSortField, LedgerSummary, ReceiptWithClient } from 'src/shared/types'
 import { formatDate } from 'src/shared/utils'
 
@@ -25,6 +14,7 @@ export interface LedgerTableProps {
   sort: LedgerSort
   calendar: CalendarSystem
   onSortChange: (sort: LedgerSort) => void
+  onView: (receipt: ReceiptWithClient) => void
   onEdit: (receipt: ReceiptWithClient) => void
   onDelete: (receipt: ReceiptWithClient) => void
 }
@@ -36,7 +26,7 @@ export interface LedgerTableProps {
  * cannot scroll out of sync with the rows it sums — the brief requires the
  * total to stay visible and to track the active filter.
  */
-export const LedgerTable = ({ receipts, summary, sort, calendar, onSortChange, onEdit, onDelete }: LedgerTableProps) => {
+export const LedgerTable = ({ receipts, summary, sort, calendar, onSortChange, onView, onEdit, onDelete }: LedgerTableProps) => {
   const { t, i18n } = useLingui()
   // `calendar` stays a prop so the component remains presentational and a
   // story can demo either calendar; only the digit style follows the locale.
@@ -49,7 +39,7 @@ export const LedgerTable = ({ receipts, summary, sort, calendar, onSortChange, o
     { field: 'channel', label: t`Channel` },
     { field: null, label: t`Original amount`, numeric: true },
     { field: 'amountToman', label: t`Toman equivalent`, numeric: true },
-    { field: null, label: '' },
+    { field: null, label: t`Actions` },
   ]
 
   const toggleSort = (field: LedgerSortField) =>
@@ -97,7 +87,9 @@ export const LedgerTable = ({ receipts, summary, sort, calendar, onSortChange, o
                 ) : null}
               </TableCell>
 
-              <TableCell align="right">{i18n._(CHANNEL_LABELS[receipt.channel])}</TableCell>
+              <TableCell align="right">
+                <Tag label={i18n._(CHANNEL_LABELS[receipt.channel])} />
+              </TableCell>
 
               <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
                 <MoneyText value={receipt.amountOriginal} currency={receipt.currency} showUnit={false} variant="body2" />{' '}
@@ -111,14 +103,7 @@ export const LedgerTable = ({ receipts, summary, sort, calendar, onSortChange, o
               </TableCell>
 
               <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
-                <Stack direction="row" spacing={0.5}>
-                  <IconButton size="small" onClick={() => onEdit(receipt)} aria-label={t`Edit`}>
-                    <EditRoundedIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton size="small" onClick={() => onDelete(receipt)} aria-label={t`Delete`}>
-                    <DeleteOutlineRoundedIcon fontSize="small" />
-                  </IconButton>
-                </Stack>
+                <RowActionsMenu onView={() => onView(receipt)} onEdit={() => onEdit(receipt)} onDelete={() => onDelete(receipt)} />
               </TableCell>
             </TableRow>
           ))}

@@ -7,14 +7,15 @@ import { Route, Routes } from 'react-router-dom'
 import { i18n, useLocaleSync } from 'src/core/i18n'
 import { queryClient, useSettings } from 'src/core/query'
 import { RtlProvider } from 'src/core/theme'
-import { QuickEntryPage } from 'src/pages/quick-entry'
+import { DashboardPage } from 'src/pages/dashboard'
 import { AppErrorFallback } from 'src/shared/error-state'
 import { AppShell } from 'src/shared/layouts'
 
-// Quick entry is the landing page and stays in the main bundle — it must be
-// instant. The rest are split: the charts page pulls in @mui/x-charts and the
-// report page pulls in pdfmake, and neither should be paid for on first load.
-// Half the demo traffic arrives on a phone, often on a slow connection.
+// The dashboard is the landing page and stays in the main bundle. The rest are
+// split: the report page pulls in pdfmake, and it should not be paid for on
+// first load. Half the demo traffic arrives on a phone, often on a slow
+// connection.
+const QuickEntryPage = lazy(() => import('src/pages/quick-entry').then((m) => ({ default: m.QuickEntryPage })))
 const LedgerPage = lazy(() => import('src/pages/ledger').then((m) => ({ default: m.LedgerPage })))
 const ChartsPage = lazy(() => import('src/pages/charts').then((m) => ({ default: m.ChartsPage })))
 const ReportPage = lazy(() => import('src/pages/report').then((m) => ({ default: m.ReportPage })))
@@ -42,13 +43,14 @@ const LocalisedApp = () => {
             <Suspense fallback={<PageLoader />}>
               <Routes>
                 <Route element={<AppShell />}>
-                  <Route index element={<QuickEntryPage />} />
+                  <Route index element={<DashboardPage />} />
+                  <Route path="quick-entry" element={<QuickEntryPage />} />
                   <Route path="ledger" element={<LedgerPage />} />
                   <Route path="charts" element={<ChartsPage />} />
                   <Route path="report" element={<ReportPage />} />
                   <Route path="settings" element={<SettingsPage />} />
                   {/* Unknown paths fall back to the entry page rather than a dead end. */}
-                  <Route path="*" element={<QuickEntryPage />} />
+                  <Route path="*" element={<DashboardPage />} />
                 </Route>
               </Routes>
             </Suspense>

@@ -1,6 +1,8 @@
 import { TextField, type TextFieldProps } from '@mui/material'
 import { useState, type CSSProperties } from 'react'
-import { formatNumberLatin, parseUserNumber, toEnglishDigits, toPersianDigits } from 'src/shared/utils'
+import { useSettings } from 'src/core/query'
+import type { AppLocale } from 'src/shared/types'
+import { formatNumber, parseUserNumber, toEnglishDigits } from 'src/shared/utils'
 
 export type NumberFieldProps = Omit<TextFieldProps, 'value' | 'onChange' | 'type'> & {
   value: number | null
@@ -26,9 +28,10 @@ export type NumberFieldProps = Omit<TextFieldProps, 'value' | 'onChange' | 'type
  * reformatting mid-keystroke.
  */
 export const NumberField = ({ value, onValueChange, decimals = 0, grouped = true, ...props }: NumberFieldProps) => {
+  const { locale } = useSettings()
   // Non-null only while the user is editing.
   const [draft, setDraft] = useState<string | null>(null)
-  const text = draft ?? display(value, decimals, grouped)
+  const text = draft ?? display(value, locale, decimals, grouped)
 
   const handleChange = (raw: string) => {
     if (raw === '') {
@@ -42,7 +45,7 @@ export const NumberField = ({ value, onValueChange, decimals = 0, grouped = true
     const normalised = toEnglishDigits(raw).replace(/[^\d.-]/g, '')
     const parsed = parseUserNumber(normalised)
 
-    setDraft(toPersianDigits(grouped && parsed !== null ? formatNumberLatin(parsed, countDecimals(normalised, decimals)) : normalised))
+    setDraft(grouped && parsed !== null ? formatNumber(parsed, locale, countDecimals(normalised, decimals)) : normalised)
     onValueChange(parsed)
   }
 
@@ -52,7 +55,7 @@ export const NumberField = ({ value, onValueChange, decimals = 0, grouped = true
       value={text}
       onChange={(event) => handleChange(event.target.value)}
       onFocus={(event) => {
-        setDraft(display(value, decimals, grouped))
+        setDraft(display(value, locale, decimals, grouped))
         props.onFocus?.(event)
       }}
       onBlur={(event) => {
@@ -79,11 +82,11 @@ export const NumberField = ({ value, onValueChange, decimals = 0, grouped = true
   )
 }
 
-const display = (value: number | null, decimals: number, grouped: boolean): string => {
+const display = (value: number | null, locale: AppLocale, decimals: number, grouped: boolean): string => {
   if (value === null) {
     return ''
   }
-  return toPersianDigits(grouped ? formatNumberLatin(value, decimals) : value.toFixed(decimals))
+  return grouped ? formatNumber(value, locale, decimals) : value.toFixed(decimals)
 }
 
 /** Preserves the decimals the user has typed so far, so «۱۲.» does not snap to «۱۲». */

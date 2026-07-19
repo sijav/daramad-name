@@ -34,11 +34,13 @@ const RAIL_WIDTH = 248
 export const AppShell = () => {
   const { t, i18n } = useLingui()
   const theme = useTheme()
-  // The rail follows reading order: trailing edge in RTL, leading edge in LTR.
-  // Hardcoding `right` leaves it overlapping the content once the user switches
-  // to English.
-  const isRtl = theme.direction === 'rtl'
-  const railAnchor = isRtl ? 'right' : 'left'
+  // The rail is anchored `left` in BOTH directions on purpose.
+  //
+  // The stylis RTL plugin rewrites `left`/`right` in the generated CSS, so a
+  // Drawer with anchor="left" already lands on the visual right in Persian.
+  // Swapping the anchor ourselves double-flips it and puts the rail on the
+  // wrong side — which is exactly what a manual swap did here before.
+  const railAnchor = 'left' as const
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'))
   const [drawerOpen, setDrawerOpen] = useState(false)
   const navigate = useNavigate()
@@ -121,7 +123,8 @@ export const AppShell = () => {
               width: RAIL_WIDTH,
               boxSizing: 'border-box',
               border: 0,
-              [isRtl ? 'borderLeft' : 'borderRight']: `1px solid ${theme.palette.outlineVariant}`,
+              // Also flipped by the RTL plugin, so it is written once for LTR.
+              borderRight: `1px solid ${theme.palette.outlineVariant}`,
               backgroundColor: 'transparent',
               backdropFilter: 'none',
             },

@@ -1,10 +1,24 @@
-import { currencyDecimals, type Currency } from 'src/shared/types'
-import { groupThousands, toPersianDigits } from './digits'
+import { currencyDecimals, type AppLocale, type Currency } from 'src/shared/types'
 
-// Number formatting only. The «تومان» unit is a translatable label and lives in
-// the i18n catalogs — components render it with `<Trans>`, and the PDF resolves
-// it through its own i18n instance. Keeping this module free of UI strings also
-// keeps it directly unit-testable without an i18n context.
+// Number formatting is delegated to `Intl.NumberFormat`, which knows each
+// locale's own conventions: fa-IR renders «۱۴۷٬۷۵۰٬۰۰۰» with the Arabic
+// thousands separator (U+066C) and «٫» for decimals, en-US renders
+// «147,750,000». Hand-rolled grouping produced Latin commas with Persian
+// digits, which is a mix no Persian reader actually writes.
+//
+// Formatters are cached because constructing one is comparatively expensive and
+// the ledger builds thousands of strings while scrolling.
+const formatterCache = new Map<string, Intl.NumberFormat>()
+
+const formatter = (locale: AppLocale, decimals: number): Intl.NumberFormat => {
+  const key = `${locale}:${decimals}`
+  let cached = formatterCache.get(key)
+  if (!cached) {
+    cached = new Intl.NumberFormat(locale, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
+    formatterCache.set(key, cached)
+  }
+  return cached
+}
 
 /**
  * The single place toman is computed. Rounded to a whole number because toman
@@ -21,20 +35,9 @@ export const computeToman = (amountOriginal: number, currency: Currency, rate: n
   return Math.round(amountOriginal * rate)
 }
 
-/** Formats a number with grouping and the right decimal count, in Latin digits. */
-export const formatNumberLatin = (value: number, decimals = 0): string => {
-  const fixed = Math.abs(value).toFixed(decimals)
-  const [whole, fraction] = fixed.split('.')
-  const grouped = groupThousands(whole)
-  const sign = value < 0 ? '-' : ''
-  return fraction ? `${sign}${grouped}.${fraction}` : `${sign}${grouped}`
-}
+/** Formats a number in the given locale's numbering system and grouping. */
+export const formatNumber = (value: number, locale: AppLocale, decimals = 0): string => formatter(locale, decimals).format(value)
 
-/** Formats a number with grouping, in Persian digits. */
-export const formatNumberPersian = (value: number, decimals = 0): string => toPersianDigits(formatNumberLatin(value, decimals))
-
-/** Formats an amount in its own currency's decimal count, without a unit label. */
-export const formatAmount = (value: number, currency: Currency, persian = true): string => {
-  const decimals = currencyDecimals[currency]
-  return persian ? formatNumberPersian(value, decimals) : formatNumberLatin(value, decimals)
-}
+/** Formats an amount with its currency's decimal count, without a unit label. */
+export const formatAmount = (value: number, currency: Currency, locale: AppLocale): string =>
+  formatNumber(value, locale, currencyDecimals[currency])

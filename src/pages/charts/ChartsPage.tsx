@@ -77,7 +77,7 @@ export const ChartsPage = () => {
             title={t`No data for this year yet`}
             description={t`Once you record a few receipts, this shows how your income rose and fell month by month, and how much of it depends on a single client.`}
             actionLabel={t`Record a receipt`}
-            onAction={() => navigate('/')}
+            onAction={() => navigate('/quick-entry')}
           />
         </GlassCard>
       ) : (

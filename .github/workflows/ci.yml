@@ -30,6 +30,9 @@ jobs:
       - name: Typecheck
         run: yarn lint:tsc
 
+      - name: Test
+        run: yarn test
+
       - name: Build
         run: yarn build
 

@@ -50,6 +50,27 @@ export default tseslint.config(
         'atob',
         'Blob',
       ],
+      // Every user-facing string must go through lingui. The `t` and `msg`
+      // macros are tagged template literals and `<Trans>` wraps JSX text, so
+      // anything Persian left in a plain string literal or bare JSX text has
+      // escaped translation. Comments are not AST literals and are unaffected.
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Literal[value=/[\\u0600-\\u06FF]/]',
+          message: 'Persian string literal must go through lingui — use the t`` macro (or msg`` outside components).',
+        },
+        {
+          // Any Trans ANCESTOR counts, not just a direct parent — nesting an
+          // inline element inside <Trans> (a link, <strong>) is idiomatic lingui.
+          selector: "JSXText[value=/[\\u0600-\\u06FF]/]:not(JSXElement[openingElement.name.name='Trans'] JSXText)",
+          message: 'Persian JSX text must be wrapped in <Trans>…</Trans>.',
+        },
+        {
+          selector: 'TemplateLiteral[quasis.0.value.raw=/[\\u0600-\\u06FF]/]:not(TaggedTemplateExpression > TemplateLiteral)',
+          message: 'Persian template literal must be tagged with the t`` or msg`` macro.',
+        },
+      ],
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }],
       'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
       'no-restricted-imports': [
@@ -74,7 +95,7 @@ export default tseslint.config(
                 'src/core/*/*',
               ],
               message:
-                'Cross-module imports must target the folder barrel (index.ts), e.g. `src/shared/score-gauge` — not a file inside it. Exceptions: types/*, layouts/*, utils/*.',
+                'Cross-module imports must target the folder barrel (index.ts), e.g. `src/shared/money-text` — not a file inside it. Exceptions: types/*, layouts/*, utils/*.',
             },
           ],
           paths: [
@@ -97,11 +118,33 @@ export default tseslint.config(
     },
   },
   {
-    // Stories are exempt from the barrel rules.
+    // Stories are exempt from the barrel rules. They are also exempt from the
+    // lingui rule: story args are plain objects evaluated outside any React
+    // context, and a story exists to show a concrete rendering — a message id
+    // resolved through a catalog would defeat the point.
     files: ['**/*.stories.{ts,tsx}'],
     rules: {
       'no-restricted-imports': 'off',
+      'no-restricted-syntax': 'off',
       'react-refresh/only-export-components': 'off',
+    },
+  },
+  {
+    // Tests assert on concrete rendered output, so their Persian literals are
+    // expected values, not user-facing copy.
+    files: ['**/*.test.{ts,tsx}'],
+    rules: {
+      'no-restricted-syntax': 'off',
+    },
+  },
+  {
+    // `digits.ts` holds the Persian and Arabic-Indic codepoint tables that the
+    // normalisation algorithm maps between. These are character data, not copy;
+    // routing them through a translation catalog would be meaningless and would
+    // break the conversion.
+    files: ['src/shared/utils/digits.ts'],
+    rules: {
+      'no-restricted-syntax': 'off',
     },
   },
   prettierRecommended,

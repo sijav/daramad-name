@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/react/macro'
 import LockRoundedIcon from '@mui/icons-material/LockRounded'
 import { Stack, Typography } from '@mui/material'
 
@@ -10,7 +11,7 @@ export const PrivacyFooter = () => (
   <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifyContent: 'center', mt: 6, pt: 3, opacity: 0.75 }}>
     <LockRoundedIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
     <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'center' }}>
-      همه‌ی داده‌ها فقط روی مرورگر خودت می‌مونه و هیچ‌جا ارسال نمی‌شه.
+      <Trans>همه‌ی داده‌ها فقط روی مرورگر خودت می‌مونه و هیچ‌جا ارسال نمی‌شه.</Trans>
     </Typography>
   </Stack>
 )

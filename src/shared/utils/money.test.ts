@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { parseUserNumber, toEnglishDigits, toPersianDigits } from './digits'
-import { computeToman, formatToman } from './money'
+import { computeToman, formatNumberPersian } from './money'
 
 // These cover the rules that would be silently, permanently wrong if broken —
 // a wrong total in a financial tool is worse than a crash, because nobody notices.
@@ -32,13 +32,13 @@ describe('computeToman — the freeze rule', () => {
   })
 })
 
-describe('formatToman', () => {
+describe('formatNumberPersian', () => {
   it('groups by three and uses Persian digits', () => {
-    expect(formatToman(12_500_000)).toBe('۱۲,۵۰۰,۰۰۰ تومان')
+    expect(formatNumberPersian(12_500_000)).toBe('۱۲,۵۰۰,۰۰۰')
   })
 
   it('renders an empty month as ۰ rather than blank', () => {
-    expect(formatToman(0)).toBe('۰ تومان')
+    expect(formatNumberPersian(0)).toBe('۰')
   })
 })
 

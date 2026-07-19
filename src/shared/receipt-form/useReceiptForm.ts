@@ -1,3 +1,4 @@
+import { useLingui } from '@lingui/react/macro'
 import { useMemo, useState } from 'react'
 import type { Channel, Currency, ReceiptWithClient } from 'src/shared/types'
 import { computeToman, isToday } from 'src/shared/utils'
@@ -52,6 +53,7 @@ const fromReceipt = (receipt: ReceiptWithClient): ReceiptFormState => ({
  * but it can stop the user from assuming the default is right.
  */
 export const useReceiptForm = (initial?: ReceiptWithClient) => {
+  const { t } = useLingui()
   const [state, setState] = useState<ReceiptFormState>(() => (initial ? fromReceipt(initial) : emptyState()))
   const [submitted, setSubmitted] = useState(false)
 
@@ -64,13 +66,13 @@ export const useReceiptForm = (initial?: ReceiptWithClient) => {
   const errors = useMemo<ReceiptFormErrors>(() => {
     const next: ReceiptFormErrors = {}
     if (state.amountOriginal === null || state.amountOriginal <= 0) {
-      next.amountOriginal = 'مبلغ را وارد کن؛ باید بزرگ‌تر از صفر باشه.'
+      next.amountOriginal = t`مبلغ را وارد کن؛ باید بزرگ‌تر از صفر باشه.`
     }
     if (needsRate && (state.rate === null || state.rate <= 0)) {
-      next.rate = 'برای ارز غیرتومانی، نرخ تبدیل لازمه.'
+      next.rate = t`برای ارز غیرتومانی، نرخ تبدیل لازمه.`
     }
     return next
-  }, [state.amountOriginal, state.rate, needsRate])
+  }, [state.amountOriginal, state.rate, needsRate, t])
 
   const tomanPreview = computeToman(state.amountOriginal ?? 0, state.currency, state.rate)
 

@@ -1,8 +1,10 @@
 import { currencyDecimals, type Currency } from 'src/shared/types'
 import { groupThousands, toPersianDigits } from './digits'
 
-// Money formatting. Rule 3: «۱۲٬۵۰۰٬۰۰۰ تومان» — Persian digits, three-digit
-// grouping. Toman has no decimals; USD and USDT have two.
+// Number formatting only. The «تومان» unit is a translatable label and lives in
+// the i18n catalogs — components render it with `<Trans>`, and the PDF resolves
+// it through its own i18n instance. Keeping this module free of UI strings also
+// keeps it directly unit-testable without an i18n context.
 
 /**
  * The single place toman is computed. Rounded to a whole number because toman
@@ -31,14 +33,8 @@ export const formatNumberLatin = (value: number, decimals = 0): string => {
 /** Formats a number with grouping, in Persian digits. */
 export const formatNumberPersian = (value: number, decimals = 0): string => toPersianDigits(formatNumberLatin(value, decimals))
 
-/** «۱۲٬۵۰۰٬۰۰۰ تومان» — the canonical money rendering for the Persian UI. */
-export const formatToman = (value: number): string => `${formatNumberPersian(value)} تومان`
-
-/** Formats an amount in its own currency, with that currency's decimal count. */
+/** Formats an amount in its own currency's decimal count, without a unit label. */
 export const formatAmount = (value: number, currency: Currency, persian = true): string => {
   const decimals = currencyDecimals[currency]
   return persian ? formatNumberPersian(value, decimals) : formatNumberLatin(value, decimals)
 }
-
-/** Latin-digit toman, for the English report where Persian digits would be unreadable. */
-export const formatTomanLatin = (value: number): string => `${formatNumberLatin(value)} Toman`

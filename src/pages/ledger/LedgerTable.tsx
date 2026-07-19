@@ -1,3 +1,4 @@
+import { useLingui } from '@lingui/react/macro'
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded'
 import EditRoundedIcon from '@mui/icons-material/EditRounded'
 import {
@@ -27,15 +28,6 @@ export interface LedgerTableProps {
   onDelete: (receipt: ReceiptWithClient) => void
 }
 
-const COLUMNS: { field: LedgerSortField | null; label: string; numeric?: boolean }[] = [
-  { field: 'occurredAt', label: 'تاریخ' },
-  { field: 'client', label: 'مشتری' },
-  { field: 'channel', label: 'کانال' },
-  { field: null, label: 'مبلغ اصلی', numeric: true },
-  { field: 'amountToman', label: 'معادل تومانی', numeric: true },
-  { field: null, label: '' },
-]
-
 /**
  * Scenario 2's ledger.
  *
@@ -44,6 +36,18 @@ const COLUMNS: { field: LedgerSortField | null; label: string; numeric?: boolean
  * total to stay visible and to track the active filter.
  */
 export const LedgerTable = ({ receipts, summary, sort, calendar, onSortChange, onEdit, onDelete }: LedgerTableProps) => {
+  const { t, i18n } = useLingui()
+
+  // Built inside the component so the labels follow the active locale.
+  const columns: { field: LedgerSortField | null; label: string; numeric?: boolean }[] = [
+    { field: 'occurredAt', label: t`تاریخ` },
+    { field: 'client', label: t`مشتری` },
+    { field: 'channel', label: t`کانال` },
+    { field: null, label: t`مبلغ اصلی`, numeric: true },
+    { field: 'amountToman', label: t`معادل تومانی`, numeric: true },
+    { field: null, label: '' },
+  ]
+
   const toggleSort = (field: LedgerSortField) =>
     onSortChange({
       field,
@@ -55,7 +59,7 @@ export const LedgerTable = ({ receipts, summary, sort, calendar, onSortChange, o
       <Table stickyHeader size="small" sx={{ minWidth: 720 }}>
         <TableHead>
           <TableRow>
-            {COLUMNS.map((column, index) => (
+            {columns.map((column, index) => (
               <TableCell key={index} align={column.numeric ? 'left' : 'right'} sx={{ whiteSpace: 'nowrap' }}>
                 {column.field ? (
                   <TableSortLabel
@@ -89,12 +93,12 @@ export const LedgerTable = ({ receipts, summary, sort, calendar, onSortChange, o
                 ) : null}
               </TableCell>
 
-              <TableCell align="right">{CHANNEL_LABELS[receipt.channel]}</TableCell>
+              <TableCell align="right">{i18n._(CHANNEL_LABELS[receipt.channel])}</TableCell>
 
               <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
                 <MoneyText value={receipt.amountOriginal} currency={receipt.currency} showUnit={false} variant="body2" />{' '}
                 <Typography component="span" variant="caption" color="text.secondary">
-                  {CURRENCY_LABELS[receipt.currency]}
+                  {i18n._(CURRENCY_LABELS[receipt.currency])}
                 </Typography>
               </TableCell>
 
@@ -104,10 +108,10 @@ export const LedgerTable = ({ receipts, summary, sort, calendar, onSortChange, o
 
               <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
                 <Stack direction="row" spacing={0.5}>
-                  <IconButton size="small" onClick={() => onEdit(receipt)} aria-label="ویرایش">
+                  <IconButton size="small" onClick={() => onEdit(receipt)} aria-label={t`ویرایش`}>
                     <EditRoundedIcon fontSize="small" />
                   </IconButton>
-                  <IconButton size="small" onClick={() => onDelete(receipt)} aria-label="حذف">
+                  <IconButton size="small" onClick={() => onDelete(receipt)} aria-label={t`حذف`}>
                     <DeleteOutlineRoundedIcon fontSize="small" />
                   </IconButton>
                 </Stack>
@@ -123,7 +127,7 @@ export const LedgerTable = ({ receipts, summary, sort, calendar, onSortChange, o
               align="right"
               sx={(theme) => ({ borderTop: `2px solid ${theme.palette.outlineVariant}`, fontWeight: 600 })}
             >
-              جمع کل ({toPersianDigits(receipts.length)} دریافتی)
+              {t`جمع کل (${toPersianDigits(receipts.length)} دریافتی)`}
             </TableCell>
             <TableCell colSpan={2} align="left" sx={(theme) => ({ borderTop: `2px solid ${theme.palette.outlineVariant}` })}>
               <MoneyText value={summary.totalToman} variant="h3" color="primary.main" />

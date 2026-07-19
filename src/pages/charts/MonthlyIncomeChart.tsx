@@ -1,5 +1,7 @@
+import { useLingui } from '@lingui/react/macro'
 import { useTheme } from '@mui/material'
 import { BarChart } from '@mui/x-charts/BarChart'
+import { CURRENCY_LABELS } from 'src/shared/constants'
 import type { CalendarSystem, MonthlyTotal } from 'src/shared/types'
 import { formatNumberPersian, monthNames, toPersianDigits } from 'src/shared/utils'
 
@@ -17,8 +19,10 @@ export interface MonthlyIncomeChartProps {
  * see (scenario 4's Mordad).
  */
 export const MonthlyIncomeChart = ({ months, calendar }: MonthlyIncomeChartProps) => {
+  const { t, i18n } = useLingui()
   const theme = useTheme()
-  const labels = monthNames(calendar)
+  const labels = monthNames(calendar, i18n)
+  const toman = i18n._(CURRENCY_LABELS.TOMAN)
 
   return (
     <BarChart
@@ -26,9 +30,9 @@ export const MonthlyIncomeChart = ({ months, calendar }: MonthlyIncomeChartProps
       series={[
         {
           data: months.map((month) => month.totalToman),
-          label: 'درآمد ماهانه',
+          label: t`درآمد ماهانه`,
           color: theme.palette.primary.main,
-          valueFormatter: (value) => (value === null ? '—' : `${formatNumberPersian(value)} تومان`),
+          valueFormatter: (value) => (value === null ? '—' : `${formatNumberPersian(value)} ${toman}`),
         },
       ]}
       xAxis={[

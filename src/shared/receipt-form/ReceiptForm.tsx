@@ -1,14 +1,17 @@
-import { Alert, Autocomplete, Box, Button, Stack, TextField, Typography } from '@mui/material'
+import { Trans, useLingui } from '@lingui/react/macro'
+import { Alert, Autocomplete, Box, Button, Stack, TextField } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { radius } from 'src/core/theme'
+import { AmountField } from 'src/shared/amount-field'
 import { ChipSelect } from 'src/shared/chip-select'
-import { CHANNEL_LABELS, CURRENCY_LABELS, CURRENCY_UNITS } from 'src/shared/constants'
+import { CHANNEL_LABELS, CURRENCY_LABELS } from 'src/shared/constants'
 import { DateField } from 'src/shared/date-field'
+import { Field } from 'src/shared/field'
 import { MoneyText } from 'src/shared/money-text'
 import { NumberField } from 'src/shared/number-field'
 import { clientsQueryKey, getClientsQuery } from 'src/shared/queries'
 import { SegmentedControl } from 'src/shared/segmented-control'
-import { CHANNELS, CURRENCIES, currencyDecimals, type Channel, type Currency } from 'src/shared/types'
+import { CHANNELS, CURRENCIES, type Channel, type Currency } from 'src/shared/types'
 import type { useReceiptForm } from './useReceiptForm'
 
 export interface ReceiptFormProps {
@@ -24,8 +27,13 @@ export interface ReceiptFormProps {
  * The receipt form. Every field is presentational; all state lives in
  * `useReceiptForm`, so the same component serves both the quick-entry page and
  * the edit dialog.
+ *
+ * Labels sit above their controls via `Field`, matching the design — MUI's
+ * floating labels would collapse into the outline and cost scannability on the
+ * one screen that has to be fast.
  */
 export const ReceiptForm = ({ form, submitLabel, pending = false, onSubmit, onSubmitAndNext }: ReceiptFormProps) => {
+  const { t, i18n } = useLingui()
   const { state, patch, errors, showErrors, needsRate, isBackdated, tomanPreview } = form
   const { data: clients = [] } = useQuery({ queryKey: clientsQueryKey, queryFn: getClientsQuery })
 
@@ -38,21 +46,19 @@ export const ReceiptForm = ({ form, submitLabel, pending = false, onSubmit, onSu
         onSubmit()
       }}
     >
-      <NumberField
-        label="مبلغ دریافتی"
+      <AmountField
+        label={t`مبلغ دریافتی`}
         value={state.amountOriginal}
+        currency={state.currency}
         onValueChange={(value) => patch('amountOriginal', value)}
-        decimals={currencyDecimals[state.currency]}
         error={showErrors && Boolean(errors.amountOriginal)}
         helperText={showErrors ? errors.amountOriginal : undefined}
-        fullWidth
         autoFocus
-        slotProps={{ input: { endAdornment: <Typography color="text.secondary">{CURRENCY_UNITS[state.currency]}</Typography> } }}
       />
 
       <SegmentedControl<Currency>
         value={state.currency}
-        options={CURRENCIES.map((currency) => ({ value: currency, label: CURRENCY_LABELS[currency] }))}
+        options={CURRENCIES.map((currency) => ({ value: currency, label: i18n._(CURRENCY_LABELS[currency]) }))}
         onValueChange={(currency) => {
           patch('currency', currency)
           // Clearing the rate when returning to toman stops a stale rate from
@@ -63,24 +69,25 @@ export const ReceiptForm = ({ form, submitLabel, pending = false, onSubmit, onSu
         }}
       />
 
-      <DateField label="تاریخ دریافت" value={state.occurredAt} onValueChange={(iso) => patch('occurredAt', iso)} />
+      <DateField label={t`تاریخ دریافت`} value={state.occurredAt} onValueChange={(iso) => patch('occurredAt', iso)} />
 
       {needsRate ? (
         <Stack spacing={1.5}>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
-            <NumberField
-              label={isBackdated ? 'نرخ تبدیل در همان تاریخ (تومان)' : 'نرخ تبدیل روز (تومان)'}
-              value={state.rate}
-              onValueChange={(value) => patch('rate', value)}
+            <Field
+              label={isBackdated ? t`نرخ تبدیل در همان تاریخ (تومان)` : t`نرخ تبدیل روز (تومان)`}
               error={showErrors && Boolean(errors.rate)}
               helperText={showErrors ? errors.rate : undefined}
-              fullWidth
-            />
+            >
+              <NumberField
+                value={state.rate}
+                onValueChange={(value) => patch('rate', value)}
+                error={showErrors && Boolean(errors.rate)}
+                fullWidth
+              />
+            </Field>
 
-            <Box sx={{ flex: 1 }}>
-              <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-                معادل تومانی
-              </Typography>
+            <Field label={t`معادل تومانی`}>
               <Box
                 sx={(theme) => ({
                   display: 'flex',
@@ -93,41 +100,46 @@ export const ReceiptForm = ({ form, submitLabel, pending = false, onSubmit, onSu
               >
                 <MoneyText value={tomanPreview} variant="h3" color="primary.dark" />
               </Box>
-            </Box>
+            </Field>
           </Stack>
 
           {isBackdated ? (
             <Alert severity="info" sx={{ borderRadius: `${radius.md}px` }}>
-              این دریافتی تاریخ گذشته داره. نرخ همون روز رو وارد کن، نه نرخ امروز — این مبلغ برای همیشه ثبت می‌شه و بعداً با تغییر قیمت عوض
-              نمی‌شه.
+              <Trans>
+                این دریافتی تاریخ گذشته داره. نرخ همون روز رو وارد کن، نه نرخ امروز — این مبلغ برای همیشه ثبت می‌شه و بعداً با تغییر قیمت
+                عوض نمی‌شه.
+              </Trans>
             </Alert>
           ) : null}
         </Stack>
       ) : null}
 
-      <Autocomplete
-        freeSolo
-        options={clients.map((client) => client.name)}
-        value={state.clientName}
-        onChange={(_event, value) => patch('clientName', value ?? '')}
-        onInputChange={(_event, value) => patch('clientName', value)}
-        renderInput={(params) => <TextField {...params} label="مشتری / پروژه" placeholder="اسم مشتری را بنویس یا انتخاب کن" />}
-      />
+      <Field label={t`مشتری / پروژه`}>
+        <Autocomplete
+          freeSolo
+          options={clients.map((client) => client.name)}
+          value={state.clientName}
+          onChange={(_event, value) => patch('clientName', value ?? '')}
+          onInputChange={(_event, value) => patch('clientName', value)}
+          renderInput={(params) => <TextField {...params} placeholder={t`اسم مشتری را بنویس یا انتخاب کن`} />}
+        />
+      </Field>
 
       <ChipSelect<Channel>
-        label="کانال دریافت"
+        label={t`کانال دریافت`}
         value={state.channel}
-        options={CHANNELS.map((channel) => ({ value: channel, label: CHANNEL_LABELS[channel] }))}
+        options={CHANNELS.map((channel) => ({ value: channel, label: i18n._(CHANNEL_LABELS[channel]) }))}
         onValueChange={(channel) => patch('channel', channel)}
       />
 
-      <TextField
-        label="یادداشت (اختیاری)"
-        value={state.note}
-        onChange={(event) => patch('note', event.target.value)}
-        placeholder="مثلاً: پیش‌پرداخت فاز اول طراحی"
-        fullWidth
-      />
+      <Field label={t`یادداشت (اختیاری)`}>
+        <TextField
+          value={state.note}
+          onChange={(event) => patch('note', event.target.value)}
+          placeholder={t`مثلاً: پیش‌پرداخت فاز اول طراحی`}
+          fullWidth
+        />
+      </Field>
 
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ pt: 0.5 }}>
         <Button type="submit" variant="contained" disabled={pending} sx={{ flex: 1 }}>
@@ -135,7 +147,7 @@ export const ReceiptForm = ({ form, submitLabel, pending = false, onSubmit, onSu
         </Button>
         {onSubmitAndNext ? (
           <Button variant="outlined" disabled={pending} onClick={onSubmitAndNext} sx={{ minWidth: 180 }}>
-            ذخیره و بعدی
+            <Trans>ذخیره و بعدی</Trans>
           </Button>
         ) : null}
       </Stack>

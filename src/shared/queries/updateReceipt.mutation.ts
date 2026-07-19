@@ -1,4 +1,6 @@
+import { msg } from '@lingui/core/macro'
 import { db, upsertClientByName } from 'src/core/db'
+import { i18n } from 'src/core/i18n'
 import type { Receipt } from 'src/shared/types'
 import { computeToman } from 'src/shared/utils'
 import type { CreateReceiptRequest } from './createReceipt.mutation'
@@ -27,7 +29,7 @@ export const updateReceiptMutation = async ({
 }: UpdateReceiptRequest): Promise<Receipt> => {
   const existing = await db.receipts.get(id)
   if (!existing) {
-    throw new Error('این دریافتی پیدا نشد؛ ممکنه قبلاً حذفش کرده باشی.')
+    throw new Error(i18n._(msg`این دریافتی پیدا نشد؛ ممکنه قبلاً حذفش کرده باشی.`))
   }
 
   const client = await upsertClientByName(clientName)

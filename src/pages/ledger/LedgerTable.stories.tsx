@@ -1,0 +1,99 @@
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { GlassCard } from 'src/shared/glass-card'
+import type { ReceiptWithClient } from 'src/shared/types'
+import { LedgerTable } from './LedgerTable'
+
+const meta = {
+  title: 'Pages/Ledger/LedgerTable',
+  component: LedgerTable,
+  parameters: { layout: 'fullscreen' },
+} satisfies Meta<typeof LedgerTable>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+const row = (
+  id: string,
+  monthsAgo: number,
+  clientName: string,
+  channel: ReceiptWithClient['channel'],
+  currency: ReceiptWithClient['currency'],
+  amountOriginal: number,
+  rate: number | null,
+  note: string | null,
+): ReceiptWithClient => {
+  const occurred = new Date()
+  occurred.setMonth(occurred.getMonth() - monthsAgo)
+  return {
+    id,
+    occurredAt: occurred.toISOString(),
+    amountOriginal,
+    currency,
+    rate,
+    amountToman: rate ? Math.round(amountOriginal * rate) : amountOriginal,
+    clientId: clientName,
+    clientName,
+    channel,
+    note,
+    createdAt: occurred.toISOString(),
+    updatedAt: occurred.toISOString(),
+  }
+}
+
+const RECEIPTS = [
+  row('1', 0, 'استودیو نقش', 'CARD_TO_CARD', 'TOMAN', 18000000, null, 'ست آیکون اپلیکیشن'),
+  row('2', 0, 'بازرگانی آریا', 'TETHER', 'USDT', 500, 98500, 'پیش‌پرداخت فاز اول طراحی'),
+  row('3', 1, 'کافه رستوران هما', 'CARD_TO_CARD', 'TOMAN', 9500000, null, 'طراحی منو'),
+  row('4', 1, 'بازرگانی آریا', 'REMITTANCE', 'USD', 1200, 96200, 'تسویه فاز دوم'),
+  row('5', 2, 'شرکت داده‌پرداز', 'OTHER', 'TOMAN', 22000000, null, null),
+]
+
+const summary = {
+  totalToman: RECEIPTS.reduce((sum, r) => sum + r.amountToman, 0),
+  receiptCount: RECEIPTS.length,
+  monthlyAverageToman: Math.round(RECEIPTS.reduce((sum, r) => sum + r.amountToman, 0) / 3),
+}
+
+/**
+ * Mixed currencies, each showing its original amount beside a frozen toman
+ * equivalent. The totals row lives inside the same table so it can never scroll
+ * out of sync with the rows it sums.
+ */
+export const Default: Story = {
+  args: {
+    receipts: RECEIPTS,
+    summary,
+    sort: { field: 'occurredAt', direction: 'desc' },
+    calendar: 'JALALI',
+    onSortChange: () => {},
+    onEdit: () => {},
+    onDelete: () => {},
+  },
+  render: (args) => (
+    <GlassCard>
+      <LedgerTable {...args} />
+    </GlassCard>
+  ),
+}
+
+/** Sorted by amount — clicking a column header toggles direction. */
+export const SortedByAmount: Story = {
+  ...Default,
+  args: { ...Default.args, sort: { field: 'amountToman', direction: 'desc' } },
+}
+
+/** A filtered view that matched a single receipt; the total tracks the filter. */
+export const SingleRow: Story = {
+  ...Default,
+  args: {
+    ...Default.args,
+    receipts: [RECEIPTS[1]],
+    summary: { totalToman: RECEIPTS[1].amountToman, receiptCount: 1, monthlyAverageToman: RECEIPTS[1].amountToman },
+  },
+}
+
+/** Gregorian rendering, driven by the Settings calendar toggle. */
+export const GregorianCalendar: Story = {
+  ...Default,
+  args: { ...Default.args, calendar: 'GREGORIAN' },
+}

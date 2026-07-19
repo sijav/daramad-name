@@ -1,3 +1,5 @@
+import type { I18n, MessageDescriptor } from '@lingui/core'
+import { msg } from '@lingui/core/macro'
 import type { TDocumentDefinitions } from 'pdfmake/interfaces'
 import type { CalendarSystem, IncomeReport } from 'src/shared/types'
 import { formatDateEnglish, formatDateLong, formatNumberLatin, formatNumberPersian, monthNames, toPersianDigits } from 'src/shared/utils'
@@ -11,15 +13,20 @@ export type ReportLanguage = 'fa' | 'en'
  * labels alone — it also switches to Gregorian dates and Latin digits, because
  * an embassy officer cannot read «۱۴۰۴/۰۵/۲۳» or «۱۲٬۵۰۰٬۰۰۰».
  */
-export const buildIncomeReport = (report: IncomeReport, language: ReportLanguage, calendar: CalendarSystem): TDocumentDefinitions => {
-  const t = language === 'fa' ? FA : EN
+export const buildIncomeReport = (
+  report: IncomeReport,
+  language: ReportLanguage,
+  calendar: CalendarSystem,
+  i18n: I18n,
+): TDocumentDefinitions => {
+  const t = resolveLabels(i18n)
   const money = (value: number) =>
     language === 'fa' ? `${formatNumberPersian(value)} ${t.toman}` : `${formatNumberLatin(value)} ${t.toman}`
   const alignment = language === 'fa' ? 'right' : 'left'
 
   const monthLabel = (month: number, year: number) => {
     if (language === 'fa') {
-      return `${monthNames(calendar)[month - 1]} ${toPersianDigits(year)}`
+      return `${monthNames(calendar, i18n)[month - 1]} ${toPersianDigits(year)}`
     }
     return `${GREGORIAN_SHORT[month - 1]} ${year}`
   }
@@ -52,7 +59,7 @@ export const buildIncomeReport = (report: IncomeReport, language: ReportLanguage
           body: [
             [
               { text: t.period, style: 'label' },
-              { text: periodText(report, language, calendar), style: 'value' },
+              { text: periodText(report, language, calendar, i18n), style: 'value' },
             ],
             [
               { text: t.total, style: 'label' },
@@ -136,67 +143,40 @@ const identityRows = (report: IncomeReport, t: ReportStrings) => {
   return rows
 }
 
-const periodText = (report: IncomeReport, language: ReportLanguage, calendar: CalendarSystem): string =>
+const periodText = (report: IncomeReport, language: ReportLanguage, calendar: CalendarSystem, i18n: I18n): string =>
   language === 'fa'
-    ? `${formatDateLong(report.range.from, calendar)} تا ${formatDateLong(report.range.to, calendar)}`
+    ? `${formatDateLong(report.range.from, calendar, i18n)} ${i18n._(msg`تا`)} ${formatDateLong(report.range.to, calendar, i18n)}`
     : `${formatDateEnglish(report.range.from)} — ${formatDateEnglish(report.range.to)}`
 
 const GREGORIAN_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-/** Label set for one language. Both catalogs below satisfy it. */
-interface ReportStrings {
-  title: string
-  subtitle: string
-  summary: string
-  breakdown: string
-  period: string
-  total: string
-  average: string
-  month: string
-  count: string
-  amount: string
-  fullName: string
-  nationalId: string
-  phone: string
-  address: string
-  toman: string
-  disclaimer: string
-}
+/**
+ * The report's labels, as lazy descriptors.
+ *
+ * Resolved through the i18n instance passed into `buildIncomeReport`, which is
+ * a SEPARATE instance from the app's — that is what lets the user download an
+ * English certificate while the interface stays Persian.
+ */
+const REPORT_LABELS = {
+  title: msg`گواهی درآمد`,
+  subtitle: msg`گزارش درآمد ثبت‌شده‌ی فریلنسری`,
+  summary: msg`خلاصه`,
+  breakdown: msg`تفکیک ماه‌به‌ماه`,
+  period: msg`بازه‌ی گزارش`,
+  total: msg`جمع کل درآمد`,
+  average: msg`میانگین درآمد ماهانه`,
+  month: msg`ماه`,
+  count: msg`تعداد دریافتی`,
+  amount: msg`مبلغ`,
+  fullName: msg`نام و نام خانوادگی`,
+  nationalId: msg`کد ملی`,
+  phone: msg`تلفن`,
+  address: msg`نشانی`,
+  toman: msg`تومان`,
+  disclaimer: msg`این گزارش بر اساس داده‌هایی تولید شده که خودِ کاربر در برنامه‌ی درآمدنامه ثبت کرده است.`,
+} satisfies Record<string, MessageDescriptor>
 
-const FA: ReportStrings = {
-  title: 'گواهی درآمد',
-  subtitle: 'گزارش درآمد ثبت‌شده‌ی فریلنسری',
-  summary: 'خلاصه',
-  breakdown: 'تفکیک ماه‌به‌ماه',
-  period: 'بازه‌ی گزارش',
-  total: 'جمع کل درآمد',
-  average: 'میانگین درآمد ماهانه',
-  month: 'ماه',
-  count: 'تعداد دریافتی',
-  amount: 'مبلغ',
-  fullName: 'نام و نام خانوادگی',
-  nationalId: 'کد ملی',
-  phone: 'تلفن',
-  address: 'نشانی',
-  toman: 'تومان',
-  disclaimer: 'این گزارش بر اساس داده‌هایی تولید شده که خودِ کاربر در برنامه‌ی درآمدنامه ثبت کرده است.',
-}
+type ReportStrings = Record<keyof typeof REPORT_LABELS, string>
 
-const EN: ReportStrings = {
-  title: 'Statement of Income',
-  subtitle: 'Self-recorded freelance income report',
-  summary: 'Summary',
-  breakdown: 'Month-by-month breakdown',
-  period: 'Reporting period',
-  total: 'Total income',
-  average: 'Average monthly income',
-  month: 'Month',
-  count: 'Payments',
-  amount: 'Amount',
-  fullName: 'Full name',
-  nationalId: 'National ID',
-  phone: 'Phone',
-  address: 'Address',
-  toman: 'Toman',
-  disclaimer: 'This report was generated from records entered by the user in the Daramadname application.',
-}
+const resolveLabels = (i18n: I18n): ReportStrings =>
+  Object.fromEntries(Object.entries(REPORT_LABELS).map(([key, descriptor]) => [key, i18n._(descriptor)])) as ReportStrings

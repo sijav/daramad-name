@@ -1,3 +1,4 @@
+import { Trans, useLingui } from '@lingui/react/macro'
 import { Alert, Box, Button, Snackbar, Stack, TextField, Typography } from '@mui/material'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRef, useState } from 'react'
@@ -18,6 +19,7 @@ import { SegmentedControl } from 'src/shared/segmented-control'
 import type { CalendarSystem, Profile } from 'src/shared/types'
 
 export const SettingsPage = () => {
+  const { t } = useLingui()
   const settings = useSettings()
   const queryClient = useQueryClient()
   const fileInput = useRef<HTMLInputElement>(null)
@@ -43,7 +45,7 @@ export const SettingsPage = () => {
     mutationFn: updateProfileMutation,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: settingsQueryKey })
-      setToast('مشخصاتت ذخیره شد.')
+      setToast(t`مشخصاتت ذخیره شد.`)
     },
   })
 
@@ -54,8 +56,8 @@ export const SettingsPage = () => {
 
   const backup = useMutation({
     mutationFn: exportBackupMutation,
-    onSuccess: () => setToast('فایل بکاپ دانلود شد.'),
-    onError: () => setError('گرفتن بکاپ ناموفق بود. دوباره امتحان کن.'),
+    onSuccess: () => setToast(t`فایل بکاپ دانلود شد.`),
+    onError: () => setError(t`گرفتن بکاپ ناموفق بود. دوباره امتحان کن.`),
   })
 
   const restore = useMutation({
@@ -63,7 +65,7 @@ export const SettingsPage = () => {
     onSuccess: async (data) => {
       await refreshAll()
       setPendingRestore(null)
-      setToast(`${data.receipts.length} دریافتی بازیابی شد.`)
+      setToast(t`${data.receipts.length} دریافتی بازیابی شد.`)
     },
     onError: (cause: Error) => {
       setPendingRestore(null)
@@ -75,7 +77,7 @@ export const SettingsPage = () => {
     mutationFn: seedSampleDataMutation,
     onSuccess: async (count) => {
       await invalidateReceiptQueries()
-      setToast(`${count} دریافتی نمونه اضافه شد.`)
+      setToast(t`${count} دریافتی نمونه اضافه شد.`)
     },
   })
 
@@ -84,7 +86,7 @@ export const SettingsPage = () => {
     onSuccess: async () => {
       await refreshAll()
       setConfirmClear(false)
-      setToast('همه‌ی داده‌ها پاک شد.')
+      setToast(t`همه‌ی داده‌ها پاک شد.`)
     },
   })
 
@@ -95,44 +97,44 @@ export const SettingsPage = () => {
     try {
       setPendingRestore(await file.text())
     } catch {
-      setError('فایل خوانده نشد. مطمئن شو فایل سالمه و دوباره انتخابش کن.')
+      setError(t`فایل خوانده نشد. مطمئن شو فایل سالمه و دوباره انتخابش کن.`)
     }
   }
 
   return (
     <Box sx={{ maxWidth: 720 }}>
-      <PageHeader title="تنظیمات" />
+      <PageHeader title={t`تنظیمات`} />
 
       <Stack spacing={3}>
         <GlassCard>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
-            مشخصات فردی
+            <Trans>مشخصات فردی</Trans>
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2.5 }}>
-            این اطلاعات بالای گزارش درآمد چاپ می‌شه. بدون اسم، سند برای سفارت یا صاحبخونه اعتباری نداره.
+            <Trans>این اطلاعات بالای گزارش درآمد چاپ می‌شه. بدون اسم، سند برای سفارت یا صاحبخونه اعتباری نداره.</Trans>
           </Typography>
 
           <Stack spacing={2}>
             <TextField
-              label="نام و نام خانوادگی"
+              label={t`نام و نام خانوادگی`}
               value={profile.fullName}
               onChange={(event) => setProfile({ ...profile, fullName: event.target.value })}
               fullWidth
             />
             <TextField
-              label="کد ملی"
+              label={t`کد ملی`}
               value={profile.nationalId}
               onChange={(event) => setProfile({ ...profile, nationalId: event.target.value })}
               fullWidth
             />
             <TextField
-              label="تلفن"
+              label={t`تلفن`}
               value={profile.phone}
               onChange={(event) => setProfile({ ...profile, phone: event.target.value })}
               fullWidth
             />
             <TextField
-              label="نشانی"
+              label={t`نشانی`}
               value={profile.address}
               onChange={(event) => setProfile({ ...profile, address: event.target.value })}
               multiline
@@ -140,23 +142,23 @@ export const SettingsPage = () => {
               fullWidth
             />
             <Button variant="contained" onClick={() => saveProfile.mutate(profile)} disabled={saveProfile.isPending}>
-              ذخیره مشخصات
+              <Trans>ذخیره مشخصات</Trans>
             </Button>
           </Stack>
         </GlassCard>
 
         <GlassCard>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
-            تقویم
+            <Trans>تقویم</Trans>
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            همه‌ی تاریخ‌ها و جمع‌بندی‌های ماهانه با این تقویم نمایش داده می‌شن. داده‌هایت تغییری نمی‌کنن.
+            <Trans>همه‌ی تاریخ‌ها و جمع‌بندی‌های ماهانه با این تقویم نمایش داده می‌شن. داده‌هایت تغییری نمی‌کنن.</Trans>
           </Typography>
           <SegmentedControl<CalendarSystem>
             value={settings.calendar}
             options={[
-              { value: 'JALALI', label: 'شمسی' },
-              { value: 'GREGORIAN', label: 'میلادی' },
+              { value: 'JALALI', label: t`شمسی` },
+              { value: 'GREGORIAN', label: t`میلادی` },
             ]}
             onValueChange={(calendar) => changeCalendar.mutate({ calendar })}
           />
@@ -164,18 +166,18 @@ export const SettingsPage = () => {
 
         <GlassCard>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
-            بکاپ و بازیابی
+            <Trans>بکاپ و بازیابی</Trans>
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2.5 }}>
-            داده‌هایت فقط روی همین مرورگره. اگر مرورگر رو پاک کنی، بدون بکاپ همه‌چیز از دست می‌ره.
+            <Trans>داده‌هایت فقط روی همین مرورگره. اگر مرورگر رو پاک کنی، بدون بکاپ همه‌چیز از دست می‌ره.</Trans>
           </Typography>
 
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
             <Button variant="contained" onClick={() => backup.mutate()} disabled={backup.isPending}>
-              بکاپ (دانلود JSON)
+              <Trans>بکاپ (دانلود JSON)</Trans>
             </Button>
             <Button variant="outlined" onClick={() => fileInput.current?.click()}>
-              بازیابی از فایل
+              <Trans>بازیابی از فایل</Trans>
             </Button>
             <input
               ref={fileInput}
@@ -193,18 +195,18 @@ export const SettingsPage = () => {
 
         <GlassCard>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
-            داده‌ی نمونه و پاک‌سازی
+            <Trans>داده‌ی نمونه و پاک‌سازی</Trans>
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2.5 }}>
-            داده‌ی نمونه برای تست و اسکرین‌شاته. برای دموی واقعی، دیتای خودت رو ثبت کن.
+            <Trans>داده‌ی نمونه برای تست و اسکرین‌شاته. برای دموی واقعی، دیتای خودت رو ثبت کن.</Trans>
           </Typography>
 
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
             <Button variant="outlined" onClick={() => seed.mutate()} disabled={seed.isPending}>
-              افزودن داده‌ی نمونه
+              <Trans>افزودن داده‌ی نمونه</Trans>
             </Button>
             <Button variant="outlined" color="error" onClick={() => setConfirmClear(true)}>
-              پاک کردن همه‌ی داده‌ها
+              <Trans>پاک کردن همه‌ی داده‌ها</Trans>
             </Button>
           </Stack>
         </GlassCard>
@@ -212,10 +214,10 @@ export const SettingsPage = () => {
 
       <ConfirmDialog
         open={confirmClear}
-        title="پاک کردن همه‌ی داده‌ها"
-        description="همه‌ی دریافتی‌ها، مشتری‌ها و مشخصاتت برای همیشه پاک می‌شن. اگر بکاپ نگرفتی، برگشتی وجود نداره."
-        confirmLabel="همه را پاک کن"
-        confirmationWord="پاک کن"
+        title={t`پاک کردن همه‌ی داده‌ها`}
+        description={t`همه‌ی دریافتی‌ها، مشتری‌ها و مشخصاتت برای همیشه پاک می‌شن. اگر بکاپ نگرفتی، برگشتی وجود نداره.`}
+        confirmLabel={t`همه را پاک کن`}
+        confirmationWord={t`پاک کن`}
         destructive
         onConfirm={() => clearAll.mutate()}
         onClose={() => setConfirmClear(false)}
@@ -223,9 +225,9 @@ export const SettingsPage = () => {
 
       <ConfirmDialog
         open={pendingRestore !== null}
-        title="بازیابی از فایل"
-        description="داده‌های فعلی کاملاً با محتوای این فایل جایگزین می‌شن. اگر الان دریافتی ثبت‌شده داری، اول ازش بکاپ بگیر."
-        confirmLabel="بازیابی کن"
+        title={t`بازیابی از فایل`}
+        description={t`داده‌های فعلی کاملاً با محتوای این فایل جایگزین می‌شن. اگر الان دریافتی ثبت‌شده داری، اول ازش بکاپ بگیر.`}
+        confirmLabel={t`بازیابی کن`}
         destructive
         onConfirm={() => pendingRestore && restore.mutate({ json: pendingRestore })}
         onClose={() => setPendingRestore(null)}

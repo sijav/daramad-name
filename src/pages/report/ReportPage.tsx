@@ -1,10 +1,13 @@
+import { Trans, useLingui } from '@lingui/react/macro'
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded'
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded'
 import { Alert, Box, Button, CircularProgress, Grid, MenuItem, Stack, TextField, Typography } from '@mui/material'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
+import { loadReportI18n } from 'src/core/i18n'
 import { useSettings } from 'src/core/query'
+import { CURRENCY_LABELS } from 'src/shared/constants'
 import { EmptyState } from 'src/shared/empty-state'
 import { GlassCard } from 'src/shared/glass-card'
 import { PageHeader } from 'src/shared/page-header'
@@ -16,6 +19,7 @@ import { formatDateLong, monthNames, toPersianDigits, yearOf, yearRange } from '
 
 /** Scenario 3: a presentable income certificate, in Persian or English. */
 export const ReportPage = () => {
+  const { t, i18n } = useLingui()
   const { calendar, profile } = useSettings()
   const [year, setYear] = useState(() => yearOf(new Date(), calendar))
   const [language, setLanguage] = useState<ReportLanguage>('fa')
@@ -38,8 +42,10 @@ export const ReportPage = () => {
       if (!report) {
         return
       }
-      const pdfMake = await loadPdfMake()
-      const definition = buildIncomeReport(report, language, calendar)
+      // A dedicated i18n instance for the document, so an English certificate
+      // can be produced without flipping the interface locale underneath the user.
+      const [pdfMake, reportI18n] = await Promise.all([loadPdfMake(), loadReportI18n(language === 'fa' ? 'fa-IR' : 'en-US')])
+      const definition = buildIncomeReport(report, language, calendar, reportI18n)
       pdfMake.createPdf(definition).download(`income-report-${year}-${language}.pdf`)
     },
     onError: (cause: Error) => setError(cause.message),
@@ -50,14 +56,14 @@ export const ReportPage = () => {
 
   return (
     <Box>
-      <PageHeader title="گزارش درآمد" subtitle="سندی که می‌تونی به سفارت، صاحبخونه یا حسابدار بدی" />
+      <PageHeader title={t`گزارش درآمد`} subtitle={t`سندی که می‌تونی به سفارت، صاحبخونه یا حسابدار بدی`} />
 
       <Stack spacing={3}>
         <GlassCard>
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ alignItems: { md: 'flex-end' } }}>
             <TextField
               select
-              label="سال گزارش"
+              label={t`سال گزارش`}
               value={year}
               onChange={(event) => setYear(Number(event.target.value))}
               sx={{ minWidth: 160 }}
@@ -71,12 +77,12 @@ export const ReportPage = () => {
 
             <Box sx={{ flex: 1, minWidth: 220 }}>
               <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-                زبان سند
+                <Trans>زبان سند</Trans>
               </Typography>
               <SegmentedControl<ReportLanguage>
                 value={language}
                 options={[
-                  { value: 'fa', label: 'فارسی' },
+                  { value: 'fa', label: t`فارسی` },
                   { value: 'en', label: 'English' },
                 ]}
                 onValueChange={setLanguage}
@@ -90,14 +96,16 @@ export const ReportPage = () => {
               onClick={() => download()}
               sx={{ minWidth: 200 }}
             >
-              {isPending ? 'در حال ساخت…' : 'دانلود PDF'}
+              {isPending ? t`در حال ساخت…` : t`دانلود PDF`}
             </Button>
           </Stack>
 
           {profileMissing ? (
             <Alert severity="warning" sx={{ mt: 2 }}>
-              اسمت هنوز ثبت نشده. بدون مشخصات فردی، این سند برای سفارت یا صاحبخونه اعتبار نداره —{' '}
-              <RouterLink to="/settings">از تنظیمات پرش کن</RouterLink>.
+              <Trans>
+                اسمت هنوز ثبت نشده. بدون مشخصات فردی، این سند برای سفارت یا صاحبخونه اعتبار نداره —{' '}
+                <RouterLink to="/settings">از تنظیمات پرش کن</RouterLink>.
+              </Trans>
             </Alert>
           ) : null}
         </GlassCard>
@@ -110,31 +118,33 @@ export const ReportPage = () => {
           <GlassCard>
             <EmptyState
               icon={<DescriptionRoundedIcon />}
-              title="برای این سال دریافتی‌ای ثبت نشده"
-              description="گزارش درآمد از روی همون دریافتی‌هایی ساخته می‌شه که ثبت کردی. اول چند تا دریافتی وارد کن، بعد از همین‌جا سند بگیر."
+              title={t`برای این سال دریافتی‌ای ثبت نشده`}
+              description={t`گزارش درآمد از روی همون دریافتی‌هایی ساخته می‌شه که ثبت کردی. اول چند تا دریافتی وارد کن، بعد از همین‌جا سند بگیر.`}
             />
           </GlassCard>
         ) : (
           <>
             <Grid container spacing={2}>
               <Grid size={{ xs: 12, sm: 6 }}>
-                <StatTile label="جمع کل درآمد" value={report?.totalToman ?? 0} emphasis />
+                <StatTile label={t`جمع کل درآمد`} value={report?.totalToman ?? 0} emphasis />
               </Grid>
               <Grid size={{ xs: 12, sm: 6 }}>
                 <StatTile
-                  label="میانگین درآمد ماهانه"
+                  label={t`میانگین درآمد ماهانه`}
                   value={report?.monthlyAverageToman ?? 0}
-                  hint="تقسیم بر تعداد ماه‌های بازه، نه فقط ماه‌های دارای درآمد"
+                  hint={t`تقسیم بر تعداد ماه‌های بازه، نه فقط ماه‌های دارای درآمد`}
                 />
               </Grid>
             </Grid>
 
             <GlassCard>
               <Typography variant="h3" sx={{ mb: 0.5 }}>
-                پیش‌نمایش سند
+                <Trans>پیش‌نمایش سند</Trans>
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2.5 }}>
-                {formatDateLong(range.from, calendar)} تا {formatDateLong(range.to, calendar)}
+                <Trans>
+                  {formatDateLong(range.from, calendar, i18n)} تا {formatDateLong(range.to, calendar, i18n)}
+                </Trans>
               </Typography>
 
               <Stack spacing={1}>
@@ -148,9 +158,9 @@ export const ReportPage = () => {
                       borderBottom: `1px solid ${theme.palette.outlineVariant}`,
                     })}
                   >
-                    <Typography variant="body2">{monthNames(calendar)[month.month - 1]}</Typography>
+                    <Typography variant="body2">{monthNames(calendar, i18n)[month.month - 1]}</Typography>
                     <Typography variant="body2" sx={{ fontVariantNumeric: 'tabular-nums' }}>
-                      {toPersianDigits(month.totalToman.toLocaleString('en-US'))} تومان
+                      {`${toPersianDigits(month.totalToman.toLocaleString('en-US'))} ${i18n._(CURRENCY_LABELS.TOMAN)}`}
                     </Typography>
                   </Stack>
                 ))}

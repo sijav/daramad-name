@@ -1,5 +1,5 @@
 import { TextField, type TextFieldProps } from '@mui/material'
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { formatNumberLatin, parseUserNumber, toEnglishDigits, toPersianDigits } from 'src/shared/utils'
 
 export type NumberFieldProps = Omit<TextFieldProps, 'value' | 'onChange' | 'type'> & {
@@ -66,7 +66,13 @@ export const NumberField = ({ value, onValueChange, decimals = 0, grouped = true
           ...props.slotProps?.htmlInput,
           inputMode: 'decimal',
           dir: 'ltr',
-          style: { textAlign: 'right', fontVariantNumeric: 'tabular-nums' },
+          // Merged, not replaced — callers (AmountField) set their own type
+          // scale here and would otherwise lose it.
+          style: {
+            textAlign: 'right',
+            fontVariantNumeric: 'tabular-nums',
+            ...(props.slotProps?.htmlInput as { style?: CSSProperties } | undefined)?.style,
+          },
         },
       }}
     />

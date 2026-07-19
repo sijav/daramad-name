@@ -1,3 +1,4 @@
+import { Trans, useLingui } from '@lingui/react/macro'
 import { Dialog, DialogContent, DialogTitle } from '@mui/material'
 import { useMutation } from '@tanstack/react-query'
 import { invalidateReceiptQueries } from 'src/core/query'
@@ -16,6 +17,7 @@ export interface EditReceiptDialogProps {
  * form in sync without an effect watching the prop.
  */
 export const EditReceiptDialog = ({ receipt, onClose }: EditReceiptDialogProps) => {
+  const { t } = useLingui()
   const form = useReceiptForm(receipt)
 
   const { mutate, isPending } = useMutation({
@@ -45,9 +47,11 @@ export const EditReceiptDialog = ({ receipt, onClose }: EditReceiptDialogProps) 
 
   return (
     <Dialog open onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>ویرایش دریافتی</DialogTitle>
+      <DialogTitle>
+        <Trans>ویرایش دریافتی</Trans>
+      </DialogTitle>
       <DialogContent sx={{ pt: 1 }}>
-        <ReceiptForm form={form} submitLabel="ذخیره تغییرات" pending={isPending} onSubmit={submit} />
+        <ReceiptForm form={form} submitLabel={t`ذخیره تغییرات`} pending={isPending} onSubmit={submit} />
       </DialogContent>
     </Dialog>
   )

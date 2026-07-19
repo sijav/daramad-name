@@ -5,6 +5,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { faIR } from 'date-fns-jalali/locale'
 import { useSettings } from 'src/core/query'
 import { fontFamilyFarsiDigits } from 'src/core/theme'
+import { Field } from 'src/shared/field'
 import type { CalendarSystem } from 'src/shared/types'
 
 export interface DateFieldProps {
@@ -38,30 +39,39 @@ export const DateField = ({ label, value, onValueChange, disableFuture = true, e
   const { calendar } = useSettings()
 
   return (
-    <LocalizationProvider {...adapterProps(calendar)}>
-      <DatePicker
-        label={label}
-        value={new Date(value)}
-        disableFuture={disableFuture}
-        onChange={(next) => next && !Number.isNaN(next.getTime()) && onValueChange(next.toISOString())}
-        slotProps={{
-          textField: {
-            fullWidth,
-            error,
-            helperText,
-            // v9 renders the field as a section list, not a plain <input>.
-            sx: {
-              '& .MuiPickersSectionList-root, & .MuiPickersInputBase-root, & input': {
-                fontFamily: fontFamilyFarsiDigits,
+    <Field label={label} error={error} helperText={helperText}>
+      <LocalizationProvider {...adapterProps(calendar)}>
+        <DatePicker
+          value={new Date(value)}
+          disableFuture={disableFuture}
+          onChange={(next) => next && !Number.isNaN(next.getTime()) && onValueChange(next.toISOString())}
+          slotProps={{
+            textField: {
+              fullWidth,
+              error,
+              // v9 renders the field as a section list, not a plain <input>.
+              // The inner section spans carry their OWN font-family from the
+              // theme's typography, so inheriting from the root is not enough —
+              // each span has to be named or the digits stay Latin.
+              sx: {
+                [[
+                  '& .MuiPickersSectionList-root',
+                  '& .MuiPickersInputBase-root',
+                  '& .MuiPickersSectionList-section',
+                  '& .MuiPickersSectionList-sectionContent',
+                  '& input',
+                ].join(', ')]: {
+                  fontFamily: fontFamilyFarsiDigits,
+                },
               },
             },
-          },
-          // The calendar popup's day cells need the same treatment.
-          desktopPaper: { sx: { fontFamily: fontFamilyFarsiDigits } },
-          mobilePaper: { sx: { fontFamily: fontFamilyFarsiDigits } },
-        }}
-      />
-    </LocalizationProvider>
+            // The calendar popup's day cells need the same treatment.
+            desktopPaper: { sx: { fontFamily: fontFamilyFarsiDigits } },
+            mobilePaper: { sx: { fontFamily: fontFamilyFarsiDigits } },
+          }}
+        />
+      </LocalizationProvider>
+    </Field>
   )
 }
 

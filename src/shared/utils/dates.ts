@@ -1,3 +1,4 @@
+import type { I18n } from '@lingui/core'
 import {
   addMonths,
   endOfDay,
@@ -20,6 +21,7 @@ import {
   startOfMonth as startOfMonthJalali,
   startOfYear as startOfYearJalali,
 } from 'date-fns-jalali'
+import { GREGORIAN_MONTH_LABELS, JALALI_MONTH_LABELS } from 'src/shared/constants'
 import type { CalendarSystem, DateRange } from 'src/shared/types'
 import { toPersianDigits } from './digits'
 
@@ -29,39 +31,16 @@ import { toPersianDigits } from './digits'
 // Everything the charts and reports do is expressed as "which 12 buckets does
 // this year have", so the Jalali/Gregorian split lives entirely in this file.
 
-export const JALALI_MONTHS = [
-  'فروردین',
-  'اردیبهشت',
-  'خرداد',
-  'تیر',
-  'مرداد',
-  'شهریور',
-  'مهر',
-  'آبان',
-  'آذر',
-  'دی',
-  'بهمن',
-  'اسفند',
-] as const
+/**
+ * Month names for the active locale.
+ *
+ * Takes an `I18n` instance rather than reading a global, so the PDF can render
+ * English month names from its own isolated instance while the interface stays
+ * Persian.
+ */
+export const monthNames = (calendar: CalendarSystem, i18n: I18n): string[] =>
+  (calendar === 'JALALI' ? JALALI_MONTH_LABELS : GREGORIAN_MONTH_LABELS).map((descriptor) => i18n._(descriptor))
 
-export const GREGORIAN_MONTHS_FA = [
-  'ژانویه',
-  'فوریه',
-  'مارس',
-  'آوریل',
-  'مه',
-  'ژوئن',
-  'ژوئیه',
-  'اوت',
-  'سپتامبر',
-  'اکتبر',
-  'نوامبر',
-  'دسامبر',
-] as const
-
-export const monthNames = (calendar: CalendarSystem): readonly string[] => (calendar === 'JALALI' ? JALALI_MONTHS : GREGORIAN_MONTHS_FA)
-
-/** Year number in the given calendar. 1404 for Jalali, 2025 for Gregorian. */
 export const yearOf = (date: Date, calendar: CalendarSystem): number => (calendar === 'JALALI' ? getYearJalali(date) : getYear(date))
 
 /** Month index, 0-11, in the given calendar. */
@@ -132,10 +111,10 @@ export const formatDate = (iso: string, calendar: CalendarSystem): string => {
 }
 
 /** «۲۳ مرداد ۱۴۰۴» — for report headers and the receipt detail. */
-export const formatDateLong = (iso: string, calendar: CalendarSystem): string => {
+export const formatDateLong = (iso: string, calendar: CalendarSystem, i18n: I18n): string => {
   const date = new Date(iso)
   const day = calendar === 'JALALI' ? formatJalali(date, 'd') : formatGregorian(date, 'd')
-  const month = monthNames(calendar)[monthIndexOf(date, calendar)]
+  const month = monthNames(calendar, i18n)[monthIndexOf(date, calendar)]
   const year = yearOf(date, calendar)
   return `${toPersianDigits(day)} ${month} ${toPersianDigits(year)}`
 }

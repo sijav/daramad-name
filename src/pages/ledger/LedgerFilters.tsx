@@ -1,3 +1,4 @@
+import { useLingui } from '@lingui/react/macro'
 import { Button, MenuItem, Stack, TextField } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { CHANNEL_LABELS } from 'src/shared/constants'
@@ -12,6 +13,7 @@ export interface LedgerFiltersProps {
 
 /** Date range, client and channel — the three filters scenario 2 needs. */
 export const LedgerFilters = ({ filter, onFilterChange }: LedgerFiltersProps) => {
+  const { t, i18n } = useLingui()
   const { data: clients = [] } = useQuery({ queryKey: clientsQueryKey, queryFn: getClientsQuery })
   const hasFilters = Boolean(filter.range || filter.clientId || filter.channel)
 
@@ -24,14 +26,14 @@ export const LedgerFilters = ({ filter, onFilterChange }: LedgerFiltersProps) =>
   return (
     <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.5} sx={{ mb: 2.5, alignItems: { md: 'center' } }}>
       <DateField
-        label="از تاریخ"
+        label={t`از تاریخ`}
         value={filter.range?.from ?? new Date().toISOString()}
         onValueChange={(iso) => patchRange('from', iso)}
         disableFuture={false}
       />
 
       <DateField
-        label="تا تاریخ"
+        label={t`تا تاریخ`}
         value={filter.range?.to ?? new Date().toISOString()}
         onValueChange={(iso) => patchRange('to', iso)}
         disableFuture={false}
@@ -40,11 +42,11 @@ export const LedgerFilters = ({ filter, onFilterChange }: LedgerFiltersProps) =>
       <TextField
         select
         fullWidth
-        label="مشتری"
+        label={t`مشتری`}
         value={filter.clientId ?? ''}
         onChange={(event) => onFilterChange({ ...filter, clientId: event.target.value || undefined })}
       >
-        <MenuItem value="">همه‌ی مشتری‌ها</MenuItem>
+        <MenuItem value="">{t`همه‌ی مشتری‌ها`}</MenuItem>
         {clients.map((client) => (
           <MenuItem key={client.id} value={client.id}>
             {client.name}
@@ -55,20 +57,20 @@ export const LedgerFilters = ({ filter, onFilterChange }: LedgerFiltersProps) =>
       <TextField
         select
         fullWidth
-        label="کانال"
+        label={t`کانال`}
         value={filter.channel ?? ''}
         onChange={(event) => onFilterChange({ ...filter, channel: (event.target.value as Channel) || undefined })}
       >
-        <MenuItem value="">همه‌ی کانال‌ها</MenuItem>
+        <MenuItem value="">{t`همه‌ی کانال‌ها`}</MenuItem>
         {CHANNELS.map((channel) => (
           <MenuItem key={channel} value={channel}>
-            {CHANNEL_LABELS[channel]}
+            {i18n._(CHANNEL_LABELS[channel])}
           </MenuItem>
         ))}
       </TextField>
 
       <Button variant="outlined" disabled={!hasFilters} onClick={() => onFilterChange({})} sx={{ flexShrink: 0 }}>
-        پاک کردن فیلترها
+        {t`پاک کردن فیلترها`}
       </Button>
     </Stack>
   )

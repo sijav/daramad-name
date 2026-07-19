@@ -23,19 +23,19 @@
 ## اجرا
 
 ```bash
-yarn install
-yarn dev          # http://localhost:5173
+npm install
+npm run dev          # http://localhost:5173
 ```
 
 | فرمان | کار |
 | --- | --- |
-| `yarn dev` | سرور توسعه |
-| `yarn build` | بیلد پروڊاکشن |
-| `yarn lint` | ESLint، بدون تحمل warning |
-| `yarn lint:tsc` | بررسی تایپ‌ها |
-| `yarn format` | Prettier |
-| `yarn storybook` | استوری‌بوک روی پورت ۶۰۰۶ |
-| `yarn i18n:extract` / `yarn i18n:compile` | کاتالوگ‌های lingui |
+| `npm run dev` | سرور توسعه |
+| `npm run build` | بیلد پروڊاکشن |
+| `npm run lint` | ESLint، بدون تحمل warning |
+| `npm run lint:tsc` | بررسی تایپ‌ها |
+| `npm run format` | Prettier |
+| `npm run storybook` | استوری‌بوک روی پورت ۶۰۰۶ |
+| `npm run i18n:extract` / `npm run i18n:compile` | کاتالوگ‌های lingui |
 
 ## معماری
 

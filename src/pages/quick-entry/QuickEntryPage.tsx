@@ -1,3 +1,4 @@
+import { Trans, useLingui } from '@lingui/react/macro'
 import { Alert, Box, Snackbar, Typography } from '@mui/material'
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
@@ -13,6 +14,7 @@ import { ReceiptForm, useReceiptForm } from 'src/shared/receipt-form'
  * amount field — so the fast path is type amount, tab, save.
  */
 export const QuickEntryPage = () => {
+  const { t } = useLingui()
   const form = useReceiptForm()
   const [toast, setToast] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -44,7 +46,7 @@ export const QuickEntryPage = () => {
 
     mutate(request, {
       onSuccess: () => {
-        setToast('دریافتی ثبت شد.')
+        setToast(t`دریافتی ثبت شد.`)
         if (keepClient) {
           form.resetKeepingClient()
         } else {
@@ -58,15 +60,17 @@ export const QuickEntryPage = () => {
     <Box sx={{ maxWidth: 620, mx: 'auto' }}>
       <GlassCard>
         <Box sx={{ mb: 3 }}>
-          <Typography variant="h2">ثبت دریافتی</Typography>
+          <Typography variant="h2">
+            <Trans>ثبت دریافتی</Trans>
+          </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-            کمتر از ۱۵ ثانیه ثبتش کن
+            <Trans>کمتر از ۱۵ ثانیه ثبتش کن</Trans>
           </Typography>
         </Box>
 
         <ReceiptForm
           form={form}
-          submitLabel="ثبت دریافتی"
+          submitLabel={t`ثبت دریافتی`}
           pending={isPending}
           onSubmit={() => submit(false)}
           onSubmitAndNext={() => submit(true)}

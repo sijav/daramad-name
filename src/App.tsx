@@ -1,8 +1,10 @@
+import { I18nProvider } from '@lingui/react'
 import { Box, CircularProgress } from '@mui/material'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { lazy, Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Route, Routes } from 'react-router-dom'
+import { i18n } from 'src/core/i18n'
 import { queryClient } from 'src/core/query'
 import { RtlProvider } from 'src/core/theme'
 import { QuickEntryPage } from 'src/pages/quick-entry'
@@ -25,23 +27,25 @@ const PageLoader = () => (
 )
 
 export const App = () => (
-  <RtlProvider>
-    <QueryClientProvider client={queryClient}>
-      <ErrorBoundary FallbackComponent={AppErrorFallback}>
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route element={<AppShell />}>
-              <Route index element={<QuickEntryPage />} />
-              <Route path="ledger" element={<LedgerPage />} />
-              <Route path="charts" element={<ChartsPage />} />
-              <Route path="report" element={<ReportPage />} />
-              <Route path="settings" element={<SettingsPage />} />
-              {/* Unknown paths fall back to the entry page rather than a dead end. */}
-              <Route path="*" element={<QuickEntryPage />} />
-            </Route>
-          </Routes>
-        </Suspense>
-      </ErrorBoundary>
-    </QueryClientProvider>
-  </RtlProvider>
+  <I18nProvider i18n={i18n}>
+    <RtlProvider>
+      <QueryClientProvider client={queryClient}>
+        <ErrorBoundary FallbackComponent={AppErrorFallback}>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route element={<AppShell />}>
+                <Route index element={<QuickEntryPage />} />
+                <Route path="ledger" element={<LedgerPage />} />
+                <Route path="charts" element={<ChartsPage />} />
+                <Route path="report" element={<ReportPage />} />
+                <Route path="settings" element={<SettingsPage />} />
+                {/* Unknown paths fall back to the entry page rather than a dead end. */}
+                <Route path="*" element={<QuickEntryPage />} />
+              </Route>
+            </Routes>
+          </Suspense>
+        </ErrorBoundary>
+      </QueryClientProvider>
+    </RtlProvider>
+  </I18nProvider>
 )

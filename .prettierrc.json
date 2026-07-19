@@ -1,8 +1,0 @@
-{
-  "singleQuote": true,
-  "semi": false,
-  "printWidth": 140,
-  "arrowParens": "always",
-  "plugins": ["prettier-plugin-organize-imports"],
-  "overrides": [{ "files": "**/*.json", "options": { "trailingComma": "none" } }]
-}

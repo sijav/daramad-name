@@ -1,3 +1,4 @@
+import { useLingui } from '@lingui/react/macro'
 import ReceiptLongRoundedIcon from '@mui/icons-material/ReceiptLongRounded'
 import { Box, CircularProgress, Grid } from '@mui/material'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -18,6 +19,7 @@ import { LedgerTable } from './LedgerTable'
 
 /** Scenario 2: the ledger, its filters, and a total that always matches what is on screen. */
 export const LedgerPage = () => {
+  const { t } = useLingui()
   const navigate = useNavigate()
   const { calendar } = useSettings()
   const [filter, setFilter] = useState<LedgerFilter>({})
@@ -43,17 +45,17 @@ export const LedgerPage = () => {
 
   return (
     <Box>
-      <PageHeader title="دفتر درآمد" subtitle="همه‌ی دریافتی‌هایت، با جمع دقیق" />
+      <PageHeader title={t`دفتر درآمد`} subtitle={t`همه‌ی دریافتی‌هایت، با جمع دقیق`} />
 
       <Grid container spacing={2} sx={{ mb: 3 }}>
         <Grid size={{ xs: 12, sm: 4 }}>
-          <StatTile label="جمع کل" value={data?.summary.totalToman ?? 0} emphasis />
+          <StatTile label={t`جمع کل`} value={data?.summary.totalToman ?? 0} emphasis />
         </Grid>
         <Grid size={{ xs: 6, sm: 4 }}>
-          <StatTile label="میانگین ماهانه" value={data?.summary.monthlyAverageToman ?? 0} />
+          <StatTile label={t`میانگین ماهانه`} value={data?.summary.monthlyAverageToman ?? 0} />
         </Grid>
         <Grid size={{ xs: 6, sm: 4 }}>
-          <StatTile label="تعداد دریافتی" value={toPersianDigits(data?.summary.receiptCount ?? 0)} />
+          <StatTile label={t`تعداد دریافتی`} value={toPersianDigits(data?.summary.receiptCount ?? 0)} />
         </Grid>
       </Grid>
 
@@ -76,17 +78,17 @@ export const LedgerPage = () => {
           />
         ) : isFiltered ? (
           <EmptyState
-            title="با این فیلترها چیزی پیدا نشد"
-            description="بازه‌ی تاریخ یا مشتری را عوض کن، یا فیلترها را پاک کن تا همه‌ی دریافتی‌ها را ببینی."
-            actionLabel="پاک کردن فیلترها"
+            title={t`با این فیلترها چیزی پیدا نشد`}
+            description={t`بازه‌ی تاریخ یا مشتری را عوض کن، یا فیلترها را پاک کن تا همه‌ی دریافتی‌ها را ببینی.`}
+            actionLabel={t`پاک کردن فیلترها`}
             onAction={() => setFilter({})}
           />
         ) : (
           <EmptyState
             icon={<ReceiptLongRoundedIcon />}
-            title="هنوز دریافتی‌ای ثبت نکردی"
-            description="دفتر درآمد جاییه که همه‌ی پول‌هایی که گرفتی یک‌جا جمع می‌شه — همون چیزی که موقع گزارش گرفتن لازمت می‌شه."
-            actionLabel="ثبت اولین دریافتی"
+            title={t`هنوز دریافتی‌ای ثبت نکردی`}
+            description={t`دفتر درآمد جاییه که همه‌ی پول‌هایی که گرفتی یک‌جا جمع می‌شه — همون چیزی که موقع گزارش گرفتن لازمت می‌شه.`}
+            actionLabel={t`ثبت اولین دریافتی`}
             onAction={() => navigate('/')}
           />
         )}
@@ -96,9 +98,9 @@ export const LedgerPage = () => {
 
       <ConfirmDialog
         open={deleting !== null}
-        title="حذف دریافتی"
-        description="این دریافتی از دفتر حذف می‌شه و جمع‌ها و نمودارها به‌روز می‌شن. این کار برگشت‌پذیر نیست."
-        confirmLabel="حذف کن"
+        title={t`حذف دریافتی`}
+        description={t`این دریافتی از دفتر حذف می‌شه و جمع‌ها و نمودارها به‌روز می‌شن. این کار برگشت‌پذیر نیست.`}
+        confirmLabel={t`حذف کن`}
         destructive
         onConfirm={() => deleting && remove({ id: deleting.id })}
         onClose={() => setDeleting(null)}

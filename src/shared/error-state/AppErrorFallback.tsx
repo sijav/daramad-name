@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/react/macro'
 import ErrorOutlineRoundedIcon from '@mui/icons-material/ErrorOutlineRounded'
 import { Box, Button, Stack, Typography } from '@mui/material'
 import type { FallbackProps } from 'react-error-boundary'
@@ -14,11 +15,15 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
     <Stack spacing={2} sx={{ alignItems: 'center', textAlign: 'center', maxWidth: 460 }}>
       <ErrorOutlineRoundedIcon sx={{ fontSize: 48, color: 'error.main' }} />
 
-      <Typography variant="h2">یه جای کار خطا خورد</Typography>
+      <Typography variant="h2">
+        <Trans>یه جای کار خطا خورد</Trans>
+      </Typography>
 
       <Typography variant="body2" color="text.secondary">
-        داده‌هایت سر جاشه و پاک نشده — این خطا فقط مربوط به نمایش صفحه‌ست. دوباره امتحان کن؛ اگر باز هم تکرار شد، از تنظیمات بکاپ بگیر و
-        صفحه را ببند و باز کن.
+        <Trans>
+          داده‌هایت سر جاشه و پاک نشده — این خطا فقط مربوط به نمایش صفحه‌ست. دوباره امتحان کن؛ اگر باز هم تکرار شد، از تنظیمات بکاپ بگیر و
+          صفحه را ببند و باز کن.
+        </Trans>
       </Typography>
 
       <Typography
@@ -38,7 +43,7 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
       </Typography>
 
       <Button variant="contained" onClick={resetErrorBoundary}>
-        دوباره امتحان کن
+        <Trans>دوباره امتحان کن</Trans>
       </Button>
     </Stack>
   </Box>

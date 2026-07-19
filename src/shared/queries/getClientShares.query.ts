@@ -1,5 +1,7 @@
+import { msg } from '@lingui/core/macro'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 import { db } from 'src/core/db'
+import { i18n } from 'src/core/i18n'
 import { CONCENTRATION_THRESHOLD, type ClientShare, type ConcentrationInsight, type DateRange } from 'src/shared/types'
 
 export const getClientSharesQueryKey = (range: DateRange) => ['client-shares', range] as const
@@ -39,7 +41,7 @@ export const getClientSharesQuery = async ({
   const shares: ClientShare[] = [...totals.entries()]
     .map(([clientId, totalToman]) => ({
       clientId,
-      clientName: clientId === UNASSIGNED_ID ? 'بدون مشتری' : (namesById.get(clientId) ?? 'نامشخص'),
+      clientName: clientId === UNASSIGNED_ID ? i18n._(msg`بدون مشتری`) : (namesById.get(clientId) ?? i18n._(msg`نامشخص`)),
       totalToman,
       percentage: Math.round((totalToman / grandTotal) * 1000) / 10,
     }))

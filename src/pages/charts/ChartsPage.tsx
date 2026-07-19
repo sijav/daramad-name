@@ -1,3 +1,4 @@
+import { Trans, useLingui } from '@lingui/react/macro'
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded'
 import { Box, CircularProgress, Grid, MenuItem, Stack, TextField, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
@@ -23,6 +24,7 @@ import { MonthlyIncomeChart } from './MonthlyIncomeChart'
 
 /** Scenario 4: the annual picture, and the dependency warning that comes with it. */
 export const ChartsPage = () => {
+  const { t } = useLingui()
   const navigate = useNavigate()
   const { calendar } = useSettings()
   const [year, setYear] = useState(() => yearOf(new Date(), calendar))
@@ -49,10 +51,10 @@ export const ChartsPage = () => {
   return (
     <Box>
       <PageHeader
-        title="نمودارها"
-        subtitle="تصویر یک‌ساله‌ی درآمدت"
+        title={t`نمودارها`}
+        subtitle={t`تصویر یک‌ساله‌ی درآمدت`}
         action={
-          <TextField select value={year} onChange={(event) => setYear(Number(event.target.value))} label="سال" sx={{ minWidth: 140 }}>
+          <TextField select value={year} onChange={(event) => setYear(Number(event.target.value))} label={t`سال`} sx={{ minWidth: 140 }}>
             {years.map((option) => (
               <MenuItem key={option} value={option}>
                 {toPersianDigits(option)}
@@ -70,9 +72,9 @@ export const ChartsPage = () => {
         <GlassCard>
           <EmptyState
             icon={<BarChartRoundedIcon />}
-            title="برای این سال هنوز داده‌ای نیست"
-            description="وقتی چند دریافتی ثبت کنی، اینجا می‌بینی درآمدت ماه‌به‌ماه چطور بالا و پایین شده و چقدرش به یک مشتری وابسته است."
-            actionLabel="ثبت دریافتی"
+            title={t`برای این سال هنوز داده‌ای نیست`}
+            description={t`وقتی چند دریافتی ثبت کنی، اینجا می‌بینی درآمدت ماه‌به‌ماه چطور بالا و پایین شده و چقدرش به یک مشتری وابسته است.`}
+            actionLabel={t`ثبت دریافتی`}
             onAction={() => navigate('/')}
           />
         </GlassCard>
@@ -80,35 +82,35 @@ export const ChartsPage = () => {
         <Stack spacing={3}>
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, sm: 4 }}>
-              <StatTile label={`درآمد سال ${toPersianDigits(year)}`} value={yearTotal} emphasis />
+              <StatTile label={t`درآمد سال ${toPersianDigits(year)}`} value={yearTotal} emphasis />
             </Grid>
             <Grid size={{ xs: 6, sm: 4 }}>
-              <StatTile label="میانگین ماهانه" value={Math.round(yearTotal / 12)} hint="تقسیم بر ۱۲ ماه سال" />
+              <StatTile label={t`میانگین ماهانه`} value={Math.round(yearTotal / 12)} hint={t`تقسیم بر ۱۲ ماه سال`} />
             </Grid>
             <Grid size={{ xs: 6, sm: 4 }}>
-              <StatTile label="ماه‌های دارای درآمد" value={`${toPersianDigits(activeMonths)} از ۱۲`} />
+              <StatTile label={t`ماه‌های دارای درآمد`} value={t`${toPersianDigits(activeMonths)} از ۱۲`} />
             </Grid>
           </Grid>
 
           <GlassCard>
             <Typography variant="h3" sx={{ mb: 2 }}>
-              درآمد ۱۲ ماه
+              <Trans>درآمد ۱۲ ماه</Trans>
             </Typography>
             <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
-              ارقام محور عمودی به میلیون تومان است.
+              <Trans>ارقام محور عمودی به میلیون تومان است.</Trans>
             </Typography>
             <MonthlyIncomeChart months={months ?? []} calendar={calendar} />
           </GlassCard>
 
           <GlassCard>
             <Typography variant="h3" sx={{ mb: 2 }}>
-              سهم مشتری‌ها
+              <Trans>سهم مشتری‌ها</Trans>
             </Typography>
             <ClientShareChart shares={shareData?.shares ?? []} />
             {shareData?.insight ? (
               <InsightBanner
                 sx={{ mt: 2 }}
-                message={`${toPersianDigits(shareData.insight.percentage)}٪ درآمدت از یک مشتری است («${shareData.insight.clientName}»). اگر این مشتری برود، بخش بزرگی از درآمدت می‌رود.`}
+                message={t`${toPersianDigits(shareData.insight.percentage)}٪ درآمدت از یک مشتری است («${shareData.insight.clientName}»). اگر این مشتری برود، بخش بزرگی از درآمدت می‌رود.`}
               />
             ) : null}
           </GlassCard>

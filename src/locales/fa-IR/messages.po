@@ -1,0 +1,762 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-07-19 12:22+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: fa-IR\n"
+
+#. placeholder {0}: toPersianDigits(activeMonths)
+#: src/pages/charts/ChartsPage.tsx
+msgid "{0} از ۱۲"
+msgstr "{0} از ۱۲"
+
+#. placeholder {0}: formatDateLong(range.from, calendar, i18n)
+#. placeholder {1}: formatDateLong(range.to, calendar, i18n)
+#: src/pages/report/ReportPage.tsx
+msgid "{0} تا {1}"
+msgstr "{0} تا {1}"
+
+#. placeholder {0}: data.receipts.length
+#: src/pages/settings/SettingsPage.tsx
+msgid "{0} دریافتی بازیابی شد."
+msgstr "{0} دریافتی بازیابی شد."
+
+#. placeholder {0}: toPersianDigits(shareData.insight.percentage)
+#. placeholder {1}: shareData.insight.clientName
+#: src/pages/charts/ChartsPage.tsx
+msgid "{0}٪ درآمدت از یک مشتری است («{1}»). اگر این مشتری برود، بخش بزرگی از درآمدت می‌رود."
+msgstr "{0}٪ درآمدت از یک مشتری است («{1}»). اگر این مشتری برود، بخش بزرگی از درآمدت می‌رود."
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "{count} دریافتی نمونه اضافه شد."
+msgstr "{count} دریافتی نمونه اضافه شد."
+
+#: src/shared/constants/labels.ts
+msgid "آبان"
+msgstr "آبان"
+
+#: src/shared/constants/labels.ts
+msgid "آذر"
+msgstr "آذر"
+
+#: src/shared/constants/labels.ts
+msgid "آوریل"
+msgstr "آوریل"
+
+#: src/shared/constants/labels.ts
+msgid "اردیبهشت"
+msgstr "اردیبهشت"
+
+#: src/pages/charts/ChartsPage.tsx
+msgid "ارقام محور عمودی به میلیون تومان است."
+msgstr "ارقام محور عمودی به میلیون تومان است."
+
+#: src/pages/ledger/LedgerFilters.tsx
+msgid "از تاریخ"
+msgstr "از تاریخ"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "استودیو نقش"
+msgstr "استودیو نقش"
+
+#: src/shared/constants/labels.ts
+msgid "اسفند"
+msgstr "اسفند"
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "اسم مشتری را بنویس یا انتخاب کن"
+msgstr "اسم مشتری را بنویس یا انتخاب کن"
+
+#: src/pages/report/ReportPage.tsx
+msgid "اسمت هنوز ثبت نشده. بدون مشخصات فردی، این سند برای سفارت یا صاحبخونه اعتبار نداره — <0>از تنظیمات پرش کن</0>."
+msgstr "اسمت هنوز ثبت نشده. بدون مشخصات فردی، این سند برای سفارت یا صاحبخونه اعتبار نداره — <0>از تنظیمات پرش کن</0>."
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "اصلاحات نهایی"
+msgstr "اصلاحات نهایی"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "افزودن داده‌ی نمونه"
+msgstr "افزودن داده‌ی نمونه"
+
+#: src/shared/constants/labels.ts
+msgid "اکتبر"
+msgstr "اکتبر"
+
+#: src/shared/confirm-dialog/ConfirmDialog.tsx
+msgid "انصراف"
+msgstr "انصراف"
+
+#: src/shared/constants/labels.ts
+msgid "اوت"
+msgstr "اوت"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "این اطلاعات بالای گزارش درآمد چاپ می‌شه. بدون اسم، سند برای سفارت یا صاحبخونه اعتباری نداره."
+msgstr "این اطلاعات بالای گزارش درآمد چاپ می‌شه. بدون اسم، سند برای سفارت یا صاحبخونه اعتباری نداره."
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "این دریافتی از دفتر حذف می‌شه و جمع‌ها و نمودارها به‌روز می‌شن. این کار برگشت‌پذیر نیست."
+msgstr "این دریافتی از دفتر حذف می‌شه و جمع‌ها و نمودارها به‌روز می‌شن. این کار برگشت‌پذیر نیست."
+
+#: src/shared/queries/updateReceipt.mutation.ts
+msgid "این دریافتی پیدا نشد؛ ممکنه قبلاً حذفش کرده باشی."
+msgstr "این دریافتی پیدا نشد؛ ممکنه قبلاً حذفش کرده باشی."
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "این دریافتی تاریخ گذشته داره. نرخ همون روز رو وارد کن، نه نرخ امروز — این مبلغ برای همیشه ثبت می‌شه و بعداً با تغییر قیمت عوض نمی‌شه."
+msgstr "این دریافتی تاریخ گذشته داره. نرخ همون روز رو وارد کن، نه نرخ امروز — این مبلغ برای همیشه ثبت می‌شه و بعداً با تغییر قیمت عوض نمی‌شه."
+
+#: src/shared/queries/restoreBackup.mutation.ts
+msgid "این فایل JSON معتبر نیست. مطمئن شو همون فایلی رو انتخاب کردی که از «بکاپ» گرفته بودی."
+msgstr "این فایل JSON معتبر نیست. مطمئن شو همون فایلی رو انتخاب کردی که از «بکاپ» گرفته بودی."
+
+#: src/shared/queries/restoreBackup.mutation.ts
+msgid "این فایل مال درآمدنامه نیست. فایل بکاپ یه ابزار دیگه رو انتخاب کردی؟"
+msgstr "این فایل مال درآمدنامه نیست. فایل بکاپ یه ابزار دیگه رو انتخاب کردی؟"
+
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "این گزارش بر اساس داده‌هایی تولید شده که خودِ کاربر در برنامه‌ی درآمدنامه ثبت کرده است."
+msgstr "این گزارش بر اساس داده‌هایی تولید شده که خودِ کاربر در برنامه‌ی درآمدنامه ثبت کرده است."
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "با این فیلترها چیزی پیدا نشد"
+msgstr "با این فیلترها چیزی پیدا نشد"
+
+#: src/shared/layouts/AppShell.tsx
+msgid "باز کردن منو"
+msgstr "باز کردن منو"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "بازرگانی آریا"
+msgstr "بازرگانی آریا"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "بازطراحی هویت بصری"
+msgstr "بازطراحی هویت بصری"
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "بازه‌ی تاریخ یا مشتری را عوض کن، یا فیلترها را پاک کن تا همه‌ی دریافتی‌ها را ببینی."
+msgstr "بازه‌ی تاریخ یا مشتری را عوض کن، یا فیلترها را پاک کن تا همه‌ی دریافتی‌ها را ببینی."
+
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "بازه‌ی گزارش"
+msgstr "بازه‌ی گزارش"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "بازیابی از فایل"
+msgstr "بازیابی از فایل"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "بازیابی کن"
+msgstr "بازیابی کن"
+
+#: src/shared/queries/getClientShares.query.ts
+msgid "بدون مشتری"
+msgstr "بدون مشتری"
+
+#: src/shared/receipt-form/useReceiptForm.ts
+msgid "برای ارز غیرتومانی، نرخ تبدیل لازمه."
+msgstr "برای ارز غیرتومانی، نرخ تبدیل لازمه."
+
+#: src/pages/report/ReportPage.tsx
+msgid "برای این سال دریافتی‌ای ثبت نشده"
+msgstr "برای این سال دریافتی‌ای ثبت نشده"
+
+#: src/pages/charts/ChartsPage.tsx
+msgid "برای این سال هنوز داده‌ای نیست"
+msgstr "برای این سال هنوز داده‌ای نیست"
+
+#: src/shared/confirm-dialog/ConfirmDialog.tsx
+msgid "برای تأیید، «{confirmationWord}» را بنویس"
+msgstr "برای تأیید، «{confirmationWord}» را بنویس"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "بکاپ (دانلود JSON)"
+msgstr "بکاپ (دانلود JSON)"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "بکاپ و بازیابی"
+msgstr "بکاپ و بازیابی"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "بنر و پست شبکه اجتماعی"
+msgstr "بنر و پست شبکه اجتماعی"
+
+#: src/shared/constants/labels.ts
+msgid "بهمن"
+msgstr "بهمن"
+
+#: src/pages/ledger/LedgerFilters.tsx
+#: src/pages/ledger/LedgerPage.tsx
+msgid "پاک کردن فیلترها"
+msgstr "پاک کردن فیلترها"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "پاک کردن همه‌ی داده‌ها"
+msgstr "پاک کردن همه‌ی داده‌ها"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "پاک کن"
+msgstr "پاک کن"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "پروژه کوچک تصویرسازی"
+msgstr "پروژه کوچک تصویرسازی"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "پیش‌پرداخت فاز اول طراحی"
+msgstr "پیش‌پرداخت فاز اول طراحی"
+
+#: src/pages/report/ReportPage.tsx
+msgid "پیش‌نمایش سند"
+msgstr "پیش‌نمایش سند"
+
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "تا"
+msgstr "تا"
+
+#: src/pages/ledger/LedgerFilters.tsx
+msgid "تا تاریخ"
+msgstr "تا تاریخ"
+
+#: src/pages/ledger/LedgerTable.tsx
+msgid "تاریخ"
+msgstr "تاریخ"
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "تاریخ دریافت"
+msgstr "تاریخ دریافت"
+
+#: src/shared/constants/labels.ts
+msgid "تتر"
+msgstr "تتر"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "تسویه فاز دوم"
+msgstr "تسویه فاز دوم"
+
+#: src/pages/charts/ChartsPage.tsx
+msgid "تصویر یک‌ساله‌ی درآمدت"
+msgstr "تصویر یک‌ساله‌ی درآمدت"
+
+#: src/pages/ledger/LedgerPage.tsx
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "تعداد دریافتی"
+msgstr "تعداد دریافتی"
+
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "تفکیک ماه‌به‌ماه"
+msgstr "تفکیک ماه‌به‌ماه"
+
+#: src/pages/charts/ChartsPage.tsx
+msgid "تقسیم بر ۱۲ ماه سال"
+msgstr "تقسیم بر ۱۲ ماه سال"
+
+#: src/pages/report/ReportPage.tsx
+msgid "تقسیم بر تعداد ماه‌های بازه، نه فقط ماه‌های دارای درآمد"
+msgstr "تقسیم بر تعداد ماه‌های بازه، نه فقط ماه‌های دارای درآمد"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "تقویم"
+msgstr "تقویم"
+
+#: src/pages/settings/SettingsPage.tsx
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "تلفن"
+msgstr "تلفن"
+
+#: src/pages/settings/SettingsPage.tsx
+#: src/shared/constants/navigation.tsx
+msgid "تنظیمات"
+msgstr "تنظیمات"
+
+#: src/shared/constants/labels.ts
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "تومان"
+msgstr "تومان"
+
+#: src/shared/constants/labels.ts
+msgid "تیر"
+msgstr "تیر"
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "ثبت اولین دریافتی"
+msgstr "ثبت اولین دریافتی"
+
+#: src/pages/charts/ChartsPage.tsx
+#: src/pages/quick-entry/QuickEntryPage.tsx
+msgid "ثبت دریافتی"
+msgstr "ثبت دریافتی"
+
+#: src/shared/constants/navigation.tsx
+msgid "ثبت سریع"
+msgstr "ثبت سریع"
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "جمع کل"
+msgstr "جمع کل"
+
+#. placeholder {0}: toPersianDigits(receipts.length)
+#: src/pages/ledger/LedgerTable.tsx
+msgid "جمع کل ({0} دریافتی)"
+msgstr "جمع کل ({0} دریافتی)"
+
+#: src/pages/report/ReportPage.tsx
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "جمع کل درآمد"
+msgstr "جمع کل درآمد"
+
+#: src/pages/ledger/LedgerTable.tsx
+msgid "حذف"
+msgstr "حذف"
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "حذف دریافتی"
+msgstr "حذف دریافتی"
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "حذف کن"
+msgstr "حذف کن"
+
+#: src/shared/constants/labels.ts
+msgid "حواله"
+msgstr "حواله"
+
+#: src/shared/constants/labels.ts
+msgid "خرداد"
+msgstr "خرداد"
+
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "خلاصه"
+msgstr "خلاصه"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "داده‌های فعلی کاملاً با محتوای این فایل جایگزین می‌شن. اگر الان دریافتی ثبت‌شده داری، اول ازش بکاپ بگیر."
+msgstr "داده‌های فعلی کاملاً با محتوای این فایل جایگزین می‌شن. اگر الان دریافتی ثبت‌شده داری، اول ازش بکاپ بگیر."
+
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "داده‌هایت سر جاشه و پاک نشده — این خطا فقط مربوط به نمایش صفحه‌ست. دوباره امتحان کن؛ اگر باز هم تکرار شد، از تنظیمات بکاپ بگیر و صفحه را ببند و باز کن."
+msgstr "داده‌هایت سر جاشه و پاک نشده — این خطا فقط مربوط به نمایش صفحه‌ست. دوباره امتحان کن؛ اگر باز هم تکرار شد، از تنظیمات بکاپ بگیر و صفحه را ببند و باز کن."
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "داده‌هایت فقط روی همین مرورگره. اگر مرورگر رو پاک کنی، بدون بکاپ همه‌چیز از دست می‌ره."
+msgstr "داده‌هایت فقط روی همین مرورگره. اگر مرورگر رو پاک کنی، بدون بکاپ همه‌چیز از دست می‌ره."
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "داده‌ی نمونه برای تست و اسکرین‌شاته. برای دموی واقعی، دیتای خودت رو ثبت کن."
+msgstr "داده‌ی نمونه برای تست و اسکرین‌شاته. برای دموی واقعی، دیتای خودت رو ثبت کن."
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "داده‌ی نمونه و پاک‌سازی"
+msgstr "داده‌ی نمونه و پاک‌سازی"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "داشبورد تحلیلی"
+msgstr "داشبورد تحلیلی"
+
+#: src/pages/report/ReportPage.tsx
+msgid "دانلود PDF"
+msgstr "دانلود PDF"
+
+#: src/pages/report/ReportPage.tsx
+msgid "در حال ساخت…"
+msgstr "در حال ساخت…"
+
+#: src/pages/charts/ChartsPage.tsx
+msgid "درآمد ۱۲ ماه"
+msgstr "درآمد ۱۲ ماه"
+
+#. placeholder {0}: toPersianDigits(year)
+#: src/pages/charts/ChartsPage.tsx
+msgid "درآمد سال {0}"
+msgstr "درآمد سال {0}"
+
+#: src/pages/charts/MonthlyIncomeChart.tsx
+msgid "درآمد ماهانه"
+msgstr "درآمد ماهانه"
+
+#: src/shared/layouts/AppShell.tsx
+msgid "درآمدنامه"
+msgstr "درآمدنامه"
+
+#: src/pages/quick-entry/QuickEntryPage.tsx
+msgid "دریافتی ثبت شد."
+msgstr "دریافتی ثبت شد."
+
+#: src/shared/constants/labels.ts
+msgid "دسامبر"
+msgstr "دسامبر"
+
+#: src/pages/ledger/LedgerPage.tsx
+#: src/shared/constants/navigation.tsx
+msgid "دفتر درآمد"
+msgstr "دفتر درآمد"
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "دفتر درآمد جاییه که همه‌ی پول‌هایی که گرفتی یک‌جا جمع می‌شه — همون چیزی که موقع گزارش گرفتن لازمت می‌شه."
+msgstr "دفتر درآمد جاییه که همه‌ی پول‌هایی که گرفتی یک‌جا جمع می‌شه — همون چیزی که موقع گزارش گرفتن لازمت می‌شه."
+
+#: src/shared/layouts/AppShell.tsx
+msgid "دفتر دریافتی‌ها و گزارش درآمد"
+msgstr "دفتر دریافتی‌ها و گزارش درآمد"
+
+#: src/shared/constants/labels.ts
+msgid "دلار"
+msgstr "دلار"
+
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "دوباره امتحان کن"
+msgstr "دوباره امتحان کن"
+
+#: src/shared/constants/labels.ts
+msgid "دی"
+msgstr "دی"
+
+#: src/shared/constants/labels.ts
+msgid "دیگر"
+msgstr "دیگر"
+
+#: src/pages/ledger/EditReceiptDialog.tsx
+msgid "ذخیره تغییرات"
+msgstr "ذخیره تغییرات"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "ذخیره مشخصات"
+msgstr "ذخیره مشخصات"
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "ذخیره و بعدی"
+msgstr "ذخیره و بعدی"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "ری‌دیزاین صفحه محصول"
+msgstr "ری‌دیزاین صفحه محصول"
+
+#: src/pages/report/ReportPage.tsx
+msgid "زبان سند"
+msgstr "زبان سند"
+
+#: src/shared/constants/labels.ts
+msgid "ژانویه"
+msgstr "ژانویه"
+
+#: src/shared/constants/labels.ts
+msgid "ژوئن"
+msgstr "ژوئن"
+
+#: src/shared/constants/labels.ts
+msgid "ژوئیه"
+msgstr "ژوئیه"
+
+#: src/shared/queries/restoreBackup.mutation.ts
+msgid "ساختار فایل بکاپ ناقصه؛ فهرست دریافتی‌ها یا مشتری‌ها توش نیست."
+msgstr "ساختار فایل بکاپ ناقصه؛ فهرست دریافتی‌ها یا مشتری‌ها توش نیست."
+
+#: src/pages/charts/ChartsPage.tsx
+msgid "سال"
+msgstr "سال"
+
+#: src/pages/report/ReportPage.tsx
+msgid "سال گزارش"
+msgstr "سال گزارش"
+
+#: src/shared/constants/labels.ts
+msgid "سپتامبر"
+msgstr "سپتامبر"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "ست آیکون اپلیکیشن"
+msgstr "ست آیکون اپلیکیشن"
+
+#: src/pages/report/ReportPage.tsx
+msgid "سندی که می‌تونی به سفارت، صاحبخونه یا حسابدار بدی"
+msgstr "سندی که می‌تونی به سفارت، صاحبخونه یا حسابدار بدی"
+
+#: src/pages/charts/ChartsPage.tsx
+msgid "سهم مشتری‌ها"
+msgstr "سهم مشتری‌ها"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "شرکت داده‌پرداز"
+msgstr "شرکت داده‌پرداز"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "شمسی"
+msgstr "شمسی"
+
+#: src/shared/constants/labels.ts
+msgid "شهریور"
+msgstr "شهریور"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "طراحی منو"
+msgstr "طراحی منو"
+
+#: src/pages/report/ReportPage.tsx
+msgid "فارسی"
+msgstr "فارسی"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "فایل بکاپ دانلود شد."
+msgstr "فایل بکاپ دانلود شد."
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "فایل خوانده نشد. مطمئن شو فایل سالمه و دوباره انتخابش کن."
+msgstr "فایل خوانده نشد. مطمئن شو فایل سالمه و دوباره انتخابش کن."
+
+#: src/shared/constants/labels.ts
+msgid "فروردین"
+msgstr "فروردین"
+
+#: src/shared/constants/labels.ts
+msgid "فوریه"
+msgstr "فوریه"
+
+#: src/shared/pdf/loadPdfMake.ts
+msgid "فونت فارسی گزارش بارگذاری نشد. صفحه را دوباره باز کن."
+msgstr "فونت فارسی گزارش بارگذاری نشد. صفحه را دوباره باز کن."
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "قرارداد سه‌ماهه"
+msgstr "قرارداد سه‌ماهه"
+
+#: src/shared/constants/labels.ts
+msgid "کارت به کارت"
+msgstr "کارت به کارت"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "کافه رستوران هما"
+msgstr "کافه رستوران هما"
+
+#: src/pages/ledger/LedgerFilters.tsx
+#: src/pages/ledger/LedgerTable.tsx
+msgid "کانال"
+msgstr "کانال"
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "کانال دریافت"
+msgstr "کانال دریافت"
+
+#: src/pages/settings/SettingsPage.tsx
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "کد ملی"
+msgstr "کد ملی"
+
+#: src/pages/quick-entry/QuickEntryPage.tsx
+msgid "کمتر از ۱۵ ثانیه ثبتش کن"
+msgstr "کمتر از ۱۵ ثانیه ثبتش کن"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "گرفتن بکاپ ناموفق بود. دوباره امتحان کن."
+msgstr "گرفتن بکاپ ناموفق بود. دوباره امتحان کن."
+
+#: src/pages/report/ReportPage.tsx
+#: src/shared/constants/navigation.tsx
+msgid "گزارش درآمد"
+msgstr "گزارش درآمد"
+
+#: src/pages/report/ReportPage.tsx
+msgid "گزارش درآمد از روی همون دریافتی‌هایی ساخته می‌شه که ثبت کردی. اول چند تا دریافتی وارد کن، بعد از همین‌جا سند بگیر."
+msgstr "گزارش درآمد از روی همون دریافتی‌هایی ساخته می‌شه که ثبت کردی. اول چند تا دریافتی وارد کن، بعد از همین‌جا سند بگیر."
+
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "گزارش درآمد ثبت‌شده‌ی فریلنسری"
+msgstr "گزارش درآمد ثبت‌شده‌ی فریلنسری"
+
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "گواهی درآمد"
+msgstr "گواهی درآمد"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "لندینگ کمپین"
+msgstr "لندینگ کمپین"
+
+#: src/shared/constants/labels.ts
+msgid "مارس"
+msgstr "مارس"
+
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "ماه"
+msgstr "ماه"
+
+#: src/pages/charts/ChartsPage.tsx
+msgid "ماه‌های دارای درآمد"
+msgstr "ماه‌های دارای درآمد"
+
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "مبلغ"
+msgstr "مبلغ"
+
+#: src/pages/ledger/LedgerTable.tsx
+msgid "مبلغ اصلی"
+msgstr "مبلغ اصلی"
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "مبلغ دریافتی"
+msgstr "مبلغ دریافتی"
+
+#: src/shared/receipt-form/useReceiptForm.ts
+msgid "مبلغ را وارد کن؛ باید بزرگ‌تر از صفر باشه."
+msgstr "مبلغ را وارد کن؛ باید بزرگ‌تر از صفر باشه."
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "مثلاً: پیش‌پرداخت فاز اول طراحی"
+msgstr "مثلاً: پیش‌پرداخت فاز اول طراحی"
+
+#: src/shared/queries/restoreBackup.mutation.ts
+msgid "محتوای فایل خالی یا خراب است."
+msgstr "محتوای فایل خالی یا خراب است."
+
+#: src/shared/constants/labels.ts
+msgid "مرداد"
+msgstr "مرداد"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "مشاوره UX"
+msgstr "مشاوره UX"
+
+#: src/pages/ledger/LedgerFilters.tsx
+#: src/pages/ledger/LedgerTable.tsx
+msgid "مشتری"
+msgstr "مشتری"
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "مشتری / پروژه"
+msgstr "مشتری / پروژه"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "مشخصات فردی"
+msgstr "مشخصات فردی"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "مشخصاتت ذخیره شد."
+msgstr "مشخصاتت ذخیره شد."
+
+#: src/pages/ledger/LedgerTable.tsx
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "معادل تومانی"
+msgstr "معادل تومانی"
+
+#: src/shared/constants/labels.ts
+msgid "مه"
+msgstr "مه"
+
+#: src/shared/constants/labels.ts
+msgid "مهر"
+msgstr "مهر"
+
+#: src/pages/report/ReportPage.tsx
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "میانگین درآمد ماهانه"
+msgstr "میانگین درآمد ماهانه"
+
+#: src/pages/charts/ChartsPage.tsx
+#: src/pages/ledger/LedgerPage.tsx
+msgid "میانگین ماهانه"
+msgstr "میانگین ماهانه"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "میلادی"
+msgstr "میلادی"
+
+#: src/pages/settings/SettingsPage.tsx
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "نام و نام خانوادگی"
+msgstr "نام و نام خانوادگی"
+
+#: src/shared/queries/getClientShares.query.ts
+msgid "نامشخص"
+msgstr "نامشخص"
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "نرخ تبدیل در همان تاریخ (تومان)"
+msgstr "نرخ تبدیل در همان تاریخ (تومان)"
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "نرخ تبدیل روز (تومان)"
+msgstr "نرخ تبدیل روز (تومان)"
+
+#: src/shared/queries/restoreBackup.mutation.ts
+msgid "نسخه‌ی این فایل بکاپ پشتیبانی نمی‌شه. با نسخه‌ی جدیدتر برنامه ساخته شده."
+msgstr "نسخه‌ی این فایل بکاپ پشتیبانی نمی‌شه. با نسخه‌ی جدیدتر برنامه ساخته شده."
+
+#: src/pages/settings/SettingsPage.tsx
+#: src/shared/pdf/buildIncomeReport.ts
+msgid "نشانی"
+msgstr "نشانی"
+
+#: src/pages/charts/ChartsPage.tsx
+#: src/shared/constants/navigation.tsx
+msgid "نمودارها"
+msgstr "نمودارها"
+
+#: src/shared/constants/labels.ts
+msgid "نوامبر"
+msgstr "نوامبر"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "همه را پاک کن"
+msgstr "همه را پاک کن"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "همه‌ی تاریخ‌ها و جمع‌بندی‌های ماهانه با این تقویم نمایش داده می‌شن. داده‌هایت تغییری نمی‌کنن."
+msgstr "همه‌ی تاریخ‌ها و جمع‌بندی‌های ماهانه با این تقویم نمایش داده می‌شن. داده‌هایت تغییری نمی‌کنن."
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "همه‌ی داده‌ها پاک شد."
+msgstr "همه‌ی داده‌ها پاک شد."
+
+#: src/shared/privacy-footer/PrivacyFooter.tsx
+msgid "همه‌ی داده‌ها فقط روی مرورگر خودت می‌مونه و هیچ‌جا ارسال نمی‌شه."
+msgstr "همه‌ی داده‌ها فقط روی مرورگر خودت می‌مونه و هیچ‌جا ارسال نمی‌شه."
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "همه‌ی دریافتی‌ها، مشتری‌ها و مشخصاتت برای همیشه پاک می‌شن. اگر بکاپ نگرفتی، برگشتی وجود نداره."
+msgstr "همه‌ی دریافتی‌ها، مشتری‌ها و مشخصاتت برای همیشه پاک می‌شن. اگر بکاپ نگرفتی، برگشتی وجود نداره."
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "همه‌ی دریافتی‌هایت، با جمع دقیق"
+msgstr "همه‌ی دریافتی‌هایت، با جمع دقیق"
+
+#: src/pages/ledger/LedgerFilters.tsx
+msgid "همه‌ی کانال‌ها"
+msgstr "همه‌ی کانال‌ها"
+
+#: src/pages/ledger/LedgerFilters.tsx
+msgid "همه‌ی مشتری‌ها"
+msgstr "همه‌ی مشتری‌ها"
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "هنوز دریافتی‌ای ثبت نکردی"
+msgstr "هنوز دریافتی‌ای ثبت نکردی"
+
+#: src/pages/charts/ChartsPage.tsx
+msgid "وقتی چند دریافتی ثبت کنی، اینجا می‌بینی درآمدت ماه‌به‌ماه چطور بالا و پایین شده و چقدرش به یک مشتری وابسته است."
+msgstr "وقتی چند دریافتی ثبت کنی، اینجا می‌بینی درآمدت ماه‌به‌ماه چطور بالا و پایین شده و چقدرش به یک مشتری وابسته است."
+
+#: src/pages/ledger/LedgerTable.tsx
+msgid "ویرایش"
+msgstr "ویرایش"
+
+#: src/pages/ledger/EditReceiptDialog.tsx
+msgid "ویرایش دریافتی"
+msgstr "ویرایش دریافتی"
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "یادداشت (اختیاری)"
+msgstr "یادداشت (اختیاری)"
+
+#: src/shared/queries/restoreBackup.mutation.ts
+msgid "یکی از دریافتی‌های داخل فایل ناقصه و قابل بازیابی نیست."
+msgstr "یکی از دریافتی‌های داخل فایل ناقصه و قابل بازیابی نیست."
+
+#: src/shared/queries/restoreBackup.mutation.ts
+msgid "یکی از مشتری‌های داخل فایل ناقصه و قابل بازیابی نیست."
+msgstr "یکی از مشتری‌های داخل فایل ناقصه و قابل بازیابی نیست."
+
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "یه جای کار خطا خورد"
+msgstr "یه جای کار خطا خورد"

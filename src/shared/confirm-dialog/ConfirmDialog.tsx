@@ -1,3 +1,4 @@
+import { useLingui } from '@lingui/react/macro'
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material'
 import { useState } from 'react'
 
@@ -32,7 +33,7 @@ export const ConfirmDialog = ({
   title,
   description,
   confirmLabel,
-  cancelLabel = 'انصراف',
+  cancelLabel,
   destructive = false,
   confirmationWord,
   onConfirm,
@@ -62,6 +63,7 @@ const ConfirmDialogBody = ({
   onConfirm,
   onClose,
 }: Omit<ConfirmDialogProps, 'open'>) => {
+  const { t } = useLingui()
   const [typed, setTyped] = useState('')
   const confirmDisabled = confirmationWord !== undefined && typed.trim() !== confirmationWord
 
@@ -78,7 +80,7 @@ const ConfirmDialogBody = ({
             fullWidth
             value={typed}
             onChange={(event) => setTyped(event.target.value)}
-            label={`برای تأیید، «${confirmationWord}» را بنویس`}
+            label={t`برای تأیید، «${confirmationWord}» را بنویس`}
             sx={{ mt: 2.5 }}
           />
         ) : null}
@@ -86,7 +88,7 @@ const ConfirmDialogBody = ({
 
       <DialogActions sx={{ px: 3, pb: 2.5, gap: 1 }}>
         <Button onClick={onClose} variant="outlined">
-          {cancelLabel}
+          {cancelLabel ?? t`انصراف`}
         </Button>
         <Button onClick={onConfirm} variant="contained" color={destructive ? 'error' : 'primary'} disabled={confirmDisabled}>
           {confirmLabel}

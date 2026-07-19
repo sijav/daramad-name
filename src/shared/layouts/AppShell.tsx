@@ -1,3 +1,4 @@
+import { Trans, useLingui } from '@lingui/react/macro'
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded'
 import {
   AppBar,
@@ -31,6 +32,7 @@ const RAIL_WIDTH = 248
  * thumb-reachable bottom bar, which is how people actually navigate a phone.
  */
 export const AppShell = () => {
+  const { t, i18n } = useLingui()
   const theme = useTheme()
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'))
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -65,7 +67,7 @@ export const AppShell = () => {
             })}
           >
             <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
-            <ListItemText slotProps={{ primary: { variant: 'subtitle2' } }}>{item.label}</ListItemText>
+            <ListItemText slotProps={{ primary: { variant: 'subtitle2' } }}>{i18n._(item.label)}</ListItemText>
           </ListItemButton>
         )
       })}
@@ -87,17 +89,17 @@ export const AppShell = () => {
       >
         <Toolbar sx={{ gap: 1 }}>
           {!isDesktop ? (
-            <IconButton edge="start" onClick={() => setDrawerOpen(true)} aria-label="باز کردن منو">
+            <IconButton edge="start" onClick={() => setDrawerOpen(true)} aria-label={t`باز کردن منو`}>
               <MenuRoundedIcon />
             </IconButton>
           ) : null}
 
           <Stack direction="row" spacing={1} sx={{ alignItems: 'baseline' }}>
             <Typography variant="h3" component="h1">
-              درآمدنامه
+              <Trans>درآمدنامه</Trans>
             </Typography>
             <Typography variant="caption" color="text.secondary" sx={{ display: { xs: 'none', sm: 'block' } }}>
-              دفتر دریافتی‌ها و گزارش درآمد
+              <Trans>دفتر دریافتی‌ها و گزارش درآمد</Trans>
             </Typography>
           </Stack>
         </Toolbar>
@@ -164,7 +166,7 @@ export const AppShell = () => {
           })}
         >
           {NAV_ITEMS.map((item) => (
-            <BottomNavigationAction key={item.to} label={item.label} icon={item.icon} sx={{ minWidth: 0, px: 0.5 }} />
+            <BottomNavigationAction key={item.to} label={i18n._(item.label)} icon={item.icon} sx={{ minWidth: 0, px: 0.5 }} />
           ))}
         </BottomNavigation>
       ) : null}

@@ -1,5 +1,7 @@
+import { msg } from '@lingui/core/macro'
 import type { TCreatedPdf } from 'pdfmake/build/pdfmake'
 import type { TDocumentDefinitions } from 'pdfmake/interfaces'
+import { i18n } from 'src/core/i18n'
 import vazirBoldUrl from 'vazirmatn/fonts/ttf/Vazirmatn-Bold.ttf?url'
 import vazirRegularUrl from 'vazirmatn/fonts/ttf/Vazirmatn-Regular.ttf?url'
 
@@ -25,7 +27,7 @@ interface PdfMakeModule {
 const fetchAsBase64 = async (url: string): Promise<string> => {
   const response = await window.fetch(url)
   if (!response.ok) {
-    throw new Error('فونت فارسی گزارش بارگذاری نشد. صفحه را دوباره باز کن.')
+    throw new Error(i18n._(msg`فونت فارسی گزارش بارگذاری نشد. صفحه را دوباره باز کن.`))
   }
   const buffer = await response.arrayBuffer()
   const bytes = new Uint8Array(buffer)

@@ -1,4 +1,7 @@
+import type { MessageDescriptor } from '@lingui/core'
+import { msg } from '@lingui/core/macro'
 import { db, upsertClientByName } from 'src/core/db'
+import { i18n } from 'src/core/i18n'
 import type { Channel, Currency, Receipt } from 'src/shared/types'
 import { computeToman } from 'src/shared/utils'
 
@@ -17,9 +20,9 @@ interface SampleReceipt {
   amount: number
   currency: Currency
   rate: number | null
-  client: string
+  client: MessageDescriptor
   channel: Channel
-  note: string
+  note: MessageDescriptor
 }
 
 const SAMPLE_RECEIPTS: SampleReceipt[] = [
@@ -29,9 +32,9 @@ const SAMPLE_RECEIPTS: SampleReceipt[] = [
     amount: 500,
     currency: 'USDT',
     rate: 98500,
-    client: 'بازرگانی آریا',
+    client: msg`بازرگانی آریا`,
     channel: 'TETHER',
-    note: 'پیش‌پرداخت فاز اول طراحی',
+    note: msg`پیش‌پرداخت فاز اول طراحی`,
   },
   {
     monthsAgo: 0,
@@ -39,9 +42,9 @@ const SAMPLE_RECEIPTS: SampleReceipt[] = [
     amount: 18000000,
     currency: 'TOMAN',
     rate: null,
-    client: 'استودیو نقش',
+    client: msg`استودیو نقش`,
     channel: 'CARD_TO_CARD',
-    note: 'ست آیکون اپلیکیشن',
+    note: msg`ست آیکون اپلیکیشن`,
   },
   {
     monthsAgo: 1,
@@ -49,9 +52,9 @@ const SAMPLE_RECEIPTS: SampleReceipt[] = [
     amount: 1200,
     currency: 'USD',
     rate: 96200,
-    client: 'بازرگانی آریا',
+    client: msg`بازرگانی آریا`,
     channel: 'REMITTANCE',
-    note: 'تسویه فاز دوم',
+    note: msg`تسویه فاز دوم`,
   },
   {
     monthsAgo: 1,
@@ -59,9 +62,9 @@ const SAMPLE_RECEIPTS: SampleReceipt[] = [
     amount: 9500000,
     currency: 'TOMAN',
     rate: null,
-    client: 'کافه رستوران هما',
+    client: msg`کافه رستوران هما`,
     channel: 'CARD_TO_CARD',
-    note: 'طراحی منو',
+    note: msg`طراحی منو`,
   },
   {
     monthsAgo: 2,
@@ -69,9 +72,9 @@ const SAMPLE_RECEIPTS: SampleReceipt[] = [
     amount: 750,
     currency: 'USDT',
     rate: 94800,
-    client: 'بازرگانی آریا',
+    client: msg`بازرگانی آریا`,
     channel: 'TETHER',
-    note: 'ری‌دیزاین صفحه محصول',
+    note: msg`ری‌دیزاین صفحه محصول`,
   },
   {
     monthsAgo: 3,
@@ -79,9 +82,9 @@ const SAMPLE_RECEIPTS: SampleReceipt[] = [
     amount: 22000000,
     currency: 'TOMAN',
     rate: null,
-    client: 'شرکت داده‌پرداز',
+    client: msg`شرکت داده‌پرداز`,
     channel: 'REMITTANCE',
-    note: 'داشبورد تحلیلی',
+    note: msg`داشبورد تحلیلی`,
   },
   {
     monthsAgo: 3,
@@ -89,9 +92,9 @@ const SAMPLE_RECEIPTS: SampleReceipt[] = [
     amount: 400,
     currency: 'USDT',
     rate: 92100,
-    client: 'استودیو نقش',
+    client: msg`استودیو نقش`,
     channel: 'TETHER',
-    note: 'اصلاحات نهایی',
+    note: msg`اصلاحات نهایی`,
   },
   // monthsAgo 4 intentionally omitted — the empty-month edge case.
   {
@@ -100,9 +103,9 @@ const SAMPLE_RECEIPTS: SampleReceipt[] = [
     amount: 1800,
     currency: 'USD',
     rate: 89500,
-    client: 'بازرگانی آریا',
+    client: msg`بازرگانی آریا`,
     channel: 'REMITTANCE',
-    note: 'قرارداد سه‌ماهه',
+    note: msg`قرارداد سه‌ماهه`,
   },
   {
     monthsAgo: 6,
@@ -110,9 +113,9 @@ const SAMPLE_RECEIPTS: SampleReceipt[] = [
     amount: 12000000,
     currency: 'TOMAN',
     rate: null,
-    client: 'کافه رستوران هما',
+    client: msg`کافه رستوران هما`,
     channel: 'CARD_TO_CARD',
-    note: 'بنر و پست شبکه اجتماعی',
+    note: msg`بنر و پست شبکه اجتماعی`,
   },
   {
     monthsAgo: 7,
@@ -120,9 +123,9 @@ const SAMPLE_RECEIPTS: SampleReceipt[] = [
     amount: 600,
     currency: 'USDT',
     rate: 87300,
-    client: 'بازرگانی آریا',
+    client: msg`بازرگانی آریا`,
     channel: 'TETHER',
-    note: 'لندینگ کمپین',
+    note: msg`لندینگ کمپین`,
   },
   {
     monthsAgo: 8,
@@ -130,9 +133,9 @@ const SAMPLE_RECEIPTS: SampleReceipt[] = [
     amount: 15000000,
     currency: 'TOMAN',
     rate: null,
-    client: 'شرکت داده‌پرداز',
+    client: msg`شرکت داده‌پرداز`,
     channel: 'CARD_TO_CARD',
-    note: 'مشاوره UX',
+    note: msg`مشاوره UX`,
   },
   {
     monthsAgo: 9,
@@ -140,9 +143,9 @@ const SAMPLE_RECEIPTS: SampleReceipt[] = [
     amount: 950,
     currency: 'USD',
     rate: 84600,
-    client: 'بازرگانی آریا',
+    client: msg`بازرگانی آریا`,
     channel: 'REMITTANCE',
-    note: 'بازطراحی هویت بصری',
+    note: msg`بازطراحی هویت بصری`,
   },
   {
     monthsAgo: 10,
@@ -150,9 +153,9 @@ const SAMPLE_RECEIPTS: SampleReceipt[] = [
     amount: 7000000,
     currency: 'TOMAN',
     rate: null,
-    client: 'استودیو نقش',
+    client: msg`استودیو نقش`,
     channel: 'OTHER',
-    note: 'پروژه کوچک تصویرسازی',
+    note: msg`پروژه کوچک تصویرسازی`,
   },
 ]
 
@@ -162,7 +165,7 @@ export const seedSampleDataMutation = async (): Promise<number> => {
 
   const receipts: Receipt[] = []
   for (const sample of SAMPLE_RECEIPTS) {
-    const client = await upsertClientByName(sample.client)
+    const client = await upsertClientByName(i18n._(sample.client))
     const occurred = new Date(now.getFullYear(), now.getMonth() - sample.monthsAgo, sample.dayOfMonth, 12, 0, 0)
     const timestamp = new Date().toISOString()
 
@@ -175,7 +178,7 @@ export const seedSampleDataMutation = async (): Promise<number> => {
       amountToman: computeToman(sample.amount, sample.currency, sample.rate),
       clientId: client?.id ?? null,
       channel: sample.channel,
-      note: sample.note,
+      note: i18n._(sample.note),
       createdAt: timestamp,
       updatedAt: timestamp,
     })

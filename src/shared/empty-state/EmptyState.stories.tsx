@@ -4,7 +4,7 @@ import { EmptyState } from './EmptyState'
 
 const meta = {
   title: 'Shared/EmptyState',
-  component: EmptyState
+  component: EmptyState,
 } satisfies Meta<typeof EmptyState>
 
 export default meta
@@ -16,8 +16,8 @@ export const FirstRun: Story = {
     icon: <ReceiptLongRoundedIcon />,
     title: 'هنوز دریافتی‌ای ثبت نکردی',
     description: 'دفتر درآمد جاییه که همه‌ی پول‌هایی که گرفتی یک‌جا جمع می‌شه — همون چیزی که موقع گزارش گرفتن لازمت می‌شه.',
-    actionLabel: 'ثبت اولین دریافتی'
-  }
+    actionLabel: 'ثبت اولین دریافتی',
+  },
 }
 
 /** A filtered-to-empty ledger is a different situation and gets different words. */
@@ -25,6 +25,6 @@ export const NoFilterMatches: Story = {
   args: {
     title: 'با این فیلترها چیزی پیدا نشد',
     description: 'بازه‌ی تاریخ یا مشتری را عوض کن، یا فیلترها را پاک کن تا همه‌ی دریافتی‌ها را ببینی.',
-    actionLabel: 'پاک کردن فیلترها'
-  }
+    actionLabel: 'پاک کردن فیلترها',
+  },
 }

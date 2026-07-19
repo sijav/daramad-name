@@ -8,7 +8,7 @@ import { RtlProvider } from 'src/core/theme'
 const preview: Preview = {
   parameters: {
     controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
-    a11y: { test: 'todo' }
+    a11y: { test: 'todo' },
   },
   decorators: [
     (Story) => (
@@ -19,8 +19,8 @@ const preview: Preview = {
           </div>
         </RtlProvider>
       </QueryClientProvider>
-    )
-  ]
+    ),
+  ],
 }
 
 export default preview

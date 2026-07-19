@@ -4,7 +4,7 @@ import { MoneyText } from './MoneyText'
 const meta = {
   title: 'Shared/MoneyText',
   component: MoneyText,
-  parameters: { layout: 'centered' }
+  parameters: { layout: 'centered' },
 } satisfies Meta<typeof MoneyText>
 
 export default meta

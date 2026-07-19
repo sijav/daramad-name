@@ -5,7 +5,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { i18n } from 'src/core/i18n'
 import { AppThemeProvider } from 'src/core/theme'
-import type { AppLocale, ThemePreference } from 'src/shared/types'
+import { settingsQueryKey } from 'src/shared/queries'
+import type { AppLocale, Settings, ThemePreference } from 'src/shared/types'
 
 // Stories render through the same providers as the app: lingui for copy,
 // TanStack Query because several components read settings via a query, and the
@@ -39,6 +40,27 @@ const useCatalog = (locale: AppLocale): boolean => {
   return ready
 }
 
+/**
+ * Components read the locale from persisted Settings, not from lingui — that is
+ * what drives number formatting, date digits and the picker's font. Seeding the
+ * query cache makes the toolbar control those too; without it the labels switch
+ * to English while the figures stay Persian.
+ */
+const seededClient = (locale: AppLocale, themePreference: ThemePreference): QueryClient => {
+  // `staleTime: Infinity` matters: with the app's default of 0 the query
+  // refetches from IndexedDB the moment it mounts and overwrites the seed,
+  // leaving English labels beside Persian numerals.
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false, staleTime: Infinity, gcTime: Infinity } } })
+  const settings: Settings = {
+    calendar: 'JALALI',
+    locale,
+    themePreference,
+    profile: { fullName: 'رها موسوی', nationalId: '', phone: '', address: '' },
+  }
+  client.setQueryData(settingsQueryKey, settings)
+  return client
+}
+
 const withProviders: Decorator = (Story, context) => {
   const locale = (context.globals.locale ?? 'fa-IR') as AppLocale
   const themePreference = (context.globals.theme ?? 'light') as ThemePreference
@@ -50,7 +72,7 @@ const withProviders: Decorator = (Story, context) => {
 
   return (
     <I18nProvider i18n={i18n}>
-      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+      <QueryClientProvider client={seededClient(locale, themePreference)}>
         <AppThemeProvider locale={locale} themePreference={themePreference}>
           {/* Matches the app's page surface so glass cards are visible. */}
           <div style={{ padding: 24, minHeight: '100vh', background: 'var(--sb-surface, transparent)' }}>

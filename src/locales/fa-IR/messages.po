@@ -602,8 +602,8 @@ msgid "One of the receipts in the file is incomplete and cannot be restored."
 msgstr "یکی از دریافتی‌های داخل فایل ناقصه و قابل بازیابی نیست."
 
 #: src/pages/dashboard/DashboardPage.tsx
-msgid "Open ledger"
-msgstr "باز کردن دفتر"
+#~ msgid "Open ledger"
+#~ msgstr "باز کردن دفتر"
 
 #: src/shared/layouts/AppShell.tsx
 msgid "Open menu"
@@ -952,6 +952,10 @@ msgstr "مشاوره UX"
 #: src/pages/charts/ChartsPage.tsx
 msgid "Vertical axis figures are in millions of Toman."
 msgstr "ارقام محور عمودی به میلیون تومان است."
+
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "View all"
+msgstr "مشاهده همه"
 
 #: src/shared/row-actions-menu/RowActionsMenu.tsx
 msgid "View details"

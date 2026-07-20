@@ -1,5 +1,8 @@
 import { useLingui } from '@lingui/react/macro'
 import AddRoundedIcon from '@mui/icons-material/AddRounded'
+import PaymentsRoundedIcon from '@mui/icons-material/PaymentsRounded'
+import ReceiptLongRoundedIcon from '@mui/icons-material/ReceiptLongRounded'
+import ShowChartRoundedIcon from '@mui/icons-material/ShowChartRounded'
 import { Box, Button, Grid, Stack, Typography } from '@mui/material'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useState, type MouseEvent } from 'react'
@@ -16,7 +19,7 @@ import { PageHeader } from 'src/shared/page-header'
 import { clientsQueryKey, deleteReceiptMutation, getClientsQuery, getLedgerQuery, getLedgerQueryKey } from 'src/shared/queries'
 import { ReceiptDetailsDrawer } from 'src/shared/receipt-details-drawer'
 import { SearchField } from 'src/shared/search-field'
-import { StatTile } from 'src/shared/stat-tile'
+import { SummaryCard } from 'src/shared/summary-card'
 import { SurfaceCard } from 'src/shared/surface-card'
 import type { ReceiptWithClient } from 'src/shared/types'
 import { EditReceiptDialog } from './EditReceiptDialog'
@@ -86,17 +89,17 @@ export const LedgerPage = () => {
 
       <Grid container spacing={2} sx={{ mb: 3 }}>
         <Grid size={{ xs: 12, sm: 4 }}>
-          <StatTile label={t`Total`} value={data?.summary.totalToman ?? 0} emphasis />
+          <SummaryCard label={t`Total`} value={data?.summary.totalToman ?? 0} icon={<PaymentsRoundedIcon />} emphasis />
         </Grid>
         <Grid size={{ xs: 6, sm: 4 }}>
-          <StatTile label={t`Monthly average`} value={data?.summary.monthlyAverageToman ?? 0} />
+          <SummaryCard label={t`Monthly average`} value={data?.summary.monthlyAverageToman ?? 0} icon={<ShowChartRoundedIcon />} />
         </Grid>
         <Grid size={{ xs: 6, sm: 4 }}>
-          <StatTile label={t`Receipts`} value={digits(data?.summary.receiptCount ?? 0)} />
+          <SummaryCard label={t`Receipts`} value={digits(data?.summary.receiptCount ?? 0)} icon={<ReceiptLongRoundedIcon />} />
         </Grid>
       </Grid>
 
-      <SurfaceCard>
+      <SurfaceCard flat>
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.5} sx={{ mb: 2, alignItems: { md: 'center' } }}>
           <FilterButton
             activeCount={view.activeFilterCount}

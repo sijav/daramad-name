@@ -98,6 +98,14 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
           rounded: { borderRadius: radius.xl },
         },
       },
+      MuiAlert: {
+        styleOverrides: {
+          // The design's inline notice (the Quick Entry rate callout) is
+          // `--radius-lg`, not the 20px a page-level card uses. An alert always
+          // sits inside another surface, so it takes the smaller radius.
+          root: { borderRadius: radius.lg },
+        },
+      },
       MuiOutlinedInput: {
         styleOverrides: {
           // The design's Field box is 52px. MUI's default vertical padding

@@ -61,7 +61,7 @@ export const ReportPage = () => {
       <PageHeader title={t`Income report`} subtitle={t`A document you can hand to an embassy, a landlord or an accountant`} />
 
       <Stack spacing={3}>
-        <SurfaceCard>
+        <SurfaceCard radius="lg" flat>
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ alignItems: { md: 'flex-end' } }}>
             <TextField
               select
@@ -117,7 +117,7 @@ export const ReportPage = () => {
             <CircularProgress />
           </Box>
         ) : !hasIncome ? (
-          <SurfaceCard>
+          <SurfaceCard radius="lg" flat>
             <EmptyState
               icon={<DescriptionRoundedIcon />}
               title={t`No receipts recorded for this year`}
@@ -139,7 +139,7 @@ export const ReportPage = () => {
               </Grid>
             </Grid>
 
-            <SurfaceCard>
+            <SurfaceCard radius="lg" flat>
               <Typography variant="h3" sx={{ mb: 0.5 }}>
                 <Trans>Document preview</Trans>
               </Typography>

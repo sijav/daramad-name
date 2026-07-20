@@ -51,7 +51,6 @@ export const TopCustomers = ({ shares, limit = 5, othersLabel }: TopCustomersPro
               borderRadius: 999,
               overflow: 'hidden',
               backgroundColor: theme.palette.surfaceSubtle,
-              border: `1px solid ${theme.palette.borderDefault}`,
             })}
           >
             <Box

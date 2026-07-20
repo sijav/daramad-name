@@ -10,6 +10,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSettings } from 'src/core/query'
+import { radius } from 'src/core/theme'
 import { ClientShareChart, MonthlyIncomeChart } from 'src/pages/charts'
 import { ChartCard } from 'src/shared/chart-card'
 import { EmptyState } from 'src/shared/empty-state'
@@ -114,14 +115,14 @@ export const DashboardPage = () => {
 
           <Grid container spacing={3}>
             <Grid size={{ xs: 12, lg: 7 }}>
-              <ChartCard title={t`Income by month`}>
+              <ChartCard variant="content" title={t`Income by month`}>
                 <MonthlyIncomeChart months={months ?? []} calendar={calendar} />
               </ChartCard>
             </Grid>
 
             <Grid size={{ xs: 12, lg: 5 }}>
               <Stack spacing={2} sx={{ height: '100%' }}>
-                <ChartCard title={t`Client share of income`} subtitle={t`Based on the income recorded this year`}>
+                <ChartCard variant="content" title={t`Client share of income`} subtitle={t`Based on the income recorded this year`}>
                   <ClientShareChart shares={shareData?.shares ?? []} othersLabel={t`Others`} />
                 </ChartCard>
                 {shareData?.insight ? (
@@ -137,8 +138,8 @@ export const DashboardPage = () => {
                 variant="content"
                 title={t`Latest receipts`}
                 action={
-                  <Button size="small" variant="outlined" onClick={() => navigate('/ledger')}>
-                    <Trans>Open ledger</Trans>
+                  <Button size="small" variant="text" onClick={() => navigate('/ledger')}>
+                    <Trans>View all</Trans>
                   </Button>
                 }
               >
@@ -148,13 +149,32 @@ export const DashboardPage = () => {
 
             <Grid size={{ xs: 12, lg: 5 }}>
               <Stack spacing={3} sx={{ height: '100%' }}>
-                <ChartCard title={t`Top clients`}>
+                <ChartCard variant="content" title={t`Top clients`}>
                   <TopCustomers shares={shareData?.shares ?? []} othersLabel={t`Others`} />
                 </ChartCard>
 
-                <ChartCard variant="content" title={t`An income report ready to present`} sx={{ textAlign: 'center' }}>
-                  <Stack spacing={2} sx={{ alignItems: 'center' }}>
-                    <DescriptionRoundedIcon sx={{ fontSize: 28, color: 'primary.main' }} />
+                {/* The design's `Report Shortcut`: a tinted panel rather than a
+                    plain card, aligned to the reading direction with a filled
+                    brand tile for the icon. */}
+                <SurfaceCard tone="subtle" flat>
+                  <Stack spacing={2} sx={{ alignItems: 'flex-start', textAlign: 'start' }}>
+                    <Box
+                      sx={(theme) => ({
+                        display: 'grid',
+                        placeItems: 'center',
+                        width: 56,
+                        height: 56,
+                        borderRadius: `${radius.lg}px`,
+                        backgroundColor: theme.palette.brandPrimary,
+                        color: theme.palette.common.white,
+                        '& svg': { fontSize: 28 },
+                      })}
+                    >
+                      <DescriptionRoundedIcon />
+                    </Box>
+                    <Typography variant="h3">
+                      <Trans>An income report ready to present</Trans>
+                    </Typography>
                     <Typography variant="body2" color="text.secondary">
                       <Trans>Produce an official income document for any range, in Persian or English.</Trans>
                     </Typography>
@@ -162,7 +182,7 @@ export const DashboardPage = () => {
                       <Trans>Create report</Trans>
                     </Button>
                   </Stack>
-                </ChartCard>
+                </SurfaceCard>
               </Stack>
             </Grid>
           </Grid>

@@ -602,8 +602,8 @@ msgid "One of the receipts in the file is incomplete and cannot be restored."
 msgstr "One of the receipts in the file is incomplete and cannot be restored."
 
 #: src/pages/dashboard/DashboardPage.tsx
-msgid "Open ledger"
-msgstr "Open ledger"
+#~ msgid "Open ledger"
+#~ msgstr "Open ledger"
 
 #: src/shared/layouts/AppShell.tsx
 msgid "Open menu"
@@ -952,6 +952,10 @@ msgstr "UX consulting"
 #: src/pages/charts/ChartsPage.tsx
 msgid "Vertical axis figures are in millions of Toman."
 msgstr "Vertical axis figures are in millions of Toman."
+
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "View all"
+msgstr "View all"
 
 #: src/shared/row-actions-menu/RowActionsMenu.tsx
 msgid "View details"

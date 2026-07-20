@@ -187,6 +187,39 @@ Prettier: single quotes, no semicolons, width 140, organize-imports plugin.
   before you create component"_ — write the story first from now on.
 - Pages hold no styling. They call components with props.
 
+### Panel treatments (verified against Figma, do not guess these)
+
+Every panel is a flat `surface-default` fill with a 1px `border-default`
+hairline. There is **no glass**: the frosted 28px card came from an older
+revision and was removed. Radius and shadow vary by screen, and the Figma file
+is genuinely inconsistent — match it per screen rather than unifying:
+
+| Screen | Radius | Shadow |
+|---|---|---|
+| Dashboard — summary cards, chart panels, recent receipts, top clients | 20 (`xl`) | Elevation/1 |
+| Dashboard — report shortcut | 20, `brand-primary-subtle` fill | none |
+| Charts page — the componentised `Chart/*` panels | 16 (`lg`) | none |
+| Quick Entry — the income form | 20 | Elevation/1 |
+| Quick Entry — support panels beside it | 16 | Elevation/1 |
+| Ledger — table panel | 20 | none |
+| Report — config and document | 16 | none |
+| Settings — every section | 16 | none |
+
+`SurfaceCard` takes `radius`, `tone` and `flat` to express all of these.
+`ChartCard`'s `variant` picks between the two chart treatments. `StatTile` is
+NOT a card — it is the nested `surface-subtle` figure box (radius 12, no border,
+no shadow) used inside the report document; a standalone figure is a
+`SummaryCard`.
+
+Only the fixed app chrome (top bar, bottom nav) is translucent, at
+`blur(12px)` — that is what `glassSurface`/`glassBlur` are for. Nothing else
+may blur; a global `MuiPaper` backdrop-filter once leaked it into every menu
+and dialog in the app.
+
+Figma file key `yW364nD8qVYhXKiOxNBShA`, canvas `11:13` "Screens · Desktop".
+Screen frames: Dashboard `152:516`, Quick Entry `173:709`, Ledger `253:817`,
+Charts `351:547`, Report `355:694`, Settings `359:760`.
+
 ---
 
 ## 3. What this app is

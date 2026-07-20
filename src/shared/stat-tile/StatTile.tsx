@@ -1,6 +1,6 @@
-import { Stack, Typography } from '@mui/material'
+import { Paper, Stack, Typography } from '@mui/material'
+import { radius } from 'src/core/theme'
 import { MoneyText } from 'src/shared/money-text'
-import { SurfaceCard } from 'src/shared/surface-card'
 
 export interface StatTileProps {
   label: string
@@ -10,22 +10,30 @@ export interface StatTileProps {
   emphasis?: boolean
 }
 
-/** A single headline number — total income, monthly average, receipt count. */
+/**
+ * A figure nested inside another surface — the two totals in the report
+ * document, for example.
+ *
+ * Deliberately not a `SurfaceCard`: the design draws these as plain
+ * `surface-subtle` boxes at 12px with no hairline and no shadow, because a
+ * bordered elevated card inside another card reads as a stack of unrelated
+ * panels. A standalone headline figure on a page is a `SummaryCard` instead.
+ */
 export const StatTile = ({ label, value, hint, emphasis = false }: StatTileProps) => (
-  <SurfaceCard
-    flat
+  <Paper
+    elevation={0}
     sx={(theme) => ({
-      p: 2.5,
+      p: 2,
       height: '100%',
       containerType: 'inline-size',
-      ...(emphasis && {
-        backgroundColor: theme.palette.primary.light,
-        borderColor: theme.palette.primary.main,
-      }),
+      borderRadius: `${radius.md}px`,
+      border: 'none',
+      boxShadow: 'none',
+      backgroundColor: emphasis ? theme.palette.primary.light : theme.palette.surfaceSubtle,
     })}
   >
     <Stack spacing={0.75}>
-      <Typography variant="subtitle2" color="text.secondary">
+      <Typography variant="caption" sx={{ fontWeight: 500 }} color="text.secondary">
         {label}
       </Typography>
 
@@ -47,5 +55,5 @@ export const StatTile = ({ label, value, hint, emphasis = false }: StatTileProps
         </Typography>
       ) : null}
     </Stack>
-  </SurfaceCard>
+  </Paper>
 )

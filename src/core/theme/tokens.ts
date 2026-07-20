@@ -157,7 +157,7 @@ export const elevation = {
   level1: '0px 1px 2px 0px rgba(0,0,0,0.06), 0px 1px 3px 0px rgba(0,0,0,0.10)',
   // Only the fixed app chrome blurs, so that scrolling content reads as
   // passing *behind* the bar rather than colliding with it.
-  glassBlur: 'blur(16px)',
+  glassBlur: 'blur(12px)',
 } as const
 
 export const fontFamily = "'Vazirmatn Variable', 'Vazirmatn', system-ui, sans-serif"

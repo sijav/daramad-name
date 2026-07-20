@@ -118,7 +118,7 @@ export const SettingsPage = () => {
       <PageHeader title={t`Settings`} />
 
       <Stack spacing={3}>
-        <SurfaceCard>
+        <SurfaceCard radius="lg" flat>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
             <Trans>Personal details</Trans>
           </Typography>
@@ -162,7 +162,7 @@ export const SettingsPage = () => {
           </Stack>
         </SurfaceCard>
 
-        <SurfaceCard>
+        <SurfaceCard radius="lg" flat>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
             <Trans>Language</Trans>
           </Typography>
@@ -179,7 +179,7 @@ export const SettingsPage = () => {
           />
         </SurfaceCard>
 
-        <SurfaceCard>
+        <SurfaceCard radius="lg" flat>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
             <Trans>Appearance</Trans>
           </Typography>
@@ -197,7 +197,7 @@ export const SettingsPage = () => {
           />
         </SurfaceCard>
 
-        <SurfaceCard>
+        <SurfaceCard radius="lg" flat>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
             <Trans>Calendar</Trans>
           </Typography>
@@ -214,7 +214,7 @@ export const SettingsPage = () => {
           />
         </SurfaceCard>
 
-        <SurfaceCard>
+        <SurfaceCard radius="lg" flat>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
             <Trans>Backup and restore</Trans>
           </Typography>
@@ -243,7 +243,7 @@ export const SettingsPage = () => {
           </Stack>
         </SurfaceCard>
 
-        <SurfaceCard>
+        <SurfaceCard radius="lg" flat>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
             <Trans>Sample data and reset</Trans>
           </Typography>

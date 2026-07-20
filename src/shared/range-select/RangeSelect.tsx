@@ -1,5 +1,5 @@
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
-import { MenuItem, Select, type SelectProps } from '@mui/material'
+import { Box, MenuItem, Select, type SelectProps } from '@mui/material'
 import { radius } from 'src/core/theme'
 
 export interface RangeSelectOption {
@@ -11,44 +11,58 @@ export interface RangeSelectProps extends Omit<SelectProps<string>, 'onChange' |
   value: number | string
   options: RangeSelectOption[]
   onSelect: (value: string) => void
-  /** Prefixed to the selected label, e.g. "Report range: 1403". */
+  /** Prefixed to the selected label, e.g. "Report range: year 1403". */
   prefix: string
 }
 
 /**
- * The design's report-range control (`183:289`): a pill, not a boxed select.
+ * The design's report-range control (`183:289` / `359:766`): a pill, not a
+ * boxed select. `surface-default` with a 1px `border-default` hairline, fully
+ * rounded, 38px tall, chevron on the leading edge, label 14/600.
  *
- * `surface-default` with a 1px `border-default` hairline, fully rounded, 38px
- * tall, with the chevron on the leading edge and the label reading
- * "Report range: <value>". The header previously showed a separate `Tag` plus
- * an outlined dropdown; the design is one control.
+ * The chevron is drawn inside `renderValue` rather than through MUI's
+ * `IconComponent`. MUI positions that icon absolutely with a physical `right`,
+ * which the RTL plugin flips underneath us — the icon ended up invisible. A
+ * flex row here gives the design's exact 16px glyph and 8px gap in both
+ * directions.
  */
 export const RangeSelect = ({ value, options, onSelect, prefix, sx, ...props }: RangeSelectProps) => (
   <Select
     {...props}
     value={String(value)}
     onChange={(event) => onSelect(event.target.value)}
-    IconComponent={KeyboardArrowDownRoundedIcon}
-    renderValue={(selected) => `${prefix}: ${options.find((option) => String(option.value) === selected)?.label ?? selected}`}
+    renderValue={(selected) => (
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <KeyboardArrowDownRoundedIcon sx={{ fontSize: 16, flexShrink: 0 }} />
+        <Box component="span" sx={{ whiteSpace: 'nowrap' }}>
+          {`${prefix}: ${options.find((option) => String(option.value) === selected)?.label ?? selected}`}
+        </Box>
+      </Box>
+    )}
     sx={[
       (theme) => ({
         height: 38,
         borderRadius: `${radius.full}px`,
         backgroundColor: theme.palette.surfaceDefault,
+        color: theme.palette.text.primary,
         fontSize: 14,
         fontWeight: 600,
-        // The pill's own hairline, so the underlying notched outline is hidden
-        // rather than fought with.
+        lineHeight: '22px',
+        // The pill's own hairline, so the notched outline is hidden rather
+        // than fought with.
         border: `1px solid ${theme.palette.borderDefault}`,
         '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+        // MUI's built-in dropdown icon is replaced by the one in `renderValue`.
+        '& .MuiSelect-icon': { display: 'none' },
         '& .MuiSelect-select': {
+          // The design pads 12 on the chevron edge and 16 on the text edge.
           paddingBlock: 0,
-          paddingInlineStart: '16px',
-          paddingInlineEnd: '38px !important',
+          paddingInlineStart: '12px',
+          paddingInlineEnd: '16px !important',
+          minHeight: 'auto',
           display: 'flex',
           alignItems: 'center',
         },
-        '& .MuiSelect-icon': { insetInlineStart: 12, insetInlineEnd: 'auto', fontSize: 18 },
       }),
       ...(Array.isArray(sx) ? sx : [sx]),
     ]}

@@ -513,8 +513,13 @@ msgstr "درآمد ماه‌به‌ماه"
 
 #. placeholder {0}: digits(year)
 #: src/pages/charts/ChartsPage.tsx
-msgid "Income for {0}"
-msgstr "درآمد سال {0}"
+#~ msgid "Income for {0}"
+#~ msgstr "درآمد سال {0}"
+
+#. placeholder {0}: digits(year)
+#: src/pages/charts/ChartsPage.tsx
+msgid "Income for {0} (millions of Toman)"
+msgstr "درآمد سال {0} (میلیون تومان)"
 
 #. placeholder {0}: digits(year)
 #: src/pages/dashboard/DashboardPage.tsx
@@ -1174,6 +1179,11 @@ msgstr "حواله"
 #: src/pages/charts/ChartsPage.tsx
 #~ msgid "Year"
 #~ msgstr "سال"
+
+#. placeholder {0}: formatYear(option)
+#: src/shared/page-actions/PageActions.tsx
+msgid "year {0}"
+msgstr "سال {0}"
 
 #: src/shared/ledger-state/LedgerState.tsx
 msgid "You have not recorded any receipts yet"

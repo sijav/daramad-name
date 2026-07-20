@@ -79,7 +79,7 @@ export const ChartsPage = () => {
         </SurfaceCard>
       ) : (
         <Stack spacing={3}>
-          <ChartCard title={t`Income for ${digits(year)}`}>
+          <ChartCard title={t`Income for ${digits(year)} (millions of Toman)`}>
             <MonthlyIncomeChart months={months ?? []} calendar={calendar} />
           </ChartCard>
 

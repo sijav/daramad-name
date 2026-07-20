@@ -10,6 +10,13 @@ export interface SegmentedControlProps<T extends string> extends Omit<ToggleButt
   value: T
   options: readonly SegmentedOption<T>[]
   onValueChange: (value: T) => void
+  /**
+   * `filled` is the pill track with a solid primary segment (`49:16`).
+   * `subtle` is the lighter one the report config uses (`357:770`): a
+   * `surface-subtle` track with the selected segment raised in
+   * `surface-default` and brand-coloured text.
+   */
+  variant?: 'filled' | 'subtle'
 }
 
 /**
@@ -20,7 +27,14 @@ export interface SegmentedControlProps<T extends string> extends Omit<ToggleButt
  * focus and the correct `aria` roles come from MUI rather than being
  * reimplemented on a row of divs.
  */
-export const SegmentedControl = <T extends string>({ value, options, onValueChange, sx, ...props }: SegmentedControlProps<T>) => (
+export const SegmentedControl = <T extends string>({
+  value,
+  options,
+  onValueChange,
+  variant = 'filled',
+  sx,
+  ...props
+}: SegmentedControlProps<T>) => (
   <ToggleButtonGroup
     exclusive
     fullWidth
@@ -30,21 +44,23 @@ export const SegmentedControl = <T extends string>({ value, options, onValueChan
     onChange={(_event, next: T | null) => next !== null && onValueChange(next)}
     sx={[
       (theme) => ({
-        height: 44,
+        height: variant === 'subtle' ? 44 : 44,
         p: 0.5,
         gap: 0.5,
-        borderRadius: `${radius.full}px`,
-        backgroundColor: theme.palette.surfaceContainerHigh,
-        border: `1px solid ${theme.palette.outlineVariant}`,
+        borderRadius: `${variant === 'subtle' ? radius.sm + 2 : radius.full}px`,
+        backgroundColor: variant === 'subtle' ? theme.palette.surfaceSubtle : theme.palette.surfaceContainerHigh,
+        border: variant === 'subtle' ? 'none' : `1px solid ${theme.palette.outlineVariant}`,
         '& .MuiToggleButton-root': {
           border: 0,
-          borderRadius: `${radius.full}px !important`,
+          borderRadius: `${variant === 'subtle' ? radius.sm : radius.full}px !important`,
           color: theme.palette.text.secondary,
           ...theme.typography.subtitle2,
           '&.Mui-selected': {
-            backgroundColor: theme.palette.primary.main,
-            color: theme.palette.primary.contrastText,
-            '&:hover': { backgroundColor: theme.palette.primary.main },
+            backgroundColor: variant === 'subtle' ? theme.palette.surfaceDefault : theme.palette.primary.main,
+            color: variant === 'subtle' ? theme.palette.brandPrimary : theme.palette.primary.contrastText,
+            '&:hover': {
+              backgroundColor: variant === 'subtle' ? theme.palette.surfaceDefault : theme.palette.primary.main,
+            },
           },
         },
       }),

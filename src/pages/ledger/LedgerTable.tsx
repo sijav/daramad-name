@@ -111,17 +111,20 @@ export const LedgerTable = ({ receipts, summary, sort, calendar, onSortChange, o
           ))}
         </TableBody>
 
+        {/* The design closes the table with a tinted total band, not a plain
+            ruled row — it reads as a result, not another receipt. */}
         <TableBody>
-          <TableRow>
-            <TableCell
-              colSpan={4}
-              align="right"
-              sx={(theme) => ({ borderTop: `2px solid ${theme.palette.outlineVariant}`, fontWeight: 600 })}
-            >
+          <TableRow
+            sx={(theme) => ({
+              backgroundColor: theme.palette.brandPrimarySubtle,
+              '& td': { borderTop: `2px solid ${theme.palette.borderDefault}`, borderBottom: 'none' },
+            })}
+          >
+            <TableCell colSpan={4} align="right" sx={{ fontWeight: 600 }}>
               {t`Total (${digits(receipts.length)} receipts)`}
             </TableCell>
-            <TableCell colSpan={2} align="left" sx={(theme) => ({ borderTop: `2px solid ${theme.palette.outlineVariant}` })}>
-              <MoneyText value={summary.totalToman} variant="h3" color="primary.main" />
+            <TableCell colSpan={2} align="left">
+              <MoneyText value={summary.totalToman} variant="subtitle2" sx={{ color: 'brandPrimary' }} />
             </TableCell>
           </TableRow>
         </TableBody>

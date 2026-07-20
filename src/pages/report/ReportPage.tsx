@@ -167,6 +167,7 @@ export const ReportPage = () => {
                   <Trans>Report language</Trans>
                 </Typography>
                 <SegmentedControl<ReportLanguage>
+                  variant="subtle"
                   value={language}
                   options={[
                     { value: 'fa', label: t`Persian` },

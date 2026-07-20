@@ -24,7 +24,7 @@ export const PageActions = ({ year, years, onYearChange, formatYear }: PageActio
 
   const options: RangeSelectOption[] = (years.length > 0 ? years : [year]).map((option) => ({
     value: option,
-    label: formatYear(option),
+    label: t`year ${formatYear(option)}`,
   }))
 
   return (

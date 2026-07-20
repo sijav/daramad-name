@@ -513,8 +513,13 @@ msgstr "Income by month"
 
 #. placeholder {0}: digits(year)
 #: src/pages/charts/ChartsPage.tsx
-msgid "Income for {0}"
-msgstr "Income for {0}"
+#~ msgid "Income for {0}"
+#~ msgstr "Income for {0}"
+
+#. placeholder {0}: digits(year)
+#: src/pages/charts/ChartsPage.tsx
+msgid "Income for {0} (millions of Toman)"
+msgstr "Income for {0} (millions of Toman)"
 
 #. placeholder {0}: digits(year)
 #: src/pages/dashboard/DashboardPage.tsx
@@ -1174,6 +1179,11 @@ msgstr "Wire transfer"
 #: src/pages/charts/ChartsPage.tsx
 #~ msgid "Year"
 #~ msgstr "Year"
+
+#. placeholder {0}: formatYear(option)
+#: src/shared/page-actions/PageActions.tsx
+msgid "year {0}"
+msgstr "year {0}"
 
 #: src/shared/ledger-state/LedgerState.tsx
 msgid "You have not recorded any receipts yet"

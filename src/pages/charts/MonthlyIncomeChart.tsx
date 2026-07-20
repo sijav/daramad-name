@@ -51,6 +51,9 @@ export const MonthlyIncomeChart = ({ months, calendar }: MonthlyIncomeChartProps
       ]}
       margin={{ right: 16 }}
       grid={{ horizontal: true }}
+      // A single-series chart needs no key; the design shows none, and the
+      // legend only stole vertical space from the bars.
+      hideLegend
     />
   )
 }

@@ -220,6 +220,24 @@ Figma file key `yW364nD8qVYhXKiOxNBShA`, canvas `11:13` "Screens · Desktop".
 Screen frames: Dashboard `152:516`, Quick Entry `173:709`, Ledger `253:817`,
 Charts `351:547`, Report `355:694`, Settings `359:760`.
 
+`get_metadata` with no `nodeId` only lists the Cover page — it does NOT list the
+screens canvas. Go straight to `11:13` or a known frame id instead.
+
+### Column order in RTL
+
+The design is laid out RTL, so a panel on the **left** of a Figma frame must
+come **second** in the DOM, and one on the right comes first. Read the frame's
+child `x` coordinates from `get_metadata` and order the JSX accordingly — do not
+eyeball it from the screenshot. This caught four separate rows: the dashboard's
+two content rows, the charts row, and both summary-card strips.
+
+### Two blues
+
+`--brand-primary` (#3460d6) is for filled buttons, bars and links.
+`--md-sys-color-primary` (#3b6ef5) is for chips, segments and the nav rail.
+They are NOT interchangeable; MUI's `primary.main` is the latter, so filled
+buttons are themed through a `variants` entry rather than the palette.
+
 ---
 
 ## 3. What this app is

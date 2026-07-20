@@ -138,3 +138,9 @@ export const isToday = (iso: string): boolean => {
   const now = new Date()
   return date >= startOfDay(now) && date <= endOfDay(now)
 }
+
+/** The calendar day `at` falls in, as a range — "what came in today". */
+export const dayRange = (at: Date): DateRange => ({
+  from: startOfDay(at).toISOString(),
+  to: endOfDay(at).toISOString(),
+})

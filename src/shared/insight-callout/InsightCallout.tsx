@@ -28,8 +28,8 @@ export const InsightCallout = ({ message, tone = 'warning' }: InsightCalloutProp
         px: 2,
         py: 1.5,
         borderRadius: `${radius.md}px`,
-        backgroundColor: theme.palette.surfaceContainerHigh,
-        border: `1px solid ${theme.palette.outlineVariant}`,
+        backgroundColor: toneSurface(tone, theme),
+        border: `1px solid ${theme.palette.borderDefault}`,
       })}
     >
       <Box
@@ -44,6 +44,19 @@ export const InsightCallout = ({ message, tone = 'warning' }: InsightCalloutProp
       <Typography variant="body2">{message}</Typography>
     </Stack>
   )
+}
+
+/** The design tints the callout with the subtle pair of its dot colour. */
+const toneSurface = (tone: InsightTone, theme: Theme): string => {
+  switch (tone) {
+    case 'info':
+      return theme.palette.brandPrimarySubtle
+    case 'positive':
+      return theme.palette.success.light
+    case 'warning':
+    default:
+      return theme.palette.warning.light
+  }
 }
 
 const dotColour = (tone: InsightTone, theme: Theme): string => {

@@ -36,12 +36,16 @@ export const ChartCard = ({ title, subtitle, variant = 'chart', action, children
         boxShadow: variant === 'content' ? elevation.level1 : 'none',
         p: 3,
         height: '100%',
+        // MUI X measures a chart against its parent. Inside a flex column the
+        // box can resolve to zero width on first paint, which makes the chart
+        // bail out with "container has no width" and never recover.
+        minWidth: 0,
       }),
       ...(Array.isArray(sx) ? sx : [sx]),
     ]}
     {...props}
   >
-    <Stack spacing={2.5} sx={{ height: '100%' }}>
+    <Stack spacing={2.5} sx={{ height: '100%', minWidth: 0, width: '100%' }}>
       <Stack direction="row" sx={{ alignItems: 'flex-start', justifyContent: 'space-between', gap: 2 }}>
         <Stack spacing={0.5} sx={{ minWidth: 0, textAlign: 'start' }}>
           <Typography variant="h5">{title}</Typography>
@@ -53,7 +57,7 @@ export const ChartCard = ({ title, subtitle, variant = 'chart', action, children
         </Stack>
         {action ? <Box sx={{ flexShrink: 0 }}>{action}</Box> : null}
       </Stack>
-      {children}
+      <Box sx={{ minWidth: 0, width: '100%' }}>{children}</Box>
     </Stack>
   </Paper>
 )

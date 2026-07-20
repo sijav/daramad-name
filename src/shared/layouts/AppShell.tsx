@@ -1,5 +1,9 @@
 import { Trans, useLingui } from '@lingui/react/macro'
+import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded'
+import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded'
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded'
+import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneRounded'
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded'
 import {
   AppBar,
   BottomNavigation,
@@ -17,11 +21,13 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { elevation } from 'src/core/theme'
+import { elevation, radius } from 'src/core/theme'
 import { NAV_ITEMS } from 'src/shared/constants'
 import { PrivacyFooter } from 'src/shared/privacy-footer'
+import { setThemePreferenceMutation, settingsQueryKey } from 'src/shared/queries'
 
 const RAIL_WIDTH = 248
 
@@ -46,6 +52,16 @@ export const AppShell = () => {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const navigate = useNavigate()
   const { pathname } = useLocation()
+  const queryClient = useQueryClient()
+
+  // The top bar's theme button flips between light and dark from whatever is
+  // currently resolved, so it also works while the preference is `system`.
+  const resolvedMode = theme.palette.mode
+  const changeTheme = useMutation({
+    mutationFn: setThemePreferenceMutation,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: settingsQueryKey }),
+  })
+  const toggleTheme = () => changeTheme.mutate({ themePreference: resolvedMode === 'dark' ? 'light' : 'dark' })
 
   const activeIndex = Math.max(
     0,
@@ -95,20 +111,54 @@ export const AppShell = () => {
           color: t.palette.text.primary,
         })}
       >
-        <Toolbar sx={{ gap: 1 }}>
-          {!isDesktop ? (
-            <IconButton edge="start" onClick={() => setDrawerOpen(true)} aria-label={t`Open menu`}>
-              <MenuRoundedIcon />
-            </IconButton>
-          ) : null}
+        <Toolbar sx={{ gap: 1, justifyContent: 'space-between' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            {!isDesktop ? (
+              <IconButton edge="start" onClick={() => setDrawerOpen(true)} aria-label={t`Open menu`}>
+                <MenuRoundedIcon />
+              </IconButton>
+            ) : null}
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'baseline' }}>
+            {/* The design's brand lockup: wordmark beside a filled 36px tile. */}
+            <Box
+              sx={(t) => ({
+                display: 'grid',
+                placeItems: 'center',
+                width: 36,
+                height: 36,
+                flexShrink: 0,
+                borderRadius: `${radius.sm}px`,
+                backgroundColor: t.palette.brandPrimary,
+                color: t.palette.textOnPrimary,
+                fontWeight: 700,
+                fontSize: 18,
+              })}
+            >
+              ₮
+            </Box>
             <Typography variant="h3" component="h1">
               <Trans>Daramadname</Trans>
             </Typography>
-            <Typography variant="caption" color="text.secondary" sx={{ display: { xs: 'none', sm: 'block' } }}>
+            <Typography variant="caption" color="text.secondary" sx={{ display: { xs: 'none', md: 'block' } }}>
               <Trans>Receipts ledger and income report</Trans>
             </Typography>
+          </Stack>
+
+          {/* Theme toggle, notifications and account, as in the design. */}
+          <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
+            <IconButton onClick={toggleTheme} aria-label={t`Switch theme`}>
+              {resolvedMode === 'dark' ? <LightModeRoundedIcon /> : <DarkModeRoundedIcon />}
+            </IconButton>
+            <IconButton aria-label={t`Notifications`} onClick={() => navigate('/ledger')}>
+              <NotificationsNoneRoundedIcon />
+            </IconButton>
+            <IconButton
+              aria-label={t`Your details`}
+              onClick={() => navigate('/settings')}
+              sx={(t) => ({ backgroundColor: t.palette.surfaceContainerHigh })}
+            >
+              <PersonRoundedIcon />
+            </IconButton>
           </Stack>
         </Toolbar>
       </AppBar>

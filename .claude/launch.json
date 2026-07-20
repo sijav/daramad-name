@@ -4,13 +4,23 @@
     {
       "name": "daramadname",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--", "--port", "5173"],
-      "port": 5173
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 5173,
+      "autoPort": true
     },
     {
       "name": "storybook",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "storybook", "--", "--no-open", "--quiet"],
+      "runtimeArgs": [
+        "run",
+        "storybook",
+        "--",
+        "--no-open",
+        "--quiet"
+      ],
       "port": 6006
     }
   ]

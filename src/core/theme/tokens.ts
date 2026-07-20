@@ -13,7 +13,9 @@ export interface ColorPalette {
   primaryContainer: string
   onPrimaryContainer: string
   brandPrimary: string
+  brandPrimaryHover: string
   brandPrimarySubtle: string
+  textOnPrimary: string
   secondaryContainer: string
   onSecondaryContainer: string
   surface: string
@@ -51,7 +53,9 @@ export const lightColors: ColorPalette = {
   onPrimaryContainer: '#0f1c3d',
   /** `--brand-primary`: a deeper blue the design uses for emphasis, distinct from `primary`. */
   brandPrimary: '#3460d6',
+  brandPrimaryHover: '#2b51b8',
   brandPrimarySubtle: '#eff3fe',
+  textOnPrimary: '#fdfeff',
 
   secondaryContainer: '#e2e4e9',
   onSecondaryContainer: '#2f3236',
@@ -79,7 +83,7 @@ export const lightColors: ColorPalette = {
   successContainer: '#e6f5ec',
   warning: '#e2a400',
   warningContainer: '#fdf7ea',
-  error: '#b3261e',
+  error: '#dc362e',
   onError: '#ffffff',
   errorContainer: '#f9dedc',
   onErrorContainer: '#410e0b',
@@ -101,7 +105,9 @@ export const darkColors: ColorPalette = {
   primaryContainer: '#24427f',
   onPrimaryContainer: '#dbe4ff',
   brandPrimary: '#8fb0ff',
+  brandPrimaryHover: '#a8c2ff',
   brandPrimarySubtle: '#1a2440',
+  textOnPrimary: '#10131a',
 
   secondaryContainer: '#2f3236',
   onSecondaryContainer: '#e2e4e9',

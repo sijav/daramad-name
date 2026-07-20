@@ -1,11 +1,10 @@
 import { Trans, useLingui } from '@lingui/react/macro'
-import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded'
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded'
 import EventAvailableRoundedIcon from '@mui/icons-material/EventAvailableRounded'
-import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded'
 import PaymentsRoundedIcon from '@mui/icons-material/PaymentsRounded'
+import ReceiptLongRoundedIcon from '@mui/icons-material/ReceiptLongRounded'
 import ShowChartRoundedIcon from '@mui/icons-material/ShowChartRounded'
-import { Box, Button, CircularProgress, Grid, MenuItem, Stack, TextField, Typography } from '@mui/material'
+import { Box, Button, CircularProgress, Grid, Stack, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -16,6 +15,7 @@ import { ChartCard } from 'src/shared/chart-card'
 import { EmptyState } from 'src/shared/empty-state'
 import { useFormat } from 'src/shared/format'
 import { InsightCallout } from 'src/shared/insight-callout'
+import { PageActions } from 'src/shared/page-actions'
 import { PageHeader } from 'src/shared/page-header'
 import {
   getClientSharesQuery,
@@ -29,9 +29,7 @@ import {
 } from 'src/shared/queries'
 import { SummaryCard } from 'src/shared/summary-card'
 import { SurfaceCard } from 'src/shared/surface-card'
-import { Tag } from 'src/shared/tag'
-import { TopCustomers } from 'src/shared/top-customers'
-import { yearOf, yearRange } from 'src/shared/utils'
+import { monthIndexOf, yearOf, yearRange } from 'src/shared/utils'
 import { RecentReceipts } from './RecentReceipts'
 
 /**
@@ -59,8 +57,9 @@ export const DashboardPage = () => {
   })
 
   const yearTotal = months?.reduce((sum, month) => sum + month.totalToman, 0) ?? 0
-  const activeMonths = months?.filter((month) => month.totalToman > 0).length ?? 0
-  const clientCount = shareData?.shares.filter((share) => share.totalToman > 0).length ?? 0
+  const receiptCount = months?.reduce((sum, month) => sum + month.receiptCount, 0) ?? 0
+  // The design's fourth card is the CURRENT month, not a count of active ones.
+  const thisMonthTotal = months?.find((month) => month.month === monthIndexOf(new Date(), calendar) + 1)?.totalToman ?? 0
   const hasData = yearTotal > 0
 
   return (
@@ -68,18 +67,7 @@ export const DashboardPage = () => {
       <PageHeader
         title={t`Income overview`}
         subtitle={t`A summary of the income and receipts recorded in ${digits(year)}`}
-        action={
-          <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
-            <Tag icon={<CalendarMonthRoundedIcon sx={{ fontSize: 15 }} />} label={t`Report range: ${digits(year)}`} />
-            <TextField select size="small" value={year} onChange={(event) => setYear(Number(event.target.value))} sx={{ minWidth: 118 }}>
-              {years.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {digits(option)}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Stack>
-        }
+        action={<PageActions year={year} years={years} onYearChange={setYear} formatYear={digits} />}
       />
 
       {isLoading ? (
@@ -100,59 +88,43 @@ export const DashboardPage = () => {
         <Stack spacing={3}>
           <Grid container spacing={2}>
             <Grid size={{ xs: 6, md: 3 }}>
-              <SummaryCard label={t`Total income`} value={yearTotal} icon={<PaymentsRoundedIcon />} emphasis />
+              <SummaryCard label={t`Income this month`} value={thisMonthTotal} icon={<EventAvailableRoundedIcon />} />
+            </Grid>
+            <Grid size={{ xs: 6, md: 3 }}>
+              <SummaryCard label={t`Income in ${digits(year)}`} value={yearTotal} icon={<PaymentsRoundedIcon />} />
             </Grid>
             <Grid size={{ xs: 6, md: 3 }}>
               <SummaryCard label={t`Monthly average`} value={Math.round(yearTotal / 12)} icon={<ShowChartRoundedIcon />} />
             </Grid>
             <Grid size={{ xs: 6, md: 3 }}>
-              <SummaryCard label={t`Months with income`} value={t`${digits(activeMonths)} of 12`} icon={<EventAvailableRoundedIcon />} />
-            </Grid>
-            <Grid size={{ xs: 6, md: 3 }}>
-              <SummaryCard label={t`Clients`} value={digits(clientCount)} icon={<GroupsRoundedIcon />} />
+              <SummaryCard label={t`Receipts in ${digits(year)}`} value={digits(receiptCount)} icon={<ReceiptLongRoundedIcon />} />
             </Grid>
           </Grid>
 
           <Grid container spacing={3}>
+            <Grid size={{ xs: 12, lg: 5 }}>
+              <Stack sx={{ height: '100%' }}>
+                <ChartCard variant="content" title={t`Client share of income`} subtitle={t`Based on the income recorded this year`}>
+                  <ClientShareChart shares={shareData?.shares ?? []} othersLabel={t`Others`} />
+                  {/* The design keeps this callout inside the share card, not
+                      as a full-width band beneath the row. */}
+                  {shareData?.insight ? (
+                    <InsightCallout message={t`${digits(shareData.insight.percentage)}% of your income comes from a single client.`} />
+                  ) : null}
+                </ChartCard>
+              </Stack>
+            </Grid>
+
             <Grid size={{ xs: 12, lg: 7 }}>
               <ChartCard variant="content" title={t`Income by month`}>
                 <MonthlyIncomeChart months={months ?? []} calendar={calendar} />
               </ChartCard>
             </Grid>
-
-            <Grid size={{ xs: 12, lg: 5 }}>
-              <Stack spacing={2} sx={{ height: '100%' }}>
-                <ChartCard variant="content" title={t`Client share of income`} subtitle={t`Based on the income recorded this year`}>
-                  <ClientShareChart shares={shareData?.shares ?? []} othersLabel={t`Others`} />
-                </ChartCard>
-                {shareData?.insight ? (
-                  <InsightCallout message={t`${digits(shareData.insight.percentage)}% of your income comes from a single client.`} />
-                ) : null}
-              </Stack>
-            </Grid>
           </Grid>
 
           <Grid container spacing={3}>
-            <Grid size={{ xs: 12, lg: 7 }}>
-              <ChartCard
-                variant="content"
-                title={t`Latest receipts`}
-                action={
-                  <Button size="small" variant="text" onClick={() => navigate('/ledger')}>
-                    <Trans>View all</Trans>
-                  </Button>
-                }
-              >
-                <RecentReceipts receipts={(ledger?.receipts ?? []).slice(0, 6)} calendar={calendar} />
-              </ChartCard>
-            </Grid>
-
             <Grid size={{ xs: 12, lg: 5 }}>
               <Stack spacing={3} sx={{ height: '100%' }}>
-                <ChartCard variant="content" title={t`Top clients`}>
-                  <TopCustomers shares={shareData?.shares ?? []} othersLabel={t`Others`} />
-                </ChartCard>
-
                 {/* The design's `Report Shortcut`: a tinted panel rather than a
                     plain card, aligned to the reading direction with a filled
                     brand tile for the icon. */}
@@ -184,6 +156,19 @@ export const DashboardPage = () => {
                   </Stack>
                 </SurfaceCard>
               </Stack>
+            </Grid>
+            <Grid size={{ xs: 12, lg: 7 }}>
+              <ChartCard
+                variant="content"
+                title={t`Latest receipts`}
+                action={
+                  <Button size="small" variant="text" onClick={() => navigate('/ledger')}>
+                    <Trans>View all</Trans>
+                  </Button>
+                }
+              >
+                <RecentReceipts receipts={(ledger?.receipts ?? []).slice(0, 6)} calendar={calendar} />
+              </ChartCard>
             </Grid>
           </Grid>
         </Stack>

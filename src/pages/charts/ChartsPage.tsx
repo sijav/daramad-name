@@ -1,7 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded'
-import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded'
-import { Box, CircularProgress, Grid, MenuItem, Stack, TextField, Typography } from '@mui/material'
+import { Box, CircularProgress, Grid, Stack, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -10,6 +9,7 @@ import { ChartCard } from 'src/shared/chart-card'
 import { EmptyState } from 'src/shared/empty-state'
 import { useFormat } from 'src/shared/format'
 import { InsightCallout } from 'src/shared/insight-callout'
+import { PageActions } from 'src/shared/page-actions'
 import { PageHeader } from 'src/shared/page-header'
 import {
   getClientSharesQuery,
@@ -20,7 +20,6 @@ import {
   getPopulatedYearsQueryKey,
 } from 'src/shared/queries'
 import { SurfaceCard } from 'src/shared/surface-card'
-import { Tag } from 'src/shared/tag'
 import { TopCustomers } from 'src/shared/top-customers'
 import { yearOf, yearRange } from 'src/shared/utils'
 import { ClientShareChart } from './ClientShareChart'
@@ -61,18 +60,7 @@ export const ChartsPage = () => {
       <PageHeader
         title={t`Charts`}
         subtitle={t`A one-year picture of your income`}
-        action={
-          <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
-            <Tag icon={<CalendarMonthRoundedIcon sx={{ fontSize: 15 }} />} label={t`Report range: ${digits(year)}`} />
-            <TextField select size="small" value={year} onChange={(event) => setYear(Number(event.target.value))} sx={{ minWidth: 118 }}>
-              {years.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {digits(option)}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Stack>
-        }
+        action={<PageActions year={year} years={years} onYearChange={setYear} formatYear={digits} />}
       />
 
       {isLoading ? (
@@ -91,23 +79,11 @@ export const ChartsPage = () => {
         </SurfaceCard>
       ) : (
         <Stack spacing={3}>
-          <ChartCard title={t`Income for ${digits(year)}`} subtitle={t`Vertical axis figures are in millions of Toman.`}>
+          <ChartCard title={t`Income for ${digits(year)}`}>
             <MonthlyIncomeChart months={months ?? []} calendar={calendar} />
           </ChartCard>
 
           <Grid container spacing={3}>
-            <Grid size={{ xs: 12, lg: 6 }}>
-              <Stack spacing={2} sx={{ height: '100%' }}>
-                <ChartCard title={t`Client share of income`} subtitle={t`Based on the income recorded this year`}>
-                  <ClientShareChart shares={shareData?.shares ?? []} othersLabel={t`Others`} />
-                </ChartCard>
-
-                {shareData?.insight ? (
-                  <InsightCallout message={t`${digits(shareData.insight.percentage)}% of your income comes from a single client.`} />
-                ) : null}
-              </Stack>
-            </Grid>
-
             <Grid size={{ xs: 12, lg: 6 }}>
               <ChartCard title={t`Top clients`}>
                 {(shareData?.shares.length ?? 0) > 0 ? (
@@ -118,6 +94,18 @@ export const ChartsPage = () => {
                   </Typography>
                 )}
               </ChartCard>
+            </Grid>
+
+            <Grid size={{ xs: 12, lg: 6 }}>
+              <Stack spacing={2} sx={{ height: '100%' }}>
+                <ChartCard title={t`Client share of income`} subtitle={t`Based on the income recorded this year`}>
+                  <ClientShareChart shares={shareData?.shares ?? []} othersLabel={t`Others`} />
+                </ChartCard>
+
+                {shareData?.insight ? (
+                  <InsightCallout message={t`${digits(shareData.insight.percentage)}% of your income comes from a single client.`} />
+                ) : null}
+              </Stack>
             </Grid>
           </Grid>
         </Stack>

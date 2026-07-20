@@ -1,5 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
 import AddRoundedIcon from '@mui/icons-material/AddRounded'
+import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded'
 import PaymentsRoundedIcon from '@mui/icons-material/PaymentsRounded'
 import ReceiptLongRoundedIcon from '@mui/icons-material/ReceiptLongRounded'
 import ShowChartRoundedIcon from '@mui/icons-material/ShowChartRounded'
@@ -81,67 +82,81 @@ export const LedgerPage = () => {
         title={t`Income ledger`}
         subtitle={t`${digits(paged.matchedCount)} receipts in the selected range`}
         action={
-          <Button variant="contained" startIcon={<AddRoundedIcon />} onClick={() => navigate('/quick-entry')}>
-            {t`Record a receipt`}
-          </Button>
+          <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
+            <Button variant="contained" endIcon={<AddRoundedIcon />} onClick={() => navigate('/quick-entry')}>
+              {t`Record a receipt`}
+            </Button>
+            <Button variant="contained" color="secondary" endIcon={<DescriptionRoundedIcon />} onClick={() => navigate('/report')}>
+              {t`Income report`}
+            </Button>
+          </Stack>
         }
       />
 
+      {/* The design puts the toolbar above the summary cards and outside any
+          card — search leads, then filters, then the clear-all escape hatch. */}
+      <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.5} sx={{ mb: 2, alignItems: { md: 'center' } }}>
+        <SearchField value={view.search} onValueChange={view.setSearch} fullWidth />
+        <FilterButton
+          activeCount={view.activeFilterCount}
+          onClick={(event: MouseEvent<HTMLElement>) => setFilterAnchor(event.currentTarget)}
+        />
+        {isFiltered ? (
+          <Button variant="text" onClick={() => view.clearAll()} sx={{ flexShrink: 0 }}>
+            {t`Clear all`}
+          </Button>
+        ) : null}
+      </Stack>
+
+      {view.activeFilterCount > 0 ? (
+        <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap', mb: 2 }}>
+          {view.filter.range ? (
+            <FilterChip
+              field={t`Range`}
+              value={`${dateLong(view.filter.range.from)} – ${dateLong(view.filter.range.to)}`}
+              onDelete={() => view.setFilter({ ...view.filter, range: undefined })}
+            />
+          ) : null}
+          {view.filter.clientId ? (
+            <FilterChip
+              field={t`Client`}
+              value={clients.find((client) => client.id === view.filter.clientId)?.name ?? t`Unknown`}
+              onDelete={() => view.setFilter({ ...view.filter, clientId: undefined })}
+            />
+          ) : null}
+          {view.filter.channel ? (
+            <FilterChip
+              field={t`Channel`}
+              value={i18n._(CHANNEL_LABELS[view.filter.channel])}
+              onDelete={() => view.setFilter({ ...view.filter, channel: undefined })}
+            />
+          ) : null}
+        </Stack>
+      ) : null}
+
       <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid size={{ xs: 12, sm: 4 }}>
-          <SummaryCard label={t`Total`} value={data?.summary.totalToman ?? 0} icon={<PaymentsRoundedIcon />} emphasis />
+        <Grid size={{ xs: 6, sm: 4 }}>
+          <SummaryCard label={t`Receipts`} value={digits(data?.summary.receiptCount ?? 0)} icon={<ReceiptLongRoundedIcon />} />
         </Grid>
         <Grid size={{ xs: 6, sm: 4 }}>
           <SummaryCard label={t`Monthly average`} value={data?.summary.monthlyAverageToman ?? 0} icon={<ShowChartRoundedIcon />} />
         </Grid>
-        <Grid size={{ xs: 6, sm: 4 }}>
-          <SummaryCard label={t`Receipts`} value={digits(data?.summary.receiptCount ?? 0)} icon={<ReceiptLongRoundedIcon />} />
+        <Grid size={{ xs: 12, sm: 4 }}>
+          <SummaryCard label={t`Total`} value={data?.summary.totalToman ?? 0} icon={<PaymentsRoundedIcon />} />
         </Grid>
       </Grid>
 
-      <SurfaceCard flat>
-        <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.5} sx={{ mb: 2, alignItems: { md: 'center' } }}>
-          <FilterButton
-            activeCount={view.activeFilterCount}
-            onClick={(event: MouseEvent<HTMLElement>) => setFilterAnchor(event.currentTarget)}
-          />
-          <SearchField value={view.search} onValueChange={view.setSearch} fullWidth />
-        </Stack>
-
-        {view.activeFilterCount > 0 ? (
-          <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap', mb: 2 }}>
-            {view.filter.range ? (
-              <FilterChip
-                field={t`Range`}
-                value={`${dateLong(view.filter.range.from)} – ${dateLong(view.filter.range.to)}`}
-                onDelete={() => view.setFilter({ ...view.filter, range: undefined })}
-              />
-            ) : null}
-            {view.filter.clientId ? (
-              <FilterChip
-                field={t`Client`}
-                value={clients.find((client) => client.id === view.filter.clientId)?.name ?? t`Unknown`}
-                onDelete={() => view.setFilter({ ...view.filter, clientId: undefined })}
-              />
-            ) : null}
-            {view.filter.channel ? (
-              <FilterChip
-                field={t`Channel`}
-                value={i18n._(CHANNEL_LABELS[view.filter.channel])}
-                onDelete={() => view.setFilter({ ...view.filter, channel: undefined })}
-              />
-            ) : null}
-          </Stack>
-        ) : null}
-
-        {stateKind ? (
+      {stateKind ? (
+        <SurfaceCard flat>
           <LedgerState kind={stateKind} onAction={stateAction} />
-        ) : (
-          <>
-            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
-              {t`${digits(paged.matchedCount)} results based on the active filters`}
-            </Typography>
+        </SurfaceCard>
+      ) : (
+        <>
+          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+            {t`${digits(paged.matchedCount)} results based on the active filters`}
+          </Typography>
 
+          <SurfaceCard flat sx={{ p: 0, overflow: 'hidden' }}>
             <LedgerTable
               receipts={paged.rows}
               summary={data?.summary ?? { totalToman: 0, receiptCount: 0, monthlyAverageToman: 0 }}
@@ -152,18 +167,18 @@ export const LedgerPage = () => {
               onEdit={setEditing}
               onDelete={setDeleting}
             />
+          </SurfaceCard>
 
-            <PageControl
-              page={paged.page}
-              pageCount={paged.pageCount}
-              pageSize={view.pageSize}
-              totalCount={paged.matchedCount}
-              onPageChange={view.setPage}
-              onPageSizeChange={view.setPageSize}
-            />
-          </>
-        )}
-      </SurfaceCard>
+          <PageControl
+            page={paged.page}
+            pageCount={paged.pageCount}
+            pageSize={view.pageSize}
+            totalCount={paged.matchedCount}
+            onPageChange={view.setPage}
+            onPageSizeChange={view.setPageSize}
+          />
+        </>
+      )}
 
       <LedgerFilterPopover
         anchorEl={filterAnchor}

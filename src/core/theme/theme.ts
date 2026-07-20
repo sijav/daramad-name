@@ -41,7 +41,9 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
       outline: c.outline,
       glassSurface: c.glassSurface,
       brandPrimary: c.brandPrimary,
+      brandPrimaryHover: c.brandPrimaryHover,
       brandPrimarySubtle: c.brandPrimarySubtle,
+      textOnPrimary: c.textOnPrimary,
       borderDefault: c.borderDefault,
       surfaceSubtle: c.surfaceSubtle,
       chartSeries: c.chartSeries,
@@ -72,6 +74,32 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
           // half-transparent primary the way MUI does by default.
           outlined: { borderColor: c.outline },
         },
+        // MUI v9 styles colour-specific variants through `variants`, not the
+        // old `containedPrimary` slot.
+        variants: [
+          {
+            // Filled buttons use `--brand-primary` (#3460d6), a step darker
+            // than `--md-sys-color-primary` (#3b6ef5), which the design
+            // reserves for chips, segments and the nav rail. They are two
+            // different colours; using `primary.main` for both made every CTA
+            // visibly too light.
+            props: { variant: 'contained' as const, color: 'primary' as const },
+            style: {
+              backgroundColor: c.brandPrimary,
+              color: c.textOnPrimary,
+              '&:hover': { backgroundColor: c.brandPrimaryHover },
+            },
+          },
+          {
+            // The tonal button beside it — "گزارش درآمد" on the ledger header.
+            props: { variant: 'contained' as const, color: 'secondary' as const },
+            style: {
+              backgroundColor: c.brandPrimarySubtle,
+              color: c.brandPrimary,
+              '&:hover': { backgroundColor: c.primaryContainer },
+            },
+          },
+        ],
       },
       MuiChip: {
         styleOverrides: {

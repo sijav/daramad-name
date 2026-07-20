@@ -20,8 +20,13 @@ msgstr "{0} M Toman"
 
 #. placeholder {0}: digits(activeMonths)
 #: src/pages/dashboard/DashboardPage.tsx
-msgid "{0} of 12"
-msgstr "{0} of 12"
+#~ msgid "{0} of 12"
+#~ msgstr "{0} of 12"
+
+#. placeholder {0}: number(todayLedger?.receipts.length ?? 0)
+#: src/pages/quick-entry/QuickEntryAside.tsx
+msgid "{0} receipts"
+msgstr "{0} receipts"
 
 #. placeholder {0}: digits(paged.matchedCount)
 #: src/pages/ledger/LedgerPage.tsx
@@ -41,8 +46,8 @@ msgstr "{0} results based on the active filters"
 #. placeholder {0}: dateLong(range.from)
 #. placeholder {1}: dateLong(range.to)
 #: src/pages/report/ReportPage.tsx
-msgid "{0} to {1}"
-msgstr "{0} to {1}"
+#~ msgid "{0} to {1}"
+#~ msgstr "{0} to {1}"
 
 #. placeholder {0}: digits(pct(leader.totalToman))
 #. placeholder {0}: digits(pct(row.totalToman))
@@ -93,8 +98,8 @@ msgid "Actions"
 msgstr "Actions"
 
 #: src/pages/settings/SettingsPage.tsx
-msgid "Add sample data"
-msgstr "Add sample data"
+#~ msgid "Add sample data"
+#~ msgstr "Add sample data"
 
 #: src/pages/settings/SettingsPage.tsx
 #: src/shared/pdf/buildIncomeReport.ts
@@ -110,9 +115,14 @@ msgid "All clients"
 msgstr "All clients"
 
 #: src/pages/settings/SettingsPage.tsx
+msgid "All data is deleted permanently"
+msgstr "All data is deleted permanently"
+
+#: src/pages/settings/SettingsPage.tsx
 msgid "All data was erased."
 msgstr "All data was erased."
 
+#: src/pages/settings/SettingsPage.tsx
 #: src/shared/privacy-footer/PrivacyFooter.tsx
 msgid "All your data stays in your own browser and is never sent anywhere."
 msgstr "All your data stays in your own browser and is never sent anywhere."
@@ -138,8 +148,12 @@ msgid "App icon set"
 msgstr "App icon set"
 
 #: src/pages/settings/SettingsPage.tsx
-msgid "Appearance"
-msgstr "Appearance"
+msgid "App theme"
+msgstr "App theme"
+
+#: src/pages/settings/SettingsPage.tsx
+#~ msgid "Appearance"
+#~ msgstr "Appearance"
 
 #: src/pages/ledger/LedgerFilterPopover.tsx
 msgid "Apply filters"
@@ -167,12 +181,16 @@ msgid "Azar"
 msgstr "Azar"
 
 #: src/pages/settings/SettingsPage.tsx
-msgid "Back up (download JSON)"
-msgstr "Back up (download JSON)"
+#~ msgid "Back up (download JSON)"
+#~ msgstr "Back up (download JSON)"
 
 #: src/pages/settings/SettingsPage.tsx
-msgid "Backup and restore"
-msgstr "Backup and restore"
+msgid "Back up data"
+msgstr "Back up data"
+
+#: src/pages/settings/SettingsPage.tsx
+#~ msgid "Backup and restore"
+#~ msgstr "Backup and restore"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Backup file downloaded."
@@ -211,10 +229,15 @@ msgstr "Captured when the receipt was recorded. Later rate changes do not affect
 msgid "Card to card"
 msgstr "Card to card"
 
+#: src/pages/report/ReportPage.tsx
+msgid "Certificate of income"
+msgstr "Certificate of income"
+
 #: src/shared/ledger-state/LedgerState.tsx
 msgid "Change the date range or client, or clear the filters to see every receipt."
 msgstr "Change the date range or client, or clear the filters to see every receipt."
 
+#: src/pages/dashboard/RecentReceipts.tsx
 #: src/pages/ledger/LedgerFilterPopover.tsx
 #: src/pages/ledger/LedgerPage.tsx
 #: src/pages/ledger/LedgerTable.tsx
@@ -227,8 +250,16 @@ msgid "Charts"
 msgstr "Charts"
 
 #: src/pages/settings/SettingsPage.tsx
-msgid "Choose a colour scheme, or let it follow your device."
-msgstr "Choose a colour scheme, or let it follow your device."
+#~ msgid "Choose a colour scheme, or let it follow your device."
+#~ msgstr "Choose a colour scheme, or let it follow your device."
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Choose file"
+msgstr "Choose file"
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "Clear all"
+msgstr "Clear all"
 
 #: src/shared/ledger-state/LedgerState.tsx
 msgid "Clear filters"
@@ -259,8 +290,8 @@ msgid "Client share of income"
 msgstr "Client share of income"
 
 #: src/pages/dashboard/DashboardPage.tsx
-msgid "Clients"
-msgstr "Clients"
+#~ msgid "Clients"
+#~ msgstr "Clients"
 
 #: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
 msgid "Close"
@@ -282,6 +313,15 @@ msgstr "Daramadname"
 msgid "Dark"
 msgstr "Dark"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Data and backup"
+msgstr "Data and backup"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Data, backup and display"
+msgstr "Data, backup and display"
+
+#: src/pages/dashboard/RecentReceipts.tsx
 #: src/pages/ledger/LedgerTable.tsx
 msgid "Date"
 msgstr "Date"
@@ -316,21 +356,33 @@ msgstr "Deposit for design phase one"
 msgid "Dey"
 msgstr "Dey"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Display"
+msgstr "Display"
+
 #: src/pages/charts/ChartsPage.tsx
 #~ msgid "Divided by the 12 months of the year"
 #~ msgstr "Divided by the 12 months of the year"
 
 #: src/pages/report/ReportPage.tsx
-msgid "Divided by the months in the range, not only the months with income"
-msgstr "Divided by the months in the range, not only the months with income"
+#~ msgid "Divided by the months in the range, not only the months with income"
+#~ msgstr "Divided by the months in the range, not only the months with income"
 
 #: src/pages/report/ReportPage.tsx
-msgid "Document language"
-msgstr "Document language"
+#~ msgid "Document language"
+#~ msgstr "Document language"
 
 #: src/pages/report/ReportPage.tsx
-msgid "Document preview"
-msgstr "Document preview"
+#~ msgid "Document preview"
+#~ msgstr "Document preview"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Download a JSON file of every receipt"
+msgstr "Download a JSON file of every receipt"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Download backup"
+msgstr "Download backup"
 
 #: src/pages/report/ReportPage.tsx
 msgid "Download PDF"
@@ -358,9 +410,17 @@ msgstr "English"
 msgid "Enter an amount greater than zero."
 msgstr "Enter an amount greater than zero."
 
+#: src/pages/quick-entry/QuickEntryPage.tsx
+msgid "Enter the amount, the client and how you were paid."
+msgstr "Enter the amount, the client and how you were paid."
+
 #: src/pages/settings/SettingsPage.tsx
 msgid "erase"
 msgstr "erase"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Erase all"
+msgstr "Erase all"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Erase all data"
@@ -402,6 +462,14 @@ msgstr "Farvardin"
 msgid "February"
 msgstr "February"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Fill"
+msgstr "Fill"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Fill the ledger with sample receipts for testing and screenshots"
+msgstr "Fill the ledger with sample receipts for testing and screenshots"
+
 #: src/shared/filter-button/FilterButton.tsx
 msgid "Filters"
 msgstr "Filters"
@@ -435,6 +503,10 @@ msgstr "Gregorian"
 msgid "Homa Cafe"
 msgstr "Homa Cafe"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Import a backup file to bring your ledger back"
+msgstr "Import a backup file to bring your ledger back"
+
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Income by month"
 msgstr "Income by month"
@@ -443,6 +515,11 @@ msgstr "Income by month"
 #: src/pages/charts/ChartsPage.tsx
 msgid "Income for {0}"
 msgstr "Income for {0}"
+
+#. placeholder {0}: digits(year)
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "Income in {0}"
+msgstr "Income in {0}"
 
 #: src/pages/ledger/LedgerPage.tsx
 #: src/shared/constants/navigation.tsx
@@ -457,10 +534,23 @@ msgstr "Income ledger"
 msgid "Income overview"
 msgstr "Income overview"
 
+#: src/pages/ledger/LedgerPage.tsx
 #: src/pages/report/ReportPage.tsx
 #: src/shared/constants/navigation.tsx
 msgid "Income report"
 msgstr "Income report"
+
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "Income this month"
+msgstr "Income this month"
+
+#: src/pages/report/ReportPage.tsx
+msgid "Issued by Daramadname — a personal record of freelance income"
+msgstr "Issued by Daramadname — a personal record of freelance income"
+
+#: src/pages/report/ReportPage.tsx
+msgid "Issued on"
+msgstr "Issued on"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Jalali"
@@ -486,6 +576,10 @@ msgstr "Khordad"
 msgid "Language"
 msgstr "Language"
 
+#: src/pages/quick-entry/QuickEntryAside.tsx
+msgid "Last receipt"
+msgstr "Last receipt"
+
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Latest receipts"
 msgstr "Latest receipts"
@@ -494,9 +588,17 @@ msgstr "Latest receipts"
 msgid "Light"
 msgstr "Light"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Light, dark, or follow your device"
+msgstr "Light, dark, or follow your device"
+
 #: src/pages/quick-entry/QuickEntryPage.tsx
-msgid "Log it in under 15 seconds"
-msgstr "Log it in under 15 seconds"
+msgid "Log a new receipt in under 15 seconds."
+msgstr "Log a new receipt in under 15 seconds."
+
+#: src/pages/quick-entry/QuickEntryPage.tsx
+#~ msgid "Log it in under 15 seconds"
+#~ msgstr "Log it in under 15 seconds"
 
 #: src/shared/constants/labels.ts
 msgid "March"
@@ -518,6 +620,10 @@ msgstr "Menu design"
 msgid "Month"
 msgstr "Month"
 
+#: src/pages/report/ReportPage.tsx
+msgid "Month by month"
+msgstr "Month by month"
+
 #: src/shared/pdf/buildIncomeReport.ts
 msgid "Month-by-month breakdown"
 msgstr "Month-by-month breakdown"
@@ -532,8 +638,8 @@ msgid "Monthly income"
 msgstr "Monthly income"
 
 #: src/pages/dashboard/DashboardPage.tsx
-msgid "Months with income"
-msgstr "Months with income"
+#~ msgid "Months with income"
+#~ msgstr "Months with income"
 
 #: src/shared/constants/labels.ts
 msgid "Mordad"
@@ -542,6 +648,10 @@ msgstr "Mordad"
 #: src/shared/queries/seedSampleData.mutation.ts
 msgid "Naghsh Studio"
 msgstr "Naghsh Studio"
+
+#: src/pages/report/ReportPage.tsx
+msgid "Name"
+msgstr "Name"
 
 #: src/pages/settings/SettingsPage.tsx
 #: src/shared/pdf/buildIncomeReport.ts
@@ -581,6 +691,10 @@ msgstr "Nothing matched these filters"
 msgid "Nothing recorded in this range yet."
 msgstr "Nothing recorded in this range yet."
 
+#: src/shared/layouts/AppShell.tsx
+msgid "Notifications"
+msgstr "Notifications"
+
 #: src/shared/constants/labels.ts
 msgid "November"
 msgstr "November"
@@ -609,10 +723,23 @@ msgstr "One of the receipts in the file is incomplete and cannot be restored."
 msgid "Open menu"
 msgstr "Open menu"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Optional contact line on the report"
+msgstr "Optional contact line on the report"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Optional, printed under your name"
+msgstr "Optional, printed under your name"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Optional, shown on the report when set"
+msgstr "Optional, shown on the report when set"
+
 #: src/shared/constants/labels.ts
 msgid "Ordibehesht"
 msgstr "Ordibehesht"
 
+#: src/pages/dashboard/RecentReceipts.tsx
 #: src/pages/ledger/LedgerTable.tsx
 #: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
 msgid "Original amount"
@@ -654,6 +781,14 @@ msgstr "Phase two settlement"
 msgid "Phone"
 msgstr "Phone"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Printed at the top of the income report"
+msgstr "Printed at the top of the income report"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Privacy"
+msgstr "Privacy"
+
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Produce an official income document for any range, in Persian or English."
 msgstr "Produce an official income document for any range, in Persian or English."
@@ -667,9 +802,11 @@ msgid "Quick entry"
 msgstr "Quick entry"
 
 #: src/pages/ledger/LedgerPage.tsx
+#: src/pages/report/ReportPage.tsx
 msgid "Range"
 msgstr "Range"
 
+#: src/pages/quick-entry/QuickEntryPage.tsx
 #: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
 msgid "Receipt details"
 msgstr "Receipt details"
@@ -683,9 +820,26 @@ msgstr "Receipt saved."
 msgid "Receipts"
 msgstr "Receipts"
 
+#. placeholder {0}: digits(year)
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "Receipts in {0}"
+msgstr "Receipts in {0}"
+
 #: src/shared/layouts/AppShell.tsx
 msgid "Receipts ledger and income report"
 msgstr "Receipts ledger and income report"
+
+#: src/pages/quick-entry/QuickEntryAside.tsx
+msgid "Receipts today"
+msgstr "Receipts today"
+
+#: src/pages/quick-entry/QuickEntryAside.tsx
+msgid "Received today"
+msgstr "Received today"
+
+#: src/pages/quick-entry/QuickEntryAside.tsx
+msgid "Recent clients"
+msgstr "Recent clients"
 
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Record a few receipts and this page will show your year at a glance — month by month, and which clients it came from."
@@ -695,22 +849,39 @@ msgstr "Record a few receipts and this page will show your year at a glance — 
 #: src/pages/dashboard/DashboardPage.tsx
 #: src/pages/ledger/LedgerPage.tsx
 #: src/pages/quick-entry/QuickEntryPage.tsx
+#: src/shared/page-actions/PageActions.tsx
 msgid "Record a receipt"
 msgstr "Record a receipt"
+
+#: src/pages/quick-entry/QuickEntryPage.tsx
+msgid "Record a receipt quickly"
+msgstr "Record a receipt quickly"
 
 #: src/shared/ledger-state/LedgerState.tsx
 msgid "Record your first receipt"
 msgstr "Record your first receipt"
 
+#: src/pages/report/ReportPage.tsx
+msgid "Report language"
+msgstr "Report language"
+
+#: src/shared/page-actions/PageActions.tsx
+msgid "Report range"
+msgstr "Report range"
+
 #. placeholder {0}: digits(year)
 #: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
-msgid "Report range: {0}"
-msgstr "Report range: {0}"
+#~ msgid "Report range: {0}"
+#~ msgstr "Report range: {0}"
 
 #: src/pages/report/ReportPage.tsx
-msgid "Report year"
-msgstr "Report year"
+msgid "Report settings"
+msgstr "Report settings"
+
+#: src/pages/report/ReportPage.tsx
+#~ msgid "Report year"
+#~ msgstr "Report year"
 
 #: src/shared/pdf/buildIncomeReport.ts
 msgid "Reporting period"
@@ -733,12 +904,16 @@ msgid "Rows"
 msgstr "Rows"
 
 #: src/pages/settings/SettingsPage.tsx
-msgid "Sample data and reset"
-msgstr "Sample data and reset"
+msgid "Sample data"
+msgstr "Sample data"
 
 #: src/pages/settings/SettingsPage.tsx
-msgid "Sample data is for testing and screenshots. For a real demo, record your own data."
-msgstr "Sample data is for testing and screenshots. For a real demo, record your own data."
+#~ msgid "Sample data and reset"
+#~ msgstr "Sample data and reset"
+
+#: src/pages/settings/SettingsPage.tsx
+#~ msgid "Sample data is for testing and screenshots. For a real demo, record your own data."
+#~ msgstr "Sample data is for testing and screenshots. For a real demo, record your own data."
 
 #: src/shared/receipt-form/ReceiptForm.tsx
 msgid "Save and next"
@@ -792,9 +967,17 @@ msgstr "Something went wrong"
 msgid "Statement of Income"
 msgstr "Statement of Income"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Store these on this device"
+msgstr "Store these on this device"
+
 #: src/shared/pdf/buildIncomeReport.ts
 msgid "Summary"
 msgstr "Summary"
+
+#: src/shared/layouts/AppShell.tsx
+msgid "Switch theme"
+msgstr "Switch theme"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "System"
@@ -816,6 +999,10 @@ msgstr "The backup failed. Try again."
 msgid "The backup file is incomplete — it has no receipts or clients list."
 msgstr "The backup file is incomplete — it has no receipts or clients list."
 
+#: src/pages/quick-entry/QuickEntryPage.tsx
+msgid "The conversion rate is stored as you record it and does not change later."
+msgstr "The conversion rate is stored as you record it and does not change later."
+
 #: src/pages/settings/SettingsPage.tsx
 msgid "The file could not be read. Make sure it is intact and pick it again."
 msgstr "The file could not be read. Make sure it is intact and pick it again."
@@ -836,6 +1023,10 @@ msgstr "The ledger could not be loaded"
 msgid "The ledger is where every payment you have received adds up in one place — exactly what you need when it is time to produce a report."
 msgstr "The ledger is where every payment you have received adds up in one place — exactly what you need when it is time to produce a report."
 
+#: src/pages/quick-entry/QuickEntryAside.tsx
+msgid "The rate and Toman equivalent are stored at the moment you record a receipt. Later rate changes do not affect it."
+msgstr "The rate and Toman equivalent are stored at the moment you record a receipt. Later rate changes do not affect it."
+
 #: src/shared/pdf/loadPdfMake.ts
 msgid "The report's Persian font failed to load. Reload the page."
 msgstr "The report's Persian font failed to load. Reload the page."
@@ -845,12 +1036,16 @@ msgid "The whole interface switches, including text direction. Your data is unto
 msgstr "The whole interface switches, including text direction. Your data is untouched."
 
 #: src/pages/settings/SettingsPage.tsx
-msgid "These details are printed at the top of the income report. Without a name the document carries no weight with an embassy or a landlord."
-msgstr "These details are printed at the top of the income report. Without a name the document carries no weight with an embassy or a landlord."
+#~ msgid "These details are printed at the top of the income report. Without a name the document carries no weight with an embassy or a landlord."
+#~ msgstr "These details are printed at the top of the income report. Without a name the document carries no weight with an embassy or a landlord."
 
 #: src/shared/queries/restoreBackup.mutation.ts
 msgid "This backup file's version is not supported. It was made by a newer version of the app."
 msgstr "This backup file's version is not supported. It was made by a newer version of the app."
+
+#: src/pages/report/ReportPage.tsx
+msgid "This document is generated from the data you recorded in Daramadname and is informational."
+msgstr "This document is generated from the data you recorded in Daramadname and is informational."
 
 #: src/shared/queries/restoreBackup.mutation.ts
 msgid "This file is not from Daramadname. Did you pick a backup from another tool?"
@@ -888,6 +1083,10 @@ msgstr "to"
 msgid "To date"
 msgstr "To date"
 
+#: src/pages/quick-entry/QuickEntryAside.tsx
+msgid "Today so far"
+msgstr "Today so far"
+
 #: src/shared/receipt-form/ReceiptForm.tsx
 msgid "Today's exchange rate (Toman)"
 msgstr "Today's exchange rate (Toman)"
@@ -897,6 +1096,7 @@ msgstr "Today's exchange rate (Toman)"
 msgid "Toman"
 msgstr "Toman"
 
+#: src/pages/dashboard/RecentReceipts.tsx
 #: src/pages/ledger/LedgerTable.tsx
 #: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
 #: src/shared/receipt-form/ReceiptForm.tsx
@@ -904,7 +1104,6 @@ msgid "Toman equivalent"
 msgstr "Toman equivalent"
 
 #: src/pages/charts/ChartsPage.tsx
-#: src/pages/dashboard/DashboardPage.tsx
 msgid "Top clients"
 msgstr "Top clients"
 
@@ -917,7 +1116,6 @@ msgstr "Total"
 msgid "Total ({0} receipts)"
 msgstr "Total ({0} receipts)"
 
-#: src/pages/dashboard/DashboardPage.tsx
 #: src/pages/report/ReportPage.tsx
 #: src/shared/pdf/buildIncomeReport.ts
 msgid "Total income"
@@ -950,8 +1148,8 @@ msgid "UX consulting"
 msgstr "UX consulting"
 
 #: src/pages/charts/ChartsPage.tsx
-msgid "Vertical axis figures are in millions of Toman."
-msgstr "Vertical axis figures are in millions of Toman."
+#~ msgid "Vertical axis figures are in millions of Toman."
+#~ msgstr "Vertical axis figures are in millions of Toman."
 
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "View all"
@@ -960,6 +1158,10 @@ msgstr "View all"
 #: src/shared/row-actions-menu/RowActionsMenu.tsx
 msgid "View details"
 msgstr "View details"
+
+#: src/pages/quick-entry/QuickEntryAside.tsx
+msgid "View in the ledger"
+msgstr "View in the ledger"
 
 #: src/shared/queries/seedSampleData.mutation.ts
 msgid "Visual identity redesign"
@@ -990,8 +1192,12 @@ msgid "Your data is safe and has not been erased. Try again."
 msgstr "Your data is safe and has not been erased. Try again."
 
 #: src/pages/settings/SettingsPage.tsx
-msgid "Your data lives only in this browser. If you clear the browser, everything is lost without a backup."
-msgstr "Your data lives only in this browser. If you clear the browser, everything is lost without a backup."
+#~ msgid "Your data lives only in this browser. If you clear the browser, everything is lost without a backup."
+#~ msgstr "Your data lives only in this browser. If you clear the browser, everything is lost without a backup."
+
+#: src/shared/layouts/AppShell.tsx
+msgid "Your details"
+msgstr "Your details"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Your details were saved."

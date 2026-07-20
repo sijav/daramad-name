@@ -1,13 +1,17 @@
-import { Trans, useLingui } from '@lingui/react/macro'
-import { Alert, Box, Button, Snackbar, Stack, TextField, Typography } from '@mui/material'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useLingui } from '@lingui/react/macro'
+import { Alert, Box, Snackbar, Stack, TextField } from '@mui/material'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRef, useState } from 'react'
 import { invalidateReceiptQueries, useSettings } from 'src/core/query'
 import { ConfirmDialog } from 'src/shared/confirm-dialog'
+import { useFormat } from 'src/shared/format'
+import { PageActions } from 'src/shared/page-actions'
 import { PageHeader } from 'src/shared/page-header'
 import {
   clearAllDataMutation,
   exportBackupMutation,
+  getPopulatedYearsQuery,
+  getPopulatedYearsQueryKey,
   restoreBackupMutation,
   seedSampleDataMutation,
   setCalendarMutation,
@@ -17,14 +21,23 @@ import {
   updateProfileMutation,
 } from 'src/shared/queries'
 import { SegmentedControl } from 'src/shared/segmented-control'
-import { SurfaceCard } from 'src/shared/surface-card'
+import { SettingButton, SettingRow, SettingsSection } from 'src/shared/settings-section'
 import type { AppLocale, CalendarSystem, Profile, ThemePreference } from 'src/shared/types'
+import { yearOf } from 'src/shared/utils'
 
 export const SettingsPage = () => {
   const { t } = useLingui()
   const settings = useSettings()
   const queryClient = useQueryClient()
   const fileInput = useRef<HTMLInputElement>(null)
+  const { digits } = useFormat()
+
+  // The design carries the same range pill and record button on every screen.
+  const [year, setYear] = useState(() => yearOf(new Date(), settings.calendar))
+  const { data: years = [] } = useQuery({
+    queryKey: getPopulatedYearsQueryKey(settings.calendar),
+    queryFn: getPopulatedYearsQuery,
+  })
 
   // `null` until the user edits, so the form reads straight from the saved
   // settings as they arrive from IndexedDB. Deriving rather than copying into
@@ -114,121 +127,67 @@ export const SettingsPage = () => {
   }
 
   return (
-    <Box sx={{ maxWidth: 720 }}>
-      <PageHeader title={t`Settings`} />
+    <Box>
+      <PageHeader
+        title={t`Settings`}
+        subtitle={t`Data, backup and display`}
+        action={<PageActions year={year} years={years} onYearChange={setYear} formatYear={digits} />}
+      />
 
       <Stack spacing={3}>
-        <SurfaceCard radius="lg" flat>
-          <Typography variant="h3" sx={{ mb: 0.5 }}>
-            <Trans>Personal details</Trans>
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2.5 }}>
-            <Trans>
-              These details are printed at the top of the income report. Without a name the document carries no weight with an embassy or a
-              landlord.
-            </Trans>
-          </Typography>
-
-          <Stack spacing={2}>
+        {/* 1 — Personal details. Not in the design's settings frame, but the
+            report is unusable without it, so it follows the same row pattern. */}
+        <SettingsSection title={t`Personal details`}>
+          <SettingRow label={t`Full name`} description={t`Printed at the top of the income report`}>
             <TextField
-              label={t`Full name`}
+              size="small"
               value={profile.fullName}
               onChange={(event) => setProfile({ ...profile, fullName: event.target.value })}
-              fullWidth
+              sx={{ minWidth: 280 }}
             />
+          </SettingRow>
+          <SettingRow label={t`National ID`} description={t`Optional, shown on the report when set`}>
             <TextField
-              label={t`National ID`}
+              size="small"
               value={profile.nationalId}
               onChange={(event) => setProfile({ ...profile, nationalId: event.target.value })}
-              fullWidth
+              sx={{ minWidth: 280 }}
             />
+          </SettingRow>
+          <SettingRow label={t`Phone`} description={t`Optional contact line on the report`}>
             <TextField
-              label={t`Phone`}
+              size="small"
               value={profile.phone}
               onChange={(event) => setProfile({ ...profile, phone: event.target.value })}
-              fullWidth
+              sx={{ minWidth: 280 }}
             />
+          </SettingRow>
+          <SettingRow label={t`Address`} description={t`Optional, printed under your name`}>
             <TextField
-              label={t`Address`}
+              size="small"
               value={profile.address}
               onChange={(event) => setProfile({ ...profile, address: event.target.value })}
               multiline
               minRows={2}
-              fullWidth
+              sx={{ minWidth: 280 }}
             />
-            <Button variant="contained" onClick={() => saveProfile.mutate(profile)} disabled={saveProfile.isPending}>
-              <Trans>Save details</Trans>
-            </Button>
-          </Stack>
-        </SurfaceCard>
+          </SettingRow>
+          <SettingRow label={t`Save details`} description={t`Store these on this device`}>
+            <SettingButton tone="primary" onClick={() => saveProfile.mutate(profile)} disabled={saveProfile.isPending}>
+              {t`Save details`}
+            </SettingButton>
+          </SettingRow>
+        </SettingsSection>
 
-        <SurfaceCard radius="lg" flat>
-          <Typography variant="h3" sx={{ mb: 0.5 }}>
-            <Trans>Language</Trans>
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            <Trans>The whole interface switches, including text direction. Your data is untouched.</Trans>
-          </Typography>
-          <SegmentedControl<AppLocale>
-            value={settings.locale}
-            options={[
-              { value: 'fa-IR', label: t`Persian` },
-              { value: 'en-US', label: t`English` },
-            ]}
-            onValueChange={(locale) => changeLocale.mutate({ locale })}
-          />
-        </SurfaceCard>
-
-        <SurfaceCard radius="lg" flat>
-          <Typography variant="h3" sx={{ mb: 0.5 }}>
-            <Trans>Appearance</Trans>
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            <Trans>Choose a colour scheme, or let it follow your device.</Trans>
-          </Typography>
-          <SegmentedControl<ThemePreference>
-            value={settings.themePreference}
-            options={[
-              { value: 'light', label: t`Light` },
-              { value: 'dark', label: t`Dark` },
-              { value: 'system', label: t`System` },
-            ]}
-            onValueChange={(themePreference) => changeTheme.mutate({ themePreference })}
-          />
-        </SurfaceCard>
-
-        <SurfaceCard radius="lg" flat>
-          <Typography variant="h3" sx={{ mb: 0.5 }}>
-            <Trans>Calendar</Trans>
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            <Trans>Every date and monthly total is shown in this calendar. Your data itself does not change.</Trans>
-          </Typography>
-          <SegmentedControl<CalendarSystem>
-            value={settings.calendar}
-            options={[
-              { value: 'JALALI', label: t`Jalali` },
-              { value: 'GREGORIAN', label: t`Gregorian` },
-            ]}
-            onValueChange={(calendar) => changeCalendar.mutate({ calendar })}
-          />
-        </SurfaceCard>
-
-        <SurfaceCard radius="lg" flat>
-          <Typography variant="h3" sx={{ mb: 0.5 }}>
-            <Trans>Backup and restore</Trans>
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2.5 }}>
-            <Trans>Your data lives only in this browser. If you clear the browser, everything is lost without a backup.</Trans>
-          </Typography>
-
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
-            <Button variant="contained" onClick={() => backup.mutate()} disabled={backup.isPending}>
-              <Trans>Back up (download JSON)</Trans>
-            </Button>
-            <Button variant="outlined" onClick={() => fileInput.current?.click()}>
-              <Trans>Restore from file</Trans>
-            </Button>
+        {/* 2 — the design's `داده‌ها و پشتیبان‌گیری`, row for row. */}
+        <SettingsSection title={t`Data and backup`}>
+          <SettingRow label={t`Back up data`} description={t`Download a JSON file of every receipt`}>
+            <SettingButton tone="primary" onClick={() => backup.mutate()} disabled={backup.isPending}>
+              {t`Download backup`}
+            </SettingButton>
+          </SettingRow>
+          <SettingRow label={t`Restore`} description={t`Import a backup file to bring your ledger back`}>
+            <SettingButton onClick={() => fileInput.current?.click()}>{t`Choose file`}</SettingButton>
             <input
               ref={fileInput}
               type="file"
@@ -240,26 +199,62 @@ export const SettingsPage = () => {
                 event.target.value = ''
               }}
             />
-          </Stack>
-        </SurfaceCard>
+          </SettingRow>
+          <SettingRow label={t`Sample data`} description={t`Fill the ledger with sample receipts for testing and screenshots`}>
+            <SettingButton onClick={() => seed.mutate()} disabled={seed.isPending}>
+              {t`Fill`}
+            </SettingButton>
+          </SettingRow>
+          <SettingRow label={t`Erase everything`} description={t`All data is deleted permanently`}>
+            <SettingButton tone="danger" onClick={() => setConfirmClear(true)}>
+              {t`Erase all`}
+            </SettingButton>
+          </SettingRow>
+        </SettingsSection>
 
-        <SurfaceCard radius="lg" flat>
-          <Typography variant="h3" sx={{ mb: 0.5 }}>
-            <Trans>Sample data and reset</Trans>
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2.5 }}>
-            <Trans>Sample data is for testing and screenshots. For a real demo, record your own data.</Trans>
-          </Typography>
+        {/* 3 — the design's `نمایش`. Theme is the row it shows; language and
+            calendar belong to the same group and keep the same pattern. */}
+        <SettingsSection title={t`Display`}>
+          <SettingRow label={t`App theme`} description={t`Light, dark, or follow your device`}>
+            <SegmentedControl<ThemePreference>
+              value={settings.themePreference}
+              options={[
+                { value: 'light', label: t`Light` },
+                { value: 'dark', label: t`Dark` },
+                { value: 'system', label: t`System` },
+              ]}
+              onValueChange={(themePreference) => changeTheme.mutate({ themePreference })}
+            />
+          </SettingRow>
+          <SettingRow label={t`Language`} description={t`The whole interface switches, including text direction. Your data is untouched.`}>
+            <SegmentedControl<AppLocale>
+              value={settings.locale}
+              options={[
+                { value: 'fa-IR', label: t`Persian` },
+                { value: 'en-US', label: t`English` },
+              ]}
+              onValueChange={(locale) => changeLocale.mutate({ locale })}
+            />
+          </SettingRow>
+          <SettingRow
+            label={t`Calendar`}
+            description={t`Every date and monthly total is shown in this calendar. Your data itself does not change.`}
+          >
+            <SegmentedControl<CalendarSystem>
+              value={settings.calendar}
+              options={[
+                { value: 'JALALI', label: t`Jalali` },
+                { value: 'GREGORIAN', label: t`Gregorian` },
+              ]}
+              onValueChange={(calendar) => changeCalendar.mutate({ calendar })}
+            />
+          </SettingRow>
+        </SettingsSection>
 
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
-            <Button variant="outlined" onClick={() => seed.mutate()} disabled={seed.isPending}>
-              <Trans>Add sample data</Trans>
-            </Button>
-            <Button variant="outlined" color="error" onClick={() => setConfirmClear(true)}>
-              <Trans>Erase all data</Trans>
-            </Button>
-          </Stack>
-        </SurfaceCard>
+        {/* 4 — the design's `حریم خصوصی`: a statement, no control. */}
+        <SettingsSection title={t`Privacy`}>
+          <SettingRow label={t`All your data stays in your own browser and is never sent anywhere.`} />
+        </SettingsSection>
       </Stack>
 
       <ConfirmDialog

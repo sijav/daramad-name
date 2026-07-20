@@ -1,11 +1,13 @@
 import { Trans, useLingui } from '@lingui/react/macro'
-import { Alert, Box, Snackbar, Typography } from '@mui/material'
+import { Alert, Box, Grid, Snackbar, Typography } from '@mui/material'
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
 import { invalidateReceiptQueries } from 'src/core/query'
+import { PageHeader } from 'src/shared/page-header'
 import { createReceiptMutation, type CreateReceiptRequest } from 'src/shared/queries'
 import { ReceiptForm, useReceiptForm } from 'src/shared/receipt-form'
 import { SurfaceCard } from 'src/shared/surface-card'
+import { QuickEntryAside } from './QuickEntryAside'
 
 /**
  * Scenario 1: record a receipt in under 15 seconds.
@@ -57,25 +59,41 @@ export const QuickEntryPage = () => {
   }
 
   return (
-    <Box sx={{ maxWidth: 620, mx: 'auto' }}>
-      <SurfaceCard>
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="h2">
-            <Trans>Record a receipt</Trans>
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-            <Trans>Log it in under 15 seconds</Trans>
-          </Typography>
-        </Box>
+    <Box>
+      <PageHeader
+        title={t`Record a receipt quickly`}
+        subtitle={t`Log a new receipt in under 15 seconds.`}
+        meta={t`The conversion rate is stored as you record it and does not change later.`}
+      />
 
-        <ReceiptForm
-          form={form}
-          submitLabel={t`Record a receipt`}
-          pending={isPending}
-          onSubmit={() => submit(false)}
-          onSubmitAndNext={() => submit(true)}
-        />
-      </SurfaceCard>
+      {/* The design's two-column grid: the form leads, with the support column
+          beside it. Form first in the DOM so RTL keeps it on the reading side. */}
+      <Grid container spacing={3}>
+        <Grid size={{ xs: 12, lg: 7 }}>
+          <SurfaceCard>
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="h3">
+                <Trans>Receipt details</Trans>
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                <Trans>Enter the amount, the client and how you were paid.</Trans>
+              </Typography>
+            </Box>
+
+            <ReceiptForm
+              form={form}
+              submitLabel={t`Record a receipt`}
+              pending={isPending}
+              onSubmit={() => submit(false)}
+              onSubmitAndNext={() => submit(true)}
+            />
+          </SurfaceCard>
+        </Grid>
+
+        <Grid size={{ xs: 12, lg: 5 }}>
+          <QuickEntryAside />
+        </Grid>
+      </Grid>
 
       <Snackbar open={toast !== null} autoHideDuration={2500} onClose={() => setToast(null)}>
         <Alert severity="success" onClose={() => setToast(null)}>

@@ -17,7 +17,9 @@ declare module '@mui/material/styles' {
     outline: string
     glassSurface: string
     brandPrimary: string
+    brandPrimaryHover: string
     brandPrimarySubtle: string
+    textOnPrimary: string
     borderDefault: string
     surfaceSubtle: string
     chartSeries: readonly string[]
@@ -31,7 +33,9 @@ declare module '@mui/material/styles' {
     outline?: string
     glassSurface?: string
     brandPrimary?: string
+    brandPrimaryHover?: string
     brandPrimarySubtle?: string
+    textOnPrimary?: string
     borderDefault?: string
     surfaceSubtle?: string
     chartSeries?: readonly string[]

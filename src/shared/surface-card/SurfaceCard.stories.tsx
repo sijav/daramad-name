@@ -10,22 +10,23 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-/** The frosted surface from the design: 28px radius, 16px backdrop blur, soft drop shadow. */
-export const Default: Story = {
-  args: {
-    children: (
-      <Stack spacing={1}>
-        <Typography variant="h2">Record a receipt</Typography>
-        <Typography variant="body2" color="text.secondary">
-          Log it in under 15 seconds
-        </Typography>
-      </Stack>
-    ),
-    sx: { maxWidth: 520 },
-  },
-}
+const body = (
+  <Stack spacing={1}>
+    <Typography variant="h3">Record a receipt</Typography>
+    <Typography variant="body2" color="text.secondary">
+      Log it in under 15 seconds
+    </Typography>
+  </Stack>
+)
 
-/** `flat` drops the shadow, for cards nested inside another surface. */
-export const Flat: Story = {
-  args: { ...Default.args, flat: true },
-}
+/** The design's panel: `surface-default`, a 1px hairline, 20px, Elevation/1. */
+export const Default: Story = { args: { children: body, sx: { maxWidth: 520 } } }
+
+/** `radius="lg"` is the 16px supporting panel — Settings, Report, Quick Entry's aside. */
+export const Supporting: Story = { args: { ...Default.args, radius: 'lg' } }
+
+/** `flat` drops the shadow. Ledger, Report and Settings panels carry none. */
+export const Flat: Story = { args: { ...Default.args, flat: true } }
+
+/** `tone="subtle"` is the tinted panel behind the dashboard's report shortcut. */
+export const Subtle: Story = { args: { ...Default.args, tone: 'subtle', flat: true } }

@@ -28,29 +28,6 @@ export const FilterButton = ({ activeCount = 0, sx, ...props }: FilterButtonProp
     <Button
       variant="outlined"
       startIcon={<FilterAltOutlinedIcon />}
-      endIcon={
-        activeCount > 0 ? (
-          <Box
-            sx={(theme) => ({
-              display: 'grid',
-              placeItems: 'center',
-              width: 20,
-              height: 20,
-              borderRadius: `${radius.sm + 2}px`,
-              backgroundColor: theme.palette.brandPrimary,
-              color: theme.palette.textOnPrimary,
-              fontSize: 12,
-              fontWeight: 500,
-              // Without an explicit line box the glyph's own leading pushes it
-              // past the 20px circle.
-              lineHeight: 1,
-              flexShrink: 0,
-            })}
-          >
-            {digits(activeCount)}
-          </Box>
-        ) : null
-      }
       sx={[
         (theme) => ({
           height: 44,
@@ -68,6 +45,33 @@ export const FilterButton = ({ activeCount = 0, sx, ...props }: FilterButtonProp
       {...props}
     >
       {t`Filters`}
+
+      {/* The count sits in the button's CHILDREN, not in `endIcon`. MUI styles
+          that slot with `.MuiButton-endIcon > *:nth-of-type(1) { font-size }`,
+          which outranks the badge's own class and blew the digit up to 20px
+          inside a 20px circle. */}
+      {activeCount > 0 ? (
+        <Box
+          component="span"
+          sx={(theme) => ({
+            display: 'grid',
+            placeItems: 'center',
+            width: 20,
+            height: 20,
+            flexShrink: 0,
+            marginInlineStart: '12px',
+            borderRadius: '50%',
+            backgroundColor: theme.palette.brandPrimary,
+            color: theme.palette.textOnPrimary,
+            // `275:65`: 13/500 on a 20px line box, so the glyph centres.
+            fontSize: 13,
+            fontWeight: 500,
+            lineHeight: '20px',
+          })}
+        >
+          {digits(activeCount)}
+        </Box>
+      ) : null}
     </Button>
   )
 }

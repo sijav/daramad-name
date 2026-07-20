@@ -36,7 +36,7 @@ export const PageControl = ({ page, pageCount, pageSize, totalCount, onPageChang
       spacing={2}
       sx={{ alignItems: 'center', justifyContent: 'space-between', pt: 3, width: '100%' }}
     >
-      <Typography variant="body2" color="text.secondary" sx={{ flex: 1, textAlign: 'start' }}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', flex: 1, textAlign: 'start' }}>
         {t`Showing ${digits(firstRow)} to ${digits(lastRow)} of ${digits(totalCount)} receipts`}
       </Typography>
 

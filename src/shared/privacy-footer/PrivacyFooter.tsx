@@ -10,7 +10,7 @@ import { Stack, Typography } from '@mui/material'
 export const PrivacyFooter = () => (
   <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifyContent: 'center', mt: 6, pt: 3, opacity: 0.75 }}>
     <LockRoundedIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
-    <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'center' }}>
+    <Typography variant="caption" sx={{ color: 'text.secondary', textAlign: 'center' }}>
       <Trans>All your data stays in your own browser and is never sent anywhere.</Trans>
     </Typography>
   </Stack>

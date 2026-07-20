@@ -18,7 +18,7 @@ const View = ({ subtitle }: { subtitle?: boolean }) => {
   return (
     <div style={{ maxWidth: 544 }}>
       <ChartCard title={t`Top clients`} subtitle={subtitle ? t`Based on the income recorded this year` : undefined}>
-        <Typography variant="body2" color="text.secondary">
+        <Typography sx={{ color: 'text.secondary' }} variant="body2">
           {t`Nothing recorded in this range yet.`}
         </Typography>
       </ChartCard>

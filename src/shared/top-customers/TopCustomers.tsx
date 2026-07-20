@@ -40,7 +40,7 @@ export const TopCustomers = ({ shares, limit = 5, othersLabel }: TopCustomersPro
             <Typography variant="subtitle1" sx={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {row.clientName}
             </Typography>
-            <Typography variant="h5" color="text.secondary" sx={{ flexShrink: 0, whiteSpace: 'nowrap' }}>
+            <Typography variant="h5" sx={{ color: 'text.secondary', flexShrink: 0, whiteSpace: 'nowrap' }}>
               {t`${number(Math.round(row.totalToman / 1_000_000))} M Toman`}
             </Typography>
           </Stack>

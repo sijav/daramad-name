@@ -22,7 +22,7 @@ export interface ChipSelectProps<T extends string> {
 export const ChipSelect = <T extends string>({ label, value, options, onValueChange }: ChipSelectProps<T>) => (
   <Box>
     {label ? (
-      <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+      <Typography variant="subtitle2" sx={{ color: 'text.secondary', mb: 1 }}>
         {label}
       </Typography>
     ) : null}

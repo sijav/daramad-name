@@ -1,5 +1,5 @@
 import { Trans, useLingui } from '@lingui/react/macro'
-import { Alert, Autocomplete, Box, Button, Stack, TextField } from '@mui/material'
+import { Alert, Autocomplete, Box, Button, Stack, TextField, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { radius } from 'src/core/theme'
 import { AmountField } from 'src/shared/amount-field'
@@ -88,18 +88,24 @@ export const ReceiptForm = ({ form, submitLabel, pending = false, onSubmit, onSu
               />
             </Field>
 
-            <Field label={t`Toman equivalent`}>
+            {/* `175:802`: a tinted readout, not a field — the figure on the
+                reading edge and "frozen" opposite it, both in brand blue, so it
+                reads as a result rather than something else to fill in. */}
+            <Field label={t`Toman equivalent (stored at the moment of entry)`}>
               <Box
                 sx={(theme) => ({
                   display: 'flex',
                   alignItems: 'center',
-                  height: 52,
-                  px: 2,
+                  justifyContent: 'space-between',
+                  gap: 2,
+                  p: 2,
                   borderRadius: `${radius.md}px`,
-                  backgroundColor: theme.palette.primary.light,
+                  backgroundColor: theme.palette.brandPrimarySubtle,
+                  color: theme.palette.brandPrimary,
                 })}
               >
-                <MoneyText value={tomanPreview} variant="h3" color="primary.dark" />
+                <MoneyText value={tomanPreview} sx={{ fontWeight: 600, lineHeight: '24px' }} />
+                <Typography variant="caption">{t`Frozen`}</Typography>
               </Box>
             </Field>
           </Stack>

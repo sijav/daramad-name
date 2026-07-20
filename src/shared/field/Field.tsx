@@ -20,7 +20,7 @@ export interface FieldProps {
  */
 export const Field = ({ label, children, helperText, error = false, fullWidth = true }: FieldProps) => (
   <Box sx={{ width: fullWidth ? '100%' : 'auto', minWidth: 0 }}>
-    <Typography variant="subtitle2" color="text.secondary" component="label" sx={{ display: 'block', mb: 1 }}>
+    <Typography variant="subtitle2" component="label" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
       {label}
     </Typography>
 

@@ -33,7 +33,7 @@ export const StatTile = ({ label, value, hint, emphasis = false }: StatTileProps
     })}
   >
     <Stack spacing={0.75}>
-      <Typography variant="caption" sx={{ fontWeight: 500 }} color="text.secondary">
+      <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 500 }}>
         {label}
       </Typography>
 
@@ -50,7 +50,7 @@ export const StatTile = ({ label, value, hint, emphasis = false }: StatTileProps
       )}
 
       {hint ? (
-        <Typography variant="caption" color="text.secondary">
+        <Typography sx={{ color: 'text.secondary' }} variant="caption">
           {hint}
         </Typography>
       ) : null}

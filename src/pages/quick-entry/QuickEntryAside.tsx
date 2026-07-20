@@ -1,5 +1,5 @@
 import { useLingui } from '@lingui/react/macro'
-import { Chip, Stack, Typography } from '@mui/material'
+import { Chip, Divider, Stack, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { useSettings } from 'src/core/query'
@@ -24,7 +24,7 @@ export const QuickEntryAside = () => {
   const { t, i18n } = useLingui()
   const navigate = useNavigate()
   const { calendar } = useSettings()
-  const { persian, number } = useFormat()
+  const { persian, number, amount } = useFormat()
 
   const today = dayRange(new Date())
 
@@ -49,14 +49,18 @@ export const QuickEntryAside = () => {
           <Typography variant="h3">{t`Today so far`}</Typography>
 
           <Stack spacing={0.25}>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
               {t`Received today`}
             </Typography>
             <MoneyText value={todayLedger?.summary.totalToman ?? 0} variant="h1" />
           </Stack>
 
+          {/* `176:813`: a hairline between the two figures, so the second does
+              not read as a caption of the first. */}
+          <Divider />
+
           <Stack spacing={0.25}>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
               {t`Receipts today`}
             </Typography>
             <Typography variant="h3">{t`${number(todayLedger?.receipts.length ?? 0)} receipts`}</Typography>
@@ -76,8 +80,16 @@ export const QuickEntryAside = () => {
               <Tag label={i18n._(CHANNEL_LABELS[lastReceipt.channel])} />
             </Stack>
 
-            <MoneyText value={lastReceipt.amountToman} variant="subtitle2" />
-            <Typography variant="caption" color="text.secondary">
+            <MoneyText
+              value={lastReceipt.amountOriginal}
+              currency={lastReceipt.currency}
+              showUnit
+              sx={{ fontWeight: 600, lineHeight: '24px' }}
+            />
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              {t`Equivalent to ${amount(lastReceipt.amountToman, 'TOMAN')} Toman`}
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
               {formatDate(lastReceipt.occurredAt, calendar, persian)}
             </Typography>
 

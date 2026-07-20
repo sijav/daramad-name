@@ -88,7 +88,7 @@ export const ReportPage = () => {
                 <Typography variant="h2">
                   <Trans>Certificate of income</Trans>
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography sx={{ color: 'text.secondary' }} variant="body2">
                   <Trans>Issued by Daramadname — a personal record of freelance income</Trans>
                 </Typography>
               </Stack>
@@ -135,7 +135,7 @@ export const ReportPage = () => {
                 ))}
               </Stack>
 
-              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 3, textAlign: 'center' }}>
+              <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mt: 3, textAlign: 'center' }}>
                 <Trans>This document is generated from the data you recorded in Daramadname and is informational.</Trans>
               </Typography>
             </SurfaceCard>
@@ -150,7 +150,7 @@ export const ReportPage = () => {
               </Typography>
 
               <Stack spacing={1}>
-                <Typography variant="caption" color="text.secondary">
+                <Typography sx={{ color: 'text.secondary' }} variant="caption">
                   <Trans>Range</Trans>
                 </Typography>
                 <TextField
@@ -177,7 +177,7 @@ export const ReportPage = () => {
               </Stack>
 
               <Stack spacing={1}>
-                <Typography variant="caption" color="text.secondary">
+                <Typography sx={{ color: 'text.secondary' }} variant="caption">
                   <Trans>Report language</Trans>
                 </Typography>
                 <SegmentedControl<ReportLanguage>

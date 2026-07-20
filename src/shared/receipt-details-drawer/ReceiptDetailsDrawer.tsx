@@ -48,7 +48,7 @@ export const ReceiptDetailsDrawer = ({ receipt, onClose, onEdit, onDelete }: Rec
           <Stack spacing={2.5} sx={{ p: 2.5, flexGrow: 1, overflowY: 'auto' }}>
             <Detail label={t`Toman equivalent`}>
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <MoneyText value={receipt.amountToman} variant="h2" color="primary.main" />
+                <MoneyText sx={{ color: 'primary.main' }} value={receipt.amountToman} variant="h2" />
                 {receipt.rate !== null ? <Tag tone="primary" icon={<LockRoundedIcon sx={{ fontSize: 14 }} />} label={t`Frozen`} /> : null}
               </Stack>
             </Detail>
@@ -63,7 +63,7 @@ export const ReceiptDetailsDrawer = ({ receipt, onClose, onEdit, onDelete }: Rec
 
                 <Detail label={t`Exchange rate at the time`}>
                   <Typography variant="body1">{number(receipt.rate)}</Typography>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography sx={{ color: 'text.secondary' }} variant="caption">
                     <Trans>Captured when the receipt was recorded. Later rate changes do not affect this amount.</Trans>
                   </Typography>
                 </Detail>
@@ -107,7 +107,7 @@ export const ReceiptDetailsDrawer = ({ receipt, onClose, onEdit, onDelete }: Rec
 
 const Detail = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <Box>
-    <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 0.75 }}>
+    <Typography variant="subtitle2" sx={{ color: 'text.secondary', mb: 0.75 }}>
       {label}
     </Typography>
     {children}

@@ -42,10 +42,6 @@ export const AmountField = ({ label, value, currency, onValueChange, error, help
           overflow: 'hidden',
         })}
       >
-        <Typography variant="body1" color="text.secondary" sx={{ flexShrink: 0 }}>
-          {i18n._(CURRENCY_LABELS[currency])}
-        </Typography>
-
         <NumberField
           value={value}
           onValueChange={onValueChange}
@@ -62,6 +58,9 @@ export const AmountField = ({ label, value, currency, onValueChange, error, help
             },
           }}
         />
+        <Typography variant="body1" sx={{ color: 'text.secondary', flexShrink: 0 }}>
+          {i18n._(CURRENCY_LABELS[currency])}
+        </Typography>
       </Box>
     </Field>
   )

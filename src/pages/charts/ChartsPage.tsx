@@ -89,7 +89,7 @@ export const ChartsPage = () => {
                 {(shareData?.shares.length ?? 0) > 0 ? (
                   <TopCustomers shares={shareData?.shares ?? []} othersLabel={t`Others`} />
                 ) : (
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography sx={{ color: 'text.secondary' }} variant="body2">
                     {t`Nothing recorded in this range yet.`}
                   </Typography>
                 )}

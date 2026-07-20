@@ -53,7 +53,7 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
             <Trans>Something went wrong</Trans>
           </Typography>
 
-          <Typography variant="body2" color="text.secondary">
+          <Typography sx={{ color: 'text.secondary' }} variant="body2">
             <Trans>Your data is safe and has not been erased — this error only affects what is on screen.</Trans>
           </Typography>
 
@@ -143,7 +143,7 @@ interface RecoveryStepProps {
 /** A lettered option inside a step: its label, then its control. */
 const SubStep = ({ letter, label, children }: { letter: string; label: string; children: ReactNode }) => (
   <Stack spacing={0.75} sx={{ textAlign: 'start' }}>
-    <Typography variant="caption" color="text.secondary">
+    <Typography sx={{ color: 'text.secondary' }} variant="caption">
       {`${letter}. ${label}`}
     </Typography>
     {children}
@@ -161,12 +161,12 @@ const RecoveryStep = ({ step, label, description, children }: RecoveryStepProps)
     sx={{ alignItems: { xs: 'stretch', sm: 'center' }, justifyContent: 'space-between', px: 2, py: 1.75 }}
   >
     <Stack direction="row" spacing={1.5} sx={{ alignItems: 'baseline', minWidth: 0, textAlign: 'start' }}>
-      <Typography variant="subtitle2" color="text.secondary">
+      <Typography sx={{ color: 'text.secondary' }} variant="subtitle2">
         {step}
       </Typography>
       <Stack spacing={0.25} sx={{ minWidth: 0 }}>
         <Typography variant="subtitle2">{label}</Typography>
-        <Typography variant="caption" color="text.secondary">
+        <Typography sx={{ color: 'text.secondary' }} variant="caption">
           {description}
         </Typography>
       </Stack>

@@ -64,7 +64,7 @@ export const ClientShareChart = ({ shares, limit = 4, othersLabel }: ClientShare
             <Typography variant="h1" sx={{ lineHeight: 1 }}>
               {t`${digits(pct(leader.totalToman))}%`}
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography sx={{ color: 'text.secondary' }} variant="caption">
               {leader.clientName}
             </Typography>
           </Stack>
@@ -84,7 +84,7 @@ export const ClientShareChart = ({ shares, limit = 4, othersLabel }: ClientShare
             />
             {/* `153:653`/`153:654`: the SHARE is the emphasised half at 14/600
                 on `text-primary`, the client name trails at 14/400 secondary. */}
-            <Typography variant="body2" color="text.secondary">
+            <Typography sx={{ color: 'text.secondary' }} variant="body2">
               {row.clientName}
             </Typography>
             <Typography variant="subtitle2">{t`${digits(pct(row.totalToman))}%`}</Typography>

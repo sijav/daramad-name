@@ -36,7 +36,7 @@ export const EmptyState = ({ icon, title, description, actionLabel, onAction }: 
 
     <Typography variant="h3">{title}</Typography>
 
-    <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 380 }}>
+    <Typography variant="body2" sx={{ color: 'text.secondary', maxWidth: 380 }}>
       {description}
     </Typography>
 

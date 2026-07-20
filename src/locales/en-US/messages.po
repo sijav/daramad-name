@@ -515,6 +515,11 @@ msgstr "Enter an amount greater than zero."
 msgid "Enter the amount, the client and how you were paid."
 msgstr "Enter the amount, the client and how you were paid."
 
+#. placeholder {0}: amount(lastReceipt.amountToman, 'TOMAN')
+#: src/pages/quick-entry/QuickEntryAside.tsx
+msgid "Equivalent to {0} Toman"
+msgstr "Equivalent to {0} Toman"
+
 #: src/pages/settings/SettingsPage.tsx
 #: src/shared/error-state/AppErrorFallback.tsx
 msgid "erase"
@@ -614,6 +619,7 @@ msgid "From date"
 msgstr "From date"
 
 #: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
+#: src/shared/receipt-form/ReceiptForm.tsx
 msgid "Frozen"
 msgstr "Frozen"
 
@@ -1288,9 +1294,12 @@ msgstr "Toman"
 #: src/pages/dashboard/RecentReceipts.tsx
 #: src/pages/ledger/LedgerTable.tsx
 #: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
-#: src/shared/receipt-form/ReceiptForm.tsx
 msgid "Toman equivalent"
 msgstr "Toman equivalent"
+
+#: src/shared/receipt-form/ReceiptForm.tsx
+msgid "Toman equivalent (stored at the moment of entry)"
+msgstr "Toman equivalent (stored at the moment of entry)"
 
 #: src/pages/charts/ChartsPage.tsx
 msgid "Top clients"

@@ -150,7 +150,7 @@ export const DashboardPage = () => {
                     <Typography variant="h3">
                       <Trans>An income report ready to present</Trans>
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography sx={{ color: 'text.secondary' }} variant="body2">
                       <Trans>Produce an official income document for any range, in Persian or English.</Trans>
                     </Typography>
                     <Button variant="contained" onClick={() => navigate('/report')}>

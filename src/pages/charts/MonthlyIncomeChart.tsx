@@ -1,5 +1,5 @@
 import { useLingui } from '@lingui/react/macro'
-import { Box, Stack, Tooltip, Typography } from '@mui/material'
+import { Box, Stack, Tooltip, Typography, useTheme } from '@mui/material'
 import { radius } from 'src/core/theme'
 import { useFormat } from 'src/shared/format'
 import type { CalendarSystem, MonthlyTotal } from 'src/shared/types'
@@ -29,17 +29,33 @@ const PLOT_HEIGHT = 220
 export const MonthlyIncomeChart = ({ months, calendar }: MonthlyIncomeChartProps) => {
   const { t, i18n } = useLingui()
   const { number } = useFormat()
+  const { direction } = useTheme()
 
   const labels = monthNames(calendar, i18n)
   const peak = Math.max(1, ...months.map((month) => month.totalToman))
+
+  // A time axis runs left-to-right in BOTH scripts — Farvardin on the left,
+  // Esfand on the right. In RTL the first child lands rightmost, so the order
+  // is reversed here rather than with `direction: ltr`, which the stylis RTL
+  // plugin mirrors straight back.
+  const plotted = direction === 'rtl' ? [...months].reverse() : months
 
   // «مرداد: ۵۸۹٫۲۵ م» — the design abbreviates to millions rather than printing
   // nine digits over a bar. The full figure lives in the ledger.
   const inMillions = (value: number) => t`${number(value / 1_000_000, 2)} M`
 
   return (
-    <Stack direction="row" spacing={1.5} sx={{ alignItems: 'flex-end', justifyContent: 'center', pt: 4, width: '100%' }}>
-      {months.map((month) => {
+    <Stack
+      direction="row"
+      spacing={1.5}
+      sx={{
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        pt: 4,
+        width: '100%',
+      }}
+    >
+      {plotted.map((month) => {
         const label = labels[month.month - 1]
         const height = month.totalToman > 0 ? Math.max(8, Math.round((month.totalToman / peak) * PLOT_HEIGHT)) : 4
 
@@ -59,7 +75,7 @@ export const MonthlyIncomeChart = ({ months, calendar }: MonthlyIncomeChartProps
                 aria-label={`${label}: ${inMillions(month.totalToman)}`}
               />
             </Tooltip>
-            <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'center' }} noWrap>
+            <Typography variant="caption" sx={{ color: 'text.secondary', textAlign: 'center' }} noWrap>
               {label}
             </Typography>
           </Stack>

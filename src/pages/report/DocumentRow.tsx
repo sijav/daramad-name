@@ -13,7 +13,7 @@ export interface DocumentRowProps {
  */
 export const DocumentRow = ({ label, value }: DocumentRowProps) => (
   <Stack direction="row" spacing={2} sx={{ justifyContent: 'space-between', alignItems: 'baseline' }}>
-    <Typography variant="caption" color="text.secondary">
+    <Typography sx={{ color: 'text.secondary' }} variant="caption">
       {label}
     </Typography>
     <Typography variant="body2">{value}</Typography>

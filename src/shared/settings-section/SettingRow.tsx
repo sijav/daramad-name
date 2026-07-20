@@ -22,7 +22,7 @@ export const SettingRow = ({ label, description, children }: SettingRowProps) =>
     <Stack spacing={0.25} sx={{ minWidth: 0, textAlign: 'start' }}>
       <Typography variant="subtitle2">{label}</Typography>
       {description ? (
-        <Typography variant="caption" color="text.secondary">
+        <Typography sx={{ color: 'text.secondary' }} variant="caption">
           {description}
         </Typography>
       ) : null}

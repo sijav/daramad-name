@@ -139,7 +139,7 @@ export const AppShell = () => {
             <Typography variant="h3" component="h1">
               <Trans>Daramadname</Trans>
             </Typography>
-            <Typography variant="caption" color="text.secondary" sx={{ display: { xs: 'none', md: 'block' } }}>
+            <Typography variant="caption" sx={{ color: 'text.secondary', display: { xs: 'none', md: 'block' } }}>
               <Trans>Receipts ledger and income report</Trans>
             </Typography>
           </Stack>

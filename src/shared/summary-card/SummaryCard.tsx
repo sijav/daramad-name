@@ -90,7 +90,7 @@ export const SummaryCard = ({ label, value, icon, hint, emphasis = false }: Summ
       )}
 
       {hint ? (
-        <Typography variant="caption" color="text.secondary">
+        <Typography sx={{ color: 'text.secondary' }} variant="caption">
           {hint}
         </Typography>
       ) : null}

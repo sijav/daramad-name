@@ -75,7 +75,7 @@ export const QuickEntryPage = () => {
               <Typography variant="h3">
                 <Trans>Receipt details</Trans>
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
                 <Trans>Enter the amount, the client and how you were paid.</Trans>
               </Typography>
             </Box>

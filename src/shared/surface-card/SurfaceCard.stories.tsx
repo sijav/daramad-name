@@ -13,7 +13,7 @@ type Story = StoryObj<typeof meta>
 const body = (
   <Stack spacing={1}>
     <Typography variant="h3">Record a receipt</Typography>
-    <Typography variant="body2" color="text.secondary">
+    <Typography sx={{ color: 'text.secondary' }} variant="body2">
       Log it in under 15 seconds
     </Typography>
   </Stack>

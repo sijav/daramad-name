@@ -25,12 +25,12 @@ export const PageHeader = ({ title, subtitle, meta, action }: PageHeaderProps) =
         {title}
       </Typography>
       {subtitle ? (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
           {subtitle}
         </Typography>
       ) : null}
       {meta ? (
-        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mt: 0.5 }}>
           {meta}
         </Typography>
       ) : null}

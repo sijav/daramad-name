@@ -156,7 +156,7 @@ export const LedgerPage = () => {
               12/400 on the same baseline. */}
           <Stack direction="row" spacing={1} sx={{ alignItems: 'baseline', mb: 1 }}>
             <Typography variant="h5">{t`${digits(paged.matchedCount)} results`}</Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography sx={{ color: 'text.secondary' }} variant="caption">
               {t`based on the active filters`}
             </Typography>
           </Stack>

@@ -34,9 +34,13 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
     setBackedUp(true)
   }
 
-  const eraseAndReload = async () => {
+  const eraseAndRestart = async () => {
     await clearAllDataMutation()
-    window.location.reload()
+    // Lands on Settings rather than reloading in place, because the very next
+    // thing to do is import the backup taken in step A — and a hard navigation
+    // is what discards whatever state broke the render. `BASE_URL` keeps this
+    // correct on GitHub Pages, which serves the app from a sub-path.
+    window.location.assign(`${import.meta.env.BASE_URL}settings`)
   }
 
   return (
@@ -95,8 +99,8 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
                 by two rows that look independent. */}
             <RecoveryStep
               step={step(3)}
-              label={t`If it still fails, start over`}
-              description={t`Take the backup first — erasing cannot be undone without it.`}
+              label={t`Download a backup, erase, and import it again`}
+              description={t`Save your data to a file, wipe the app clean, then bring it back from Settings. Nothing is lost as long as you take the file first.`}
             >
               <Stack spacing={1.5} sx={{ minWidth: 210 }}>
                 <SubStep letter={letter(0)} label={t`Download a backup`}>
@@ -104,7 +108,7 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
                     {backedUp ? t`Downloaded` : t`Download`}
                   </Button>
                 </SubStep>
-                <SubStep letter={letter(1)} label={t`Erase and restart`}>
+                <SubStep letter={letter(1)} label={t`Erase and restart, then import your file from Settings`}>
                   <Button variant="outlined" color="error" fullWidth onClick={() => setConfirmErase(true)}>
                     {t`Erase and restart`}
                   </Button>
@@ -118,11 +122,11 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
       <ConfirmDialog
         open={confirmErase}
         title={t`Erase everything and restart`}
-        description={t`Every receipt, client and personal detail is erased permanently, then the page reloads. Without a backup there is no way back.`}
+        description={t`Every receipt, client and personal detail is erased permanently, then Settings opens so you can import your backup. Without that file there is no way back.`}
         confirmLabel={t`Erase everything`}
         confirmationWord={t`erase`}
         destructive
-        onConfirm={() => void eraseAndReload()}
+        onConfirm={() => void eraseAndRestart()}
         onClose={() => setConfirmErase(false)}
       />
     </Box>

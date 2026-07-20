@@ -454,6 +454,10 @@ msgstr "Download"
 msgid "Download a backup"
 msgstr "Download a backup"
 
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Download a backup, erase, and import it again"
+msgstr "Download a backup, erase, and import it again"
+
 #: src/pages/settings/SettingsPage.tsx
 msgid "Download a JSON file of every receipt"
 msgstr "Download a JSON file of every receipt"
@@ -514,6 +518,10 @@ msgid "Erase and restart"
 msgstr "Erase and restart"
 
 #: src/shared/error-state/AppErrorFallback.tsx
+msgid "Erase and restart, then import your file from Settings"
+msgstr "Erase and restart, then import your file from Settings"
+
+#: src/shared/error-state/AppErrorFallback.tsx
 #~ msgid "Erase data and restart"
 #~ msgstr "Erase data and restart"
 
@@ -539,12 +547,16 @@ msgstr "Every date and monthly total is shown in this calendar. Your data itself
 #~ msgstr "Every receipt you have, with an exact total"
 
 #: src/shared/error-state/AppErrorFallback.tsx
+msgid "Every receipt, client and personal detail is erased permanently, then Settings opens so you can import your backup. Without that file there is no way back."
+msgstr "Every receipt, client and personal detail is erased permanently, then Settings opens so you can import your backup. Without that file there is no way back."
+
+#: src/shared/error-state/AppErrorFallback.tsx
 #~ msgid "Every receipt, client and personal detail is erased permanently, then the page reloads. Download a backup first — without one there is no way back."
 #~ msgstr "Every receipt, client and personal detail is erased permanently, then the page reloads. Download a backup first — without one there is no way back."
 
 #: src/shared/error-state/AppErrorFallback.tsx
-msgid "Every receipt, client and personal detail is erased permanently, then the page reloads. Without a backup there is no way back."
-msgstr "Every receipt, client and personal detail is erased permanently, then the page reloads. Without a backup there is no way back."
+#~ msgid "Every receipt, client and personal detail is erased permanently, then the page reloads. Without a backup there is no way back."
+#~ msgstr "Every receipt, client and personal detail is erased permanently, then the page reloads. Without a backup there is no way back."
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Every receipt, client and personal detail is erased permanently. Without a backup there is no way back."
@@ -608,8 +620,8 @@ msgid "Homa Cafe"
 msgstr "Homa Cafe"
 
 #: src/shared/error-state/AppErrorFallback.tsx
-msgid "If it still fails, start over"
-msgstr "If it still fails, start over"
+#~ msgid "If it still fails, start over"
+#~ msgstr "If it still fails, start over"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Import a backup file to bring your ledger back"
@@ -1060,6 +1072,10 @@ msgstr "Save changes"
 msgid "Save details"
 msgstr "Save details"
 
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Save your data to a file, wipe the app clean, then bring it back from Settings. Nothing is lost as long as you take the file first."
+msgstr "Save your data to a file, wipe the app clean, then bring it back from Settings. Nothing is lost as long as you take the file first."
+
 #: src/shared/search-field/SearchField.tsx
 msgid "Search by client, note or amount"
 msgstr "Search by client, note or amount"
@@ -1128,8 +1144,8 @@ msgid "System"
 msgstr "System"
 
 #: src/shared/error-state/AppErrorFallback.tsx
-msgid "Take the backup first — erasing cannot be undone without it."
-msgstr "Take the backup first — erasing cannot be undone without it."
+#~ msgid "Take the backup first — erasing cannot be undone without it."
+#~ msgstr "Take the backup first — erasing cannot be undone without it."
 
 #: src/shared/constants/labels.ts
 msgid "Tether"

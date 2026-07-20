@@ -146,11 +146,13 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
             borderRadius: radius.md,
             backgroundColor: c.surfaceDefault,
             height: 52,
-            paddingInline: '14px',
           },
           input: {
             paddingBlock: '0px',
-            paddingInline: '0px',
+            // The inset lives on the INPUT slot, not the root. A Select's click
+            // target is that slot, so padding on the root leaves a dead band
+            // around the edge where clicking does not open the menu.
+            paddingInline: '14px',
             height: '100%',
             boxSizing: 'border-box',
             // Attached to the input slot, NOT written as a descendant rule in
@@ -168,6 +170,20 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
             top: 0,
             paddingInline: 0,
             '& legend': { display: 'none' },
+          },
+        },
+      },
+      MuiSelect: {
+        styleOverrides: {
+          // MUI sizes this slot to one line and centres it, leaving the rest of
+          // the field dead to clicks — and this slot is what opens the menu. It
+          // fills the field instead, so the whole control is the target.
+          select: {
+            minHeight: 0,
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            boxSizing: 'border-box',
           },
         },
       },

@@ -57,6 +57,9 @@ export const SearchField = ({ value, onValueChange, placeholder, sx, ...props }:
             fontWeight: 400,
             lineHeight: '24px',
           },
+          // The root carries the inset here, because the magnifier adornment
+          // has to sit inside it.
+          '& .MuiOutlinedInput-input': { paddingInline: 0 },
         },
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}

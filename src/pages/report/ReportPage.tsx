@@ -1,6 +1,5 @@
 import { Trans, useLingui } from '@lingui/react/macro'
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded'
-import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded'
 import { Alert, Box, Button, CircularProgress, Divider, Grid, MenuItem, Stack, TextField, Typography } from '@mui/material'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
@@ -177,13 +176,7 @@ export const ReportPage = () => {
                 />
               </Stack>
 
-              <Button
-                variant="contained"
-                startIcon={<DownloadRoundedIcon />}
-                disabled={!hasIncome || isPending}
-                onClick={() => download()}
-                fullWidth
-              >
+              <Button variant="contained" disabled={!hasIncome || isPending} onClick={() => download()} fullWidth>
                 {isPending ? t`Generating…` : t`Download PDF`}
               </Button>
 

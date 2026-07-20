@@ -10,7 +10,12 @@ export type SearchFieldProps = Omit<TextFieldProps, 'value' | 'onChange'> & {
 }
 
 /**
- * The ledger's search field.
+ * The ledger's search field (`278:1018`): 48px tall, radius 10 on
+ * `surface-default` with a 1px `border-default` hairline, magnifier on the
+ * leading edge.
+ *
+ * NOT a pill — an earlier pass recorded it as fully rounded, which was wrong;
+ * it shares the 10px radius with the filter button standing next to it.
  *
  * The clear button only appears once there is something to clear — a permanent
  * one reads as "this filter is active" even when it is not.
@@ -40,7 +45,17 @@ export const SearchField = ({ value, onValueChange, placeholder, sx, ...props }:
           ) : null,
         },
       }}
-      sx={[{ '& .MuiOutlinedInput-root': { borderRadius: `${radius.full}px`, height: 48 } }, ...(Array.isArray(sx) ? sx : [sx])]}
+      sx={[
+        (theme) => ({
+          '& .MuiOutlinedInput-root': {
+            borderRadius: `${radius.sm + 2}px`,
+            height: 48,
+            backgroundColor: theme.palette.surfaceDefault,
+            '& fieldset': { borderColor: theme.palette.borderDefault },
+          },
+        }),
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
     />
   )
 }

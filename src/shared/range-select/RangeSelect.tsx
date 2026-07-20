@@ -1,5 +1,5 @@
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
-import { Box, MenuItem, Select, type SelectProps } from '@mui/material'
+import { MenuItem, Select, type SelectProps } from '@mui/material'
 import { radius } from 'src/core/theme'
 
 export interface RangeSelectOption {
@@ -18,27 +18,23 @@ export interface RangeSelectProps extends Omit<SelectProps<string>, 'onChange' |
 /**
  * The design's report-range control (`183:289` / `359:766`): a pill, not a
  * boxed select. `surface-default` with a 1px `border-default` hairline, fully
- * rounded, 38px tall, chevron on the leading edge, label 14/600.
+ * rounded, 38px tall, chevron on the trailing edge, label 14/600.
  *
- * The chevron is drawn inside `renderValue` rather than through MUI's
- * `IconComponent`. MUI positions that icon absolutely with a physical `right`,
- * which the RTL plugin flips underneath us — the icon ended up invisible. A
- * flex row here gives the design's exact 16px glyph and 8px gap in both
- * directions.
+ * Everything positional here is written as a PHYSICAL property on purpose. The
+ * stylis RTL plugin mirrors `right`/`paddingRight` in the generated CSS, so
+ * authoring LTR values lands the chevron on the left in Persian — which is
+ * where the design puts it. Two earlier attempts got this wrong: a logical
+ * `insetInlineStart` fought MUI's own `right` and hid the glyph, and moving the
+ * icon into `renderValue` put it on the right, because the first child of a
+ * flex row is the RIGHTmost one in RTL.
  */
 export const RangeSelect = ({ value, options, onSelect, prefix, sx, ...props }: RangeSelectProps) => (
   <Select
     {...props}
     value={String(value)}
     onChange={(event) => onSelect(event.target.value)}
-    renderValue={(selected) => (
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <KeyboardArrowDownRoundedIcon sx={{ fontSize: 16, flexShrink: 0 }} />
-        <Box component="span" sx={{ whiteSpace: 'nowrap' }}>
-          {`${prefix}: ${options.find((option) => String(option.value) === selected)?.label ?? selected}`}
-        </Box>
-      </Box>
-    )}
+    IconComponent={KeyboardArrowDownRoundedIcon}
+    renderValue={(selected) => `${prefix}: ${options.find((option) => String(option.value) === selected)?.label ?? selected}`}
     sx={[
       (theme) => ({
         height: 38,
@@ -52,17 +48,18 @@ export const RangeSelect = ({ value, options, onSelect, prefix, sx, ...props }: 
         // than fought with.
         border: `1px solid ${theme.palette.borderDefault}`,
         '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
-        // MUI's built-in dropdown icon is replaced by the one in `renderValue`.
-        '& .MuiSelect-icon': { display: 'none' },
         '& .MuiSelect-select': {
-          // The design pads 12 on the chevron edge and 16 on the text edge.
-          paddingBlock: 0,
-          paddingInlineStart: '12px',
-          paddingInlineEnd: '16px !important',
+          paddingTop: 0,
+          paddingBottom: 0,
+          // 12 on the chevron edge, 16 on the text edge, both mirrored in RTL.
+          paddingRight: '36px !important',
+          paddingLeft: '16px',
           minHeight: 'auto',
           display: 'flex',
           alignItems: 'center',
+          whiteSpace: 'nowrap',
         },
+        '& .MuiSelect-icon': { right: 12, fontSize: 16, color: theme.palette.text.primary },
       }),
       ...(Array.isArray(sx) ? sx : [sx]),
     ]}

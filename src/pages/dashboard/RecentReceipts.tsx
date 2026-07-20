@@ -1,27 +1,32 @@
 import { useLingui } from '@lingui/react/macro'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
-import { CHANNEL_LABELS, CURRENCY_LABELS } from 'src/shared/constants'
+import { radius } from 'src/core/theme'
+import { CHANNEL_LABELS } from 'src/shared/constants'
 import { useFormat } from 'src/shared/format'
 import { MoneyText } from 'src/shared/money-text'
 import { Tag } from 'src/shared/tag'
 import type { CalendarSystem, ReceiptWithClient } from 'src/shared/types'
-import { formatDate } from 'src/shared/utils'
 
 export interface RecentReceiptsProps {
   receipts: ReceiptWithClient[]
-  calendar: CalendarSystem
+  /** Retained for stories that pin a calendar; dates format from settings. */
+  calendar?: CalendarSystem
 }
 
 /**
- * The dashboard's "latest receipts" list.
+ * The dashboard's "latest receipts" list (`154:638`).
  *
  * Deliberately not the full `LedgerTable`: no sorting, no actions, no
  * pagination. It exists to confirm "yes, the thing I just recorded is in
  * there", and reusing the ledger table would drag its whole toolbar with it.
+ *
+ * The Toman figure is the one column that matters at a glance, so the design
+ * gives it 20/600 while everything else sits at 14 — this is a summary, not a
+ * grid to scan.
  */
-export const RecentReceipts = ({ receipts, calendar }: RecentReceiptsProps) => {
+export const RecentReceipts = ({ receipts }: RecentReceiptsProps) => {
   const { t, i18n } = useLingui()
-  const { persian, number } = useFormat()
+  const { date } = useFormat()
 
   if (receipts.length === 0) {
     return (
@@ -32,43 +37,57 @@ export const RecentReceipts = ({ receipts, calendar }: RecentReceiptsProps) => {
   }
 
   return (
-    // Scrolls inside its own card. Without this the table's intrinsic width
-    // pushes the whole document wider than a 375px phone, which drags the
-    // fixed app bar and bottom nav out of alignment with the content.
-    <TableContainer sx={{ overflowX: 'auto' }}>
-      <Table size="small" sx={{ minWidth: 320 }}>
-        {/* The design gives this table a header row: date, channel, original
-            amount, Toman equivalent. No client column — the ledger has that. */}
+    // The design's own bordered, 16px-rounded frame — it is a table INSIDE the
+    // card, not the card's own edge.
+    <TableContainer
+      sx={(theme) => ({
+        overflowX: 'auto',
+        border: `1px solid ${theme.palette.borderDefault}`,
+        borderRadius: `${radius.lg}px`,
+      })}
+    >
+      <Table sx={{ minWidth: 640 }}>
         <TableHead>
-          <TableRow>
-            <TableCell sx={{ whiteSpace: 'nowrap' }}>{t`Date`}</TableCell>
-            <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t`Channel`}</TableCell>
-            <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>{t`Original amount`}</TableCell>
-            <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>{t`Toman equivalent`}</TableCell>
+          <TableRow
+            sx={(theme) => ({
+              '& th': {
+                backgroundColor: theme.palette.surfaceContainerHigh,
+                borderBottom: 'none',
+                color: theme.palette.text.secondary,
+                paddingBlock: '15px',
+              },
+            })}
+          >
+            <TableCell sx={{ width: 120 }}>{t`Date`}</TableCell>
+            <TableCell>{t`Client / project`}</TableCell>
+            <TableCell sx={{ width: 140 }}>{t`Channel`}</TableCell>
+            <TableCell align="right" sx={{ width: 150 }}>{t`Original amount`}</TableCell>
+            <TableCell align="right" sx={{ width: 200 }}>{t`Toman equivalent`}</TableCell>
           </TableRow>
         </TableHead>
 
         <TableBody>
           {receipts.map((receipt) => (
-            <TableRow key={receipt.id}>
-              <TableCell sx={{ whiteSpace: 'nowrap', width: 1 }}>
-                <Typography variant="caption" color="text.secondary">
-                  {formatDate(receipt.occurredAt, calendar, persian)}
+            <TableRow key={receipt.id} sx={{ '& td': { paddingBlock: '17px' } }}>
+              <TableCell sx={{ whiteSpace: 'nowrap', color: 'text.secondary' }}>{date(receipt.occurredAt)}</TableCell>
+
+              <TableCell sx={{ minWidth: 0 }}>
+                <Typography variant="body2" noWrap>
+                  {receipt.clientName ?? '—'}
                 </Typography>
               </TableCell>
 
-              <TableCell sx={{ width: 1, display: { xs: 'none', sm: 'table-cell' } }}>
+              <TableCell>
                 <Tag label={i18n._(CHANNEL_LABELS[receipt.channel])} />
               </TableCell>
 
-              <TableCell align="right" sx={{ whiteSpace: 'nowrap', width: 1 }}>
-                <Typography variant="caption" color="text.secondary">
-                  {`${number(receipt.amountOriginal)} ${i18n._(CURRENCY_LABELS[receipt.currency])}`}
-                </Typography>
+              <TableCell align="right" sx={{ whiteSpace: 'nowrap', color: 'text.secondary' }}>
+                <MoneyText value={receipt.amountOriginal} currency={receipt.currency} showUnit />
               </TableCell>
 
-              <TableCell align="right" sx={{ whiteSpace: 'nowrap', width: 1 }}>
-                <MoneyText value={receipt.amountToman} variant="subtitle2" showUnit={false} />
+              <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
+                {/* `50:32`: the headline figure of the row. */}
+                <MoneyText value={receipt.amountToman} showUnit={false} sx={{ fontSize: 20, fontWeight: 600, lineHeight: '28px' }} />
               </TableCell>
             </TableRow>
           ))}

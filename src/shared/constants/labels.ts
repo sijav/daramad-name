@@ -10,7 +10,7 @@ import type { Channel, Currency } from 'src/shared/types'
 // which callers resolve with `i18n._(descriptor)` at render time.
 
 export const CHANNEL_LABELS: Record<Channel, MessageDescriptor> = {
-  CARD_TO_CARD: msg`Card to card`,
+  CARD_TO_CARD: msg`Card transfer`,
   REMITTANCE: msg`Wire transfer`,
   TETHER: msg`Tether`,
   OTHER: msg`Other`,

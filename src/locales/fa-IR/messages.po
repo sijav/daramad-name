@@ -306,7 +306,11 @@ msgid "Captured when the receipt was recorded. Later rate changes do not affect 
 msgstr "در لحظه ثبت دریافتی ذخیره شده. تغییرات بعدی نرخ روی این مبلغ اثری ندارد."
 
 #: src/shared/constants/labels.ts
-msgid "Card to card"
+#~ msgid "Card to card"
+#~ msgstr "کارت به کارت"
+
+#: src/shared/constants/labels.ts
+msgid "Card transfer"
 msgstr "کارت به کارت"
 
 #: src/pages/report/ReportPage.tsx
@@ -354,6 +358,7 @@ msgstr "پاک کردن جست‌وجو"
 msgid "Client"
 msgstr "مشتری"
 
+#: src/pages/dashboard/RecentReceipts.tsx
 #: src/pages/ledger/LedgerTable.tsx
 #: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
 #: src/shared/receipt-form/ReceiptForm.tsx

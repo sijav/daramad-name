@@ -306,8 +306,12 @@ msgid "Captured when the receipt was recorded. Later rate changes do not affect 
 msgstr "Captured when the receipt was recorded. Later rate changes do not affect this amount."
 
 #: src/shared/constants/labels.ts
-msgid "Card to card"
-msgstr "Card to card"
+#~ msgid "Card to card"
+#~ msgstr "Card to card"
+
+#: src/shared/constants/labels.ts
+msgid "Card transfer"
+msgstr "Card transfer"
 
 #: src/pages/report/ReportPage.tsx
 msgid "Certificate of income"
@@ -354,6 +358,7 @@ msgstr "Clear search"
 msgid "Client"
 msgstr "Client"
 
+#: src/pages/dashboard/RecentReceipts.tsx
 #: src/pages/ledger/LedgerTable.tsx
 #: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
 #: src/shared/receipt-form/ReceiptForm.tsx

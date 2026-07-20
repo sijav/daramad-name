@@ -1,7 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, Stack, Tooltip, Typography } from '@mui/material'
 import { radius } from 'src/core/theme'
-import { CURRENCY_LABELS } from 'src/shared/constants'
 import { useFormat } from 'src/shared/format'
 import type { CalendarSystem, MonthlyTotal } from 'src/shared/types'
 import { monthNames } from 'src/shared/utils'
@@ -32,8 +31,11 @@ export const MonthlyIncomeChart = ({ months, calendar }: MonthlyIncomeChartProps
   const { number } = useFormat()
 
   const labels = monthNames(calendar, i18n)
-  const toman = i18n._(CURRENCY_LABELS.TOMAN)
   const peak = Math.max(1, ...months.map((month) => month.totalToman))
+
+  // «مرداد: ۵۸۹٫۲۵ م» — the design abbreviates to millions rather than printing
+  // nine digits over a bar. The full figure lives in the ledger.
+  const inMillions = (value: number) => t`${number(value / 1_000_000, 2)} M`
 
   return (
     <Stack direction="row" spacing={1.5} sx={{ alignItems: 'flex-end', justifyContent: 'center', pt: 4, width: '100%' }}>
@@ -43,7 +45,7 @@ export const MonthlyIncomeChart = ({ months, calendar }: MonthlyIncomeChartProps
 
         return (
           <Stack key={`${month.year}-${month.month}`} spacing={1} sx={{ flex: 1, minWidth: 0, alignItems: 'center' }}>
-            <Tooltip title={`${label}: ${number(month.totalToman)} ${toman}`} placement="top" arrow>
+            <Tooltip title={`${label}: ${inMillions(month.totalToman)}`} placement="top" arrow>
               <Box
                 sx={(theme) => ({
                   width: '100%',
@@ -54,7 +56,7 @@ export const MonthlyIncomeChart = ({ months, calendar }: MonthlyIncomeChartProps
                   borderRadius: `${radius.sm}px ${radius.sm}px 0 0`,
                   backgroundColor: month.totalToman > 0 ? theme.palette.brandPrimary : theme.palette.borderDefault,
                 })}
-                aria-label={t`${label}: ${number(month.totalToman)} ${toman}`}
+                aria-label={`${label}: ${inMillions(month.totalToman)}`}
               />
             </Tooltip>
             <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'center' }} noWrap>

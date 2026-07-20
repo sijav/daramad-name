@@ -11,7 +11,7 @@ export interface ClientShareChartProps {
   othersLabel: string
 }
 
-const DONUT_SIZE = 150
+const DONUT_SIZE = 160
 
 /**
  * The design's `Chart/Donut`: a legend on one side, a 150px donut on the other,
@@ -70,22 +70,24 @@ export const ClientShareChart = ({ shares, limit = 4, othersLabel }: ClientShare
           </Stack>
         ) : null}
       </Box>
-      <Stack spacing={1.75} sx={{ alignItems: 'flex-start' }}>
+      <Stack spacing={1.5} sx={{ alignItems: 'flex-start' }}>
         {rows.map((row, index) => (
           <Stack key={row.clientId} direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             <Box
               sx={{
-                width: 10,
-                height: 10,
+                width: 12,
+                height: 12,
                 borderRadius: '50%',
                 flexShrink: 0,
                 backgroundColor: theme.palette.chartSeries[index % theme.palette.chartSeries.length],
               }}
             />
-            <Typography sx={{ fontSize: 13, fontWeight: 400, lineHeight: '22px' }}>{row.clientName}</Typography>
-            <Typography variant="h5" color="text.secondary">
-              {t`${digits(pct(row.totalToman))}%`}
+            {/* `153:653`/`153:654`: the SHARE is the emphasised half at 14/600
+                on `text-primary`, the client name trails at 14/400 secondary. */}
+            <Typography variant="body2" color="text.secondary">
+              {row.clientName}
             </Typography>
+            <Typography variant="subtitle2">{t`${digits(pct(row.totalToman))}%`}</Typography>
           </Stack>
         ))}
       </Stack>

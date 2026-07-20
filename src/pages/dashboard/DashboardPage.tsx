@@ -105,12 +105,15 @@ export const DashboardPage = () => {
             <Grid size={{ xs: 12, lg: 5 }}>
               <Stack sx={{ height: '100%' }}>
                 <ChartCard variant="content" title={t`Client share of income`} subtitle={t`Based on the income recorded this year`}>
-                  <ClientShareChart shares={shareData?.shares ?? []} othersLabel={t`Others`} />
                   {/* The design keeps this callout inside the share card, not
-                      as a full-width band beneath the row. */}
-                  {shareData?.insight ? (
-                    <InsightCallout message={t`${digits(shareData.insight.percentage)}% of your income comes from a single client.`} />
-                  ) : null}
+                      as a full-width band beneath the row, and pins it to the
+                      bottom so it lines up when the row grows. */}
+                  <Stack spacing={3} sx={{ flex: 1, justifyContent: 'space-between' }}>
+                    <ClientShareChart shares={shareData?.shares ?? []} othersLabel={t`Others`} />
+                    {shareData?.insight ? (
+                      <InsightCallout message={t`${digits(shareData.insight.percentage)}% of your income comes from a single client.`} />
+                    ) : null}
+                  </Stack>
                 </ChartCard>
               </Stack>
             </Grid>
@@ -123,7 +126,7 @@ export const DashboardPage = () => {
           </Grid>
 
           <Grid container spacing={3}>
-            <Grid size={{ xs: 12, lg: 5 }}>
+            <Grid size={{ xs: 12, lg: 4 }}>
               <Stack spacing={3} sx={{ height: '100%' }}>
                 {/* The design's `Report Shortcut`: a tinted panel rather than a
                     plain card, aligned to the reading direction with a filled
@@ -157,7 +160,7 @@ export const DashboardPage = () => {
                 </SurfaceCard>
               </Stack>
             </Grid>
-            <Grid size={{ xs: 12, lg: 7 }}>
+            <Grid size={{ xs: 12, lg: 8 }}>
               <ChartCard
                 variant="content"
                 title={t`Latest receipts`}

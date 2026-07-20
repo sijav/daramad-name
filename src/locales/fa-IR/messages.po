@@ -13,6 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#. placeholder {0}: number(value / 1_000_000, 2)
+#: src/pages/charts/MonthlyIncomeChart.tsx
+msgid "{0} M"
+msgstr "{0} م"
+
 #. placeholder {0}: number(Math.round(row.totalToman / 1_000_000))
 #: src/shared/top-customers/TopCustomers.tsx
 msgid "{0} M Toman"
@@ -83,8 +88,8 @@ msgstr "{count} دریافتی نمونه اضافه شد."
 
 #. placeholder {0}: number(month.totalToman)
 #: src/pages/charts/MonthlyIncomeChart.tsx
-msgid "{label}: {0} {toman}"
-msgstr "{label}: {0} {toman}"
+#~ msgid "{label}: {0} {toman}"
+#~ msgstr "{label}: {0} {toman}"
 
 #: src/shared/error-state/AppErrorFallback.tsx
 msgid "A"

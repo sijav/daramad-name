@@ -57,7 +57,7 @@ export const ChartCard = ({ title, subtitle, variant = 'chart', action, children
         </Stack>
         {action ? <Box sx={{ flexShrink: 0 }}>{action}</Box> : null}
       </Stack>
-      <Box sx={{ minWidth: 0, width: '100%' }}>{children}</Box>
+      <Box sx={{ minWidth: 0, width: '100%', flex: 1, display: 'flex', flexDirection: 'column' }}>{children}</Box>
     </Stack>
   </Paper>
 )

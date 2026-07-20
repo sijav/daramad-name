@@ -24,7 +24,7 @@ export const InsightCallout = ({ message, tone = 'warning' }: InsightCalloutProp
       direction="row"
       spacing={1.5}
       sx={(theme) => ({
-        alignItems: 'center',
+        alignItems: 'flex-start',
         px: 2,
         py: 1.5,
         borderRadius: `${radius.md}px`,
@@ -35,13 +35,18 @@ export const InsightCallout = ({ message, tone = 'warning' }: InsightCalloutProp
       <Box
         sx={{
           flexShrink: 0,
+          marginBlockStart: '6px',
           width: 10,
           height: 10,
           borderRadius: '50%',
           backgroundColor: dotColour(tone, theme),
         }}
       />
-      <Typography variant="body2">{message}</Typography>
+      {/* `153:677`: the sentence carries the tone's own colour at 14/600 —
+          it is the point of the callout, not body copy inside it. */}
+      <Typography variant="subtitle2" sx={{ color: toneColour(tone, theme) }}>
+        {message}
+      </Typography>
     </Stack>
   )
 }
@@ -58,6 +63,8 @@ const toneSurface = (tone: InsightTone, theme: Theme): string => {
       return theme.palette.warning.light
   }
 }
+
+const toneColour = (tone: InsightTone, theme: Theme): string => dotColour(tone, theme)
 
 const dotColour = (tone: InsightTone, theme: Theme): string => {
   switch (tone) {

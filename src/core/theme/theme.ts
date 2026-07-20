@@ -2,7 +2,7 @@ import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownR
 import { createTheme, type Theme } from '@mui/material'
 import vazirFdRegular from 'vazirmatn/misc/Farsi-Digits/fonts/webfonts/Vazirmatn-FD-Regular.woff2?url'
 import vazirFdSemiBold from 'vazirmatn/misc/Farsi-Digits/fonts/webfonts/Vazirmatn-FD-SemiBold.woff2?url'
-import { darkColors, fontFamily, fontFamilyFarsiDigits, lightColors, radius, spacingUnit, typeScale } from './tokens'
+import { darkColors, elevation, fontFamily, fontFamilyFarsiDigits, lightColors, radius, spacingUnit, typeScale } from './tokens'
 
 export type ThemeMode = 'light' | 'dark'
 export type Direction = 'ltr' | 'rtl'
@@ -171,6 +171,22 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
             paddingInline: 0,
             '& legend': { display: 'none' },
           },
+        },
+      },
+      MuiTooltip: {
+        styleOverrides: {
+          // `225:263`: a dark `text-primary` chip with `surface-default` text,
+          // 8px corners and Elevation/1 — not MUI's translucent grey.
+          tooltip: {
+            backgroundColor: c.onSurface,
+            color: c.surfaceDefault,
+            ...typeScale.caption,
+            borderRadius: radius.sm,
+            paddingInline: '10px',
+            paddingBlock: '6px',
+            boxShadow: elevation.level1,
+          },
+          arrow: { color: c.onSurface },
         },
       },
       MuiSelect: {

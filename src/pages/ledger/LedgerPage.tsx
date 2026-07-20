@@ -161,7 +161,7 @@ export const LedgerPage = () => {
             </Typography>
           </Stack>
 
-          <SurfaceCard flat sx={{ p: 0, overflow: 'hidden' }}>
+          <SurfaceCard flat disablePadding>
             <LedgerTable
               receipts={paged.rows}
               summary={data?.summary ?? { totalToman: 0, receiptCount: 0, monthlyAverageToman: 0 }}

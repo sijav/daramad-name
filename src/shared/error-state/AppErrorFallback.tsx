@@ -67,7 +67,7 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
           </Typography>
         </Stack>
 
-        <SurfaceCard radius="lg" flat sx={{ width: '100%', p: 0, overflow: 'hidden' }}>
+        <SurfaceCard radius="lg" flat disablePadding sx={{ width: '100%' }}>
           <Stack
             sx={(theme) => ({
               // Callback at the TOP of `sx` — a function nested as a value is

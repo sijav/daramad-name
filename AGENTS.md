@@ -231,6 +231,28 @@ child `x` coordinates from `get_metadata` and order the JSX accordingly — do n
 eyeball it from the screenshot. This caught four separate rows: the dashboard's
 two content rows, the charts row, and both summary-card strips.
 
+### Two dependencies are pinned on purpose
+
+- **`stylis` at 4.2.0** — the copy `@emotion/cache` bundles. Emotion walks the
+  element tree with its own stylis, so handing it a `prefixer` from a different
+  version yields elements it cannot lift and crashes on every `::placeholder`
+  rule in the app. `@mui/stylis-plugin-rtl` wants 4.4.0; the `overrides` entry
+  holds everything at 4.2.0. Do not bump it without checking what emotion ships.
+- **`typescript` at 6.0.3** — typescript-eslint's peer range is `<6.1.0`.
+
+Run `npm outdated` when picking up work; everything else is free to move,
+subject to the 7-day release-age cap.
+
+### Styling belongs in the theme
+
+If a component needs an `sx` to match the design, ask whether the THEME should
+carry it instead. `MuiTableCell`, `MuiTableSortLabel` and the input placeholder
+tone all live in `theme.ts` for that reason — the ledger table styles no cells
+at all, it only marks the two places the design deliberately departs.
+
+`SurfaceCard`'s default padding is responsive, so `sx={{ p: 0 }}` loses to its
+own `@media` rule. Use `disablePadding` instead.
+
 ### Date ranges collapse
 
 A range writes its shared parts once: same year prints the year only on the

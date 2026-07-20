@@ -1,4 +1,6 @@
-import { db, readSettings } from 'src/core/db'
+import { msg } from '@lingui/core/macro'
+import { assertReferencesResolve, assertValidClient, assertValidReceipt, db, readSettings } from 'src/core/db'
+import { i18n } from 'src/core/i18n'
 import type { BackupFile } from 'src/shared/types'
 
 /**
@@ -10,6 +12,13 @@ import type { BackupFile } from 'src/shared/types'
  */
 export const exportBackupMutation = async (): Promise<BackupFile> => {
   const [receipts, clients, settings] = await Promise.all([db.receipts.toArray(), db.clients.toArray(), readSettings()])
+
+  // A backup of corrupt data is worse than none: it gets trusted, and the
+  // corruption is only discovered when it is the last copy left.
+  const where = i18n._(msg`your data`)
+  receipts.forEach((receipt) => assertValidReceipt(receipt, where))
+  clients.forEach((client) => assertValidClient(client, where))
+  assertReferencesResolve(receipts, clients, where)
 
   const backup: BackupFile = {
     app: 'daramadname',

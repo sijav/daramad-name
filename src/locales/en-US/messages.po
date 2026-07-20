@@ -81,6 +81,14 @@ msgstr "{0}% of your income comes from a single client."
 msgid "{count} sample receipts added."
 msgstr "{count} sample receipts added."
 
+#: src/core/db/validate.ts
+msgid "A client in {where} has no identifier."
+msgstr "A client in {where} has no identifier."
+
+#: src/core/db/validate.ts
+msgid "A client in {where} has no name."
+msgstr "A client in {where} has no name."
+
 #: src/pages/report/ReportPage.tsx
 msgid "A document you can hand to an embassy, a landlord or an accountant"
 msgstr "A document you can hand to an embassy, a landlord or an accountant"
@@ -96,6 +104,38 @@ msgstr "A non-Toman currency needs an exchange rate."
 #: src/pages/charts/ChartsPage.tsx
 msgid "A one-year picture of your income"
 msgstr "A one-year picture of your income"
+
+#: src/core/db/validate.ts
+msgid "A receipt in {where} has an invalid amount."
+msgstr "A receipt in {where} has an invalid amount."
+
+#: src/core/db/validate.ts
+msgid "A receipt in {where} has an unreadable date."
+msgstr "A receipt in {where} has an unreadable date."
+
+#: src/core/db/validate.ts
+msgid "A receipt in {where} has no identifier."
+msgstr "A receipt in {where} has no identifier."
+
+#: src/core/db/validate.ts
+msgid "A receipt in {where} has no stored Toman value, so totals would be wrong."
+msgstr "A receipt in {where} has no stored Toman value, so totals would be wrong."
+
+#: src/core/db/validate.ts
+msgid "A receipt in {where} is in a foreign currency but has no stored conversion rate."
+msgstr "A receipt in {where} is in a foreign currency but has no stored conversion rate."
+
+#: src/core/db/validate.ts
+msgid "A receipt in {where} refers to a client that is not in the file."
+msgstr "A receipt in {where} refers to a client that is not in the file."
+
+#: src/core/db/validate.ts
+msgid "A receipt in {where} uses a currency this app does not know."
+msgstr "A receipt in {where} uses a currency this app does not know."
+
+#: src/core/db/validate.ts
+msgid "A receipt in {where} uses a payment channel this app does not know."
+msgstr "A receipt in {where} uses a payment channel this app does not know."
 
 #. placeholder {0}: digits(year)
 #: src/pages/dashboard/DashboardPage.tsx
@@ -781,12 +821,12 @@ msgid "Once you record a few receipts, this shows how your income rose and fell 
 msgstr "Once you record a few receipts, this shows how your income rose and fell month by month, and how much of it depends on a single client."
 
 #: src/shared/queries/restoreBackup.mutation.ts
-msgid "One of the clients in the file is incomplete and cannot be restored."
-msgstr "One of the clients in the file is incomplete and cannot be restored."
+#~ msgid "One of the clients in the file is incomplete and cannot be restored."
+#~ msgstr "One of the clients in the file is incomplete and cannot be restored."
 
 #: src/shared/queries/restoreBackup.mutation.ts
-msgid "One of the receipts in the file is incomplete and cannot be restored."
-msgstr "One of the receipts in the file is incomplete and cannot be restored."
+#~ msgid "One of the receipts in the file is incomplete and cannot be restored."
+#~ msgstr "One of the receipts in the file is incomplete and cannot be restored."
 
 #: src/pages/dashboard/DashboardPage.tsx
 #~ msgid "Open ledger"
@@ -1132,6 +1172,10 @@ msgstr "The whole interface switches, including text direction. Your data is unt
 #~ msgstr "These details are printed at the top of the income report. Without a name the document carries no weight with an embassy or a landlord."
 
 #: src/shared/queries/restoreBackup.mutation.ts
+msgid "this backup file"
+msgstr "this backup file"
+
+#: src/shared/queries/restoreBackup.mutation.ts
 msgid "This backup file's version is not supported. It was made by a newer version of the app."
 msgstr "This backup file's version is not supported. It was made by a newer version of the app."
 
@@ -1146,6 +1190,11 @@ msgstr "This file is not from Daramadname. Did you pick a backup from another to
 #: src/shared/queries/restoreBackup.mutation.ts
 msgid "This is not valid JSON. Make sure you picked the file you downloaded from Back up."
 msgstr "This is not valid JSON. Make sure you picked the file you downloaded from Back up."
+
+#: src/shared/queries/createReceipt.mutation.ts
+#: src/shared/queries/updateReceipt.mutation.ts
+msgid "this receipt"
+msgstr "this receipt"
 
 #: src/shared/receipt-form/ReceiptForm.tsx
 msgid "This receipt is backdated. Enter the rate from that day, not today's — the amount is frozen permanently and will not change if the price moves later."
@@ -1291,6 +1340,10 @@ msgstr "You have not recorded any receipts yet"
 #: src/pages/settings/SettingsPage.tsx
 msgid "Your current data is replaced entirely by the contents of this file. If you have receipts recorded now, back them up first."
 msgstr "Your current data is replaced entirely by the contents of this file. If you have receipts recorded now, back them up first."
+
+#: src/shared/queries/exportBackup.mutation.ts
+msgid "your data"
+msgstr "your data"
 
 #: src/shared/error-state/AppErrorFallback.tsx
 #~ msgid "Your data is safe and has not been erased — this error only affects rendering. Try again first. If it keeps happening, download a backup here, and only then erase and start fresh."

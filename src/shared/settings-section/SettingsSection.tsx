@@ -15,7 +15,7 @@ export interface SettingsSectionProps {
  * card interior, which they cannot do if the card itself pads to 24.
  */
 export const SettingsSection = ({ title, children }: SettingsSectionProps) => (
-  <SurfaceCard radius="lg" flat sx={{ p: 1, overflow: 'hidden' }}>
+  <SurfaceCard radius="lg" flat disablePadding sx={{ p: 1 }}>
     <Box sx={{ px: 2, pt: 2, pb: 1 }}>
       <Typography variant="h5">{title}</Typography>
     </Box>

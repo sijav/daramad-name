@@ -1,3 +1,4 @@
+import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
 import { createTheme, type Theme } from '@mui/material'
 import vazirFdRegular from 'vazirmatn/misc/Farsi-Digits/fonts/webfonts/Vazirmatn-FD-Regular.woff2?url'
 import vazirFdSemiBold from 'vazirmatn/misc/Farsi-Digits/fonts/webfonts/Vazirmatn-FD-SemiBold.woff2?url'
@@ -168,8 +169,13 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
             ...typeScale.bodyMedium,
             color: c.onSurface,
             borderBottom: `1px solid ${c.borderDefault}`,
-            paddingInline: '10px',
+            // The design's row is `px-20` with a `16px` gap between columns, so
+            // a cell carries half the gap on each side and the full inset at
+            // the ends. Without this the date sits flush against the client.
+            paddingInline: '8px',
             paddingBlock: '14px',
+            '&:first-of-type': { paddingInlineStart: '20px' },
+            '&:last-of-type': { paddingInlineEnd: '20px' },
           },
           head: {
             ...typeScale.labelLarge,
@@ -180,6 +186,8 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
         },
       },
       MuiTableSortLabel: {
+        // The design sorts with a chevron, not MUI's downward arrow.
+        defaultProps: { IconComponent: KeyboardArrowDownRoundedIcon },
         styleOverrides: {
           root: {
             gap: 4,

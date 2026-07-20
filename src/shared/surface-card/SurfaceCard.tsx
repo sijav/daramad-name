@@ -15,6 +15,14 @@ export interface SurfaceCardProps extends Omit<PaperProps, 'variant'> {
   tone?: 'default' | 'subtle'
   /** Drops the Elevation/1 shadow. The design omits it on Ledger, Report and Settings. */
   flat?: boolean
+  /**
+   * Removes the padding for cards whose child paints edge to edge — the ledger
+   * table, whose header band has to reach the rounded corners.
+   *
+   * A prop rather than `sx={{ p: 0 }}`: the default padding is responsive, so a
+   * scalar override loses to its own `@media` rule and the padding stays.
+   */
+  disablePadding?: boolean
 }
 
 /**
@@ -30,7 +38,14 @@ export interface SurfaceCardProps extends Omit<PaperProps, 'variant'> {
  * variants and the `component` prop keep working, and so the theme's
  * `MuiPaper` overrides apply in one place.
  */
-export const SurfaceCard = ({ radius: size = 'xl', tone = 'default', flat = false, sx, ...props }: SurfaceCardProps) => (
+export const SurfaceCard = ({
+  radius: size = 'xl',
+  tone = 'default',
+  flat = false,
+  disablePadding = false,
+  sx,
+  ...props
+}: SurfaceCardProps) => (
   <Paper
     elevation={0}
     sx={[
@@ -38,7 +53,7 @@ export const SurfaceCard = ({ radius: size = 'xl', tone = 'default', flat = fals
         borderRadius: `${size === 'xl' ? radius.xl : radius.lg}px`,
         backgroundColor: tone === 'subtle' ? theme.palette.brandPrimarySubtle : theme.palette.surfaceDefault,
         boxShadow: flat ? 'none' : elevation.level1,
-        p: { xs: 2.5, sm: 3 },
+        ...(disablePadding ? { p: 0, overflow: 'hidden' } : { p: { xs: 2.5, sm: 3 } }),
       }),
       ...(Array.isArray(sx) ? sx : [sx]),
     ]}

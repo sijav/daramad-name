@@ -1,5 +1,13 @@
 import { msg } from '@lingui/core/macro'
-import { db, defaultSettings, writeSettings } from 'src/core/db'
+import {
+  assertReferencesResolve,
+  assertValidClient,
+  assertValidReceipt,
+  coerceSettings,
+  db,
+  defaultSettings,
+  writeSettings,
+} from 'src/core/db'
 import { i18n } from 'src/core/i18n'
 import type { BackupFile, Client, Receipt } from 'src/shared/types'
 
@@ -52,25 +60,22 @@ const parseBackup = (json: string): BackupFile => {
     throw new Error(i18n._(msg`The backup file is incomplete — it has no receipts or clients list.`))
   }
 
-  // Guard the fields the whole app relies on. A receipt without a stored
-  // `amountToman` would quietly contribute zero to every total.
-  for (const receipt of candidate.receipts as Receipt[]) {
-    if (typeof receipt.id !== 'string' || typeof receipt.occurredAt !== 'string' || typeof receipt.amountToman !== 'number') {
-      throw new Error(i18n._(msg`One of the receipts in the file is incomplete and cannot be restored.`))
-    }
-  }
-  for (const client of candidate.clients as Client[]) {
-    if (typeof client.id !== 'string' || typeof client.name !== 'string') {
-      throw new Error(i18n._(msg`One of the clients in the file is incomplete and cannot be restored.`))
-    }
-  }
+  // Same checks the app uses on write and on export, so a file cannot be
+  // rejected from one direction and trusted from another.
+  const where = i18n._(msg`this backup file`)
+  const receipts = candidate.receipts as Receipt[]
+  const clients = candidate.clients as Client[]
+  receipts.forEach((receipt) => assertValidReceipt(receipt, where))
+  clients.forEach((client) => assertValidClient(client, where))
+  assertReferencesResolve(receipts, clients, where)
 
   return {
     app: 'daramadname',
     version: 1,
     exportedAt: candidate.exportedAt ?? new Date().toISOString(),
-    receipts: candidate.receipts as Receipt[],
-    clients: candidate.clients as Client[],
-    settings: candidate.settings ?? defaultSettings,
+    receipts,
+    clients,
+    // A broken preference is not worth refusing a restore over; repair it.
+    settings: coerceSettings(candidate.settings, defaultSettings),
   }
 }

@@ -1,5 +1,5 @@
 import { msg } from '@lingui/core/macro'
-import { db, upsertClientByName } from 'src/core/db'
+import { assertValidReceipt, db, upsertClientByName } from 'src/core/db'
 import { i18n } from 'src/core/i18n'
 import type { Receipt } from 'src/shared/types'
 import { computeToman } from 'src/shared/utils'
@@ -48,6 +48,7 @@ export const updateReceiptMutation = async ({
     updatedAt: new Date().toISOString(),
   }
 
+  assertValidReceipt(updated, i18n._(msg`this receipt`))
   await db.receipts.put(updated)
   return updated
 }

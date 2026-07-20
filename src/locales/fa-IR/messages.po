@@ -81,6 +81,14 @@ msgstr "{0}٪ از درآمد شما از یک مشتری تأمین شده اس
 msgid "{count} sample receipts added."
 msgstr "{count} دریافتی نمونه اضافه شد."
 
+#: src/core/db/validate.ts
+msgid "A client in {where} has no identifier."
+msgstr "یکی از مشتری‌ها در {where} شناسه ندارد."
+
+#: src/core/db/validate.ts
+msgid "A client in {where} has no name."
+msgstr "یکی از مشتری‌ها در {where} نام ندارد."
+
 #: src/pages/report/ReportPage.tsx
 msgid "A document you can hand to an embassy, a landlord or an accountant"
 msgstr "سندی که می‌تونی به سفارت، صاحبخونه یا حسابدار بدی"
@@ -96,6 +104,38 @@ msgstr "برای ارز غیرتومانی، نرخ تبدیل لازمه."
 #: src/pages/charts/ChartsPage.tsx
 msgid "A one-year picture of your income"
 msgstr "تصویر یک‌ساله‌ی درآمدت"
+
+#: src/core/db/validate.ts
+msgid "A receipt in {where} has an invalid amount."
+msgstr "مبلغ یکی از دریافتی‌ها در {where} معتبر نیست."
+
+#: src/core/db/validate.ts
+msgid "A receipt in {where} has an unreadable date."
+msgstr "تاریخ یکی از دریافتی‌ها در {where} خوانا نیست."
+
+#: src/core/db/validate.ts
+msgid "A receipt in {where} has no identifier."
+msgstr "یکی از دریافتی‌ها در {where} شناسه ندارد."
+
+#: src/core/db/validate.ts
+msgid "A receipt in {where} has no stored Toman value, so totals would be wrong."
+msgstr "یکی از دریافتی‌ها در {where} معادل تومانی ذخیره‌شده ندارد و جمع‌ها نادرست می‌شود."
+
+#: src/core/db/validate.ts
+msgid "A receipt in {where} is in a foreign currency but has no stored conversion rate."
+msgstr "یکی از دریافتی‌ها در {where} ارزی است اما نرخ تبدیل ذخیره‌شده ندارد."
+
+#: src/core/db/validate.ts
+msgid "A receipt in {where} refers to a client that is not in the file."
+msgstr "یکی از دریافتی‌ها در {where} به مشتری‌ای اشاره دارد که در فایل نیست."
+
+#: src/core/db/validate.ts
+msgid "A receipt in {where} uses a currency this app does not know."
+msgstr "یکی از دریافتی‌ها در {where} ارزی دارد که این برنامه نمی‌شناسد."
+
+#: src/core/db/validate.ts
+msgid "A receipt in {where} uses a payment channel this app does not know."
+msgstr "یکی از دریافتی‌ها در {where} کانال دریافتی دارد که این برنامه نمی‌شناسد."
 
 #. placeholder {0}: digits(year)
 #: src/pages/dashboard/DashboardPage.tsx
@@ -781,12 +821,12 @@ msgid "Once you record a few receipts, this shows how your income rose and fell 
 msgstr "وقتی چند دریافتی ثبت کنی، اینجا می‌بینی درآمدت ماه‌به‌ماه چطور بالا و پایین شده و چقدرش به یک مشتری وابسته است."
 
 #: src/shared/queries/restoreBackup.mutation.ts
-msgid "One of the clients in the file is incomplete and cannot be restored."
-msgstr "یکی از مشتری‌های داخل فایل ناقصه و قابل بازیابی نیست."
+#~ msgid "One of the clients in the file is incomplete and cannot be restored."
+#~ msgstr "یکی از مشتری‌های داخل فایل ناقصه و قابل بازیابی نیست."
 
 #: src/shared/queries/restoreBackup.mutation.ts
-msgid "One of the receipts in the file is incomplete and cannot be restored."
-msgstr "یکی از دریافتی‌های داخل فایل ناقصه و قابل بازیابی نیست."
+#~ msgid "One of the receipts in the file is incomplete and cannot be restored."
+#~ msgstr "یکی از دریافتی‌های داخل فایل ناقصه و قابل بازیابی نیست."
 
 #: src/pages/dashboard/DashboardPage.tsx
 #~ msgid "Open ledger"
@@ -1132,6 +1172,10 @@ msgstr "کل رابط عوض می‌شه، از جمله جهت متن. داده
 #~ msgstr "این اطلاعات بالای گزارش درآمد چاپ می‌شه. بدون اسم، سند برای سفارت یا صاحبخونه اعتباری نداره."
 
 #: src/shared/queries/restoreBackup.mutation.ts
+msgid "this backup file"
+msgstr "این فایل بکاپ"
+
+#: src/shared/queries/restoreBackup.mutation.ts
 msgid "This backup file's version is not supported. It was made by a newer version of the app."
 msgstr "نسخه‌ی این فایل بکاپ پشتیبانی نمی‌شه. با نسخه‌ی جدیدتر برنامه ساخته شده."
 
@@ -1146,6 +1190,11 @@ msgstr "این فایل مال درآمدنامه نیست. فایل بکاپ ی
 #: src/shared/queries/restoreBackup.mutation.ts
 msgid "This is not valid JSON. Make sure you picked the file you downloaded from Back up."
 msgstr "این فایل JSON معتبر نیست. مطمئن شو همون فایلی رو انتخاب کردی که از «بکاپ» گرفته بودی."
+
+#: src/shared/queries/createReceipt.mutation.ts
+#: src/shared/queries/updateReceipt.mutation.ts
+msgid "this receipt"
+msgstr "این دریافتی"
 
 #: src/shared/receipt-form/ReceiptForm.tsx
 msgid "This receipt is backdated. Enter the rate from that day, not today's — the amount is frozen permanently and will not change if the price moves later."
@@ -1291,6 +1340,10 @@ msgstr "هنوز دریافتی‌ای ثبت نکردی"
 #: src/pages/settings/SettingsPage.tsx
 msgid "Your current data is replaced entirely by the contents of this file. If you have receipts recorded now, back them up first."
 msgstr "داده‌های فعلی کاملاً با محتوای این فایل جایگزین می‌شن. اگر الان دریافتی ثبت‌شده داری، اول ازش بکاپ بگیر."
+
+#: src/shared/queries/exportBackup.mutation.ts
+msgid "your data"
+msgstr "داده‌های تو"
 
 #: src/shared/error-state/AppErrorFallback.tsx
 #~ msgid "Your data is safe and has not been erased — this error only affects rendering. Try again first. If it keeps happening, download a backup here, and only then erase and start fresh."

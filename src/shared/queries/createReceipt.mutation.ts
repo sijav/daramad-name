@@ -1,4 +1,6 @@
-import { db, upsertClientByName } from 'src/core/db'
+import { msg } from '@lingui/core/macro'
+import { assertValidReceipt, db, upsertClientByName } from 'src/core/db'
+import { i18n } from 'src/core/i18n'
 import type { Channel, Currency, Receipt } from 'src/shared/types'
 import { computeToman } from 'src/shared/utils'
 
@@ -48,6 +50,8 @@ export const createReceiptMutation = async ({
     updatedAt: now,
   }
 
+  // Validated before the write, so a bad row can never reach the ledger.
+  assertValidReceipt(receipt, i18n._(msg`this receipt`))
   await db.receipts.add(receipt)
   return receipt
 }

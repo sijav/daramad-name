@@ -202,6 +202,10 @@ msgstr "Back up data"
 #~ msgid "Backup and restore"
 #~ msgstr "Backup and restore"
 
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Backup downloaded"
+msgstr "Backup downloaded"
+
 #: src/pages/settings/SettingsPage.tsx
 msgid "Backup file downloaded."
 msgstr "Backup file downloaded."
@@ -390,6 +394,10 @@ msgstr "Display"
 #~ msgid "Document preview"
 #~ msgstr "Document preview"
 
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Download a backup"
+msgstr "Download a backup"
+
 #: src/pages/settings/SettingsPage.tsx
 msgid "Download a JSON file of every receipt"
 msgstr "Download a JSON file of every receipt"
@@ -429,6 +437,7 @@ msgid "Enter the amount, the client and how you were paid."
 msgstr "Enter the amount, the client and how you were paid."
 
 #: src/pages/settings/SettingsPage.tsx
+#: src/shared/error-state/AppErrorFallback.tsx
 msgid "erase"
 msgstr "erase"
 
@@ -440,7 +449,12 @@ msgstr "Erase all"
 msgid "Erase all data"
 msgstr "Erase all data"
 
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Erase data and restart"
+msgstr "Erase data and restart"
+
 #: src/pages/settings/SettingsPage.tsx
+#: src/shared/error-state/AppErrorFallback.tsx
 msgid "Erase everything"
 msgstr "Erase everything"
 
@@ -455,6 +469,10 @@ msgstr "Every date and monthly total is shown in this calendar. Your data itself
 #: src/pages/ledger/LedgerPage.tsx
 #~ msgid "Every receipt you have, with an exact total"
 #~ msgstr "Every receipt you have, with an exact total"
+
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Every receipt, client and personal detail is erased permanently, then the page reloads. Download a backup first — without one there is no way back."
+msgstr "Every receipt, client and personal detail is erased permanently, then the page reloads. Download a backup first — without one there is no way back."
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Every receipt, client and personal detail is erased permanently. Without a backup there is no way back."
@@ -884,6 +902,10 @@ msgstr "Record a receipt quickly"
 msgid "Record your first receipt"
 msgstr "Record your first receipt"
 
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Reload the page"
+msgstr "Reload the page"
+
 #: src/pages/report/ReportPage.tsx
 msgid "Report language"
 msgstr "Report language"
@@ -1227,8 +1249,12 @@ msgid "Your current data is replaced entirely by the contents of this file. If y
 msgstr "Your current data is replaced entirely by the contents of this file. If you have receipts recorded now, back them up first."
 
 #: src/shared/error-state/AppErrorFallback.tsx
-msgid "Your data is safe and has not been erased — this error only affects rendering. Try again; if it keeps happening, take a backup from Settings, then close and reopen the page."
-msgstr "Your data is safe and has not been erased — this error only affects rendering. Try again; if it keeps happening, take a backup from Settings, then close and reopen the page."
+msgid "Your data is safe and has not been erased — this error only affects rendering. Try again first. If it keeps happening, download a backup here, and only then erase and start fresh."
+msgstr "Your data is safe and has not been erased — this error only affects rendering. Try again first. If it keeps happening, download a backup here, and only then erase and start fresh."
+
+#: src/shared/error-state/AppErrorFallback.tsx
+#~ msgid "Your data is safe and has not been erased — this error only affects rendering. Try again; if it keeps happening, take a backup from Settings, then close and reopen the page."
+#~ msgstr "Your data is safe and has not been erased — this error only affects rendering. Try again; if it keeps happening, take a backup from Settings, then close and reopen the page."
 
 #: src/shared/ledger-state/LedgerState.tsx
 msgid "Your data is safe and has not been erased. Try again."

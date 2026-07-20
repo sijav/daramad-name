@@ -83,7 +83,7 @@ export const PageControl = ({ page, pageCount, pageSize, totalCount, onPageChang
               color: theme.palette.text.secondary,
               '& fieldset': { borderColor: theme.palette.borderDefault },
             },
-            '& .MuiSelect-select': { paddingBlock: 0, paddingInlineStart: '16px' },
+            '& .MuiSelect-select': { paddingBlock: '0px', paddingInlineStart: '16px' },
           })}
         >
           {PAGE_SIZE_OPTIONS.map((option) => (

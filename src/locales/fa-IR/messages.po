@@ -202,6 +202,10 @@ msgstr "بکاپ داده‌ها"
 #~ msgid "Backup and restore"
 #~ msgstr "بکاپ و بازیابی"
 
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Backup downloaded"
+msgstr "بکاپ دانلود شد"
+
 #: src/pages/settings/SettingsPage.tsx
 msgid "Backup file downloaded."
 msgstr "فایل بکاپ دانلود شد."
@@ -390,6 +394,10 @@ msgstr "نمایش"
 #~ msgid "Document preview"
 #~ msgstr "پیش‌نمایش سند"
 
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Download a backup"
+msgstr "دانلود بکاپ"
+
 #: src/pages/settings/SettingsPage.tsx
 msgid "Download a JSON file of every receipt"
 msgstr "یک فایل JSON از همه‌ی دریافتی‌ها دانلود کن"
@@ -429,6 +437,7 @@ msgid "Enter the amount, the client and how you were paid."
 msgstr "مبلغ، مشتری و کانال دریافت را وارد کنید."
 
 #: src/pages/settings/SettingsPage.tsx
+#: src/shared/error-state/AppErrorFallback.tsx
 msgid "erase"
 msgstr "پاک کن"
 
@@ -440,7 +449,12 @@ msgstr "پاک کردن همه"
 msgid "Erase all data"
 msgstr "پاک کردن همه‌ی داده‌ها"
 
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Erase data and restart"
+msgstr "پاک کردن داده‌ها و شروع دوباره"
+
 #: src/pages/settings/SettingsPage.tsx
+#: src/shared/error-state/AppErrorFallback.tsx
 msgid "Erase everything"
 msgstr "همه را پاک کن"
 
@@ -455,6 +469,10 @@ msgstr "همه‌ی تاریخ‌ها و جمع‌بندی‌های ماهانه
 #: src/pages/ledger/LedgerPage.tsx
 #~ msgid "Every receipt you have, with an exact total"
 #~ msgstr "همه‌ی دریافتی‌هایت، با جمع دقیق"
+
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Every receipt, client and personal detail is erased permanently, then the page reloads. Download a backup first — without one there is no way back."
+msgstr "همه‌ی دریافتی‌ها، مشتری‌ها و مشخصات فردی برای همیشه پاک می‌شود و صفحه دوباره بارگذاری می‌شود. اول بکاپ بگیر — بدون آن راه برگشتی نیست."
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Every receipt, client and personal detail is erased permanently. Without a backup there is no way back."
@@ -884,6 +902,10 @@ msgstr "ثبت سریع دریافتی"
 msgid "Record your first receipt"
 msgstr "ثبت اولین دریافتی"
 
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Reload the page"
+msgstr "بارگذاری دوباره‌ی صفحه"
+
 #: src/pages/report/ReportPage.tsx
 msgid "Report language"
 msgstr "زبان گزارش"
@@ -1227,8 +1249,12 @@ msgid "Your current data is replaced entirely by the contents of this file. If y
 msgstr "داده‌های فعلی کاملاً با محتوای این فایل جایگزین می‌شن. اگر الان دریافتی ثبت‌شده داری، اول ازش بکاپ بگیر."
 
 #: src/shared/error-state/AppErrorFallback.tsx
-msgid "Your data is safe and has not been erased — this error only affects rendering. Try again; if it keeps happening, take a backup from Settings, then close and reopen the page."
-msgstr "داده‌هایت سر جاشه و پاک نشده — این خطا فقط مربوط به نمایش صفحه‌ست. دوباره امتحان کن؛ اگر باز هم تکرار شد، از تنظیمات بکاپ بگیر و صفحه را ببند و باز کن."
+msgid "Your data is safe and has not been erased — this error only affects rendering. Try again first. If it keeps happening, download a backup here, and only then erase and start fresh."
+msgstr "داده‌هایت سر جاشه و پاک نشده — این خطا فقط مربوط به نمایش صفحه‌ست. اول دوباره امتحان کن؛ اگر باز هم تکرار شد، همین‌جا بکاپ بگیر و تنها بعد از آن داده‌ها را پاک کن و از نو شروع کن."
+
+#: src/shared/error-state/AppErrorFallback.tsx
+#~ msgid "Your data is safe and has not been erased — this error only affects rendering. Try again; if it keeps happening, take a backup from Settings, then close and reopen the page."
+#~ msgstr "داده‌هایت سر جاشه و پاک نشده — این خطا فقط مربوط به نمایش صفحه‌ست. دوباره امتحان کن؛ اگر باز هم تکرار شد، از تنظیمات بکاپ بگیر و صفحه را ببند و باز کن."
 
 #: src/shared/ledger-state/LedgerState.tsx
 msgid "Your data is safe and has not been erased. Try again."

@@ -166,7 +166,7 @@ export const ReportPage = () => {
                       fontSize: 13,
                       '& fieldset': { borderColor: theme.palette.borderDefault },
                     },
-                    '& .MuiSelect-select': { paddingBlock: 0, paddingInlineStart: '14px' },
+                    '& .MuiSelect-select': { paddingBlock: '0px', paddingInlineStart: '14px' },
                   })}
                 >
                   {years.map((option) => (

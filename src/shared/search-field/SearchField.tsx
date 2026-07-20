@@ -55,9 +55,9 @@ export const SearchField = ({ value, onValueChange, placeholder, sx, ...props }:
             fontSize: 14,
             fontWeight: 400,
             lineHeight: '24px',
-            '& input::placeholder': { color: theme.palette.text.secondary, opacity: 1 },
             '& fieldset': { borderColor: theme.palette.borderDefault },
           },
+          '& .MuiInputBase-input::placeholder': { color: theme.palette.text.secondary, opacity: 1 },
         }),
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}

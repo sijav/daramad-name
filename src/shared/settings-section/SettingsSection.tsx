@@ -20,10 +20,12 @@ export const SettingsSection = ({ title, children }: SettingsSectionProps) => (
       <Typography variant="h5">{title}</Typography>
     </Box>
     <Stack
-      sx={{
-        // Every row but the last carries the design's bottom hairline.
-        '& > :not(:last-of-type)': (theme) => ({ borderBottom: `1px solid ${theme.palette.borderDefault}` }),
-      }}
+      sx={(theme) => ({
+        // Every row but the last carries the design's bottom hairline. The
+        // callback has to sit at the TOP of `sx` — a function nested as a
+        // value is never resolved, and emotion serialises it as garbage.
+        '& > :not(:last-of-type)': { borderBottom: `1px solid ${theme.palette.borderDefault}` },
+      })}
     >
       {children}
     </Stack>

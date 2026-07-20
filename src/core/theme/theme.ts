@@ -69,8 +69,8 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
       MuiButton: {
         defaultProps: { disableElevation: true },
         styleOverrides: {
-          root: { borderRadius: radius.full, height: 48, paddingInline: 24 },
-          sizeSmall: { height: 40, paddingInline: 16 },
+          root: { borderRadius: radius.full, height: 48, paddingInline: '24px' },
+          sizeSmall: { height: 40, paddingInline: '16px' },
           // The design outlines buttons in `--md-sys-color-outline`, not in a
           // half-transparent primary the way MUI does by default.
           outlined: { borderColor: c.outline },
@@ -109,7 +109,7 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
           // channel pills in the record card.
           root: { borderRadius: radius.full, height: 38, fontWeight: 500 },
           sizeSmall: { height: 38 },
-          label: { paddingInline: 16 },
+          label: { paddingInline: '16px' },
         },
       },
       MuiPaper: {
@@ -140,14 +140,14 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
           // The design's Field box is 52px. MUI's default vertical padding
           // pushed it to 56, so the padding is set rather than just a minHeight.
           root: { borderRadius: radius.md, backgroundColor: c.surfaceContainerHigh, height: 52 },
-          input: { paddingBlock: 0, height: '100%', boxSizing: 'border-box' },
+          input: { paddingBlock: '0px', height: '100%', boxSizing: 'border-box' },
           notchedOutline: { borderColor: c.outlineVariant },
         },
       },
       MuiInputBase: {
         styleOverrides: {
           // A multiline note has to grow, so it opts out of the fixed 52px.
-          multiline: { height: 'auto', minHeight: 52, paddingBlock: 12 },
+          multiline: { height: 'auto', minHeight: 52, paddingBlock: '12px' },
         },
       },
       MuiCssBaseline: {

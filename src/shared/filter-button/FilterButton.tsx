@@ -39,8 +39,12 @@ export const FilterButton = ({ activeCount = 0, sx, ...props }: FilterButtonProp
               borderRadius: `${radius.sm + 2}px`,
               backgroundColor: theme.palette.brandPrimary,
               color: theme.palette.textOnPrimary,
-              fontSize: 13,
+              fontSize: 12,
               fontWeight: 500,
+              // Without an explicit line box the glyph's own leading pushes it
+              // past the 20px circle.
+              lineHeight: 1,
+              flexShrink: 0,
             })}
           >
             {digits(activeCount)}

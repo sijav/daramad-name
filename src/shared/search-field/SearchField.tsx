@@ -51,6 +51,11 @@ export const SearchField = ({ value, onValueChange, placeholder, sx, ...props }:
             borderRadius: `${radius.sm + 2}px`,
             height: 48,
             backgroundColor: theme.palette.surfaceDefault,
+            // `275:4`: 14/400, and the placeholder reads in the secondary tone.
+            fontSize: 14,
+            fontWeight: 400,
+            lineHeight: '24px',
+            '& input::placeholder': { color: theme.palette.text.secondary, opacity: 1 },
             '& fieldset': { borderColor: theme.palette.borderDefault },
           },
         }),

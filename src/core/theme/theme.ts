@@ -45,6 +45,7 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
       brandPrimarySubtle: c.brandPrimarySubtle,
       textOnPrimary: c.textOnPrimary,
       borderDefault: c.borderDefault,
+      borderStrong: c.borderStrong,
       surfaceSubtle: c.surfaceSubtle,
       chartSeries: c.chartSeries,
     },

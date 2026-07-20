@@ -34,28 +34,6 @@ export const ClientShareChart = ({ shares, limit = 4, othersLabel }: ClientShare
 
   return (
     <Stack direction="row" spacing={2} sx={{ alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}>
-      <Stack spacing={1.75} sx={{ alignItems: 'flex-start' }}>
-        {rows.map((row, index) => (
-          <Stack key={row.clientId} direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Box
-              sx={{
-                width: 10,
-                height: 10,
-                borderRadius: '50%',
-                flexShrink: 0,
-                backgroundColor: theme.palette.chartSeries[index % theme.palette.chartSeries.length],
-              }}
-            />
-            <Typography variant="body2" sx={{ fontSize: 13 }}>
-              {row.clientName}
-            </Typography>
-            <Typography variant="h5" color="text.secondary">
-              {t`${digits(pct(row.totalToman))}%`}
-            </Typography>
-          </Stack>
-        ))}
-      </Stack>
-
       <Box sx={{ position: 'relative', width: DONUT_SIZE, height: DONUT_SIZE, flexShrink: 0 }}>
         <PieChart
           width={DONUT_SIZE}
@@ -92,6 +70,25 @@ export const ClientShareChart = ({ shares, limit = 4, othersLabel }: ClientShare
           </Stack>
         ) : null}
       </Box>
+      <Stack spacing={1.75} sx={{ alignItems: 'flex-start' }}>
+        {rows.map((row, index) => (
+          <Stack key={row.clientId} direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Box
+              sx={{
+                width: 10,
+                height: 10,
+                borderRadius: '50%',
+                flexShrink: 0,
+                backgroundColor: theme.palette.chartSeries[index % theme.palette.chartSeries.length],
+              }}
+            />
+            <Typography sx={{ fontSize: 13, fontWeight: 400, lineHeight: '22px' }}>{row.clientName}</Typography>
+            <Typography variant="h5" color="text.secondary">
+              {t`${digits(pct(row.totalToman))}%`}
+            </Typography>
+          </Stack>
+        ))}
+      </Stack>
     </Stack>
   )
 }

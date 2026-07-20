@@ -60,6 +60,11 @@ const sortRows = (rows: ReceiptWithClient[], sort: LedgerSort): void => {
     switch (sort.field) {
       case 'amountToman':
         return (left.amountToman - right.amountToman) * direction
+      // Sorting the ORIGINAL amount compares across currencies, so group by
+      // currency first — otherwise 100 USD interleaves with 100 Toman and the
+      // column reads as unsorted.
+      case 'amountOriginal':
+        return (left.currency.localeCompare(right.currency) || left.amountOriginal - right.amountOriginal) * direction
       case 'client':
         return (left.clientName ?? '').localeCompare(right.clientName ?? '', 'fa') * direction
       case 'channel':

@@ -40,7 +40,7 @@ export const SummaryCard = ({ label, value, icon, hint, emphasis = false }: Summ
       <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
         <Typography
           variant="caption"
-          sx={{ fontWeight: 500 }}
+          sx={{ fontWeight: 500, lineHeight: '16px' }}
           color={emphasis ? 'primary.dark' : 'text.secondary'}
           // The label can be long in English; it wraps rather than pushing the
           // icon chip out of the row.
@@ -71,12 +71,20 @@ export const SummaryCard = ({ label, value, icon, hint, emphasis = false }: Summ
       {typeof value === 'number' ? (
         <MoneyText
           value={value}
-          variant="h3"
           color={emphasis ? 'primary.dark' : 'text.primary'}
-          sx={{ display: 'block', whiteSpace: 'normal', overflowWrap: 'anywhere', fontSize: 'clamp(0.95rem, 5cqw, 1.25rem)' }}
+          sx={{
+            display: 'block',
+            whiteSpace: 'normal',
+            overflowWrap: 'anywhere',
+            fontWeight: 600,
+            lineHeight: '28px',
+            // 20px is the design's size; it only shrinks when a long English
+            // label squeezes the card below its natural width.
+            fontSize: 'clamp(1rem, 5.2cqw, 1.25rem)',
+          }}
         />
       ) : (
-        <Typography variant="h3" color={emphasis ? 'primary.dark' : 'text.primary'}>
+        <Typography color={emphasis ? 'primary.dark' : 'text.primary'} sx={{ fontSize: 20, fontWeight: 600, lineHeight: '28px' }}>
           {value}
         </Typography>
       )}

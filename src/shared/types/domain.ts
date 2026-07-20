@@ -92,7 +92,7 @@ export interface LedgerFilter {
   channel?: Channel
 }
 
-export type LedgerSortField = 'occurredAt' | 'amountToman' | 'client' | 'channel'
+export type LedgerSortField = 'occurredAt' | 'amountToman' | 'amountOriginal' | 'client' | 'channel'
 export type SortDirection = 'asc' | 'desc'
 
 export interface LedgerSort {

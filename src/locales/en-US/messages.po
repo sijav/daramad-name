@@ -40,8 +40,18 @@ msgstr "{0} receipts restored."
 
 #. placeholder {0}: digits(paged.matchedCount)
 #: src/pages/ledger/LedgerPage.tsx
-msgid "{0} results based on the active filters"
-msgstr "{0} results based on the active filters"
+msgid "{0} results"
+msgstr "{0} results"
+
+#. placeholder {0}: digits(paged.matchedCount)
+#: src/pages/ledger/LedgerPage.tsx
+#~ msgid "{0} results based on the active filters"
+#~ msgstr "{0} results based on the active filters"
+
+#. placeholder {0}: digits(option)
+#: src/shared/page-control/PageControl.tsx
+msgid "{0} rows per page"
+msgstr "{0} rows per page"
 
 #. placeholder {0}: dateLong(range.from)
 #. placeholder {1}: dateLong(range.to)
@@ -203,6 +213,10 @@ msgstr "Bahman"
 #: src/shared/queries/seedSampleData.mutation.ts
 msgid "Banner and social posts"
 msgstr "Banner and social posts"
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "based on the active filters"
+msgstr "based on the active filters"
 
 #: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
@@ -675,6 +689,10 @@ msgstr "No data for this year yet"
 msgid "No income recorded for this year yet"
 msgstr "No income recorded for this year yet"
 
+#: src/pages/ledger/LedgerFilterPopover.tsx
+msgid "No matching client"
+msgstr "No matching client"
+
 #: src/pages/report/ReportPage.tsx
 msgid "No receipts recorded for this year"
 msgstr "No receipts recorded for this year"
@@ -905,8 +923,8 @@ msgid "Restore from file"
 msgstr "Restore from file"
 
 #: src/shared/page-control/PageControl.tsx
-msgid "Rows"
-msgstr "Rows"
+#~ msgid "Rows"
+#~ msgstr "Rows"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Sample data"
@@ -957,8 +975,15 @@ msgstr "Shahrivar"
 #. placeholder {1}: digits(lastRow)
 #. placeholder {2}: digits(totalCount)
 #: src/shared/page-control/PageControl.tsx
-msgid "Showing {0}–{1} of {2}"
-msgstr "Showing {0}–{1} of {2}"
+msgid "Showing {0} to {1} of {2} receipts"
+msgstr "Showing {0} to {1} of {2} receipts"
+
+#. placeholder {0}: digits(firstRow)
+#. placeholder {1}: digits(lastRow)
+#. placeholder {2}: digits(totalCount)
+#: src/shared/page-control/PageControl.tsx
+#~ msgid "Showing {0}–{1} of {2}"
+#~ msgstr "Showing {0}–{1} of {2}"
 
 #: src/shared/queries/seedSampleData.mutation.ts
 msgid "Small illustration project"
@@ -1119,13 +1144,18 @@ msgstr "Total"
 
 #. placeholder {0}: digits(receipts.length)
 #: src/pages/ledger/LedgerTable.tsx
-msgid "Total ({0} receipts)"
-msgstr "Total ({0} receipts)"
+#~ msgid "Total ({0} receipts)"
+#~ msgstr "Total ({0} receipts)"
 
 #: src/pages/report/ReportPage.tsx
 #: src/shared/pdf/buildIncomeReport.ts
 msgid "Total income"
 msgstr "Total income"
+
+#. placeholder {0}: digits(receipts.length)
+#: src/pages/ledger/LedgerTable.tsx
+msgid "Total of {0} filtered receipts"
+msgstr "Total of {0} filtered receipts"
 
 #: src/shared/error-state/AppErrorFallback.tsx
 #: src/shared/ledger-state/LedgerState.tsx

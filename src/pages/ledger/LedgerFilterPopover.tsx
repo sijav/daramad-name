@@ -1,5 +1,5 @@
 import { Trans, useLingui } from '@lingui/react/macro'
-import { Button, MenuItem, Popover, Stack, TextField } from '@mui/material'
+import { Autocomplete, Button, MenuItem, Popover, Stack, TextField } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { CHANNEL_LABELS } from 'src/shared/constants'
@@ -56,20 +56,18 @@ export const LedgerFilterPopover = ({ anchorEl, filter, onApply, onClose }: Ledg
           disableFuture={false}
         />
 
-        <TextField
-          select
-          fullWidth
-          label={t`Client`}
-          value={draft.clientId ?? ''}
-          onChange={(event) => setDraft({ ...draft, clientId: event.target.value || undefined })}
-        >
-          <MenuItem value="">{t`All clients`}</MenuItem>
-          {clients.map((client) => (
-            <MenuItem key={client.id} value={client.id}>
-              {client.name}
-            </MenuItem>
-          ))}
-        </TextField>
+        {/* Searchable, not a bare dropdown. A freelancer accumulates dozens of
+            clients, and scrolling a flat menu to find one is the slow path the
+            design's search field exists to avoid. */}
+        <Autocomplete
+          options={clients}
+          getOptionLabel={(client) => client.name}
+          value={clients.find((client) => client.id === draft.clientId) ?? null}
+          onChange={(_event, client) => setDraft({ ...draft, clientId: client?.id ?? undefined })}
+          isOptionEqualToValue={(option, value) => option.id === value.id}
+          noOptionsText={t`No matching client`}
+          renderInput={(params) => <TextField {...params} label={t`Client`} placeholder={t`All clients`} />}
+        />
 
         <TextField
           select

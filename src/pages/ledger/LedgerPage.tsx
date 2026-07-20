@@ -152,9 +152,14 @@ export const LedgerPage = () => {
         </SurfaceCard>
       ) : (
         <>
-          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
-            {t`${digits(paged.matchedCount)} results based on the active filters`}
-          </Typography>
+          {/* `267:980`: the count leads at 16/600, the qualifier trails at
+              12/400 on the same baseline. */}
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'baseline', mb: 1 }}>
+            <Typography variant="h5">{t`${digits(paged.matchedCount)} results`}</Typography>
+            <Typography variant="caption" color="text.secondary">
+              {t`based on the active filters`}
+            </Typography>
+          </Stack>
 
           <SurfaceCard flat sx={{ p: 0, overflow: 'hidden' }}>
             <LedgerTable

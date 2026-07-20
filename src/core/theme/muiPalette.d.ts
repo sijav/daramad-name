@@ -21,6 +21,7 @@ declare module '@mui/material/styles' {
     brandPrimarySubtle: string
     textOnPrimary: string
     borderDefault: string
+    borderStrong: string
     surfaceSubtle: string
     chartSeries: readonly string[]
   }
@@ -37,6 +38,7 @@ declare module '@mui/material/styles' {
     brandPrimarySubtle?: string
     textOnPrimary?: string
     borderDefault?: string
+    borderStrong?: string
     surfaceSubtle?: string
     chartSeries?: readonly string[]
   }

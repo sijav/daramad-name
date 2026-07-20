@@ -30,6 +30,7 @@ export interface ColorPalette {
   neutralVariant: string
   /** `--border-default`: the 1px hairline on chart cards. */
   borderDefault: string
+  borderStrong: string
   /** `--surface-subtle`: the unfilled part of a progress track. */
   surfaceSubtle: string
   /** Categorical series colours for the donut, in the design's order. */
@@ -72,6 +73,7 @@ export const lightColors: ColorPalette = {
   outlineVariant: '#c8cbcf',
   neutralVariant: '#95989c',
   borderDefault: '#dadde1',
+  borderStrong: '#7c7e83',
   surfaceSubtle: '#f8f9fb',
   // blue/40, success/40, warning/40, neutral-variant/60 — the design uses a
   // categorical set here, not a single-hue ramp.
@@ -124,6 +126,7 @@ export const darkColors: ColorPalette = {
   outlineVariant: '#44474b',
   neutralVariant: '#6b6e72',
   borderDefault: '#3a3d42',
+  borderStrong: '#6d7075',
   surfaceSubtle: '#1d1f23',
   // Lightened so each series keeps its hue identity against a dark surface.
   chartSeries: ['#7ea6ff', '#5fc98a', '#f0c04a', '#a8abaf', '#9db8ff', '#8e9195'],

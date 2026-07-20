@@ -20,12 +20,26 @@ export const FilterChip = ({ field, value, sx, ...props }: FilterChipProps) => (
     label={`${field}: ${value}`}
     sx={[
       (theme) => ({
-        ...theme.typography.caption,
+        // `277:45`: a tinted 32px chip at radius 16 with a hairline — not the
+        // fully-rounded primary-container pill MUI defaults to.
         height: 32,
-        borderRadius: `${radius.full}px`,
-        backgroundColor: theme.palette.primary.light,
-        color: theme.palette.primary.dark,
-        '& .MuiChip-deleteIcon': { color: theme.palette.primary.main },
+        borderRadius: `${radius.lg}px`,
+        fontSize: 13,
+        fontWeight: 500,
+        lineHeight: '20px',
+        backgroundColor: theme.palette.brandPrimarySubtle,
+        border: `1px solid ${theme.palette.borderDefault}`,
+        color: theme.palette.text.primary,
+        paddingInlineStart: '12px',
+        paddingInlineEnd: '10px',
+        '& .MuiChip-label': { padding: 0 },
+        '& .MuiChip-deleteIcon': {
+          margin: 0,
+          marginInlineStart: '8px',
+          fontSize: 16,
+          color: theme.palette.text.secondary,
+          '&:hover': { color: theme.palette.text.primary },
+        },
       }),
       ...(Array.isArray(sx) ? sx : [sx]),
     ]}

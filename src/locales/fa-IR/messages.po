@@ -40,8 +40,18 @@ msgstr "{0} دریافتی بازیابی شد."
 
 #. placeholder {0}: digits(paged.matchedCount)
 #: src/pages/ledger/LedgerPage.tsx
-msgid "{0} results based on the active filters"
-msgstr "{0} نتیجه بر اساس فیلترهای فعال"
+msgid "{0} results"
+msgstr "{0} نتیجه"
+
+#. placeholder {0}: digits(paged.matchedCount)
+#: src/pages/ledger/LedgerPage.tsx
+#~ msgid "{0} results based on the active filters"
+#~ msgstr "{0} نتیجه بر اساس فیلترهای فعال"
+
+#. placeholder {0}: digits(option)
+#: src/shared/page-control/PageControl.tsx
+msgid "{0} rows per page"
+msgstr "{0} ردیف در صفحه"
 
 #. placeholder {0}: dateLong(range.from)
 #. placeholder {1}: dateLong(range.to)
@@ -203,6 +213,10 @@ msgstr "بهمن"
 #: src/shared/queries/seedSampleData.mutation.ts
 msgid "Banner and social posts"
 msgstr "بنر و پست شبکه اجتماعی"
+
+#: src/pages/ledger/LedgerPage.tsx
+msgid "based on the active filters"
+msgstr "بر اساس فیلترهای فعال"
 
 #: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
@@ -675,6 +689,10 @@ msgstr "برای این سال هنوز داده‌ای نیست"
 msgid "No income recorded for this year yet"
 msgstr "برای این سال هنوز درآمدی ثبت نشده"
 
+#: src/pages/ledger/LedgerFilterPopover.tsx
+msgid "No matching client"
+msgstr "مشتری‌ای پیدا نشد"
+
 #: src/pages/report/ReportPage.tsx
 msgid "No receipts recorded for this year"
 msgstr "برای این سال دریافتی‌ای ثبت نشده"
@@ -905,8 +923,8 @@ msgid "Restore from file"
 msgstr "بازیابی از فایل"
 
 #: src/shared/page-control/PageControl.tsx
-msgid "Rows"
-msgstr "ردیف"
+#~ msgid "Rows"
+#~ msgstr "ردیف"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Sample data"
@@ -957,8 +975,15 @@ msgstr "شهریور"
 #. placeholder {1}: digits(lastRow)
 #. placeholder {2}: digits(totalCount)
 #: src/shared/page-control/PageControl.tsx
-msgid "Showing {0}–{1} of {2}"
-msgstr "نمایش {0}–{1} از {2}"
+msgid "Showing {0} to {1} of {2} receipts"
+msgstr "نمایش {0} تا {1} از {2} دریافتی"
+
+#. placeholder {0}: digits(firstRow)
+#. placeholder {1}: digits(lastRow)
+#. placeholder {2}: digits(totalCount)
+#: src/shared/page-control/PageControl.tsx
+#~ msgid "Showing {0}–{1} of {2}"
+#~ msgstr "نمایش {0}–{1} از {2}"
 
 #: src/shared/queries/seedSampleData.mutation.ts
 msgid "Small illustration project"
@@ -1119,13 +1144,18 @@ msgstr "جمع کل"
 
 #. placeholder {0}: digits(receipts.length)
 #: src/pages/ledger/LedgerTable.tsx
-msgid "Total ({0} receipts)"
-msgstr "جمع کل ({0} دریافتی)"
+#~ msgid "Total ({0} receipts)"
+#~ msgstr "جمع کل ({0} دریافتی)"
 
 #: src/pages/report/ReportPage.tsx
 #: src/shared/pdf/buildIncomeReport.ts
 msgid "Total income"
 msgstr "جمع کل درآمد"
+
+#. placeholder {0}: digits(receipts.length)
+#: src/pages/ledger/LedgerTable.tsx
+msgid "Total of {0} filtered receipts"
+msgstr "جمع کل {0} دریافتی فیلترشده"
 
 #: src/shared/error-state/AppErrorFallback.tsx
 #: src/shared/ledger-state/LedgerState.tsx

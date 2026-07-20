@@ -10,12 +10,12 @@ import { useSettings } from 'src/core/query'
 import { CURRENCY_LABELS } from 'src/shared/constants'
 import { EmptyState } from 'src/shared/empty-state'
 import { useFormat } from 'src/shared/format'
-import { GlassCard } from 'src/shared/glass-card'
 import { PageHeader } from 'src/shared/page-header'
 import { buildIncomeReport, loadPdfMake, type ReportLanguage } from 'src/shared/pdf'
 import { getIncomeReportQuery, getIncomeReportQueryKey, getPopulatedYearsQuery, getPopulatedYearsQueryKey } from 'src/shared/queries'
 import { SegmentedControl } from 'src/shared/segmented-control'
 import { StatTile } from 'src/shared/stat-tile'
+import { SurfaceCard } from 'src/shared/surface-card'
 import { monthNames, yearOf, yearRange } from 'src/shared/utils'
 
 /** Scenario 3: a presentable income certificate, in Persian or English. */
@@ -61,7 +61,7 @@ export const ReportPage = () => {
       <PageHeader title={t`Income report`} subtitle={t`A document you can hand to an embassy, a landlord or an accountant`} />
 
       <Stack spacing={3}>
-        <GlassCard>
+        <SurfaceCard>
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ alignItems: { md: 'flex-end' } }}>
             <TextField
               select
@@ -110,20 +110,20 @@ export const ReportPage = () => {
               </Trans>
             </Alert>
           ) : null}
-        </GlassCard>
+        </SurfaceCard>
 
         {isLoading ? (
           <Box sx={{ display: 'grid', placeItems: 'center', py: 8 }}>
             <CircularProgress />
           </Box>
         ) : !hasIncome ? (
-          <GlassCard>
+          <SurfaceCard>
             <EmptyState
               icon={<DescriptionRoundedIcon />}
               title={t`No receipts recorded for this year`}
               description={t`The income report is built from the receipts you record. Add a few receipts first, then produce the document here.`}
             />
-          </GlassCard>
+          </SurfaceCard>
         ) : (
           <>
             <Grid container spacing={2}>
@@ -139,7 +139,7 @@ export const ReportPage = () => {
               </Grid>
             </Grid>
 
-            <GlassCard>
+            <SurfaceCard>
               <Typography variant="h3" sx={{ mb: 0.5 }}>
                 <Trans>Document preview</Trans>
               </Typography>
@@ -167,7 +167,7 @@ export const ReportPage = () => {
                   </Stack>
                 ))}
               </Stack>
-            </GlassCard>
+            </SurfaceCard>
           </>
         )}
       </Stack>

@@ -1,7 +1,7 @@
 import { useLingui } from '@lingui/react/macro'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
-import { GlassCard } from 'src/shared/glass-card'
+import { SurfaceCard } from 'src/shared/surface-card'
 import type { Currency } from 'src/shared/types'
 import { AmountField } from './AmountField'
 
@@ -21,16 +21,16 @@ const Harness = ({ currency, initial }: { currency: Currency; initial: number | 
   const { t } = useLingui()
   const [value, setValue] = useState<number | null>(initial)
   return (
-    <GlassCard sx={{ maxWidth: 520 }}>
+    <SurfaceCard sx={{ maxWidth: 520 }}>
       <AmountField label={t`Amount received`} value={value} currency={currency} onValueChange={setValue} />
-    </GlassCard>
+    </SurfaceCard>
   )
 }
 
 const Invalid = () => {
   const { t } = useLingui()
   return (
-    <GlassCard sx={{ maxWidth: 520 }}>
+    <SurfaceCard sx={{ maxWidth: 520 }}>
       <AmountField
         label={t`Amount received`}
         value={null}
@@ -39,7 +39,7 @@ const Invalid = () => {
         error
         helperText={t`Enter an amount greater than zero.`}
       />
-    </GlassCard>
+    </SurfaceCard>
   )
 }
 

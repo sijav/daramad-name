@@ -1,6 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { GlassCard } from 'src/shared/glass-card'
+import { SurfaceCard } from 'src/shared/surface-card'
 import type { ReceiptWithClient } from 'src/shared/types'
 import { ReceiptForm } from './ReceiptForm'
 import { useReceiptForm } from './useReceiptForm'
@@ -23,9 +23,9 @@ const Harness = ({ initial }: { initial?: ReceiptWithClient }) => {
   const { t } = useLingui()
   const form = useReceiptForm(initial)
   return (
-    <GlassCard sx={{ maxWidth: 560 }}>
+    <SurfaceCard sx={{ maxWidth: 560 }}>
       <ReceiptForm form={form} submitLabel={t`Record a receipt`} onSubmit={() => {}} onSubmitAndNext={() => {}} />
-    </GlassCard>
+    </SurfaceCard>
   )
 }
 

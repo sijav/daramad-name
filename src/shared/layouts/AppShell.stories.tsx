@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
-import { GlassCard } from 'src/shared/glass-card'
 import { PageHeader } from 'src/shared/page-header'
+import { SurfaceCard } from 'src/shared/surface-card'
 import { AppShell } from './AppShell'
 
 const meta = {
@@ -22,7 +22,7 @@ const Frame = ({ path }: { path: string }) => (
           element={
             <>
               <PageHeader title="Income ledger" subtitle="Every receipt you have, with an exact total" />
-              <GlassCard sx={{ minHeight: 240 }}>Page content</GlassCard>
+              <SurfaceCard sx={{ minHeight: 240 }}>Page content</SurfaceCard>
             </>
           }
         />

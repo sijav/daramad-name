@@ -1,46 +1,84 @@
-import { Stack, Typography } from '@mui/material'
-import { GlassCard } from 'src/shared/glass-card'
+import { Box, Paper, Stack, Typography } from '@mui/material'
+import type { ReactNode } from 'react'
+import { elevation, radius } from 'src/core/theme'
 import { MoneyText } from 'src/shared/money-text'
 
 export interface SummaryCardProps {
   label: string
   /** A number renders as money; a string renders verbatim. */
   value: number | string
+  /** Shown in a 36px tinted chip beside the label, per the design's `Head` row. */
+  icon?: ReactNode
   hint?: string
   emphasis?: boolean
 }
 
 /**
- * The design's dashboard `Card`: a compact label + figure tile.
+ * The design's dashboard `Card`: a tinted icon chip and a small label on one
+ * row, the figure beneath.
  *
- * Sibling of `StatTile` but tuned for the dashboard's denser 4-across row, so
- * it uses a smaller type ramp and tighter padding. Kept separate rather than
- * adding a `dense` flag to `StatTile`, because the two appear on different
- * pages and will drift apart as the dashboard grows.
+ * Flat, not frosted — `surface-default` with a 1px `border-default` hairline,
+ * 20px radius and the Elevation/1 shadow. The 28px glass treatment belongs to
+ * the older record card; the current design system uses bordered surfaces
+ * everywhere, and a blurred panel behind a headline number costs legibility.
  */
-export const SummaryCard = ({ label, value, hint, emphasis = false }: SummaryCardProps) => (
-  <GlassCard
-    flat
+export const SummaryCard = ({ label, value, icon, hint, emphasis = false }: SummaryCardProps) => (
+  <Paper
+    elevation={0}
     sx={(theme) => ({
-      p: 2,
       height: '100%',
+      px: 2.5,
+      py: 2.25,
       containerType: 'inline-size',
-      ...(emphasis && { backgroundColor: theme.palette.primary.light, borderColor: theme.palette.primary.main }),
+      borderRadius: `${radius.xl}px`,
+      backgroundColor: emphasis ? theme.palette.primary.light : theme.palette.surfaceDefault,
+      border: `1px solid ${emphasis ? theme.palette.primary.main : theme.palette.borderDefault}`,
+      boxShadow: elevation.level1,
     })}
   >
-    <Stack spacing={0.5}>
-      <Typography variant="caption" color="text.secondary">
-        {label}
-      </Typography>
+    <Stack spacing={1.25}>
+      <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+        <Typography
+          variant="caption"
+          sx={{ fontWeight: 500 }}
+          color={emphasis ? 'primary.dark' : 'text.secondary'}
+          // The label can be long in English; it wraps rather than pushing the
+          // icon chip out of the row.
+          style={{ minWidth: 0 }}
+        >
+          {label}
+        </Typography>
+
+        {icon ? (
+          <Box
+            sx={(theme) => ({
+              flexShrink: 0,
+              display: 'grid',
+              placeItems: 'center',
+              width: 36,
+              height: 36,
+              borderRadius: `${radius.sm}px`,
+              backgroundColor: theme.palette.primary.light,
+              color: theme.palette.primary.main,
+              '& svg': { fontSize: 18 },
+            })}
+          >
+            {icon}
+          </Box>
+        ) : null}
+      </Stack>
 
       {typeof value === 'number' ? (
         <MoneyText
           value={value}
           variant="h3"
+          color={emphasis ? 'primary.dark' : 'text.primary'}
           sx={{ display: 'block', whiteSpace: 'normal', overflowWrap: 'anywhere', fontSize: 'clamp(0.95rem, 5cqw, 1.25rem)' }}
         />
       ) : (
-        <Typography variant="h3">{value}</Typography>
+        <Typography variant="h3" color={emphasis ? 'primary.dark' : 'text.primary'}>
+          {value}
+        </Typography>
       )}
 
       {hint ? (
@@ -49,5 +87,5 @@ export const SummaryCard = ({ label, value, hint, emphasis = false }: SummaryCar
         </Typography>
       ) : null}
     </Stack>
-  </GlassCard>
+  </Paper>
 )

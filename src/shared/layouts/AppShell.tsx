@@ -19,6 +19,7 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { elevation } from 'src/core/theme'
 import { NAV_ITEMS } from 'src/shared/constants'
 import { PrivacyFooter } from 'src/shared/privacy-footer'
 
@@ -89,7 +90,7 @@ export const AppShell = () => {
         sx={(t) => ({
           zIndex: t.zIndex.drawer + 1,
           backgroundColor: t.palette.glassSurface,
-          backdropFilter: 'blur(16px)',
+          backdropFilter: elevation.glassBlur,
           borderBottom: `1px solid ${t.palette.outlineVariant}`,
           color: t.palette.text.primary,
         })}
@@ -126,7 +127,6 @@ export const AppShell = () => {
               // Also flipped by the RTL plugin, so it is written once for LTR.
               borderRight: `1px solid ${theme.palette.outlineVariant}`,
               backgroundColor: 'transparent',
-              backdropFilter: 'none',
             },
           }}
         >
@@ -170,7 +170,7 @@ export const AppShell = () => {
             zIndex: t.zIndex.appBar,
             borderTop: `1px solid ${t.palette.outlineVariant}`,
             backgroundColor: t.palette.glassSurface,
-            backdropFilter: 'blur(16px)',
+            backdropFilter: elevation.glassBlur,
           })}
         >
           {NAV_ITEMS.map((item) => (

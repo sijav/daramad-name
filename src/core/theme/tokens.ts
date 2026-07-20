@@ -33,7 +33,6 @@ export interface ColorPalette {
   /** Categorical series colours for the donut, in the design's order. */
   chartSeries: readonly string[]
   glassSurface: string
-  glassBorder: string
   success: string
   successContainer: string
   warning: string
@@ -75,7 +74,6 @@ export const lightColors: ColorPalette = {
   chartSeries: ['#3b6ef5', '#2e9e5b', '#e2a400', '#95989c', '#6b93f7', '#7c7e83'],
 
   glassSurface: 'rgba(255, 255, 255, 0.6)',
-  glassBorder: 'rgba(255, 255, 255, 0.7)',
 
   success: '#2e9e5b',
   successContainer: '#e6f5ec',
@@ -126,7 +124,6 @@ export const darkColors: ColorPalette = {
 
   // The glass treatment inverts: a light film on dark, not a white one.
   glassSurface: 'rgba(38, 40, 44, 0.6)',
-  glassBorder: 'rgba(255, 255, 255, 0.08)',
 
   success: '#6edb9b',
   successContainer: '#12351f',
@@ -158,8 +155,8 @@ export const controlHeight = {
 export const elevation = {
   // Elevation/1 from the design system.
   level1: '0px 1px 2px 0px rgba(0,0,0,0.06), 0px 1px 3px 0px rgba(0,0,0,0.10)',
-  // The record card's drop shadow.
-  card: '0px 16px 48px 0px rgba(0, 0, 0, 0.18)',
+  // Only the fixed app chrome blurs, so that scrolling content reads as
+  // passing *behind* the bar rather than colliding with it.
   glassBlur: 'blur(16px)',
 } as const
 

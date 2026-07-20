@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { GlassCard } from 'src/shared/glass-card'
+import { SurfaceCard } from 'src/shared/surface-card'
 import type { MonthlyTotal } from 'src/shared/types'
 import { MonthlyIncomeChart } from './MonthlyIncomeChart'
 
@@ -25,9 +25,9 @@ export const WithEmptyMonths: Story = {
     months: months([22000000, 107940000, 124940000, 67250000, 0, 0, 0, 15000000, 0, 12000000, 52380000, 0]),
   },
   render: (args) => (
-    <GlassCard>
+    <SurfaceCard>
       <MonthlyIncomeChart {...args} />
-    </GlassCard>
+    </SurfaceCard>
   ),
 }
 

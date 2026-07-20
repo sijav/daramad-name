@@ -2,7 +2,7 @@ import { useLingui } from '@lingui/react/macro'
 import ReceiptLongRoundedIcon from '@mui/icons-material/ReceiptLongRounded'
 import SearchOffRoundedIcon from '@mui/icons-material/SearchOffRounded'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { GlassCard } from 'src/shared/glass-card'
+import { SurfaceCard } from 'src/shared/surface-card'
 import { EmptyState } from './EmptyState'
 
 const meta = { title: 'Shared/EmptyState', component: EmptyState } satisfies Meta<typeof EmptyState>
@@ -12,7 +12,7 @@ type Story = StoryObj<typeof meta>
 const FirstRunView = () => {
   const { t } = useLingui()
   return (
-    <GlassCard>
+    <SurfaceCard>
       <EmptyState
         icon={<ReceiptLongRoundedIcon />}
         title={t`You have not recorded any receipts yet`}
@@ -20,14 +20,14 @@ const FirstRunView = () => {
         actionLabel={t`Record your first receipt`}
         onAction={() => {}}
       />
-    </GlassCard>
+    </SurfaceCard>
   )
 }
 
 const NoMatchView = () => {
   const { t } = useLingui()
   return (
-    <GlassCard>
+    <SurfaceCard>
       <EmptyState
         icon={<SearchOffRoundedIcon />}
         title={t`Nothing matched these filters`}
@@ -35,7 +35,7 @@ const NoMatchView = () => {
         actionLabel={t`Clear filters`}
         onAction={() => {}}
       />
-    </GlassCard>
+    </SurfaceCard>
   )
 }
 

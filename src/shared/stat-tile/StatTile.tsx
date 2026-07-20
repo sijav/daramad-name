@@ -1,6 +1,6 @@
 import { Stack, Typography } from '@mui/material'
-import { GlassCard } from 'src/shared/glass-card'
 import { MoneyText } from 'src/shared/money-text'
+import { SurfaceCard } from 'src/shared/surface-card'
 
 export interface StatTileProps {
   label: string
@@ -12,7 +12,7 @@ export interface StatTileProps {
 
 /** A single headline number — total income, monthly average, receipt count. */
 export const StatTile = ({ label, value, hint, emphasis = false }: StatTileProps) => (
-  <GlassCard
+  <SurfaceCard
     flat
     sx={(theme) => ({
       p: 2.5,
@@ -47,5 +47,5 @@ export const StatTile = ({ label, value, hint, emphasis = false }: StatTileProps
         </Typography>
       ) : null}
     </Stack>
-  </GlassCard>
+  </SurfaceCard>
 )

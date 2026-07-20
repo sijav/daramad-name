@@ -3,9 +3,9 @@ import { Alert, Box, Snackbar, Typography } from '@mui/material'
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
 import { invalidateReceiptQueries } from 'src/core/query'
-import { GlassCard } from 'src/shared/glass-card'
 import { createReceiptMutation, type CreateReceiptRequest } from 'src/shared/queries'
 import { ReceiptForm, useReceiptForm } from 'src/shared/receipt-form'
+import { SurfaceCard } from 'src/shared/surface-card'
 
 /**
  * Scenario 1: record a receipt in under 15 seconds.
@@ -58,7 +58,7 @@ export const QuickEntryPage = () => {
 
   return (
     <Box sx={{ maxWidth: 620, mx: 'auto' }}>
-      <GlassCard>
+      <SurfaceCard>
         <Box sx={{ mb: 3 }}>
           <Typography variant="h2">
             <Trans>Record a receipt</Trans>
@@ -75,7 +75,7 @@ export const QuickEntryPage = () => {
           onSubmit={() => submit(false)}
           onSubmitAndNext={() => submit(true)}
         />
-      </GlassCard>
+      </SurfaceCard>
 
       <Snackbar open={toast !== null} autoHideDuration={2500} onClose={() => setToast(null)}>
         <Alert severity="success" onClose={() => setToast(null)}>

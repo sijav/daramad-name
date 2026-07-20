@@ -1,11 +1,11 @@
 import { Stack, Typography } from '@mui/material'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { GlassCard } from './GlassCard'
+import { SurfaceCard } from './SurfaceCard'
 
 const meta = {
-  title: 'Shared/GlassCard',
-  component: GlassCard,
-} satisfies Meta<typeof GlassCard>
+  title: 'Shared/SurfaceCard',
+  component: SurfaceCard,
+} satisfies Meta<typeof SurfaceCard>
 
 export default meta
 type Story = StoryObj<typeof meta>

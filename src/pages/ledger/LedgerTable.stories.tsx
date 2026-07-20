@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { GlassCard } from 'src/shared/glass-card'
+import { SurfaceCard } from 'src/shared/surface-card'
 import type { ReceiptWithClient } from 'src/shared/types'
 import { LedgerTable } from './LedgerTable'
 
@@ -71,9 +71,9 @@ export const Default: Story = {
     onDelete: () => {},
   },
   render: (args) => (
-    <GlassCard>
+    <SurfaceCard>
       <LedgerTable {...args} />
-    </GlassCard>
+    </SurfaceCard>
   ),
 }
 

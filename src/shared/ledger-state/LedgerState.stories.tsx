@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { GlassCard } from 'src/shared/glass-card'
+import { SurfaceCard } from 'src/shared/surface-card'
 import { LedgerState } from './LedgerState'
 
 const meta = {
   title: 'Shared/LedgerState',
   component: LedgerState,
   render: (args) => (
-    <GlassCard>
+    <SurfaceCard>
       <LedgerState {...args} />
-    </GlassCard>
+    </SurfaceCard>
   ),
 } satisfies Meta<typeof LedgerState>
 

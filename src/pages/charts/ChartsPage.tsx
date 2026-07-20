@@ -9,7 +9,6 @@ import { useSettings } from 'src/core/query'
 import { ChartCard } from 'src/shared/chart-card'
 import { EmptyState } from 'src/shared/empty-state'
 import { useFormat } from 'src/shared/format'
-import { GlassCard } from 'src/shared/glass-card'
 import { InsightCallout } from 'src/shared/insight-callout'
 import { PageHeader } from 'src/shared/page-header'
 import {
@@ -20,6 +19,7 @@ import {
   getPopulatedYearsQuery,
   getPopulatedYearsQueryKey,
 } from 'src/shared/queries'
+import { SurfaceCard } from 'src/shared/surface-card'
 import { Tag } from 'src/shared/tag'
 import { TopCustomers } from 'src/shared/top-customers'
 import { yearOf, yearRange } from 'src/shared/utils'
@@ -80,7 +80,7 @@ export const ChartsPage = () => {
           <CircularProgress />
         </Box>
       ) : !hasData ? (
-        <GlassCard>
+        <SurfaceCard>
           <EmptyState
             icon={<BarChartRoundedIcon />}
             title={t`No data for this year yet`}
@@ -88,7 +88,7 @@ export const ChartsPage = () => {
             actionLabel={t`Record a receipt`}
             onAction={() => navigate('/quick-entry')}
           />
-        </GlassCard>
+        </SurfaceCard>
       ) : (
         <Stack spacing={3}>
           <ChartCard title={t`Income for ${digits(year)}`} subtitle={t`Vertical axis figures are in millions of Toman.`}>

@@ -1,6 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { GlassCard } from 'src/shared/glass-card'
+import { SurfaceCard } from 'src/shared/surface-card'
 import type { ClientShare } from 'src/shared/types'
 import { TopCustomers } from './TopCustomers'
 
@@ -25,9 +25,9 @@ const RANKED = [
 const View = ({ shares, limit }: { shares: ClientShare[]; limit?: number }) => {
   const { t } = useLingui()
   return (
-    <GlassCard sx={{ maxWidth: 440 }}>
+    <SurfaceCard sx={{ maxWidth: 440 }}>
       <TopCustomers shares={shares} limit={limit} othersLabel={t`Others`} />
-    </GlassCard>
+    </SurfaceCard>
   )
 }
 

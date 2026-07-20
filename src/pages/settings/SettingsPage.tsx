@@ -4,7 +4,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRef, useState } from 'react'
 import { invalidateReceiptQueries, useSettings } from 'src/core/query'
 import { ConfirmDialog } from 'src/shared/confirm-dialog'
-import { GlassCard } from 'src/shared/glass-card'
 import { PageHeader } from 'src/shared/page-header'
 import {
   clearAllDataMutation,
@@ -18,6 +17,7 @@ import {
   updateProfileMutation,
 } from 'src/shared/queries'
 import { SegmentedControl } from 'src/shared/segmented-control'
+import { SurfaceCard } from 'src/shared/surface-card'
 import type { AppLocale, CalendarSystem, Profile, ThemePreference } from 'src/shared/types'
 
 export const SettingsPage = () => {
@@ -118,7 +118,7 @@ export const SettingsPage = () => {
       <PageHeader title={t`Settings`} />
 
       <Stack spacing={3}>
-        <GlassCard>
+        <SurfaceCard>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
             <Trans>Personal details</Trans>
           </Typography>
@@ -160,9 +160,9 @@ export const SettingsPage = () => {
               <Trans>Save details</Trans>
             </Button>
           </Stack>
-        </GlassCard>
+        </SurfaceCard>
 
-        <GlassCard>
+        <SurfaceCard>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
             <Trans>Language</Trans>
           </Typography>
@@ -177,9 +177,9 @@ export const SettingsPage = () => {
             ]}
             onValueChange={(locale) => changeLocale.mutate({ locale })}
           />
-        </GlassCard>
+        </SurfaceCard>
 
-        <GlassCard>
+        <SurfaceCard>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
             <Trans>Appearance</Trans>
           </Typography>
@@ -195,9 +195,9 @@ export const SettingsPage = () => {
             ]}
             onValueChange={(themePreference) => changeTheme.mutate({ themePreference })}
           />
-        </GlassCard>
+        </SurfaceCard>
 
-        <GlassCard>
+        <SurfaceCard>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
             <Trans>Calendar</Trans>
           </Typography>
@@ -212,9 +212,9 @@ export const SettingsPage = () => {
             ]}
             onValueChange={(calendar) => changeCalendar.mutate({ calendar })}
           />
-        </GlassCard>
+        </SurfaceCard>
 
-        <GlassCard>
+        <SurfaceCard>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
             <Trans>Backup and restore</Trans>
           </Typography>
@@ -241,9 +241,9 @@ export const SettingsPage = () => {
               }}
             />
           </Stack>
-        </GlassCard>
+        </SurfaceCard>
 
-        <GlassCard>
+        <SurfaceCard>
           <Typography variant="h3" sx={{ mb: 0.5 }}>
             <Trans>Sample data and reset</Trans>
           </Typography>
@@ -259,7 +259,7 @@ export const SettingsPage = () => {
               <Trans>Erase all data</Trans>
             </Button>
           </Stack>
-        </GlassCard>
+        </SurfaceCard>
       </Stack>
 
       <ConfirmDialog

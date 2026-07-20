@@ -10,7 +10,6 @@ import { CHANNEL_LABELS } from 'src/shared/constants'
 import { FilterButton } from 'src/shared/filter-button'
 import { FilterChip } from 'src/shared/filter-chip'
 import { useFormat } from 'src/shared/format'
-import { GlassCard } from 'src/shared/glass-card'
 import { LedgerState } from 'src/shared/ledger-state'
 import { PageControl } from 'src/shared/page-control'
 import { PageHeader } from 'src/shared/page-header'
@@ -18,6 +17,7 @@ import { clientsQueryKey, deleteReceiptMutation, getClientsQuery, getLedgerQuery
 import { ReceiptDetailsDrawer } from 'src/shared/receipt-details-drawer'
 import { SearchField } from 'src/shared/search-field'
 import { StatTile } from 'src/shared/stat-tile'
+import { SurfaceCard } from 'src/shared/surface-card'
 import type { ReceiptWithClient } from 'src/shared/types'
 import { EditReceiptDialog } from './EditReceiptDialog'
 import { LedgerFilterPopover } from './LedgerFilterPopover'
@@ -96,7 +96,7 @@ export const LedgerPage = () => {
         </Grid>
       </Grid>
 
-      <GlassCard>
+      <SurfaceCard>
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.5} sx={{ mb: 2, alignItems: { md: 'center' } }}>
           <FilterButton
             activeCount={view.activeFilterCount}
@@ -160,7 +160,7 @@ export const LedgerPage = () => {
             />
           </>
         )}
-      </GlassCard>
+      </SurfaceCard>
 
       <LedgerFilterPopover
         anchorEl={filterAnchor}

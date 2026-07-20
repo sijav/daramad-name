@@ -1,7 +1,7 @@
 import { createTheme, type Theme } from '@mui/material'
 import vazirFdRegular from 'vazirmatn/misc/Farsi-Digits/fonts/webfonts/Vazirmatn-FD-Regular.woff2?url'
 import vazirFdSemiBold from 'vazirmatn/misc/Farsi-Digits/fonts/webfonts/Vazirmatn-FD-SemiBold.woff2?url'
-import { darkColors, elevation, fontFamily, fontFamilyFarsiDigits, lightColors, radius, spacingUnit, typeScale } from './tokens'
+import { darkColors, fontFamily, fontFamilyFarsiDigits, lightColors, radius, spacingUnit, typeScale } from './tokens'
 
 export type ThemeMode = 'light' | 'dark'
 export type Direction = 'ltr' | 'rtl'
@@ -27,7 +27,10 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
       error: { main: c.error, contrastText: c.onError, light: c.errorContainer, dark: c.onErrorContainer },
       success: { main: c.success, light: c.successContainer },
       warning: { main: c.warning, light: c.warningContainer },
-      background: { default: c.surface, paper: c.glassSurface },
+      // `paper` is the design's opaque `surface-default`, not the translucent
+      // glass fill. Every Paper in the app inherits this, including menus and
+      // dialogs, which must not let content show through them.
+      background: { default: c.surface, paper: c.surfaceDefault },
       text: { primary: c.onSurface, secondary: c.textSecondary },
       divider: c.outlineVariant,
       // Extra MD3 roles with no MUI equivalent. Declared in `muiPalette.d.ts`.
@@ -37,7 +40,6 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
       outlineVariant: c.outlineVariant,
       outline: c.outline,
       glassSurface: c.glassSurface,
-      glassBorder: c.glassBorder,
       brandPrimary: c.brandPrimary,
       brandPrimarySubtle: c.brandPrimarySubtle,
       borderDefault: c.borderDefault,
@@ -83,13 +85,17 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
       },
       MuiPaper: {
         styleOverrides: {
-          // The glass treatment from the record card, applied to every surface.
+          // The design's surface: a flat `surface-default` fill with a 1px
+          // `border-default` hairline. NOT frosted — the earlier glass
+          // treatment (translucent + 16px backdrop blur) came from a single
+          // record card in an older revision, and applying it here put a blur
+          // behind every menu, dialog and select popover in the app.
           root: {
             backgroundImage: 'none',
-            backdropFilter: elevation.glassBlur,
-            border: `1px solid ${c.glassBorder}`,
+            border: `1px solid ${c.borderDefault}`,
           },
-          rounded: { borderRadius: radius.xxl },
+          // `--radius-xl`, the radius the design's content `Card` uses.
+          rounded: { borderRadius: radius.xl },
         },
       },
       MuiOutlinedInput: {

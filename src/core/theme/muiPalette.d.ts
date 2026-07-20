@@ -16,7 +16,6 @@ declare module '@mui/material/styles' {
     outlineVariant: string
     outline: string
     glassSurface: string
-    glassBorder: string
     brandPrimary: string
     brandPrimarySubtle: string
     borderDefault: string
@@ -31,7 +30,6 @@ declare module '@mui/material/styles' {
     outlineVariant?: string
     outline?: string
     glassSurface?: string
-    glassBorder?: string
     brandPrimary?: string
     brandPrimarySubtle?: string
     borderDefault?: string

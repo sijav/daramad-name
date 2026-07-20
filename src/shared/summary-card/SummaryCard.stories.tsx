@@ -1,4 +1,5 @@
 import { useLingui } from '@lingui/react/macro'
+import PaymentsRoundedIcon from '@mui/icons-material/PaymentsRounded'
 import { Grid } from '@mui/material'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useFormat } from 'src/shared/format'
@@ -10,7 +11,7 @@ type Story = StoryObj<typeof meta>
 
 const One = ({ emphasis }: { emphasis?: boolean }) => {
   const { t } = useLingui()
-  return <SummaryCard label={t`Total income`} value={649980000} emphasis={emphasis} />
+  return <SummaryCard label={t`Total income`} value={649980000} icon={<PaymentsRoundedIcon />} emphasis={emphasis} />
 }
 
 const Row = () => {
@@ -19,7 +20,7 @@ const Row = () => {
   return (
     <Grid container spacing={2} sx={{ maxWidth: 1112 }}>
       <Grid size={3}>
-        <SummaryCard label={t`Total income`} value={649980000} emphasis />
+        <SummaryCard label={t`Total income`} value={649980000} icon={<PaymentsRoundedIcon />} emphasis />
       </Grid>
       <Grid size={3}>
         <SummaryCard label={t`Monthly average`} value={54165000} />

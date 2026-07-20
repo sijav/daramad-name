@@ -1,6 +1,10 @@
 import { Trans, useLingui } from '@lingui/react/macro'
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded'
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded'
+import EventAvailableRoundedIcon from '@mui/icons-material/EventAvailableRounded'
+import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded'
+import PaymentsRoundedIcon from '@mui/icons-material/PaymentsRounded'
+import ShowChartRoundedIcon from '@mui/icons-material/ShowChartRounded'
 import { Box, Button, CircularProgress, Grid, MenuItem, Stack, TextField, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
@@ -10,7 +14,6 @@ import { ClientShareChart, MonthlyIncomeChart } from 'src/pages/charts'
 import { ChartCard } from 'src/shared/chart-card'
 import { EmptyState } from 'src/shared/empty-state'
 import { useFormat } from 'src/shared/format'
-import { GlassCard } from 'src/shared/glass-card'
 import { InsightCallout } from 'src/shared/insight-callout'
 import { PageHeader } from 'src/shared/page-header'
 import {
@@ -24,6 +27,7 @@ import {
   getPopulatedYearsQueryKey,
 } from 'src/shared/queries'
 import { SummaryCard } from 'src/shared/summary-card'
+import { SurfaceCard } from 'src/shared/surface-card'
 import { Tag } from 'src/shared/tag'
 import { TopCustomers } from 'src/shared/top-customers'
 import { yearOf, yearRange } from 'src/shared/utils'
@@ -82,7 +86,7 @@ export const DashboardPage = () => {
           <CircularProgress />
         </Box>
       ) : !hasData ? (
-        <GlassCard>
+        <SurfaceCard>
           <EmptyState
             icon={<DescriptionRoundedIcon />}
             title={t`No income recorded for this year yet`}
@@ -90,21 +94,21 @@ export const DashboardPage = () => {
             actionLabel={t`Record a receipt`}
             onAction={() => navigate('/quick-entry')}
           />
-        </GlassCard>
+        </SurfaceCard>
       ) : (
         <Stack spacing={3}>
           <Grid container spacing={2}>
             <Grid size={{ xs: 6, md: 3 }}>
-              <SummaryCard label={t`Total income`} value={yearTotal} emphasis />
+              <SummaryCard label={t`Total income`} value={yearTotal} icon={<PaymentsRoundedIcon />} emphasis />
             </Grid>
             <Grid size={{ xs: 6, md: 3 }}>
-              <SummaryCard label={t`Monthly average`} value={Math.round(yearTotal / 12)} />
+              <SummaryCard label={t`Monthly average`} value={Math.round(yearTotal / 12)} icon={<ShowChartRoundedIcon />} />
             </Grid>
             <Grid size={{ xs: 6, md: 3 }}>
-              <SummaryCard label={t`Months with income`} value={t`${digits(activeMonths)} of 12`} />
+              <SummaryCard label={t`Months with income`} value={t`${digits(activeMonths)} of 12`} icon={<EventAvailableRoundedIcon />} />
             </Grid>
             <Grid size={{ xs: 6, md: 3 }}>
-              <SummaryCard label={t`Clients`} value={digits(clientCount)} />
+              <SummaryCard label={t`Clients`} value={digits(clientCount)} icon={<GroupsRoundedIcon />} />
             </Grid>
           </Grid>
 
@@ -129,17 +133,17 @@ export const DashboardPage = () => {
 
           <Grid container spacing={3}>
             <Grid size={{ xs: 12, lg: 7 }}>
-              <GlassCard sx={{ height: '100%' }}>
-                <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                  <Typography variant="h3">
-                    <Trans>Latest receipts</Trans>
-                  </Typography>
+              <ChartCard
+                variant="content"
+                title={t`Latest receipts`}
+                action={
                   <Button size="small" variant="outlined" onClick={() => navigate('/ledger')}>
                     <Trans>Open ledger</Trans>
                   </Button>
-                </Stack>
+                }
+              >
                 <RecentReceipts receipts={(ledger?.receipts ?? []).slice(0, 6)} calendar={calendar} />
-              </GlassCard>
+              </ChartCard>
             </Grid>
 
             <Grid size={{ xs: 12, lg: 5 }}>
@@ -148,18 +152,17 @@ export const DashboardPage = () => {
                   <TopCustomers shares={shareData?.shares ?? []} othersLabel={t`Others`} />
                 </ChartCard>
 
-                <GlassCard sx={{ textAlign: 'center' }}>
-                  <DescriptionRoundedIcon sx={{ fontSize: 28, color: 'primary.main' }} />
-                  <Typography variant="h3" sx={{ mt: 1, mb: 1 }}>
-                    <Trans>An income report ready to present</Trans>
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                    <Trans>Produce an official income document for any range, in Persian or English.</Trans>
-                  </Typography>
-                  <Button variant="contained" onClick={() => navigate('/report')}>
-                    <Trans>Create report</Trans>
-                  </Button>
-                </GlassCard>
+                <ChartCard variant="content" title={t`An income report ready to present`} sx={{ textAlign: 'center' }}>
+                  <Stack spacing={2} sx={{ alignItems: 'center' }}>
+                    <DescriptionRoundedIcon sx={{ fontSize: 28, color: 'primary.main' }} />
+                    <Typography variant="body2" color="text.secondary">
+                      <Trans>Produce an official income document for any range, in Persian or English.</Trans>
+                    </Typography>
+                    <Button variant="contained" onClick={() => navigate('/report')}>
+                      <Trans>Create report</Trans>
+                    </Button>
+                  </Stack>
+                </ChartCard>
               </Stack>
             </Grid>
           </Grid>

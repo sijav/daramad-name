@@ -10,7 +10,7 @@ type Story = StoryObj<typeof meta>
 /**
  * The surface the design uses for charts: 16px radius, solid `surface-default`,
  * a 1px `border-default` hairline — deliberately NOT the 28px frosted
- * `GlassCard`. A blurred translucent backdrop behind a data visualisation costs
+ * `SurfaceCard`. A blurred translucent backdrop behind a data visualisation costs
  * contrast exactly where it matters most.
  */
 const View = ({ subtitle }: { subtitle?: boolean }) => {

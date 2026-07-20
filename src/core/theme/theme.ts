@@ -161,7 +161,12 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
           notchedOutline: {
             borderColor: c.borderDefault,
             // The label sits ABOVE the box in this design, so the outline has
-            // no notch to cut for it.
+            // no notch to cut for it. MUI raises the outline 5px and insets it
+            // 8px to make room for that notch; with the legend gone both are
+            // pure overhang, and the raise showed as a white sliver along the
+            // top edge of every field.
+            top: 0,
+            paddingInline: 0,
             '& legend': { display: 'none' },
           },
         },

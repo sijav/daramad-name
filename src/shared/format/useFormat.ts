@@ -1,7 +1,7 @@
 import { useLingui } from '@lingui/react/macro'
 import { useSettings } from 'src/core/query'
 import type { Currency } from 'src/shared/types'
-import { formatAmount, formatDate, formatDateLong, formatNumber, toPersianDigits } from 'src/shared/utils'
+import { formatAmount, formatDate, formatDateLong, formatDateRangeLong, formatNumber, toPersianDigits } from 'src/shared/utils'
 
 /**
  * Locale-aware number and date rendering.
@@ -14,7 +14,7 @@ import { formatAmount, formatDate, formatDateLong, formatNumber, toPersianDigits
  */
 export const useFormat = () => {
   const { locale, calendar } = useSettings()
-  const { i18n } = useLingui()
+  const { t, i18n } = useLingui()
   const persian = locale === 'fa-IR'
 
   return {
@@ -25,5 +25,7 @@ export const useFormat = () => {
     amount: (value: number, currency: Currency) => formatAmount(value, currency, locale),
     date: (iso: string) => formatDate(iso, calendar, persian),
     dateLong: (iso: string) => formatDateLong(iso, calendar, i18n, persian),
+    /** A range with the shared year (and month) written only once. */
+    dateRange: (fromIso: string, toIso: string) => formatDateRangeLong(fromIso, toIso, calendar, i18n, t`to`, persian),
   }
 }

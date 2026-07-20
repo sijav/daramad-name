@@ -36,7 +36,7 @@ import { useLedgerView } from './useLedgerView'
 export const LedgerPage = () => {
   const { t, i18n } = useLingui()
   const navigate = useNavigate()
-  const { digits, dateLong } = useFormat()
+  const { dateRange, digits } = useFormat()
   const view = useLedgerView()
 
   const [filterAnchor, setFilterAnchor] = useState<HTMLElement | null>(null)
@@ -113,7 +113,7 @@ export const LedgerPage = () => {
           {view.filter.range ? (
             <FilterChip
               field={t`Range`}
-              value={`${dateLong(view.filter.range.from)} – ${dateLong(view.filter.range.to)}`}
+              value={dateRange(view.filter.range.from, view.filter.range.to)}
               onDelete={() => view.setFilter({ ...view.filter, range: undefined })}
             />
           ) : null}

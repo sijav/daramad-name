@@ -144,3 +144,38 @@ export const dayRange = (at: Date): DateRange => ({
   from: startOfDay(at).toISOString(),
   to: endOfDay(at).toISOString(),
 })
+
+/**
+ * «۱ فروردین تا ۲۹ اسفند ۱۴۰۵» — a range with the repeated parts dropped.
+ *
+ * The design prints the year once when both ends share it, and drops the month
+ * from the opening date when they share that too. Writing «۱۴۰۵» twice in one
+ * line is noise: the reader only needs telling when the range actually crosses
+ * a boundary, and seeing it repeat invites a second look to check they are not
+ * different years.
+ */
+export const formatDateRangeLong = (
+  fromIso: string,
+  toIso: string,
+  calendar: CalendarSystem,
+  i18n: I18n,
+  separator: string,
+  persianDigits = true,
+): string => {
+  const from = new Date(fromIso)
+  const to = new Date(toIso)
+  const digits = (value: string | number) => (persianDigits ? toPersianDigits(value) : String(value))
+  const dayOf = (date: Date) => digits(calendar === 'JALALI' ? formatJalali(date, 'd') : formatGregorian(date, 'd'))
+
+  const names = monthNames(calendar, i18n)
+  const sameYear = yearOf(from, calendar) === yearOf(to, calendar)
+  const sameMonth = sameYear && monthIndexOf(from, calendar) === monthIndexOf(to, calendar)
+
+  const tail = formatDateLong(toIso, calendar, i18n, persianDigits)
+  if (!sameYear) {
+    return `${formatDateLong(fromIso, calendar, i18n, persianDigits)} ${separator} ${tail}`
+  }
+
+  const head = sameMonth ? dayOf(from) : `${dayOf(from)} ${names[monthIndexOf(from, calendar)]}`
+  return `${head} ${separator} ${tail}`
+}

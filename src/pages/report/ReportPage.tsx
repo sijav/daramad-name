@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { loadReportI18n } from 'src/core/i18n'
 import { useSettings } from 'src/core/query'
+import { radius } from 'src/core/theme'
 import { CURRENCY_LABELS } from 'src/shared/constants'
 import { EmptyState } from 'src/shared/empty-state'
 import { useFormat } from 'src/shared/format'
@@ -22,7 +23,7 @@ import { DocumentRow } from './DocumentRow'
 /** Scenario 3: a presentable income certificate, in Persian or English. */
 export const ReportPage = () => {
   const { t, i18n } = useLingui()
-  const { digits, number, dateLong } = useFormat()
+  const { dateLong, dateRange, digits, number } = useFormat()
   const { calendar, profile } = useSettings()
   const [year, setYear] = useState(() => yearOf(new Date(), calendar))
   const [language, setLanguage] = useState<ReportLanguage>('fa')
@@ -96,7 +97,7 @@ export const ReportPage = () => {
 
               <Stack spacing={1.5} sx={{ mb: 3 }}>
                 <DocumentRow label={t`Name`} value={profile.fullName.trim() || '—'} />
-                <DocumentRow label={t`Range`} value={`${dateLong(range.from)} – ${dateLong(range.to)}`} />
+                <DocumentRow label={t`Range`} value={dateRange(range.from, range.to)} />
                 <DocumentRow label={t`Issued on`} value={dateLong(new Date().toISOString())} />
               </Stack>
 
@@ -152,10 +153,25 @@ export const ReportPage = () => {
                 <Typography variant="caption" color="text.secondary">
                   <Trans>Range</Trans>
                 </Typography>
-                <TextField select size="small" value={year} onChange={(event) => setYear(Number(event.target.value))} fullWidth>
+                <TextField
+                  select
+                  value={year}
+                  onChange={(event) => setYear(Number(event.target.value))}
+                  fullWidth
+                  sx={(theme) => ({
+                    '& .MuiOutlinedInput-root': {
+                      height: 44,
+                      borderRadius: `${radius.sm + 2}px`,
+                      backgroundColor: theme.palette.surfaceSubtle,
+                      fontSize: 13,
+                      '& fieldset': { borderColor: theme.palette.borderDefault },
+                    },
+                    '& .MuiSelect-select': { paddingBlock: 0, paddingInlineStart: '14px' },
+                  })}
+                >
                   {years.map((option) => (
                     <MenuItem key={option} value={option}>
-                      {digits(option)}
+                      {t`year ${digits(option)}`}
                     </MenuItem>
                   ))}
                 </TextField>

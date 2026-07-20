@@ -1080,6 +1080,7 @@ msgstr "Three-month contract"
 msgid "Tir"
 msgstr "Tir"
 
+#: src/shared/format/useFormat.ts
 #: src/shared/pdf/buildIncomeReport.ts
 msgid "to"
 msgstr "to"
@@ -1180,7 +1181,9 @@ msgstr "Wire transfer"
 #~ msgid "Year"
 #~ msgstr "Year"
 
+#. placeholder {0}: digits(option)
 #. placeholder {0}: formatYear(option)
+#: src/pages/report/ReportPage.tsx
 #: src/shared/page-actions/PageActions.tsx
 msgid "year {0}"
 msgstr "year {0}"

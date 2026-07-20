@@ -1080,6 +1080,7 @@ msgstr "قرارداد سه‌ماهه"
 msgid "Tir"
 msgstr "تیر"
 
+#: src/shared/format/useFormat.ts
 #: src/shared/pdf/buildIncomeReport.ts
 msgid "to"
 msgstr "تا"
@@ -1180,7 +1181,9 @@ msgstr "حواله"
 #~ msgid "Year"
 #~ msgstr "سال"
 
+#. placeholder {0}: digits(option)
 #. placeholder {0}: formatYear(option)
+#: src/pages/report/ReportPage.tsx
 #: src/shared/page-actions/PageActions.tsx
 msgid "year {0}"
 msgstr "سال {0}"

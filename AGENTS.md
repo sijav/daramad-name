@@ -231,6 +231,14 @@ child `x` coordinates from `get_metadata` and order the JSX accordingly — do n
 eyeball it from the screenshot. This caught four separate rows: the dashboard's
 two content rows, the charts row, and both summary-card strips.
 
+### Date ranges collapse
+
+A range writes its shared parts once: same year prints the year only on the
+closing date, and same month drops the month from the opening one too —
+«۱ فروردین تا ۲۹ اسفند ۱۴۰۵», «۱ تا ۲۹ اسفند ۱۴۰۵». Only a range that actually
+crosses a boundary spells both ends out. Use `useFormat().dateRange`, never two
+`dateLong` calls with a dash between them.
+
 ### Two blues
 
 `--brand-primary` (#3460d6) is for filled buttons, bars and links.

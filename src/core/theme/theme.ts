@@ -228,6 +228,12 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
             '&:first-of-type': { paddingInlineStart: '20px' },
             '&:last-of-type': { paddingInlineEnd: '20px' },
           },
+          // `align="right"` emits `text-align: right`, which the stylis RTL
+          // plugin mirrors — putting figures on the LEFT in Persian. A column
+          // of numbers reads right-aligned in either direction, so this
+          // counter-flips: authoring `left` in RTL makes the plugin emit
+          // `right`.
+          alignRight: { textAlign: direction === 'rtl' ? 'left' : 'right' },
           head: {
             ...typeScale.labelLarge,
             color: c.textSecondary,

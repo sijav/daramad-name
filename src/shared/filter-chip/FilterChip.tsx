@@ -1,3 +1,4 @@
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import { Chip, type ChipProps } from '@mui/material'
 import { radius } from 'src/core/theme'
 
@@ -18,6 +19,8 @@ export interface FilterChipProps extends Omit<ChipProps, 'variant' | 'color'> {
 export const FilterChip = ({ field, value, sx, ...props }: FilterChipProps) => (
   <Chip
     label={`${field}: ${value}`}
+    // `277:46` is a bare ✕; MUI defaults to a filled cancel disc.
+    deleteIcon={<CloseRoundedIcon />}
     sx={[
       (theme) => ({
         // `277:45`: a tinted 32px chip at radius 16 with a hairline — not the

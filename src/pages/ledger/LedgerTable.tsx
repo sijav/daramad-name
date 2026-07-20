@@ -13,6 +13,8 @@ export interface LedgerTableProps {
   sort: LedgerSort
   /** Retained for stories that pin a calendar; dates format from settings. */
   calendar?: CalendarSystem
+  /** Drives the total row's wording — "filtered" is a lie when nothing is. */
+  filtered?: boolean
   onSortChange: (sort: LedgerSort) => void
   onView: (receipt: ReceiptWithClient) => void
   onEdit: (receipt: ReceiptWithClient) => void
@@ -26,7 +28,7 @@ export interface LedgerTableProps {
  * cannot scroll out of sync with the rows it sums — the brief requires the
  * total to stay visible and to track the active filter.
  */
-export const LedgerTable = ({ receipts, summary, sort, onSortChange, onView, onEdit, onDelete }: LedgerTableProps) => {
+export const LedgerTable = ({ receipts, summary, sort, filtered = false, onSortChange, onView, onEdit, onDelete }: LedgerTableProps) => {
   const { t, i18n } = useLingui()
   const { digits, dateLong } = useFormat()
 
@@ -35,12 +37,12 @@ export const LedgerTable = ({ receipts, summary, sort, onSortChange, onView, onE
   // squeezing the client column into a two-line wrap.
   // Widths, alignment and sortability all come from `267:984`. Everything is
   // start-aligned except the channel tag and the row actions, which centre.
-  const columns: { field: LedgerSortField | null; label: string; align: 'start' | 'center'; width?: number | string }[] = [
+  const columns: { field: LedgerSortField | null; label: string; align: 'start' | 'center' | 'right'; width?: number | string }[] = [
     { field: 'occurredAt', label: t`Date`, align: 'start', width: 130 },
-    { field: 'client', label: t`Client`, align: 'start' },
+    { field: 'client', label: t`Client / project`, align: 'start' },
     { field: null, label: t`Channel`, align: 'center', width: 140 },
-    { field: 'amountOriginal', label: t`Original amount`, align: 'start', width: 160 },
-    { field: 'amountToman', label: t`Toman equivalent`, align: 'start', width: 190 },
+    { field: 'amountOriginal', label: t`Original amount`, align: 'right', width: 160 },
+    { field: 'amountToman', label: t`Toman equivalent`, align: 'right', width: 190 },
     { field: null, label: t`Actions`, align: 'center', width: 64 },
   ]
 
@@ -56,7 +58,7 @@ export const LedgerTable = ({ receipts, summary, sort, onSortChange, onView, onE
         <TableHead>
           <TableRow>
             {columns.map((column, index) => (
-              <TableCell key={index} align={column.align === 'center' ? 'center' : undefined} sx={{ width: column.width }}>
+              <TableCell key={index} align={column.align === 'start' ? undefined : column.align} sx={{ width: column.width }}>
                 {column.field ? (
                   <TableSortLabel
                     active={sort.field === column.field}
@@ -87,11 +89,11 @@ export const LedgerTable = ({ receipts, summary, sort, onSortChange, onView, onE
               {/* The design greys the original amount and keeps the Toman
                   equivalent in the primary tone — the Toman figure is the one
                   the row is about. */}
-              <TableCell sx={{ whiteSpace: 'nowrap', color: 'text.secondary' }}>
+              <TableCell align="right" sx={{ whiteSpace: 'nowrap', color: 'text.secondary' }}>
                 <MoneyText value={receipt.amountOriginal} currency={receipt.currency} showUnit />
               </TableCell>
 
-              <TableCell sx={{ whiteSpace: 'nowrap' }}>
+              <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
                 <MoneyText value={receipt.amountToman} sx={{ fontWeight: 600, lineHeight: '24px' }} />
               </TableCell>
 
@@ -113,9 +115,11 @@ export const LedgerTable = ({ receipts, summary, sort, onSortChange, onView, onE
             })}
           >
             <TableCell colSpan={4}>
-              <Typography variant="subtitle2">{t`Total of ${digits(receipts.length)} filtered receipts`}</Typography>
+              <Typography variant="subtitle2">
+                {filtered ? t`Total of ${digits(receipts.length)} filtered receipts` : t`Total of ${digits(receipts.length)} receipts`}
+              </Typography>
             </TableCell>
-            <TableCell>
+            <TableCell align="right">
               <MoneyText value={summary.totalToman} variant="subtitle2" sx={{ color: 'brandPrimary' }} />
             </TableCell>
             <TableCell />

@@ -166,6 +166,7 @@ export const LedgerPage = () => {
               receipts={paged.rows}
               summary={data?.summary ?? { totalToman: 0, receiptCount: 0, monthlyAverageToman: 0 }}
               sort={view.sort}
+              filtered={isFiltered}
               calendar={view.calendar}
               onSortChange={view.setSort}
               onView={setViewing}

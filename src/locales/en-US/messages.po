@@ -81,6 +81,11 @@ msgstr "{0}% of your income comes from a single client."
 msgid "{count} sample receipts added."
 msgstr "{count} sample receipts added."
 
+#. placeholder {0}: number(month.totalToman)
+#: src/pages/charts/MonthlyIncomeChart.tsx
+msgid "{label}: {0} {toman}"
+msgstr "{label}: {0} {toman}"
+
 #: src/shared/error-state/AppErrorFallback.tsx
 msgid "A"
 msgstr "A"
@@ -341,10 +346,10 @@ msgstr "Clear search"
 
 #: src/pages/ledger/LedgerFilterPopover.tsx
 #: src/pages/ledger/LedgerPage.tsx
-#: src/pages/ledger/LedgerTable.tsx
 msgid "Client"
 msgstr "Client"
 
+#: src/pages/ledger/LedgerTable.tsx
 #: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
 #: src/shared/receipt-form/ReceiptForm.tsx
 msgid "Client / project"
@@ -763,8 +768,8 @@ msgid "Monthly average"
 msgstr "Monthly average"
 
 #: src/pages/charts/MonthlyIncomeChart.tsx
-msgid "Monthly income"
-msgstr "Monthly income"
+#~ msgid "Monthly income"
+#~ msgstr "Monthly income"
 
 #: src/pages/dashboard/DashboardPage.tsx
 #~ msgid "Months with income"
@@ -1299,6 +1304,11 @@ msgstr "Total income"
 #: src/pages/ledger/LedgerTable.tsx
 msgid "Total of {0} filtered receipts"
 msgstr "Total of {0} filtered receipts"
+
+#. placeholder {0}: digits(receipts.length)
+#: src/pages/ledger/LedgerTable.tsx
+msgid "Total of {0} receipts"
+msgstr "Total of {0} receipts"
 
 #: src/shared/error-state/AppErrorFallback.tsx
 #: src/shared/ledger-state/LedgerState.tsx

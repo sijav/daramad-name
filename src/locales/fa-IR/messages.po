@@ -81,6 +81,11 @@ msgstr "{0}٪ از درآمد شما از یک مشتری تأمین شده اس
 msgid "{count} sample receipts added."
 msgstr "{count} دریافتی نمونه اضافه شد."
 
+#. placeholder {0}: number(month.totalToman)
+#: src/pages/charts/MonthlyIncomeChart.tsx
+msgid "{label}: {0} {toman}"
+msgstr "{label}: {0} {toman}"
+
 #: src/shared/error-state/AppErrorFallback.tsx
 msgid "A"
 msgstr "الف"
@@ -341,10 +346,10 @@ msgstr "پاک کردن جست‌وجو"
 
 #: src/pages/ledger/LedgerFilterPopover.tsx
 #: src/pages/ledger/LedgerPage.tsx
-#: src/pages/ledger/LedgerTable.tsx
 msgid "Client"
 msgstr "مشتری"
 
+#: src/pages/ledger/LedgerTable.tsx
 #: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
 #: src/shared/receipt-form/ReceiptForm.tsx
 msgid "Client / project"
@@ -763,8 +768,8 @@ msgid "Monthly average"
 msgstr "میانگین ماهانه"
 
 #: src/pages/charts/MonthlyIncomeChart.tsx
-msgid "Monthly income"
-msgstr "درآمد ماهانه"
+#~ msgid "Monthly income"
+#~ msgstr "درآمد ماهانه"
 
 #: src/pages/dashboard/DashboardPage.tsx
 #~ msgid "Months with income"
@@ -1299,6 +1304,11 @@ msgstr "جمع کل درآمد"
 #: src/pages/ledger/LedgerTable.tsx
 msgid "Total of {0} filtered receipts"
 msgstr "جمع کل {0} دریافتی فیلترشده"
+
+#. placeholder {0}: digits(receipts.length)
+#: src/pages/ledger/LedgerTable.tsx
+msgid "Total of {0} receipts"
+msgstr "جمع کل {0} دریافتی"
 
 #: src/shared/error-state/AppErrorFallback.tsx
 #: src/shared/ledger-state/LedgerState.tsx

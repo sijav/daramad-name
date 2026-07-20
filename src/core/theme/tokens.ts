@@ -191,6 +191,8 @@ export const typeScale = {
   /** FA/Body/Small — legend labels. */
   bodySmall: { fontSize: 13, fontWeight: 400, lineHeight: 22 / 13 },
   labelLarge: { fontSize: 14, fontWeight: 600, lineHeight: 22 / 14 },
+  /** FA/Number/Table — the figure a ledger row is actually about. */
+  numberTable: { fontSize: 14, fontWeight: 600, lineHeight: 24 / 14 },
   bodyLarge: { fontSize: 16, fontWeight: 400, lineHeight: 26 / 16 },
   bodyMedium: { fontSize: 14, fontWeight: 400, lineHeight: 24 / 14 },
   caption: { fontSize: 12, fontWeight: 400, lineHeight: 20 / 12 },

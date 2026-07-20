@@ -85,6 +85,10 @@ msgstr "{count} sample receipts added."
 msgid "A document you can hand to an embassy, a landlord or an accountant"
 msgstr "A document you can hand to an embassy, a landlord or an accountant"
 
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "A JSON file of every receipt. Do this before erasing anything."
+msgstr "A JSON file of every receipt. Do this before erasing anything."
+
 #: src/shared/receipt-form/useReceiptForm.ts
 msgid "A non-Toman currency needs an exchange rate."
 msgstr "A non-Toman currency needs an exchange rate."
@@ -203,8 +207,8 @@ msgstr "Back up data"
 #~ msgstr "Backup and restore"
 
 #: src/shared/error-state/AppErrorFallback.tsx
-msgid "Backup downloaded"
-msgstr "Backup downloaded"
+#~ msgid "Backup downloaded"
+#~ msgstr "Backup downloaded"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Backup file downloaded."
@@ -395,6 +399,10 @@ msgstr "Display"
 #~ msgstr "Document preview"
 
 #: src/shared/error-state/AppErrorFallback.tsx
+msgid "Download"
+msgstr "Download"
+
+#: src/shared/error-state/AppErrorFallback.tsx
 msgid "Download a backup"
 msgstr "Download a backup"
 
@@ -409,6 +417,10 @@ msgstr "Download backup"
 #: src/pages/report/ReportPage.tsx
 msgid "Download PDF"
 msgstr "Download PDF"
+
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Downloaded"
+msgstr "Downloaded"
 
 #: src/shared/receipt-form/ReceiptForm.tsx
 msgid "e.g. deposit for design phase one"
@@ -450,13 +462,21 @@ msgid "Erase all data"
 msgstr "Erase all data"
 
 #: src/shared/error-state/AppErrorFallback.tsx
-msgid "Erase data and restart"
-msgstr "Erase data and restart"
+msgid "Erase and restart"
+msgstr "Erase and restart"
+
+#: src/shared/error-state/AppErrorFallback.tsx
+#~ msgid "Erase data and restart"
+#~ msgstr "Erase data and restart"
 
 #: src/pages/settings/SettingsPage.tsx
 #: src/shared/error-state/AppErrorFallback.tsx
 msgid "Erase everything"
 msgstr "Erase everything"
+
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Erase everything and restart"
+msgstr "Erase everything and restart"
 
 #: src/shared/constants/labels.ts
 msgid "Esfand"
@@ -471,8 +491,12 @@ msgstr "Every date and monthly total is shown in this calendar. Your data itself
 #~ msgstr "Every receipt you have, with an exact total"
 
 #: src/shared/error-state/AppErrorFallback.tsx
-msgid "Every receipt, client and personal detail is erased permanently, then the page reloads. Download a backup first — without one there is no way back."
-msgstr "Every receipt, client and personal detail is erased permanently, then the page reloads. Download a backup first — without one there is no way back."
+#~ msgid "Every receipt, client and personal detail is erased permanently, then the page reloads. Download a backup first — without one there is no way back."
+#~ msgstr "Every receipt, client and personal detail is erased permanently, then the page reloads. Download a backup first — without one there is no way back."
+
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Every receipt, client and personal detail is erased permanently, then the page reloads. Without a backup there is no way back."
+msgstr "Every receipt, client and personal detail is erased permanently, then the page reloads. Without a backup there is no way back."
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Every receipt, client and personal detail is erased permanently. Without a backup there is no way back."
@@ -617,6 +641,10 @@ msgstr "Language"
 msgid "Last receipt"
 msgstr "Last receipt"
 
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Last resort, and only once you have the backup above."
+msgstr "Last resort, and only once you have the backup above."
+
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Latest receipts"
 msgstr "Latest receipts"
@@ -722,6 +750,10 @@ msgstr "Note"
 #: src/shared/receipt-form/ReceiptForm.tsx
 msgid "Note (optional)"
 msgstr "Note (optional)"
+
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Nothing is changed or reloaded."
+msgstr "Nothing is changed or reloaded."
 
 #: src/shared/ledger-state/LedgerState.tsx
 msgid "Nothing matched these filters"
@@ -903,6 +935,10 @@ msgid "Record your first receipt"
 msgstr "Record your first receipt"
 
 #: src/shared/error-state/AppErrorFallback.tsx
+msgid "Reload"
+msgstr "Reload"
+
+#: src/shared/error-state/AppErrorFallback.tsx
 msgid "Reload the page"
 msgstr "Reload the page"
 
@@ -1014,6 +1050,10 @@ msgstr "Small illustration project"
 #: src/shared/error-state/AppErrorFallback.tsx
 msgid "Something went wrong"
 msgstr "Something went wrong"
+
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Starts the app fresh. Your data stays where it is."
+msgstr "Starts the app fresh. Your data stays where it is."
 
 #: src/shared/pdf/buildIncomeReport.ts
 msgid "Statement of Income"
@@ -1184,6 +1224,10 @@ msgstr "Total of {0} filtered receipts"
 msgid "Try again"
 msgstr "Try again"
 
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Try rendering the page again"
+msgstr "Try rendering the page again"
+
 #: src/shared/confirm-dialog/ConfirmDialog.tsx
 msgid "Type “{confirmationWord}” to confirm"
 msgstr "Type “{confirmationWord}” to confirm"
@@ -1249,12 +1293,16 @@ msgid "Your current data is replaced entirely by the contents of this file. If y
 msgstr "Your current data is replaced entirely by the contents of this file. If you have receipts recorded now, back them up first."
 
 #: src/shared/error-state/AppErrorFallback.tsx
-msgid "Your data is safe and has not been erased — this error only affects rendering. Try again first. If it keeps happening, download a backup here, and only then erase and start fresh."
-msgstr "Your data is safe and has not been erased — this error only affects rendering. Try again first. If it keeps happening, download a backup here, and only then erase and start fresh."
+#~ msgid "Your data is safe and has not been erased — this error only affects rendering. Try again first. If it keeps happening, download a backup here, and only then erase and start fresh."
+#~ msgstr "Your data is safe and has not been erased — this error only affects rendering. Try again first. If it keeps happening, download a backup here, and only then erase and start fresh."
 
 #: src/shared/error-state/AppErrorFallback.tsx
 #~ msgid "Your data is safe and has not been erased — this error only affects rendering. Try again; if it keeps happening, take a backup from Settings, then close and reopen the page."
 #~ msgstr "Your data is safe and has not been erased — this error only affects rendering. Try again; if it keeps happening, take a backup from Settings, then close and reopen the page."
+
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Your data is safe and has not been erased — this error only affects what is on screen."
+msgstr "Your data is safe and has not been erased — this error only affects what is on screen."
 
 #: src/shared/ledger-state/LedgerState.tsx
 msgid "Your data is safe and has not been erased. Try again."

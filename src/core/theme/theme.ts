@@ -140,7 +140,15 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
           // The design's Field box is 52px. MUI's default vertical padding
           // pushed it to 56, so the padding is set rather than just a minHeight.
           root: { borderRadius: radius.md, backgroundColor: c.surfaceContainerHigh, height: 52 },
-          input: { paddingBlock: '0px', height: '100%', boxSizing: 'border-box' },
+          input: {
+            paddingBlock: '0px',
+            height: '100%',
+            boxSizing: 'border-box',
+            // Attached to the input slot, NOT written as a descendant rule in
+            // an `sx`: `& .MuiInputBase-input::placeholder` crashes stylis'
+            // prefixer, and the boundary swallows it.
+            '&::placeholder': { color: c.textSecondary, opacity: 1 },
+          },
           notchedOutline: { borderColor: c.outlineVariant },
         },
       },
@@ -148,6 +156,39 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
         styleOverrides: {
           // A multiline note has to grow, so it opts out of the fixed 52px.
           multiline: { height: 'auto', minHeight: 52, paddingBlock: '12px' },
+        },
+      },
+      // Tables carry the design's ramp themselves, so a row never needs an
+      // `sx` to look right. `267:1015` is 14/400 lh24 on `text-primary` for
+      // body cells; `267:984` is 14/600 on `text-secondary` over
+      // `surface-subtle` for the head.
+      MuiTableCell: {
+        styleOverrides: {
+          root: {
+            ...typeScale.bodyMedium,
+            color: c.onSurface,
+            borderBottom: `1px solid ${c.borderDefault}`,
+            paddingInline: '10px',
+            paddingBlock: '14px',
+          },
+          head: {
+            ...typeScale.labelLarge,
+            color: c.textSecondary,
+            backgroundColor: c.surfaceSubtle,
+            paddingBlock: '11px',
+          },
+        },
+      },
+      MuiTableSortLabel: {
+        styleOverrides: {
+          root: {
+            gap: 4,
+            color: 'inherit',
+            '&:hover': { color: c.onSurface },
+            '&.Mui-active': { color: c.brandPrimary },
+            '&.Mui-active .MuiTableSortLabel-icon': { color: c.brandPrimary, opacity: 1 },
+          },
+          icon: { fontSize: 16, opacity: 0.5, margin: 0 },
         },
       },
       MuiCssBaseline: {

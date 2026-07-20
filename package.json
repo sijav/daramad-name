@@ -1,6 +1,6 @@
 {
   "name": "daramadname",
-  "description": "درآمدنامه — دفتر دریافتی‌ها و گزارش درآمد قابل ارائه برای فریلنسر ایرانی",
+  "description": "\u062f\u0631\u0622\u0645\u062f\u0646\u0627\u0645\u0647 \u2014 \u062f\u0641\u062a\u0631 \u062f\u0631\u06cc\u0627\u0641\u062a\u06cc\u200c\u0647\u0627 \u0648 \u06af\u0632\u0627\u0631\u0634 \u062f\u0631\u0622\u0645\u062f \u0642\u0627\u0628\u0644 \u0627\u0631\u0627\u0626\u0647 \u0628\u0631\u0627\u06cc \u0641\u0631\u06cc\u0644\u0646\u0633\u0631 \u0627\u06cc\u0631\u0627\u0646\u06cc",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -49,7 +49,7 @@
     "react-dom": "^19.2.7",
     "react-error-boundary": "^6.1.2",
     "react-router-dom": "^7.18.1",
-    "stylis": "^4.4.0",
+    "stylis": "4.2.0",
     "vazirmatn": "^33.0.3"
   },
   "devDependencies": {
@@ -84,5 +84,8 @@
   },
   "engines": {
     "node": ">=22.12.0"
+  },
+  "overrides": {
+    "stylis": "4.2.0"
   }
 }

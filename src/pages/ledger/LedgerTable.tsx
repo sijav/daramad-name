@@ -1,6 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, Typography } from '@mui/material'
-import { CHANNEL_LABELS, CURRENCY_LABELS } from 'src/shared/constants'
+import { CHANNEL_LABELS } from 'src/shared/constants'
 import { useFormat } from 'src/shared/format'
 import { MoneyText } from 'src/shared/money-text'
 import { RowActionsMenu } from 'src/shared/row-actions-menu'
@@ -54,20 +54,7 @@ export const LedgerTable = ({ receipts, summary, sort, onSortChange, onView, onE
     <TableContainer sx={{ overflowX: 'auto' }}>
       <Table stickyHeader size="small" sx={{ minWidth: 900, tableLayout: 'fixed' }}>
         <TableHead>
-          {/* `surface-subtle` band, secondary labels, and the active column in
-              brand blue with a full-opacity chevron. */}
-          <TableRow
-            sx={(theme) => ({
-              '& th': {
-                backgroundColor: theme.palette.surfaceSubtle,
-                borderBottom: `1px solid ${theme.palette.borderDefault}`,
-                color: theme.palette.text.secondary,
-                ...theme.typography.subtitle2,
-                whiteSpace: 'nowrap',
-                paddingBlock: '11px',
-              },
-            })}
-          >
+          <TableRow>
             {columns.map((column, index) => (
               <TableCell key={index} align={column.align === 'center' ? 'center' : undefined} sx={{ width: column.width }}>
                 {column.field ? (
@@ -75,12 +62,6 @@ export const LedgerTable = ({ receipts, summary, sort, onSortChange, onView, onE
                     active={sort.field === column.field}
                     direction={sort.field === column.field ? sort.direction : 'desc'}
                     onClick={() => toggleSort(column.field as LedgerSortField)}
-                    sx={(theme) => ({
-                      gap: 0.5,
-                      '&.Mui-active': { color: theme.palette.brandPrimary },
-                      '&.Mui-active .MuiTableSortLabel-icon': { color: theme.palette.brandPrimary, opacity: 1 },
-                      '& .MuiTableSortLabel-icon': { fontSize: 16, opacity: 0.5, margin: 0 },
-                    })}
                   >
                     {column.label}
                   </TableSortLabel>
@@ -103,15 +84,15 @@ export const LedgerTable = ({ receipts, summary, sort, onSortChange, onView, onE
                 <Tag label={i18n._(CHANNEL_LABELS[receipt.channel])} />
               </TableCell>
 
-              <TableCell sx={{ whiteSpace: 'nowrap' }}>
-                <MoneyText value={receipt.amountOriginal} currency={receipt.currency} showUnit={false} variant="body2" />{' '}
-                <Typography component="span" variant="caption" color="text.secondary">
-                  {i18n._(CURRENCY_LABELS[receipt.currency])}
-                </Typography>
+              {/* The design greys the original amount and keeps the Toman
+                  equivalent in the primary tone — the Toman figure is the one
+                  the row is about. */}
+              <TableCell sx={{ whiteSpace: 'nowrap', color: 'text.secondary' }}>
+                <MoneyText value={receipt.amountOriginal} currency={receipt.currency} showUnit />
               </TableCell>
 
-              <TableCell>
-                <MoneyText value={receipt.amountToman} variant="subtitle2" showUnit={false} />
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                <MoneyText value={receipt.amountToman} sx={{ fontWeight: 600, lineHeight: '24px' }} />
               </TableCell>
 
               <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>

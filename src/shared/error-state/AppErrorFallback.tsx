@@ -5,22 +5,27 @@ import { useState } from 'react'
 import type { FallbackProps } from 'react-error-boundary'
 import { ConfirmDialog } from 'src/shared/confirm-dialog'
 import { clearAllDataMutation, exportBackupMutation } from 'src/shared/queries'
+import { SurfaceCard } from 'src/shared/surface-card'
+import { toPersianDigits } from 'src/shared/utils'
 
 /**
  * Rule 9: no «خطایی رخ داد». Say what happened and what to do about it.
  *
- * The technical message is shown too — this is a tool holding someone's
- * financial history, and hiding the cause of a failure would leave them unable
- * to tell a transient glitch from real data loss.
+ * The recovery steps are laid out in the order they should be tried, each with
+ * its own explanation and its own button, because "take a backup from Settings
+ * and reopen the page" is useless advice when the screen that broke is the one
+ * you are reading it on. Erasing sits last and behind a confirmation.
  */
 export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
-  const { t } = useLingui()
+  const { t, i18n } = useLingui()
+  // Not `useFormat`: that reads settings through React Query, and the boundary
+  // may have been tripped by the provider tree above this screen.
+  const step = (n: number) => (i18n.locale === 'fa-IR' ? toPersianDigits(n) : String(n))
   const [confirmErase, setConfirmErase] = useState(false)
   const [backedUp, setBackedUp] = useState(false)
 
-  // Deliberately called directly rather than through React Query: the error
-  // boundary may have been tripped by the provider tree itself, so this screen
-  // cannot assume any hook context above it still works.
+  // Called directly rather than through React Query: the boundary may have been
+  // tripped by the provider tree itself, so no hook context above can be relied on.
   const backup = async () => {
     await exportBackupMutation()
     setBackedUp(true)
@@ -33,65 +38,120 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
 
   return (
     <Box sx={{ display: 'grid', placeItems: 'center', minHeight: '60vh', p: 3 }}>
-      <Stack spacing={2} sx={{ alignItems: 'center', textAlign: 'center', maxWidth: 460 }}>
-        <ErrorOutlineRoundedIcon sx={{ fontSize: 48, color: 'error.main' }} />
+      <Stack spacing={3} sx={{ alignItems: 'center', textAlign: 'center', maxWidth: 560, width: '100%' }}>
+        <Stack spacing={1.5} sx={{ alignItems: 'center' }}>
+          <ErrorOutlineRoundedIcon sx={{ fontSize: 48, color: 'error.main' }} />
 
-        <Typography variant="h2">
-          <Trans>Something went wrong</Trans>
-        </Typography>
+          <Typography variant="h2">
+            <Trans>Something went wrong</Trans>
+          </Typography>
 
-        <Typography variant="body2" color="text.secondary">
-          <Trans>
-            Your data is safe and has not been erased — this error only affects rendering. Try again first. If it keeps happening, download
-            a backup here, and only then erase and start fresh.
-          </Trans>
-        </Typography>
+          <Typography variant="body2" color="text.secondary">
+            <Trans>Your data is safe and has not been erased — this error only affects what is on screen.</Trans>
+          </Typography>
 
-        <Typography
-          variant="caption"
-          sx={(theme) => ({
-            direction: 'ltr',
-            fontFamily: 'monospace',
-            color: theme.palette.text.secondary,
-            backgroundColor: theme.palette.surfaceContainerHigh,
-            borderRadius: 1,
-            px: 1.5,
-            py: 1,
-            wordBreak: 'break-word',
-          })}
-        >
-          {error instanceof Error ? error.message : String(error)}
-        </Typography>
-
-        {/* Each recovery step is its own button, in the order they should be
-          tried. Telling someone to "back up from Settings" is useless advice
-          when the screen they are on is the one that broke. */}
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ pt: 1, flexWrap: 'wrap', justifyContent: 'center' }}>
-          <Button variant="contained" onClick={resetErrorBoundary}>
-            <Trans>Try again</Trans>
-          </Button>
-          <Button variant="outlined" onClick={() => void backup()}>
-            {backedUp ? t`Backup downloaded` : t`Download a backup`}
-          </Button>
-          <Button variant="outlined" onClick={() => window.location.reload()}>
-            <Trans>Reload the page</Trans>
-          </Button>
-          <Button variant="outlined" color="error" onClick={() => setConfirmErase(true)}>
-            <Trans>Erase data and restart</Trans>
-          </Button>
+          <Typography
+            variant="caption"
+            sx={(theme) => ({
+              direction: 'ltr',
+              fontFamily: 'monospace',
+              color: theme.palette.text.secondary,
+              backgroundColor: theme.palette.surfaceContainerHigh,
+              borderRadius: 1,
+              px: 1.5,
+              py: 1,
+              wordBreak: 'break-word',
+            })}
+          >
+            {error instanceof Error ? error.message : String(error)}
+          </Typography>
         </Stack>
 
-        <ConfirmDialog
-          open={confirmErase}
-          title={t`Erase data and restart`}
-          description={t`Every receipt, client and personal detail is erased permanently, then the page reloads. Download a backup first — without one there is no way back.`}
-          confirmLabel={t`Erase everything`}
-          confirmationWord={t`erase`}
-          destructive
-          onConfirm={() => void eraseAndReload()}
-          onClose={() => setConfirmErase(false)}
-        />
+        <SurfaceCard radius="lg" flat sx={{ width: '100%', p: 0, overflow: 'hidden' }}>
+          <Stack
+            sx={(theme) => ({
+              // Callback at the TOP of `sx` — a function nested as a value is
+              // never resolved.
+              '& > :not(:last-of-type)': { borderBottom: `1px solid ${theme.palette.borderDefault}` },
+            })}
+          >
+            <RecoveryStep step={step(1)} label={t`Try rendering the page again`} description={t`Nothing is changed or reloaded.`}>
+              <Button variant="contained" onClick={resetErrorBoundary}>
+                {t`Try again`}
+              </Button>
+            </RecoveryStep>
+
+            <RecoveryStep step={step(2)} label={t`Reload the page`} description={t`Starts the app fresh. Your data stays where it is.`}>
+              <Button variant="outlined" onClick={() => window.location.reload()}>
+                {t`Reload`}
+              </Button>
+            </RecoveryStep>
+
+            <RecoveryStep
+              step={step(3)}
+              label={t`Download a backup`}
+              description={t`A JSON file of every receipt. Do this before erasing anything.`}
+            >
+              <Button variant="outlined" onClick={() => void backup()}>
+                {backedUp ? t`Downloaded` : t`Download`}
+              </Button>
+            </RecoveryStep>
+
+            <RecoveryStep
+              step={step(4)}
+              label={t`Erase everything and restart`}
+              description={t`Last resort, and only once you have the backup above.`}
+            >
+              <Button variant="outlined" color="error" onClick={() => setConfirmErase(true)}>
+                {t`Erase and restart`}
+              </Button>
+            </RecoveryStep>
+          </Stack>
+        </SurfaceCard>
       </Stack>
+
+      <ConfirmDialog
+        open={confirmErase}
+        title={t`Erase everything and restart`}
+        description={t`Every receipt, client and personal detail is erased permanently, then the page reloads. Without a backup there is no way back.`}
+        confirmLabel={t`Erase everything`}
+        confirmationWord={t`erase`}
+        destructive
+        onConfirm={() => void eraseAndReload()}
+        onClose={() => setConfirmErase(false)}
+      />
     </Box>
   )
 }
+
+interface RecoveryStepProps {
+  step: string
+  label: string
+  description: string
+  children: React.ReactNode
+}
+
+/** One numbered option: explanation on the reading side, its button opposite. */
+const RecoveryStep = ({ step, label, description, children }: RecoveryStepProps) => (
+  <Stack
+    direction={{ xs: 'column', sm: 'row' }}
+    // `spacing` alone leaves no gap once the row wraps to a column, which is
+    // what made the stacked buttons collide.
+    spacing={2}
+    useFlexGap
+    sx={{ alignItems: { xs: 'stretch', sm: 'center' }, justifyContent: 'space-between', px: 2, py: 1.75 }}
+  >
+    <Stack direction="row" spacing={1.5} sx={{ alignItems: 'baseline', minWidth: 0, textAlign: 'start' }}>
+      <Typography variant="subtitle2" color="text.secondary">
+        {step}
+      </Typography>
+      <Stack spacing={0.25} sx={{ minWidth: 0 }}>
+        <Typography variant="subtitle2">{label}</Typography>
+        <Typography variant="caption" color="text.secondary">
+          {description}
+        </Typography>
+      </Stack>
+    </Stack>
+    <Box sx={{ flexShrink: 0 }}>{children}</Box>
+  </Stack>
+)

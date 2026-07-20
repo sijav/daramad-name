@@ -164,7 +164,6 @@ export const ReportPage = () => {
                       borderRadius: `${radius.sm + 2}px`,
                       backgroundColor: theme.palette.surfaceSubtle,
                       fontSize: 13,
-                      '& fieldset': { borderColor: theme.palette.borderDefault },
                     },
                     '& .MuiSelect-select': { paddingBlock: '0px', paddingInlineStart: '14px' },
                   })}

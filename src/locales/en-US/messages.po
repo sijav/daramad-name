@@ -81,6 +81,10 @@ msgstr "{0}% of your income comes from a single client."
 msgid "{count} sample receipts added."
 msgstr "{count} sample receipts added."
 
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "A"
+msgstr "A"
+
 #: src/core/db/validate.ts
 msgid "A client in {where} has no identifier."
 msgstr "A client in {where} has no identifier."
@@ -94,8 +98,8 @@ msgid "A document you can hand to an embassy, a landlord or an accountant"
 msgstr "A document you can hand to an embassy, a landlord or an accountant"
 
 #: src/shared/error-state/AppErrorFallback.tsx
-msgid "A JSON file of every receipt. Do this before erasing anything."
-msgstr "A JSON file of every receipt. Do this before erasing anything."
+#~ msgid "A JSON file of every receipt. Do this before erasing anything."
+#~ msgstr "A JSON file of every receipt. Do this before erasing anything."
 
 #: src/shared/receipt-form/useReceiptForm.ts
 msgid "A non-Toman currency needs an exchange rate."
@@ -233,6 +237,10 @@ msgstr "Average monthly income"
 #: src/shared/constants/labels.ts
 msgid "Azar"
 msgstr "Azar"
+
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "B"
+msgstr "B"
 
 #: src/pages/settings/SettingsPage.tsx
 #~ msgid "Back up (download JSON)"
@@ -599,6 +607,10 @@ msgstr "Gregorian"
 msgid "Homa Cafe"
 msgstr "Homa Cafe"
 
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "If it still fails, start over"
+msgstr "If it still fails, start over"
+
 #: src/pages/settings/SettingsPage.tsx
 msgid "Import a backup file to bring your ledger back"
 msgstr "Import a backup file to bring your ledger back"
@@ -682,8 +694,8 @@ msgid "Last receipt"
 msgstr "Last receipt"
 
 #: src/shared/error-state/AppErrorFallback.tsx
-msgid "Last resort, and only once you have the backup above."
-msgstr "Last resort, and only once you have the backup above."
+#~ msgid "Last resort, and only once you have the backup above."
+#~ msgstr "Last resort, and only once you have the backup above."
 
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Latest receipts"
@@ -1114,6 +1126,10 @@ msgstr "Switch theme"
 #: src/pages/settings/SettingsPage.tsx
 msgid "System"
 msgstr "System"
+
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "Take the backup first — erasing cannot be undone without it."
+msgstr "Take the backup first — erasing cannot be undone without it."
 
 #: src/shared/constants/labels.ts
 msgid "Tether"

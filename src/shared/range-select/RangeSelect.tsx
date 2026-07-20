@@ -39,15 +39,11 @@ export const RangeSelect = ({ value, options, onSelect, prefix, sx, ...props }: 
       (theme) => ({
         height: 38,
         borderRadius: `${radius.full}px`,
-        backgroundColor: theme.palette.surfaceDefault,
         color: theme.palette.text.primary,
         fontSize: 14,
         fontWeight: 600,
         lineHeight: '22px',
-        // The pill's own hairline, so the notched outline is hidden rather
-        // than fought with.
-        border: `1px solid ${theme.palette.borderDefault}`,
-        '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+        paddingInline: 0,
         '& .MuiSelect-select': {
           paddingTop: 0,
           paddingBottom: 0,

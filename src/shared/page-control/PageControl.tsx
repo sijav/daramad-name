@@ -77,11 +77,9 @@ export const PageControl = ({ page, pageCount, pageSize, totalCount, onPageChang
             '& .MuiOutlinedInput-root': {
               height: 44,
               borderRadius: `${radius.sm + 2}px`,
-              backgroundColor: theme.palette.surfaceDefault,
               fontSize: 13,
               fontWeight: 500,
               color: theme.palette.text.secondary,
-              '& fieldset': { borderColor: theme.palette.borderDefault },
             },
             '& .MuiSelect-select': { paddingBlock: '0px', paddingInlineStart: '16px' },
           })}

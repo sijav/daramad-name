@@ -138,11 +138,19 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
       },
       MuiOutlinedInput: {
         styleOverrides: {
-          // The design's Field box is 52px. MUI's default vertical padding
-          // pushed it to 56, so the padding is set rather than just a minHeight.
-          root: { borderRadius: radius.md, backgroundColor: c.surfaceContainerHigh, height: 52 },
+          // The design's `Field` box (`43:16`): 52px on `surface-default` with
+          // a 1px `border-default` hairline and 14px inline padding. MUI's
+          // default vertical padding pushes it to 56, so height is set rather
+          // than just a minHeight.
+          root: {
+            borderRadius: radius.md,
+            backgroundColor: c.surfaceDefault,
+            height: 52,
+            paddingInline: '14px',
+          },
           input: {
             paddingBlock: '0px',
+            paddingInline: '0px',
             height: '100%',
             boxSizing: 'border-box',
             // Attached to the input slot, NOT written as a descendant rule in
@@ -150,7 +158,29 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
             // prefixer, and the boundary swallows it.
             '&::placeholder': { color: c.textSecondary, opacity: 1 },
           },
-          notchedOutline: { borderColor: c.outlineVariant },
+          notchedOutline: {
+            borderColor: c.borderDefault,
+            // The label sits ABOVE the box in this design, so the outline has
+            // no notch to cut for it.
+            '& legend': { display: 'none' },
+          },
+        },
+      },
+      MuiInputLabel: {
+        // `43:15`: the label is a 14/600 line above the field, not a caption
+        // floating on the border. Forcing `shrink` keeps MUI from animating it
+        // down into the box when the field is empty.
+        defaultProps: { shrink: true },
+        styleOverrides: {
+          outlined: {
+            position: 'static',
+            transform: 'none',
+            maxWidth: '100%',
+            marginBottom: 8,
+            ...typeScale.labelLarge,
+            color: c.textSecondary,
+            '&.Mui-focused': { color: c.textSecondary },
+          },
         },
       },
       MuiInputBase: {

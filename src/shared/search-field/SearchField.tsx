@@ -46,18 +46,18 @@ export const SearchField = ({ value, onValueChange, placeholder, sx, ...props }:
         },
       }}
       sx={[
-        (theme) => ({
+        {
+          // Only the departures from the theme's `Field`: this one is 48px at
+          // radius 10, and 14/400 rather than 16.
           '& .MuiOutlinedInput-root': {
             borderRadius: `${radius.sm + 2}px`,
             height: 48,
-            backgroundColor: theme.palette.surfaceDefault,
-            // `275:4`: 14/400. The placeholder tone comes from the theme.
+            paddingInline: '16px',
             fontSize: 14,
             fontWeight: 400,
             lineHeight: '24px',
-            '& fieldset': { borderColor: theme.palette.borderDefault },
           },
-        }),
+        },
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
     />

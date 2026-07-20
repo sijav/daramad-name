@@ -1,7 +1,7 @@
 import { Trans, useLingui } from '@lingui/react/macro'
 import ErrorOutlineRoundedIcon from '@mui/icons-material/ErrorOutlineRounded'
 import { Box, Button, Stack, Typography } from '@mui/material'
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import type { FallbackProps } from 'react-error-boundary'
 import { ConfirmDialog } from 'src/shared/confirm-dialog'
 import { clearAllDataMutation, exportBackupMutation } from 'src/shared/queries'
@@ -21,6 +21,9 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
   // Not `useFormat`: that reads settings through React Query, and the boundary
   // may have been tripped by the provider tree above this screen.
   const step = (n: number) => (i18n.locale === 'fa-IR' ? toPersianDigits(n) : String(n))
+  // Enumeration letters are user-visible text: Persian lists with الف-ب.
+  const letters = [t`A`, t`B`]
+  const letter = (index: number) => letters[index]
   const [confirmErase, setConfirmErase] = useState(false)
   const [backedUp, setBackedUp] = useState(false)
 
@@ -87,24 +90,26 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
               </Button>
             </RecoveryStep>
 
+            {/* The last resort is a PAIR, in order: take the backup, then
+                erase. Lettered so that order is explicit rather than implied
+                by two rows that look independent. */}
             <RecoveryStep
               step={step(3)}
-              label={t`Download a backup`}
-              description={t`A JSON file of every receipt. Do this before erasing anything.`}
+              label={t`If it still fails, start over`}
+              description={t`Take the backup first — erasing cannot be undone without it.`}
             >
-              <Button variant="outlined" onClick={() => void backup()}>
-                {backedUp ? t`Downloaded` : t`Download`}
-              </Button>
-            </RecoveryStep>
-
-            <RecoveryStep
-              step={step(4)}
-              label={t`Erase everything and restart`}
-              description={t`Last resort, and only once you have the backup above.`}
-            >
-              <Button variant="outlined" color="error" onClick={() => setConfirmErase(true)}>
-                {t`Erase and restart`}
-              </Button>
+              <Stack spacing={1.5} sx={{ minWidth: 210 }}>
+                <SubStep letter={letter(0)} label={t`Download a backup`}>
+                  <Button variant="outlined" fullWidth onClick={() => void backup()}>
+                    {backedUp ? t`Downloaded` : t`Download`}
+                  </Button>
+                </SubStep>
+                <SubStep letter={letter(1)} label={t`Erase and restart`}>
+                  <Button variant="outlined" color="error" fullWidth onClick={() => setConfirmErase(true)}>
+                    {t`Erase and restart`}
+                  </Button>
+                </SubStep>
+              </Stack>
             </RecoveryStep>
           </Stack>
         </SurfaceCard>
@@ -128,8 +133,18 @@ interface RecoveryStepProps {
   step: string
   label: string
   description: string
-  children: React.ReactNode
+  children: ReactNode
 }
+
+/** A lettered option inside a step: its label, then its control. */
+const SubStep = ({ letter, label, children }: { letter: string; label: string; children: ReactNode }) => (
+  <Stack spacing={0.75} sx={{ textAlign: 'start' }}>
+    <Typography variant="caption" color="text.secondary">
+      {`${letter}. ${label}`}
+    </Typography>
+    {children}
+  </Stack>
+)
 
 /** One numbered option: explanation on the reading side, its button opposite. */
 const RecoveryStep = ({ step, label, description, children }: RecoveryStepProps) => (

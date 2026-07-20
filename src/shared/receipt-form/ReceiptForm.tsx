@@ -46,6 +46,9 @@ export const ReceiptForm = ({ form, submitLabel, pending = false, onSubmit, onSu
         onSubmit()
       }}
     >
+      {/* `175:769` opens with the date, then the amount. */}
+      <DateField label={t`Date received`} value={state.occurredAt} onValueChange={(iso) => patch('occurredAt', iso)} />
+
       <AmountField
         label={t`Amount received`}
         value={state.amountOriginal}
@@ -68,8 +71,6 @@ export const ReceiptForm = ({ form, submitLabel, pending = false, onSubmit, onSu
           }
         }}
       />
-
-      <DateField label={t`Date received`} value={state.occurredAt} onValueChange={(iso) => patch('occurredAt', iso)} />
 
       {needsRate ? (
         <Stack spacing={1.5}>

@@ -48,7 +48,7 @@ export const ChartCard = ({ title, subtitle, variant = 'chart', action, children
     <Stack spacing={2.5} sx={{ height: '100%', minWidth: 0, width: '100%' }}>
       <Stack direction="row" sx={{ alignItems: 'flex-start', justifyContent: 'space-between', gap: 2 }}>
         <Stack spacing={0.5} sx={{ minWidth: 0, textAlign: 'start' }}>
-          <Typography variant="h5">{title}</Typography>
+          <Typography variant={variant === 'content' ? 'h3' : 'h5'}>{title}</Typography>
           {subtitle ? (
             <Typography variant="caption" color="text.secondary">
               {subtitle}

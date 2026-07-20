@@ -1,6 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
-import { useTheme } from '@mui/material'
-import { BarChart } from '@mui/x-charts/BarChart'
+import { Box, Stack, Tooltip, Typography } from '@mui/material'
+import { radius } from 'src/core/theme'
 import { CURRENCY_LABELS } from 'src/shared/constants'
 import { useFormat } from 'src/shared/format'
 import type { CalendarSystem, MonthlyTotal } from 'src/shared/types'
@@ -11,49 +11,58 @@ export interface MonthlyIncomeChartProps {
   calendar: CalendarSystem
 }
 
+const PLOT_HEIGHT = 220
+
 /**
- * The 12-month bar chart.
+ * The 12-month bar chart (`153:604`).
  *
- * Every month is plotted, including the empty ones — a month with no income
- * gets a zero bar rather than disappearing. Dropping it would compress the axis
- * and quietly hide the gap, which is exactly the thing a freelancer needs to
- * see (scenario 4's Mordad).
+ * Deliberately not a charting library: the design has no axis, no gridlines and
+ * no legend — twelve bars with their month beneath. MUI X drew all three and a
+ * numeric scale nobody asked for, which is a different chart from the one in
+ * the file. Plain boxes also mean the bars can carry the design's top-only 8px
+ * corners, which the library does not expose.
+ *
+ * Every month is plotted, including the empty ones. A month with no income gets
+ * the design's 4px grey stub rather than disappearing — dropping it would
+ * compress the axis and quietly hide the gap, which is exactly the thing a
+ * freelancer needs to see (scenario 4's Mordad).
  */
 export const MonthlyIncomeChart = ({ months, calendar }: MonthlyIncomeChartProps) => {
   const { t, i18n } = useLingui()
-  const { number, digits } = useFormat()
-  const theme = useTheme()
+  const { number } = useFormat()
+
   const labels = monthNames(calendar, i18n)
   const toman = i18n._(CURRENCY_LABELS.TOMAN)
+  const peak = Math.max(1, ...months.map((month) => month.totalToman))
 
   return (
-    <BarChart
-      height={320}
-      series={[
-        {
-          data: months.map((month) => month.totalToman),
-          label: t`Monthly income`,
-          color: theme.palette.primary.main,
-          valueFormatter: (value) => (value === null ? '—' : `${number(value)} ${toman}`),
-        },
-      ]}
-      xAxis={[
-        {
-          data: months.map((month) => labels[month.month - 1]),
-          scaleType: 'band',
-        },
-      ]}
-      yAxis={[
-        {
-          // Millions, so the axis stays readable instead of printing nine digits.
-          valueFormatter: (value: number) => digits(Math.round(value / 1_000_000)),
-        },
-      ]}
-      margin={{ right: 16 }}
-      grid={{ horizontal: true }}
-      // A single-series chart needs no key; the design shows none, and the
-      // legend only stole vertical space from the bars.
-      hideLegend
-    />
+    <Stack direction="row" spacing={1.5} sx={{ alignItems: 'flex-end', justifyContent: 'center', pt: 4, width: '100%' }}>
+      {months.map((month) => {
+        const label = labels[month.month - 1]
+        const height = month.totalToman > 0 ? Math.max(8, Math.round((month.totalToman / peak) * PLOT_HEIGHT)) : 4
+
+        return (
+          <Stack key={`${month.year}-${month.month}`} spacing={1} sx={{ flex: 1, minWidth: 0, alignItems: 'center' }}>
+            <Tooltip title={`${label}: ${number(month.totalToman)} ${toman}`} placement="top" arrow>
+              <Box
+                sx={(theme) => ({
+                  width: '100%',
+                  maxWidth: 44,
+                  height,
+                  // Top corners only, so the bars read as columns rising from a
+                  // baseline rather than as floating pills.
+                  borderRadius: `${radius.sm}px ${radius.sm}px 0 0`,
+                  backgroundColor: month.totalToman > 0 ? theme.palette.brandPrimary : theme.palette.borderDefault,
+                })}
+                aria-label={t`${label}: ${number(month.totalToman)} ${toman}`}
+              />
+            </Tooltip>
+            <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'center' }} noWrap>
+              {label}
+            </Typography>
+          </Stack>
+        )
+      })}
+    </Stack>
   )
 }

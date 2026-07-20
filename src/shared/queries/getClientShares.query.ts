@@ -43,7 +43,9 @@ export const getClientSharesQuery = async ({
       clientId,
       clientName: clientId === UNASSIGNED_ID ? i18n._(msg`No client`) : (namesById.get(clientId) ?? i18n._(msg`Unknown`)),
       totalToman,
-      percentage: Math.round((totalToman / grandTotal) * 1000) / 10,
+      // Whole percent, matching what the legend prints. Keeping a decimal
+      // here made the callout say «۷۳.۲٪» beside a legend reading «۷۳٪».
+      percentage: Math.round((totalToman / grandTotal) * 100),
     }))
     .sort((left, right) => right.totalToman - left.totalToman)
 

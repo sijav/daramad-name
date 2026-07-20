@@ -37,8 +37,8 @@ export const AmountField = ({ label, value, currency, onValueChange, error, help
           height: 72,
           px: 2.5,
           borderRadius: `${radius.lg}px`,
-          backgroundColor: theme.palette.surfaceContainerHigh,
-          border: `1px solid ${error ? theme.palette.error.main : theme.palette.outlineVariant}`,
+          backgroundColor: theme.palette.surfaceDefault,
+          border: `1px solid ${error ? theme.palette.error.main : theme.palette.borderDefault}`,
           overflow: 'hidden',
         })}
       >

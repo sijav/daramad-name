@@ -1362,12 +1362,12 @@ msgstr "جمع کل"
 msgid "Total income"
 msgstr "جمع کل درآمد"
 
-#. placeholder {0}: digits(receipts.length)
+#. placeholder {0}: digits(summary.receiptCount)
 #: src/pages/ledger/LedgerTable.tsx
 msgid "Total of {0} filtered receipts"
 msgstr "جمع کل {0} دریافتی فیلترشده"
 
-#. placeholder {0}: digits(receipts.length)
+#. placeholder {0}: digits(summary.receiptCount)
 #: src/pages/ledger/LedgerTable.tsx
 msgid "Total of {0} receipts"
 msgstr "جمع کل {0} دریافتی"

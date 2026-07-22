@@ -1,5 +1,17 @@
 import { useLingui } from '@lingui/react/macro'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, Typography } from '@mui/material'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableSortLabel,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material'
+import type { ReactNode } from 'react'
 import { CHANNEL_LABELS } from 'src/shared/constants'
 import { useFormat } from 'src/shared/format'
 import { MoneyText } from 'src/shared/money-text'
@@ -21,30 +33,109 @@ export interface LedgerTableProps {
   onDelete: (receipt: ReceiptWithClient) => void
 }
 
+type ColumnKey = 'date' | 'client' | 'channel' | 'original' | 'toman' | 'actions'
+
 /**
  * Scenario 2's ledger.
  *
  * The totals row is inside the same `<Table>` rather than a separate card so it
  * cannot scroll out of sync with the rows it sums — the brief requires the
  * total to stay visible and to track the active filter.
+ *
+ * Columns are dropped on narrow screens, which is what the design does: the
+ * phone and tablet frames use this same table component and simply hide cells.
+ * It rendered all six at a fixed 900px inside a horizontal scroller instead, so
+ * on a 390px phone both money columns sat outside the frame — an income ledger
+ * showing everything except the income.
  */
 export const LedgerTable = ({ receipts, summary, sort, filtered = false, onSortChange, onView, onEdit, onDelete }: LedgerTableProps) => {
   const { t, i18n } = useLingui()
   const { digits, dateLong } = useFormat()
+  const theme = useTheme()
 
-  // Built inside the component so the labels follow the active locale.
-  // Widths are explicit because English headers are wider than Persian and were
-  // squeezing the client column into a two-line wrap.
-  // Widths, alignment and sortability all come from `267:984`. Everything is
+  // Phone frame is 390 and tablet is 834, so the cuts land at MUI's sm and md.
+  // Tablet keeps Actions and drops Channel and Original amount; the phone drops
+  // Actions too, leaving exactly the three the design shows — date, who paid,
+  // and how much in Toman.
+  const showActions = useMediaQuery(theme.breakpoints.up('sm'))
+  const showSecondary = useMediaQuery(theme.breakpoints.up('md'))
+
+  // Built inside the component so labels follow the active locale. Widths,
+  // alignment and sortability all come from `267:984`; everything is
   // start-aligned except the channel tag and the row actions, which centre.
-  const columns: { field: LedgerSortField | null; label: string; align: 'start' | 'center' | 'right'; width?: number | string }[] = [
-    { field: 'occurredAt', label: t`Date`, align: 'start', width: 130 },
-    { field: 'client', label: t`Client / project`, align: 'start' },
-    { field: null, label: t`Channel`, align: 'center', width: 140 },
-    { field: 'amountOriginal', label: t`Original amount`, align: 'right', width: 160 },
-    { field: 'amountToman', label: t`Toman equivalent`, align: 'right', width: 190 },
-    { field: null, label: t`Actions`, align: 'center', width: 64 },
+  const allColumns: {
+    key: ColumnKey
+    field: LedgerSortField | null
+    label: string
+    align: 'start' | 'center' | 'right'
+    width?: number
+    visible: boolean
+    cell: (receipt: ReceiptWithClient) => ReactNode
+  }[] = [
+    {
+      key: 'date',
+      field: 'occurredAt',
+      label: t`Date`,
+      align: 'start',
+      width: 130,
+      visible: true,
+      cell: (receipt) => dateLong(receipt.occurredAt),
+    },
+    {
+      key: 'client',
+      field: 'client',
+      label: t`Client / project`,
+      align: 'start',
+      visible: true,
+      cell: (receipt) => receipt.clientName ?? '—',
+    },
+    {
+      key: 'channel',
+      field: null,
+      label: t`Channel`,
+      align: 'center',
+      width: 140,
+      visible: showSecondary,
+      cell: (receipt) => <Tag label={i18n._(CHANNEL_LABELS[receipt.channel])} />,
+    },
+    {
+      key: 'original',
+      field: 'amountOriginal',
+      label: t`Original amount`,
+      align: 'right',
+      width: 160,
+      visible: showSecondary,
+      cell: (receipt) => <MoneyText value={receipt.amountOriginal} currency={receipt.currency} showUnit />,
+    },
+    {
+      key: 'toman',
+      field: 'amountToman',
+      label: t`Toman equivalent`,
+      align: 'right',
+      width: 190,
+      visible: true,
+      cell: (receipt) => <MoneyText value={receipt.amountToman} sx={{ fontWeight: 600, lineHeight: '24px' }} />,
+    },
+    {
+      key: 'actions',
+      field: null,
+      label: t`Actions`,
+      align: 'center',
+      width: 64,
+      visible: showActions,
+      cell: (receipt) => (
+        <RowActionsMenu onView={() => onView(receipt)} onEdit={() => onEdit(receipt)} onDelete={() => onDelete(receipt)} />
+      ),
+    },
   ]
+
+  const columns = allColumns.filter((column) => column.visible)
+
+  // The total's label spans everything before the Toman figure, and the trailing
+  // spacer exists only when Actions does. Hard-coding either produces a row with
+  // a different cell count from the header, which widens the whole table.
+  const tomanIndex = columns.findIndex((column) => column.key === 'toman')
+  const trailingCells = columns.length - tomanIndex - 1
 
   const toggleSort = (field: LedgerSortField) =>
     onSortChange({
@@ -54,11 +145,32 @@ export const LedgerTable = ({ receipts, summary, sort, filtered = false, onSortC
 
   return (
     <TableContainer sx={{ overflowX: 'auto' }}>
-      <Table stickyHeader size="small" sx={{ minWidth: 900, tableLayout: 'fixed' }}>
+      {/* Only fix the layout once there is enough width to honour the explicit
+          widths. On a phone the three columns share whatever the screen gives,
+          so there is nothing to scroll. */}
+      <Table
+        stickyHeader
+        size="small"
+        sx={{
+          minWidth: showSecondary ? 900 : 0,
+          tableLayout: showSecondary ? 'fixed' : 'auto',
+          // Three columns of Persian dates and Toman figures still overrun a
+          // 390px phone at the desktop inset, so the padding tightens with the
+          // screen rather than handing the row back to a scrollbar.
+          ...(showActions ? {} : { '& .MuiTableCell-root': { paddingInline: '8px' } }),
+        }}
+      >
         <TableHead>
           <TableRow>
-            {columns.map((column, index) => (
-              <TableCell key={index} align={column.align === 'start' ? undefined : column.align} sx={{ width: column.width }}>
+            {columns.map((column) => (
+              <TableCell
+                key={column.key}
+                align={column.align === 'start' ? undefined : column.align}
+                // Widths come from the desktop frame. Pinning them on a phone
+                // holds the date column at 130px it does not need and pushes
+                // the row wider than the screen.
+                sx={{ width: showSecondary ? column.width : undefined }}
+              >
                 {column.field ? (
                   <TableSortLabel
                     active={sort.field === column.field}
@@ -78,28 +190,21 @@ export const LedgerTable = ({ receipts, summary, sort, filtered = false, onSortC
         <TableBody>
           {receipts.map((receipt) => (
             <TableRow key={receipt.id} hover>
-              <TableCell sx={{ whiteSpace: 'nowrap' }}>{dateLong(receipt.occurredAt)}</TableCell>
-
-              <TableCell>{receipt.clientName ?? '—'}</TableCell>
-
-              <TableCell align="center">
-                <Tag label={i18n._(CHANNEL_LABELS[receipt.channel])} />
-              </TableCell>
-
-              {/* The design greys the original amount and keeps the Toman
-                  equivalent in the primary tone — the Toman figure is the one
-                  the row is about. */}
-              <TableCell align="right" sx={{ whiteSpace: 'nowrap', color: 'text.secondary' }}>
-                <MoneyText value={receipt.amountOriginal} currency={receipt.currency} showUnit />
-              </TableCell>
-
-              <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
-                <MoneyText value={receipt.amountToman} sx={{ fontWeight: 600, lineHeight: '24px' }} />
-              </TableCell>
-
-              <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>
-                <RowActionsMenu onView={() => onView(receipt)} onEdit={() => onEdit(receipt)} onDelete={() => onDelete(receipt)} />
-              </TableCell>
+              {columns.map((column) => (
+                <TableCell
+                  key={column.key}
+                  align={column.align === 'start' ? undefined : column.align}
+                  sx={{
+                    whiteSpace: column.key === 'client' ? undefined : 'nowrap',
+                    // The design greys the original amount and keeps the Toman
+                    // equivalent in the primary tone — the Toman figure is the
+                    // one the row is about.
+                    color: column.key === 'original' ? 'text.secondary' : undefined,
+                  }}
+                >
+                  {column.cell(receipt)}
+                </TableCell>
+              ))}
             </TableRow>
           ))}
         </TableBody>
@@ -114,15 +219,17 @@ export const LedgerTable = ({ receipts, summary, sort, filtered = false, onSortC
               '& td': { borderTop: `2px solid ${theme.palette.borderStrong}`, borderBottom: 'none', paddingBlock: '16px' },
             })}
           >
-            <TableCell colSpan={4}>
+            <TableCell colSpan={tomanIndex}>
               <Typography variant="subtitle2">
-                {filtered ? t`Total of ${digits(receipts.length)} filtered receipts` : t`Total of ${digits(receipts.length)} receipts`}
+                {filtered
+                  ? t`Total of ${digits(summary.receiptCount)} filtered receipts`
+                  : t`Total of ${digits(summary.receiptCount)} receipts`}
               </Typography>
             </TableCell>
             <TableCell align="right">
               <MoneyText value={summary.totalToman} variant="subtitle2" sx={{ color: 'brandPrimary' }} />
             </TableCell>
-            <TableCell />
+            {trailingCells > 0 ? <TableCell colSpan={trailingCells} /> : null}
           </TableRow>
         </TableBody>
       </Table>

@@ -1,7 +1,7 @@
 import type { QueryFunctionContext } from '@tanstack/react-query'
 import { db, readSettings } from 'src/core/db'
 import type { CalendarSystem, DateRange, IncomeReport, MonthlyTotal } from 'src/shared/types'
-import { monthBucketsOfYear, monthIndexOf, monthsSpanned, yearOf } from 'src/shared/utils'
+import { averagingPeriod, monthBucketsOfYear, monthIndexOf, yearOf } from 'src/shared/utils'
 
 export const getIncomeReportQueryKey = (range: DateRange, calendar: CalendarSystem) => ['income-report', range, calendar] as const
 
@@ -14,8 +14,14 @@ export const getIncomeReportQueryKey = (range: DateRange, calendar: CalendarSyst
  * misrepresent the applicant.
  */
 export const getIncomeReportQuery = async ({
-  queryKey: [, range, calendar],
+  queryKey: [, requestedRange, calendar],
 }: QueryFunctionContext<ReturnType<typeof getIncomeReportQueryKey>>): Promise<IncomeReport> => {
+  // The period never runs past today. A certificate for the current year would
+  // otherwise claim to cover months that have not happened — printing eight
+  // zero rows for the future and dividing four months of real income by 12,
+  // which understates the holder threefold on the page an embassy reads.
+  const { range, months: monthsInRange } = averagingPeriod(requestedRange, calendar)
+
   const [receipts, settings] = await Promise.all([
     db.receipts.where('occurredAt').between(range.from, range.to, true, true).toArray(),
     readSettings(),
@@ -48,7 +54,6 @@ export const getIncomeReportQuery = async ({
   }
 
   const months = [...buckets.values()].sort((left, right) => left.year - right.year || left.month - right.month)
-  const monthsInRange = monthsSpanned(range, calendar)
 
   return {
     profile: settings.profile,

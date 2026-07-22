@@ -449,6 +449,13 @@ msgstr "Dey"
 msgid "Display"
 msgstr "Display"
 
+#. placeholder {0}: digits(averagingMonths)
+#. placeholder {0}: digits(data?.summary.monthsInRange ?? 1)
+#: src/pages/dashboard/DashboardPage.tsx
+#: src/pages/ledger/LedgerPage.tsx
+msgid "divided by {0} months"
+msgstr "divided by {0} months"
+
 #: src/pages/charts/ChartsPage.tsx
 #~ msgid "Divided by the 12 months of the year"
 #~ msgstr "Divided by the 12 months of the year"

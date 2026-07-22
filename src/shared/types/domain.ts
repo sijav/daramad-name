@@ -109,8 +109,10 @@ export interface LedgerSummary {
   /** Sum over the CURRENT filter, not over the whole database. */
   totalToman: number
   receiptCount: number
-  /** `totalToman` divided by the number of calendar months the range spans. */
+  /** `totalToman` divided by `monthsInRange`, per `averagingPeriod`. */
   monthlyAverageToman: number
+  /** The divisor, shown beside the average so its basis is never implicit. */
+  monthsInRange: number
 }
 
 export interface Ledger {

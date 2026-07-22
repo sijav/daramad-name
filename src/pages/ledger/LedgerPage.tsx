@@ -139,7 +139,12 @@ export const LedgerPage = () => {
           <SummaryCard label={t`Receipts`} value={digits(data?.summary.receiptCount ?? 0)} icon={<ReceiptLongRoundedIcon />} />
         </Grid>
         <Grid size={{ xs: 6, sm: 4 }}>
-          <SummaryCard label={t`Monthly average`} value={data?.summary.monthlyAverageToman ?? 0} icon={<ShowChartRoundedIcon />} />
+          <SummaryCard
+            label={t`Monthly average`}
+            value={data?.summary.monthlyAverageToman ?? 0}
+            hint={t`divided by ${digits(data?.summary.monthsInRange ?? 1)} months`}
+            icon={<ShowChartRoundedIcon />}
+          />
         </Grid>
         <Grid size={{ xs: 12, sm: 4 }}>
           <SummaryCard label={t`Total`} value={data?.summary.totalToman ?? 0} icon={<PaymentsRoundedIcon />} />
@@ -164,7 +169,7 @@ export const LedgerPage = () => {
           <SurfaceCard flat disablePadding>
             <LedgerTable
               receipts={paged.rows}
-              summary={data?.summary ?? { totalToman: 0, receiptCount: 0, monthlyAverageToman: 0 }}
+              summary={data?.summary ?? { totalToman: 0, receiptCount: 0, monthlyAverageToman: 0, monthsInRange: 1 }}
               sort={view.sort}
               filtered={isFiltered}
               calendar={view.calendar}

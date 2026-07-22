@@ -52,6 +52,7 @@ const summary = {
   totalToman: RECEIPTS.reduce((sum, r) => sum + r.amountToman, 0),
   receiptCount: RECEIPTS.length,
   monthlyAverageToman: Math.round(RECEIPTS.reduce((sum, r) => sum + r.amountToman, 0) / 3),
+  monthsInRange: 3,
 }
 
 /**
@@ -89,7 +90,7 @@ export const SingleRow: Story = {
   args: {
     ...Default.args,
     receipts: [RECEIPTS[1]],
-    summary: { totalToman: RECEIPTS[1].amountToman, receiptCount: 1, monthlyAverageToman: RECEIPTS[1].amountToman },
+    summary: { totalToman: RECEIPTS[1].amountToman, receiptCount: 1, monthlyAverageToman: RECEIPTS[1].amountToman, monthsInRange: 1 },
   },
 }
 

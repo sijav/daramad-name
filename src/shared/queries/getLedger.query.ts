@@ -1,7 +1,7 @@
 import type { QueryFunctionContext } from '@tanstack/react-query'
 import { db } from 'src/core/db'
-import type { CalendarSystem, Client, Ledger, LedgerFilter, LedgerSort, Receipt, ReceiptWithClient } from 'src/shared/types'
-import { monthsSpanned } from 'src/shared/utils'
+import type { CalendarSystem, Client, DateRange, Ledger, LedgerFilter, LedgerSort, Receipt, ReceiptWithClient } from 'src/shared/types'
+import { averagingPeriod } from 'src/shared/utils'
 
 export const getLedgerQueryKey = (filter: LedgerFilter, sort: LedgerSort, calendar: CalendarSystem) =>
   ['ledger', filter, sort, calendar] as const
@@ -29,7 +29,7 @@ export const getLedgerQuery = async ({
   sortRows(rows, sort)
 
   const totalToman = rows.reduce((sum, row) => sum + row.amountToman, 0)
-  const months = filter.range ? monthsSpanned(filter.range, calendar) : monthsSpannedFromRows(rows, calendar)
+  const months = averagingPeriod(filter.range ?? unfilteredPeriod(rows), calendar).months
 
   return {
     receipts: rows,
@@ -37,6 +37,7 @@ export const getLedgerQuery = async ({
       totalToman,
       receiptCount: rows.length,
       monthlyAverageToman: Math.round(totalToman / months),
+      monthsInRange: months,
     },
   }
 }
@@ -76,11 +77,20 @@ const sortRows = (rows: ReceiptWithClient[], sort: LedgerSort): void => {
   })
 }
 
-/** With no range filter, the average spans from the first receipt to the last. */
-const monthsSpannedFromRows = (rows: ReceiptWithClient[], calendar: CalendarSystem): number => {
+/**
+ * With no filter the period runs from the first receipt to TODAY, not to the
+ * last receipt.
+ *
+ * Ending at the last receipt drops every quiet month since, which is precisely
+ * the "months with income" divisor the rule forbids: income clustered in three
+ * months of a year divided by three, printing an average four times the one the
+ * report showed for the same data. Months you earned nothing are still months.
+ */
+const unfilteredPeriod = (rows: ReceiptWithClient[]): DateRange => {
+  const now = new Date().toISOString()
   if (rows.length === 0) {
-    return 1
+    return { from: now, to: now }
   }
-  const dates = rows.map((row) => row.occurredAt).sort()
-  return monthsSpanned({ from: dates[0], to: dates[dates.length - 1] }, calendar)
+  const earliest = rows.reduce((first, row) => (row.occurredAt < first ? row.occurredAt : first), rows[0].occurredAt)
+  return { from: earliest, to: now }
 }

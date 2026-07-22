@@ -67,7 +67,7 @@ const total = FIXTURE_RECEIPTS.reduce((sum, r) => sum + r.amountToman, 0)
 
 export const FIXTURE_LEDGER: Ledger = {
   receipts: FIXTURE_RECEIPTS,
-  summary: { totalToman: total, receiptCount: FIXTURE_RECEIPTS.length, monthlyAverageToman: Math.round(total / 7) },
+  summary: { totalToman: total, receiptCount: FIXTURE_RECEIPTS.length, monthlyAverageToman: Math.round(total / 7), monthsInRange: 7 },
 }
 
 const byClient = (name: string): number => FIXTURE_RECEIPTS.filter((r) => r.clientName === name).reduce((sum, r) => sum + r.amountToman, 0)
@@ -110,7 +110,9 @@ export const seedPageData = (client: QueryClient, { empty = false }: { empty?: b
   const year = yearOf(new Date(), CALENDAR)
   const range = yearRange(year, CALENDAR)
 
-  const ledger: Ledger = empty ? { receipts: [], summary: { totalToman: 0, receiptCount: 0, monthlyAverageToman: 0 } } : FIXTURE_LEDGER
+  const ledger: Ledger = empty
+    ? { receipts: [], summary: { totalToman: 0, receiptCount: 0, monthlyAverageToman: 0, monthsInRange: 1 } }
+    : FIXTURE_LEDGER
   const shares = empty ? [] : FIXTURE_SHARES
   const months = empty ? FIXTURE_MONTHS(year).map((m) => ({ ...m, totalToman: 0, receiptCount: 0 })) : FIXTURE_MONTHS(year)
 
@@ -131,6 +133,7 @@ export const seedPageData = (client: QueryClient, { empty = false }: { empty?: b
     range,
     totalToman: ledger.summary.totalToman,
     monthlyAverageToman: ledger.summary.monthlyAverageToman,
+    monthsInRange: ledger.summary.monthsInRange,
     months,
     generatedAt: new Date().toISOString(),
   })

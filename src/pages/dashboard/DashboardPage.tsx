@@ -29,7 +29,7 @@ import {
 } from 'src/shared/queries'
 import { SummaryCard } from 'src/shared/summary-card'
 import { SurfaceCard } from 'src/shared/surface-card'
-import { monthIndexOf, yearOf, yearRange } from 'src/shared/utils'
+import { averagingPeriod, monthIndexOf, yearOf, yearRange } from 'src/shared/utils'
 import { RecentReceipts } from './RecentReceipts'
 
 /**
@@ -47,6 +47,10 @@ export const DashboardPage = () => {
   const [year, setYear] = useState(() => yearOf(new Date(), calendar))
 
   const range = yearRange(year, calendar)
+  // One rule for every monthly average in the app: divide by the months of the
+  // period on screen, never counting past today. A year still in progress must
+  // not be divided by 12.
+  const averagingMonths = averagingPeriod(range, calendar).months
 
   const { data: years = [] } = useQuery({ queryKey: getPopulatedYearsQueryKey(calendar), queryFn: getPopulatedYearsQuery })
   const { data: months, isLoading } = useQuery({ queryKey: getMonthlyTotalsQueryKey(year, calendar), queryFn: getMonthlyTotalsQuery })
@@ -94,7 +98,12 @@ export const DashboardPage = () => {
               <SummaryCard label={t`Income in ${digits(year)}`} value={yearTotal} icon={<PaymentsRoundedIcon />} />
             </Grid>
             <Grid size={{ xs: 6, md: 3 }}>
-              <SummaryCard label={t`Monthly average`} value={Math.round(yearTotal / 12)} icon={<ShowChartRoundedIcon />} />
+              <SummaryCard
+                label={t`Monthly average`}
+                value={Math.round(yearTotal / averagingMonths)}
+                hint={t`divided by ${digits(averagingMonths)} months`}
+                icon={<ShowChartRoundedIcon />}
+              />
             </Grid>
             <Grid size={{ xs: 6, md: 3 }}>
               <SummaryCard label={t`Receipts in ${digits(year)}`} value={digits(receiptCount)} icon={<ReceiptLongRoundedIcon />} />

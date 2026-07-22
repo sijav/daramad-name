@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
-import { monthBucketsOfYear, monthsSpanned, yearOf, yearRange } from './dates'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { averagingPeriod, monthBucketsOfYear, monthsSpanned, yearOf, yearRange } from './dates'
 
 // The Jalali boundary logic is the part most likely to be subtly wrong and
 // least likely to be noticed — a year that starts in January instead of
@@ -72,5 +72,57 @@ describe('monthsSpanned — the denominator of the monthly average', () => {
   it('never returns zero, so the average can never divide by zero', () => {
     const now = new Date().toISOString()
     expect(monthsSpanned({ from: now, to: now }, 'JALALI')).toBe(1)
+  })
+})
+
+// `averagingPeriod` is the single rule behind every "monthly average" the app
+// shows. Two bugs came from not having one: the ledger divided by the span
+// between the first and last receipt (inflating a clustered year fourfold) and
+// the report divided a year still in progress by twelve (understating four
+// real months threefold on the document that goes to an embassy).
+describe('averagingPeriod — one rule for every monthly average', () => {
+  const AT_TIR_31 = new Date('2026-07-22T09:00:00.000Z')
+
+  beforeEach(() => {
+    vi.useFakeTimers()
+    vi.setSystemTime(AT_TIR_31)
+  })
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('divides a COMPLETED year by twelve', () => {
+    expect(averagingPeriod(yearRange(1404, 'JALALI'), 'JALALI').months).toBe(12)
+  })
+
+  it('divides a year still in progress by the months actually elapsed', () => {
+    // 1405 began at Farvardin; the fake clock sits in Tir, the fourth month.
+    const { months, range } = averagingPeriod(yearRange(1405, 'JALALI'), 'JALALI')
+    expect(months).toBe(4)
+    // The period is reported as ending today, not at Esfand — a certificate
+    // must not claim to cover months that have not happened.
+    expect(new Date(range.to).getTime()).toBe(AT_TIR_31.getTime())
+  })
+
+  it('leaves a range that already ended in the past untouched', () => {
+    const year = yearRange(1404, 'JALALI')
+    expect(averagingPeriod(year, 'JALALI').range.to).toBe(year.to)
+  })
+
+  it('counts quiet months since the last receipt, which is what the ledger got wrong', () => {
+    // Income in Farvardin only, read in Tir: four months elapsed, not one.
+    const buckets = monthBucketsOfYear(1405, 'JALALI')
+    expect(averagingPeriod({ from: buckets[0].from, to: new Date().toISOString() }, 'JALALI').months).toBe(4)
+  })
+
+  it('never divides by zero', () => {
+    const now = new Date().toISOString()
+    expect(averagingPeriod({ from: now, to: now }, 'JALALI').months).toBe(1)
+  })
+
+  it('does not invert when the period has not started yet', () => {
+    const next = yearRange(1406, 'JALALI')
+    const { range } = averagingPeriod(next, 'JALALI')
+    expect(new Date(range.to).getTime()).toBeGreaterThanOrEqual(new Date(range.from).getTime())
   })
 })

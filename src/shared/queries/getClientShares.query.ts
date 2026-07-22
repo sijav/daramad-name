@@ -52,8 +52,16 @@ export const getClientSharesQuery = async ({
   const top = shares[0]
   // An "unassigned" bucket over 50% is a data-hygiene problem, not a client
   // concentration risk, so it must not raise the dependency warning.
+  //
+  // The test uses the RAW share, not the rounded one the callout prints.
+  // Comparing the rounded value moved the real boundary to 50.5%: a client at a
+  // true 50.4% rounded to 50, `50 > 50` was false, and a freelancer taking over
+  // half their income from one place got no warning — beside a donut reading
+  // «۵۰٪». Rounding stays for display only, so the callout still agrees with the
+  // legend.
+  const topShare = top ? (top.totalToman / grandTotal) * 100 : 0
   const insight =
-    top && top.clientId !== UNASSIGNED_ID && top.percentage > CONCENTRATION_THRESHOLD
+    top && top.clientId !== UNASSIGNED_ID && topShare > CONCENTRATION_THRESHOLD
       ? { clientName: top.clientName, percentage: top.percentage }
       : null
 

@@ -90,10 +90,10 @@ export const monthBucketsOfYear = (year: number, calendar: CalendarSystem): Date
 }
 
 /**
- * How many calendar months a range spans, minimum 1. This is the denominator
- * for "monthly average" on the income report: total over months elapsed, not
- * over months that happened to have income — a freelancer with income in 3 of
- * 12 months has a low average, and inflating it would misrepresent the report.
+ * How many calendar months a range spans, minimum 1.
+ *
+ * Prefer `averagingPeriod` for anything the user sees — this is the raw span
+ * and does not clamp a range that runs into the future.
  */
 export const monthsSpanned = (range: DateRange, calendar: CalendarSystem): number => {
   const from = new Date(range.from)
@@ -101,6 +101,34 @@ export const monthsSpanned = (range: DateRange, calendar: CalendarSystem): numbe
   const yearDelta = yearOf(to, calendar) - yearOf(from, calendar)
   const monthDelta = monthIndexOf(to, calendar) - monthIndexOf(from, calendar)
   return Math.max(1, yearDelta * 12 + monthDelta + 1)
+}
+
+/**
+ * THE rule behind every "monthly average" in the app.
+ *
+ * One definition, used by the report, the ledger and the dashboard alike:
+ * total ÷ the calendar months of the period on screen, where that period never
+ * runs past today, minimum one month. Each surface prints the divisor beside
+ * the figure — an average whose basis is unstated is exactly the number a
+ * clerk throws the whole document out over.
+ *
+ * Two live bugs came from not having this in one place. The ledger divided by
+ * the span between the FIRST and LAST receipt, so a freelancer earning in
+ * three months of twelve saw an average four times the report's under the same
+ * label. And the report divided a year still in progress by 12, understating
+ * four months of real income by three times on the document that goes to an
+ * embassy.
+ *
+ * Returns the clamped period too, so callers can bucket and label against the
+ * same range they divided by rather than re-deriving it.
+ */
+export const averagingPeriod = (range: DateRange, calendar: CalendarSystem): { range: DateRange; months: number } => {
+  const now = new Date().toISOString()
+  const capped = range.to > now ? now : range.to
+  // A range starting in the future would invert once capped; keep it empty
+  // rather than backwards.
+  const clamped: DateRange = { from: range.from, to: capped < range.from ? range.from : capped }
+  return { range: clamped, months: monthsSpanned(clamped, calendar) }
 }
 
 /** «۱۴۰۴/۰۵/۲۳» — the ledger's date column. */

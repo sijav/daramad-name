@@ -1,6 +1,6 @@
 import { msg } from '@lingui/core/macro'
 import { describe, expect, it } from 'vitest'
-import { loadReportI18n } from './i18n'
+import { activateLocale, DEFAULT_LOCALE, i18n, loadReportI18n } from './i18n'
 
 // The report renders through its OWN i18n instance so an English certificate
 // can be produced while the interface stays Persian. That instance is built
@@ -35,5 +35,52 @@ describe('loadReportI18n', () => {
     await loadReportI18n('en-US')
 
     expect(i18n.locale).toBe(before)
+  })
+})
+
+// `useLocaleSync` gates the entire first render on this function: nothing paints
+// until it resolves, and its `ready` seed is the identity check
+// `i18n.locale === locale`. So the two things that matter are that the catalog
+// really lands and that the locale tag comes back EXACTLY as asked — a
+// normalised «fa» or «fa_IR» would leave the gate shut and the app would sit on
+// a spinner forever, with no error to explain it.
+describe('activateLocale', () => {
+  it('loads the catalog, so components render Persian rather than message ids', async () => {
+    await activateLocale('fa-IR')
+
+    expect(i18n._(msg`Total income`)).toBe('جمع کل درآمد')
+  })
+
+  it('reports the locale back verbatim, which is what opens the render gate', async () => {
+    await activateLocale('fa-IR')
+    expect(i18n.locale).toBe('fa-IR')
+
+    await activateLocale('en-US')
+    expect(i18n.locale).toBe('en-US')
+  })
+
+  it('actually swaps the catalog when the user changes language, and back again', async () => {
+    await activateLocale('en-US')
+    expect(i18n._(msg`Total income`)).toBe('Total income')
+
+    await activateLocale('fa-IR')
+    expect(i18n._(msg`Total income`)).toBe('جمع کل درآمد')
+  })
+
+  // Re-activating the current locale is the common case — the effect re-runs on
+  // every mount. It must leave the loaded catalog exactly where it was rather
+  // than blanking it mid-session.
+  it('is a no-op when the locale is already active', async () => {
+    await activateLocale('fa-IR')
+    await activateLocale('fa-IR')
+
+    expect(i18n.locale).toBe('fa-IR')
+    expect(i18n._(msg`Total income`)).toBe('جمع کل درآمد')
+  })
+
+  // The product is for Iranian freelancers; English is opt-in. A flipped default
+  // would greet every first-time visitor in the wrong language.
+  it('defaults to Persian', () => {
+    expect(DEFAULT_LOCALE).toBe('fa-IR')
   })
 })

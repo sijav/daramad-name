@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { SurfaceCard } from 'src/shared/surface-card'
 import type { ReceiptWithClient } from 'src/shared/types'
-import { fn } from 'storybook/test'
+import { expect, fn, userEvent, within } from 'storybook/test'
 import { LedgerTable } from './LedgerTable'
 
 const meta = {
@@ -99,4 +99,113 @@ export const SingleRow: Story = {
 export const GregorianCalendar: Story = {
   ...Default,
   args: { ...Default.args, calendar: 'GREGORIAN' },
+}
+
+const fa = new Intl.NumberFormat('fa-IR')
+const dataRows = (canvasElement: HTMLElement): HTMLTableRowElement[] => [
+  ...(canvasElement.querySelectorAll('tbody')[0]?.querySelectorAll('tr') ?? []),
+]
+const totalRow = (canvasElement: HTMLElement): HTMLTableRowElement => {
+  const bodies = canvasElement.querySelectorAll('tbody')
+  return bodies[bodies.length - 1].querySelectorAll('tr')[0]
+}
+
+/**
+ * The total describes the whole filtered set, not the page.
+ *
+ * This row once read "total of 25 receipts" above the sum of the 100 that were
+ * actually matched — a number a freelancer would copy onto a visa application.
+ * So the story deliberately hands the table a two-row PAGE alongside a summary
+ * for 25 receipts, and asserts the row reports the summary rather than what it
+ * can see.
+ */
+export const TotalDescribesTheSummaryNotTheVisibleRows: Story = {
+  ...Default,
+  args: {
+    ...Default.args,
+    receipts: RECEIPTS.slice(0, 2),
+    filtered: true,
+    summary: { totalToman: 640_000_000, receiptCount: 25, monthlyAverageToman: 91_428_571, monthsInRange: 7 },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(await canvas.findByText(/۲۵ دریافتی فیلتر|25 filtered receipts/)).toBeInTheDocument()
+    // The sum of the two visible rows is 67,250,000 — the row must not print it.
+    await expect(await canvas.findByText(`${fa.format(640_000_000)} تومان`)).toBeInTheDocument()
+    await expect(canvas.queryByText(`${fa.format(67_250_000)} تومان`)).toBeNull()
+    await expect(dataRows(canvasElement)).toHaveLength(2)
+  },
+}
+
+/**
+ * "Filtered" is a claim about the data. Printing it on an unfiltered ledger
+ * tells the user rows are being withheld and sends them looking for a filter
+ * that was never applied.
+ */
+export const UnfilteredTotalDoesNotClaimToBeFiltered: Story = {
+  ...Default,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(await canvas.findByText(/^جمع کل ۵ دریافتی$|^Total of 5 receipts$/)).toBeInTheDocument()
+    await expect(canvas.queryByText(/فیلتر‌شده|filtered receipts/)).toBeNull()
+  },
+}
+
+/**
+ * The sort toggle rule: a NEW column starts descending (newest / largest first,
+ * which is what someone opening a ledger wants), and only re-clicking the
+ * column already in use flips it to ascending. Getting this backwards makes the
+ * first click on "amount" show the five smallest receipts.
+ */
+export const HeaderClicksToggleSortCorrectly: Story = {
+  ...Default,
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('the column already sorted descending flips to ascending', async () => {
+      await userEvent.click(await canvas.findByRole('button', { name: /^تاریخ|^Date/ }))
+      await expect(args.onSortChange).toHaveBeenLastCalledWith({ field: 'occurredAt', direction: 'asc' })
+    })
+
+    await step('a different column starts descending rather than inheriting the direction', async () => {
+      await userEvent.click(await canvas.findByRole('button', { name: /^معادل تومانی|^Toman equivalent/ }))
+      await expect(args.onSortChange).toHaveBeenLastCalledWith({ field: 'amountToman', direction: 'desc' })
+    })
+
+    await step('the channel column is not sortable, so it has no button', async () => {
+      await expect(canvas.queryByRole('button', { name: /^کانال$|^Channel$/ })).toBeNull()
+    })
+  },
+}
+
+/**
+ * Narrow screens drop columns, and the total row's label spans "everything
+ * before the Toman figure" via a COMPUTED colSpan. Hard-code it and the total
+ * row ends up wider or narrower than the header, which silently stretches the
+ * whole table sideways on the one screen size that cannot afford it.
+ *
+ * So this asserts the invariant directly: the total row's spans must add up to
+ * the header's cell count, at a phone width where three of the six columns are
+ * gone.
+ */
+export const TotalRowSpansMatchTheHeaderOnAPhone: Story = {
+  ...Default,
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await canvas.findByText(/^جمع کل ۵ دریافتی$|^Total of 5 receipts$/)
+
+    const headerCells = [...canvasElement.querySelectorAll('thead th')]
+    // Channel, Original amount and Actions are all dropped below `sm`.
+    await expect(headerCells).toHaveLength(3)
+
+    for (const row of dataRows(canvasElement)) {
+      await expect(row.querySelectorAll('td')).toHaveLength(headerCells.length)
+    }
+
+    const spans = [...totalRow(canvasElement).querySelectorAll('td')].reduce((sum, cell) => sum + cell.colSpan, 0)
+    await expect(spans).toBe(headerCells.length)
+  },
 }

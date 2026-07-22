@@ -84,3 +84,135 @@ describe('certificate identity block', () => {
     expect(valueOf(en, 'National ID')).toBe('0012345678')
   })
 })
+
+// Everything a reader of the certificate actually looks at: the direction it
+// reads in, the numerals it is written in, and the figures. None of these fail
+// loudly — a wrong one produces a finished-looking page that is simply not
+// true, handed to someone with no way to check it.
+
+const everyString = (model: Awaited<ReturnType<typeof build>>): string[] => [
+  model.title,
+  model.subtitle,
+  model.issuer,
+  model.serialLabel,
+  model.serial,
+  ...model.identity.flatMap((row) => [row.label, row.value]),
+  ...model.summary.flatMap((row) => [row.label, row.value]),
+  model.totalLabel,
+  model.totalFigure,
+  model.totalInWordsLabel,
+  model.totalInWords,
+  model.breakdownTitle,
+  model.columns.month,
+  model.columns.count,
+  model.columns.amount,
+  ...model.months.flatMap((row) => [row.month, row.count, row.amount]),
+  model.averageBasis,
+  model.footnote,
+]
+
+describe('the document is written in its OWN language, not the interface’s', () => {
+  it('reads left to right in English and right to left in Persian', async () => {
+    expect((await build('en')).direction).toBe('ltr')
+    expect((await build('fa')).direction).toBe('rtl')
+  })
+
+  it('puts NOT ONE Persian numeral anywhere on the English certificate', async () => {
+    // The failure this exists for: an embassy officer receiving «۶۴۴٬۲۶۰٬۰۰۰»
+    // on an otherwise English page. It only takes one field to slip.
+    const model = await build('en')
+
+    for (const text of everyString(model)) {
+      expect(text).not.toMatch(/[۰-۹]/)
+    }
+  })
+
+  it('writes every figure in Persian numerals on the Persian certificate', async () => {
+    const model = await build('fa')
+
+    expect(model.totalFigure).toBe('۶۴۴٬۲۶۰٬۰۰۰ تومان')
+    expect(model.months[0].count).toBe('۲')
+    expect(model.months[0].amount).toBe('۴۴٬۰۰۰٬۰۰۰ تومان')
+  })
+
+  it('dates the English certificate in Gregorian even when the app is on the Jalali calendar', async () => {
+    // The calendar setting is the interface's; an English document that dated
+    // itself ۱۴۰۵ would be unreadable to the person it is for.
+    const model = await build('en')
+    const issuedOn = model.summary.find((row) => row.label === 'Issued on')?.value ?? ''
+
+    expect(issuedOn).toMatch(/^\d{2} [A-Za-z]{3} \d{4}$/)
+  })
+
+  it('dates the Persian certificate in Jalali', async () => {
+    const model = await build('fa')
+    const issuedOn = model.summary.find((row) => row.label === 'تاریخ صدور')?.value ?? ''
+
+    expect(issuedOn).toMatch(/^[۰-۹]+ \S+ ۱۴۰۵$/)
+  })
+})
+
+// A reference that changed on every print would undermine the one thing it is
+// there to signal: that this page and the one filed last week are the same
+// document.
+describe('the reference', () => {
+  it('is identical for the same report printed twice on the same day', async () => {
+    expect((await build('fa')).serial).toBe((await build('fa')).serial)
+  })
+
+  it('carries the Jalali year the document COVERS, not the Gregorian one', async () => {
+    // The range ends in July 2026, which is 1405. Slicing the ISO string would
+    // print 2026 beside dates that all read ۱۴۰۵.
+    expect((await build('fa')).serial).toMatch(/^DN-1405-/)
+  })
+
+  it('changes when the total changes, so two different figures cannot share one reference', async () => {
+    const i18n = await loadReportI18n('fa-IR')
+    const first = buildCertificateModel(report(), 'fa', 'JALALI', i18n)
+    const second = buildCertificateModel(report({ totalToman: 644_260_001 }), 'fa', 'JALALI', i18n)
+
+    expect(second.serial).not.toBe(first.serial)
+  })
+})
+
+describe('the total in words', () => {
+  it('is written out and carries the unit, because words cannot be altered by adding a zero', async () => {
+    const model = await build('fa')
+
+    expect(model.totalInWords).toMatch(/^\S/)
+    expect(model.totalInWords.endsWith('تومان')).toBe(true)
+  })
+
+  it('is left EMPTY rather than wrong when the amount runs past the named scales', async () => {
+    // `numberToWords` gives up beyond «هزار میلیارد». The model must hand the
+    // page an empty string so the row disappears, not a dangling «تومان» with
+    // no figure in front of it.
+    const i18n = await loadReportI18n('fa-IR')
+    const model = buildCertificateModel(report({ totalToman: 1e18 }), 'fa', 'JALALI', i18n)
+
+    expect(model.totalInWords).toBe('')
+  })
+})
+
+describe('the average states its own divisor', () => {
+  it('names the number of months it divided by, in the document’s numerals', async () => {
+    // An average with an unstated basis is the number a clerk discards the
+    // whole document over.
+    expect((await build('fa')).averageBasis).toContain('۴')
+    expect((await build('en')).averageBasis).toContain('4')
+  })
+})
+
+describe('incomplete', () => {
+  it('is true when the holder has no name, because the page is not presentable yet', async () => {
+    expect((await build('en', { fullName: '', fullNameEn: '' })).incomplete).toBe(true)
+  })
+
+  it('is true for a name that is only whitespace', async () => {
+    expect((await build('fa', { fullName: '   ' })).incomplete).toBe(true)
+  })
+
+  it('is false once a name is set', async () => {
+    expect((await build('fa')).incomplete).toBe(false)
+  })
+})

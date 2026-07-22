@@ -136,7 +136,13 @@ export const SettingsPage = () => {
 
       <Stack spacing={3}>
         {/* 1 — Personal details. Not in the design's settings frame, but the
-            report is unusable without it, so it follows the same row pattern. */}
+            report is unusable without it, so it follows the same row pattern.
+
+            The row label sits beside the control rather than being a `<label>`
+            bound to it, so each input carries the same text as an `aria-label`.
+            Without it a screen reader announces seven unnamed text boxes in a
+            row — and these are the fields that end up printed on the
+            certificate, so getting the wrong one is not recoverable. */}
         <SettingsSection title={t`Personal details`}>
           <SettingRow label={t`Full name`} description={t`Printed at the top of the income report`}>
             <TextField
@@ -144,6 +150,7 @@ export const SettingsPage = () => {
               value={profile.fullName}
               onChange={(event) => setProfile({ ...profile, fullName: event.target.value })}
               sx={{ minWidth: 280 }}
+              slotProps={{ htmlInput: { 'aria-label': t`Full name` } }}
             />
           </SettingRow>
           <SettingRow
@@ -155,7 +162,7 @@ export const SettingsPage = () => {
               value={profile.fullNameEn}
               onChange={(event) => setProfile({ ...profile, fullNameEn: event.target.value })}
               sx={{ minWidth: 280 }}
-              slotProps={{ htmlInput: { dir: 'ltr' } }}
+              slotProps={{ htmlInput: { dir: 'ltr', 'aria-label': t`Full name in English` } }}
             />
           </SettingRow>
           <SettingRow label={t`National ID`} description={t`Optional, shown on the report when set`}>
@@ -164,6 +171,7 @@ export const SettingsPage = () => {
               value={profile.nationalId}
               onChange={(event) => setProfile({ ...profile, nationalId: event.target.value })}
               sx={{ minWidth: 280 }}
+              slotProps={{ htmlInput: { 'aria-label': t`National ID` } }}
             />
           </SettingRow>
           <SettingRow label={t`Passport number`} description={t`Optional. Worth setting if the report is for a visa application`}>
@@ -172,7 +180,7 @@ export const SettingsPage = () => {
               value={profile.passportNumber}
               onChange={(event) => setProfile({ ...profile, passportNumber: event.target.value })}
               sx={{ minWidth: 280 }}
-              slotProps={{ htmlInput: { dir: 'ltr' } }}
+              slotProps={{ htmlInput: { dir: 'ltr', 'aria-label': t`Passport number` } }}
             />
           </SettingRow>
           <SettingRow label={t`Phone`} description={t`Optional contact line on the report`}>
@@ -181,6 +189,7 @@ export const SettingsPage = () => {
               value={profile.phone}
               onChange={(event) => setProfile({ ...profile, phone: event.target.value })}
               sx={{ minWidth: 280 }}
+              slotProps={{ htmlInput: { 'aria-label': t`Phone` } }}
             />
           </SettingRow>
           <SettingRow label={t`Address`} description={t`Optional, printed under your name`}>
@@ -191,6 +200,7 @@ export const SettingsPage = () => {
               multiline
               minRows={2}
               sx={{ minWidth: 280 }}
+              slotProps={{ htmlInput: { 'aria-label': t`Address` } }}
             />
           </SettingRow>
           <SettingRow
@@ -204,7 +214,7 @@ export const SettingsPage = () => {
               multiline
               minRows={2}
               sx={{ minWidth: 280 }}
-              slotProps={{ htmlInput: { dir: 'ltr' } }}
+              slotProps={{ htmlInput: { dir: 'ltr', 'aria-label': t`Address in English` } }}
             />
           </SettingRow>
           <SettingRow label={t`Save details`} description={t`Store these on this device`}>

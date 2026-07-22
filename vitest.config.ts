@@ -48,6 +48,10 @@ export default defineConfig({
           name: 'unit',
           environment: 'node',
           include: ['src/**/*.test.ts'],
+          // Installs a real IndexedDB implementation over the global and empties
+          // it between cases, so the data layer can be tested for what it
+          // actually does rather than against a mocked Dexie.
+          setupFiles: [join(rootDir, 'src/test-setup.ts')],
         },
       },
       {

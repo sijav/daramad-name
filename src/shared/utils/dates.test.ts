@@ -1,5 +1,23 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { averagingPeriod, monthBucketsOfYear, monthsSpanned, yearOf, yearRange } from './dates'
+import type { I18n } from '@lingui/core'
+import { loadReportI18n } from 'src/core/i18n'
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import {
+  averagingPeriod,
+  dayRange,
+  formatDate,
+  formatDateEnglish,
+  formatDateLong,
+  formatDateRangeLong,
+  inclusiveDayRange,
+  isToday,
+  monthBucketsOfYear,
+  monthIndexOf,
+  monthNames,
+  monthsSpanned,
+  toDateInputValue,
+  yearOf,
+  yearRange,
+} from './dates'
 
 // The Jalali boundary logic is the part most likely to be subtly wrong and
 // least likely to be noticed — a year that starts in January instead of
@@ -124,5 +142,175 @@ describe('averagingPeriod — one rule for every monthly average', () => {
     const next = yearRange(1406, 'JALALI')
     const { range } = averagingPeriod(next, 'JALALI')
     expect(new Date(range.to).getTime()).toBeGreaterThanOrEqual(new Date(range.from).getTime())
+  })
+})
+
+// Everything below is display. None of it can throw — a mistake here prints a
+// date that is off by a month, or Persian numerals on an English certificate,
+// and the page still looks finished on its way to an embassy.
+
+const at = (year: number, monthIndex: number, day: number) => new Date(year, monthIndex, day, 12).toISOString()
+
+// 1 August 2026 is 10 Mordad 1405; 1 December 2025 is still 1404.
+const AUG_1 = at(2026, 7, 1)
+const AUG_15 = at(2026, 7, 15)
+const APR_10 = at(2026, 3, 10)
+const AUG_1_2025 = at(2025, 7, 1)
+const DEC_1_2025 = at(2025, 11, 1)
+
+let fa: I18n
+let en: I18n
+
+beforeAll(async () => {
+  // Two independent instances, exactly as the app uses them: the interface's
+  // and the report's.
+  fa = await loadReportI18n('fa-IR')
+  en = await loadReportI18n('en-US')
+})
+
+describe('formatDate — the ledger column', () => {
+  it('prints the Jalali date in Persian numerals', () => {
+    expect(formatDate(AUG_1, 'JALALI')).toBe('۱۴۰۵/۰۵/۱۰')
+  })
+
+  it('prints the same instant Gregorian when the calendar setting says so', () => {
+    expect(formatDate(AUG_1, 'GREGORIAN', false)).toBe('2026/08/01')
+  })
+
+  it('keeps Latin digits when asked, which is what English mode asks for', () => {
+    // Persian numerals leaking into English shipped as a live bug once.
+    expect(formatDate(AUG_1, 'JALALI', false)).toBe('1405/05/10')
+  })
+})
+
+describe('formatDateLong', () => {
+  it('names the JALALI month, not the Gregorian one at the same instant', () => {
+    expect(formatDateLong(AUG_1, 'JALALI', fa)).toBe('۱۰ مرداد ۱۴۰۵')
+  })
+
+  it('reads December back into the previous Jalali year', () => {
+    // The Farvardin boundary again: 2025 and 1404 do not line up.
+    expect(formatDateLong(DEC_1_2025, 'JALALI', fa)).toBe('۱۰ آذر ۱۴۰۴')
+  })
+
+  it('uses Gregorian names and Latin digits for the English document', () => {
+    expect(formatDateLong(AUG_1, 'GREGORIAN', en, false)).toBe('1 August 2026')
+  })
+})
+
+describe('formatDateEnglish', () => {
+  it('is Gregorian and Latin whatever else is going on', () => {
+    // This is the one the English certificate calls while the app around it is
+    // still Persian.
+    expect(formatDateEnglish(AUG_1)).toBe('01 Aug 2026')
+    expect(formatDateEnglish(AUG_1)).not.toMatch(/[۰-۹]/)
+  })
+})
+
+// The collapsing rule from AGENTS.md. What it guards against is not ugliness:
+// «۱۴۰۵ تا ۱۴۰۵» makes a reader stop and check whether the two ends are
+// actually different years, on a line whose whole job is to be unambiguous.
+describe('formatDateRangeLong — shared parts written once', () => {
+  it('drops the month AND the year from the opening date inside one month', () => {
+    expect(formatDateRangeLong(AUG_1, AUG_15, 'JALALI', fa, 'تا')).toBe('۱۰ تا ۲۴ مرداد ۱۴۰۵')
+  })
+
+  it('keeps the opening month but drops the year inside one year', () => {
+    expect(formatDateRangeLong(APR_10, AUG_1, 'JALALI', fa, 'تا')).toBe('۲۱ فروردین تا ۱۰ مرداد ۱۴۰۵')
+  })
+
+  it('spells both ends out when the range really crosses a year', () => {
+    expect(formatDateRangeLong(DEC_1_2025, AUG_1, 'JALALI', fa, 'تا')).toBe('۱۰ آذر ۱۴۰۴ تا ۱۰ مرداد ۱۴۰۵')
+  })
+
+  it('does not collapse a shared month INDEX across two years', () => {
+    // Mordad 1404 to Mordad 1405 is twelve months, not fourteen days. Testing
+    // month equality without year equality would print «۱۰ تا ۱۰ مرداد ۱۴۰۵».
+    expect(formatDateRangeLong(AUG_1_2025, AUG_1, 'JALALI', fa, 'تا')).toBe('۱۰ مرداد ۱۴۰۴ تا ۱۰ مرداد ۱۴۰۵')
+  })
+
+  it('collapses the English range too, in Latin digits', () => {
+    expect(formatDateRangeLong(APR_10, AUG_1, 'GREGORIAN', en, 'to', false)).toBe('10 April to 1 August 2026')
+  })
+})
+
+describe('isToday — the switch behind the backdating warning', () => {
+  const today = (hours: number, minutes = 0, seconds = 0, ms = 0) => {
+    const date = new Date()
+    date.setHours(hours, minutes, seconds, ms)
+    return date.toISOString()
+  }
+
+  it('accepts both edges of today, not just the middle of it', () => {
+    // A receipt logged at 23:59 is still today's, and must not make the form
+    // claim it is backdated.
+    expect(isToday(today(0))).toBe(true)
+    expect(isToday(today(23, 59, 59, 999))).toBe(true)
+  })
+
+  it('rejects yesterday, which is what relabels the rate field', () => {
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+    yesterday.setHours(12, 0, 0, 0)
+    expect(isToday(yesterday.toISOString())).toBe(false)
+  })
+
+  it('rejects scenario 5, a receipt from two months ago', () => {
+    const twoMonthsAgo = new Date()
+    twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2)
+    expect(isToday(twoMonthsAgo.toISOString())).toBe(false)
+  })
+})
+
+describe('inclusiveDayRange — a filter must not drop its own last day', () => {
+  it('covers the whole closing day, not the instant it began', () => {
+    const { from, to } = inclusiveDayRange(AUG_1, AUG_15)
+    const lateOnTheLastDay = new Date(2026, 7, 15, 23, 30).toISOString()
+    expect(lateOnTheLastDay >= from && lateOnTheLastDay <= to).toBe(true)
+  })
+
+  it('starts at the opening midnight, so that morning is not lost either', () => {
+    const { from } = inclusiveDayRange(AUG_1, AUG_15)
+    const earlyOnTheFirstDay = new Date(2026, 7, 1, 0, 30).toISOString()
+    expect(earlyOnTheFirstDay >= from).toBe(true)
+  })
+})
+
+describe('dayRange', () => {
+  it('spans exactly one whole local day from any instant inside it', () => {
+    const { from, to } = dayRange(new Date(2026, 7, 1, 15, 42))
+    expect(new Date(to).getTime() - new Date(from).getTime()).toBe(24 * 60 * 60 * 1000 - 1)
+  })
+})
+
+describe('toDateInputValue', () => {
+  it('is Gregorian ISO, which is the only thing a native date input speaks', () => {
+    expect(toDateInputValue(AUG_1)).toBe('2026-08-01')
+  })
+})
+
+describe('month names and indexes line up', () => {
+  it('starts the Jalali year at Farvardin and ends it at Esfand', () => {
+    expect(monthNames('JALALI', fa)).toHaveLength(12)
+    expect(monthNames('JALALI', fa)[0]).toBe('فروردین')
+    expect(monthNames('JALALI', fa)[11]).toBe('اسفند')
+  })
+
+  it('names the month an instant actually falls in, per calendar', () => {
+    // The same instant is Mordad and August. An index taken from one calendar
+    // and a name list from the other is off by five months and still plausible.
+    expect(monthNames('JALALI', fa)[monthIndexOf(new Date(AUG_1), 'JALALI')]).toBe('مرداد')
+    expect(monthNames('GREGORIAN', en)[monthIndexOf(new Date(AUG_1), 'GREGORIAN')]).toBe('August')
+  })
+
+  it('takes its i18n instance, so the PDF can be English while the app stays Persian', () => {
+    expect(monthNames('JALALI', en)[0]).toBe('Farvardin')
+  })
+})
+
+describe('yearOf', () => {
+  it('reads the Gregorian year as well as the Jalali one', () => {
+    expect(yearOf(new Date(AUG_1), 'GREGORIAN')).toBe(2026)
+    expect(yearOf(new Date(AUG_1), 'JALALI')).toBe(1405)
   })
 })

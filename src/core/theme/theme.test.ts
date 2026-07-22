@@ -99,6 +99,26 @@ describe('getTheme — the two blues stay separate', () => {
     expect(getTheme('light', 'rtl').palette.secondary.main).toBe(lightColors.brandPrimary)
     expect(getTheme('dark', 'rtl').palette.secondary.main).toBe(darkColors.brandPrimary)
   })
+
+  // The rule that separates them, stated once: `primary` is a CONTAINER role.
+  // It fills a background under `primary.dark` and draws non-text marks — a
+  // border, a dot, an icon on `primary.light`, all held to 3:1. It never draws
+  // type: #3b6ef5 is 4.39:1 on `surface-default` and 4.21:1 on `surface-subtle`,
+  // under the 4.5:1 bar wherever it lands. `brandPrimary` #3460d6 is the ink,
+  // at 5.49:1 and 5.26:1 on the same two.
+  //
+  // The theme is where that breaks silently, because MUI resolves
+  // `color="primary"` to `primary.main` for a LABEL unless a `variants` entry
+  // says otherwise — which is how `variant="outlined"` shipped 14/600 #3b6ef5
+  // on every page. One step of blue: invisible in review, and axe found it
+  // seven times.
+  it('never paints primary.main as type in any component override', () => {
+    for (const mode of ['light', 'dark'] as const) {
+      const { components, palette } = getTheme(mode, 'rtl')
+
+      expect(JSON.stringify(components ?? {}), mode).not.toContain(`"color":"${palette.primary.main}"`)
+    }
+  })
 })
 
 describe('getTheme — direction', () => {
@@ -152,5 +172,50 @@ describe('getTheme — component overrides', () => {
 
     expect(palette.background.paper).toBe(lightColors.surfaceDefault)
     expect(palette.background.paper).not.toBe(lightColors.glassSurface)
+  })
+})
+
+// The typography variants are the design's type ramp — sizes, not outline
+// levels. MUI's default mapping renders `h5` as a real `<h5>`, so a card title
+// that only wanted 16/600 skipped two heading levels under the page's `<h2>`;
+// axe's `heading-order` reported it 82 times across the suite. Nothing about
+// that failure is visible, which is exactly why it is asserted here.
+describe('getTheme — typography maps size onto the right element', () => {
+  const mapping = (): Record<string, string> => {
+    const props = getTheme('light', 'rtl').components?.MuiTypography?.defaultProps
+    return (props?.variantMapping ?? {}) as Record<string, string>
+  }
+
+  // Three levels deep and no deeper: the wordmark, the page title, a section.
+  it('sends every title size to the one section level the app has', () => {
+    const map = mapping()
+
+    expect(map.h3).toBe('h3')
+    expect(map.h4).toBe('h3')
+    expect(map.h5).toBe('h3')
+    expect(map.h6).toBe('h3')
+  })
+
+  it('keeps the page-title size on h2', () => {
+    expect(mapping().h2).toBe('h2')
+  })
+
+  // `numberLarge` is the 32px figure and the `subtitle` pair are field labels
+  // and row values. MUI would make all three headings — `subtitle1`/`subtitle2`
+  // default to `<h6>`, which is where the ledger totals and settings row labels
+  // were entering the outline.
+  it('keeps figures and labels out of the outline entirely', () => {
+    const map = mapping()
+
+    for (const variant of ['h1', 'subtitle1', 'subtitle2']) {
+      expect(map[variant], variant).not.toMatch(/^h[1-6]$/)
+    }
+  })
+
+  // The one heading the app declares by hand. `component` beats the mapping, so
+  // AppShell's `variant="h3" component="h1"` wordmark has to survive it — with
+  // no `<h1>` there is no document outline to be ordered in the first place.
+  it('leaves h1 to be claimed explicitly, never by a variant', () => {
+    expect(Object.values(mapping())).not.toContain('h1')
   })
 })

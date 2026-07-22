@@ -76,7 +76,9 @@ export const DashboardPage = () => {
 
       {isLoading ? (
         <Box sx={{ display: 'grid', placeItems: 'center', py: 10 }}>
-          <CircularProgress />
+          {/* `role="progressbar"` with no text inside it has no accessible
+              name of its own (axe `aria-progressbar-name`). */}
+          <CircularProgress aria-label={t`Loading`} />
         </Box>
       ) : !hasData ? (
         <SurfaceCard>

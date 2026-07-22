@@ -12,6 +12,21 @@ const config: StorybookConfig = {
   // automigration's own fix renames `disable` to `disabled` — a key the 10.5
   // runtime never reads, so it silences the warning and re-enables the addon.
   features: { backgrounds: false },
+  viteFinal: (config) => ({
+    ...config,
+    optimizeDeps: {
+      ...config.optimizeDeps,
+      // `fake-indexeddb` is the UNIT project's shim — the browser has a real
+      // IndexedDB and never needs it. But Vite's dependency scanner crawls all
+      // of `src`, finds the import in `src/test-setup.ts`, and pre-bundles it
+      // MID-RUN. That prints "optimized dependencies changed. reloading" and
+      // reloads the page, which drops the websocket and surfaces in the Testing
+      // panel as "Connection lost" — reliably around test 56 of 252.
+      exclude: [...(config.optimizeDeps?.exclude ?? []), 'fake-indexeddb', 'fake-indexeddb/auto'],
+      // Scanning entries are the stories, not every file under `src`.
+      entries: ['../src/**/*.stories.@(ts|tsx)', '../src/**/*.mdx'],
+    },
+  }),
 }
 
 export default config

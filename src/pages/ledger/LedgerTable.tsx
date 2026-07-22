@@ -144,7 +144,11 @@ export const LedgerTable = ({ receipts, summary, sort, filtered = false, onSortC
     })
 
   return (
-    <TableContainer sx={{ overflowX: 'auto' }}>
+    // A region that scrolls must be reachable by keyboard, or the columns past
+    // the fold are unreachable without a mouse (axe
+    // `scrollable-region-focusable`). `tabIndex` makes it focusable so arrow
+    // keys can scroll it, and it needs a name once it is in the tab order.
+    <TableContainer tabIndex={0} role="group" aria-label={t`Income ledger table`} sx={{ overflowX: 'auto' }}>
       {/* Only fix the layout once there is enough width to honour the explicit
           widths. On a phone the three columns share whatever the screen gives,
           so there is nothing to scroll. */}

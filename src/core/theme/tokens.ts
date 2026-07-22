@@ -89,16 +89,39 @@ export const lightColors: ColorPalette = {
   textDisabled: '#626569',
   surfaceSubtle: '#f8f9fb',
   // blue/40, success/40, warning/40, neutral-variant/60 — the design uses a
-  // categorical set here, not a single-hue ramp.
+  // categorical set here, not a single-hue ramp. These keep the Figma tones
+  // (#2e9e5b, #e2a400) that `success` and `warning` below had to leave behind:
+  // a donut slice is a filled area, not 12px type, so it is not held to 4.5:1.
   chartSeries: ['#3b6ef5', '#2e9e5b', '#e2a400', '#95989c', '#6b93f7', '#7c7e83'],
 
   glassSurface: 'rgba(255, 255, 255, 0.6)',
 
-  success: '#2e9e5b',
+  // The Figma sheet gives success/40 #2e9e5b and warning/40 #e2a400. Both are
+  // used as TEXT on their own container — the success and warning `Tag`, and
+  // the `InsightCallout` sentence — and at that job the design tones fail WCAG
+  // AA outright: #2e9e5b on #eef7f1 measures 3.12:1 and #e2a400 on #fdf7ea an
+  // unreadable 2.06:1, against a 4.5:1 requirement for text under 18.66px bold.
+  //
+  // Both are darkened here with hue and saturation held EXACTLY at the design's
+  // values (146.4°/54.9% and 43.5°/100%) — only HSL lightness drops, 40%→31.5%
+  // and 44.3%→28.2%, the least that clears the bar. That lifts them to 4.74:1
+  // and 4.72:1 on their containers, and 5.13:1 / 4.99:1 on `surface-default`.
+  //
+  // The containers themselves are untouched, so every tinted background in the
+  // app still matches Figma; only the ink on top of them moved.
+  //
+  // `error` is the same story a third time. The sheet's #dc362e is drawn as
+  // 12px ink — `Field`'s helper line under an invalid input — and as the fill
+  // behind white on the destructive `ConfirmDialog` button. On `surface-subtle`
+  // it measures 4.32:1 and white on it 4.44:1, both under 4.5:1. Hue 2.8° and
+  // saturation 71.3% are held exactly; only HSL lightness drops, 52.2%→50.0%,
+  // the least that clears the bar in every direction at once: 4.55:1 on
+  // `surface-subtle`, 4.75:1 on `surface-default`, and 4.79:1 for white on it.
+  success: '#247c48',
   successContainer: '#eef7f1',
-  warning: '#e2a400',
+  warning: '#906800',
   warningContainer: '#fdf7ea',
-  error: '#dc362e',
+  error: '#da2d25',
   onError: '#ffffff',
   errorContainer: '#fceeee',
   onErrorContainer: '#410e0b',

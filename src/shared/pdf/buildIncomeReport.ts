@@ -99,21 +99,31 @@ export const buildIncomeReport = (model: CertificateModel): TDocumentDefinitions
       { text: model.footnote, style: 'footer', alignment, margin: [0, 18, 0, 0] },
     ],
 
+    // The greys are the ones `IncomeCertificate` paints, and they stay in step
+    // with it deliberately — the two renderers share one model precisely so the
+    // reader cannot tell which produced the page in front of them. `#6e7075`
+    // replaced `#7c7e83`, which measured 4.06:1 on white against a 4.5:1 bar;
+    // the new value measures 4.96:1. See the note on `FAINT` there.
+    //
+    // Sizes do NOT transfer one for one: these are points, the sheet's are CSS
+    // pixels, and both pages measure ~176mm across, so one of its pixels is
+    // 0.75 of a point here. Its 9.5px floor is 7.1pt — the smallest type below
+    // is already 8pt, so it clears that floor without moving.
     styles: {
       issuer: { fontSize: 9, bold: true, color: '#3460d6', margin: [0, 0, 0, 3] },
       title: { fontSize: 19, bold: true },
       subtitle: { fontSize: 9.5, color: '#494b50', margin: [0, 3, 0, 0] },
-      serialLabel: { fontSize: 8, color: '#7c7e83' },
+      serialLabel: { fontSize: 8, color: '#6e7075' },
       serial: { fontSize: 11, bold: true },
       section: { fontSize: 12, bold: true, margin: [0, 0, 0, 6] },
       label: { fontSize: 10, color: '#494b50' },
-      faint: { fontSize: 8.5, color: '#7c7e83' },
+      faint: { fontSize: 8.5, color: '#6e7075' },
       value: { fontSize: 10.5 },
       totalFigure: { fontSize: 16, bold: true },
       words: { fontSize: 9.5, color: '#494b50' },
       th: { fontSize: 9, bold: true, fillColor: '#e9eaec' },
       td: { fontSize: 9.5 },
-      footer: { fontSize: 8, color: '#7c7e83', italics: true },
+      footer: { fontSize: 8, color: '#6e7075', italics: true },
     },
   }
 }

@@ -40,7 +40,10 @@ export const TopCustomers = ({ shares, limit = 5, othersLabel }: TopCustomersPro
             <Typography variant="subtitle1" sx={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {row.clientName}
             </Typography>
-            <Typography variant="h5" sx={{ color: 'text.secondary', flexShrink: 0, whiteSpace: 'nowrap' }}>
+            {/* A row of a ranked list, not an outline entry — the client name
+                and its amount are data. `h5` is only the size the design draws
+                the amount at, so the element is pinned to `p`. */}
+            <Typography variant="h5" component="p" sx={{ color: 'text.secondary', flexShrink: 0, whiteSpace: 'nowrap' }}>
               {t`${number(Math.round(row.totalToman / 1_000_000))} M Toman`}
             </Typography>
           </Stack>

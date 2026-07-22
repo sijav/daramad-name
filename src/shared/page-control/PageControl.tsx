@@ -97,6 +97,16 @@ export const PageControl = ({ page, pageCount, pageSize, totalCount, onPageChang
           select
           value={pageSize}
           onChange={(event) => onPageSizeChange(Number(event.target.value))}
+          // The design gives this select no visible label, so MUI's `Select`
+          // rendered a `role="combobox"` with no accessible name at all (axe
+          // `aria-input-field-name`) — a screen reader announced «۲۵ ردیف در
+          // صفحه» with nothing saying what it controls.
+          //
+          // MUI's documented answer when there is no `InputLabel` to point
+          // `labelId` at is an `aria-label` on the input props; on `TextField`
+          // that slot is `htmlInput`, which `Select` spreads onto the display
+          // element it gives the combobox role to.
+          slotProps={{ htmlInput: { 'aria-label': t`Rows per page` } }}
           sx={(theme) => ({
             width: 190,
             '& .MuiOutlinedInput-root': {

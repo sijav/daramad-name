@@ -136,7 +136,7 @@ const preview: Preview = {
   tags: ['autodocs'],
   parameters: {
     controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
-    a11y: { test: 'todo' },
+    a11y: { test: 'error' },
     docs: {
       // A component with six state variants is a page worth navigating.
       toc: true,

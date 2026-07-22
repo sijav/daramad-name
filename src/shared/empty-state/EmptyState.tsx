@@ -34,7 +34,11 @@ export const EmptyState = ({ icon, title, description, actionLabel, onAction }: 
       </Box>
     ) : null}
 
-    <Typography variant="h3">{title}</Typography>
+    {/* An empty state stands in for the panel's content, so its title is a
+        real heading at the same level a section title would be. */}
+    <Typography variant="h3" component="h3">
+      {title}
+    </Typography>
 
     <Typography variant="body2" sx={{ color: 'text.secondary', maxWidth: 380 }}>
       {description}

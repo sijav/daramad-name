@@ -3,7 +3,7 @@ import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded'
 import OpenInNewRoundedIcon from '@mui/icons-material/OpenInNewRounded'
 import { Alert, Box, Button, CircularProgress, Grid, MenuItem, Stack, TextField, Typography } from '@mui/material'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { useSettings } from 'src/core/query'
 import { radius } from 'src/core/theme'
@@ -28,6 +28,7 @@ export const ReportPage = () => {
   const [year, setYear] = useReportYear(calendar)
   const [language, setLanguage] = useState<ReportLanguage>('fa')
   const [error, setError] = useState<string | null>(null)
+  const rangeLabelId = useId()
 
   const range = yearRange(year, calendar)
 
@@ -78,7 +79,9 @@ export const ReportPage = () => {
         <Grid size={{ xs: 12, lg: 8 }}>
           {isLoading ? (
             <Box sx={{ display: 'grid', placeItems: 'center', py: 8 }}>
-              <CircularProgress />
+              {/* `role="progressbar"` with no text inside it has no accessible
+                  name of its own (axe `aria-progressbar-name`). */}
+              <CircularProgress aria-label={t`Loading`} />
             </Box>
           ) : !hasIncome ? (
             <SurfaceCard radius="lg" flat>
@@ -90,7 +93,7 @@ export const ReportPage = () => {
             </SurfaceCard>
           ) : (
             <SurfaceCard radius="lg" flat>
-              {model ? <IncomeCertificate model={model} variant="preview" /> : <CircularProgress />}
+              {model ? <IncomeCertificate model={model} variant="preview" /> : <CircularProgress aria-label={t`Loading`} />}
             </SurfaceCard>
           )}
         </Grid>
@@ -103,7 +106,13 @@ export const ReportPage = () => {
               </Typography>
 
               <Stack spacing={1}>
-                <Typography sx={{ color: 'text.secondary' }} variant="caption">
+                {/* The design writes the label as a caption above the control
+                    rather than as a `<label>`, so the select opened as an
+                    unnamed combobox (axe `aria-input-field-name`). `labelId` is
+                    MUI's documented way to point a Select at an element that
+                    already says what it is — better than a duplicated
+                    `aria-label`, which would drift from the visible word. */}
+                <Typography id={rangeLabelId} sx={{ color: 'text.secondary' }} variant="caption">
                   <Trans>Range</Trans>
                 </Typography>
                 <TextField
@@ -111,6 +120,7 @@ export const ReportPage = () => {
                   value={year}
                   onChange={(event) => setYear(Number(event.target.value))}
                   fullWidth
+                  slotProps={{ select: { labelId: rangeLabelId } }}
                   sx={(theme) => ({
                     '& .MuiOutlinedInput-root': {
                       height: 44,

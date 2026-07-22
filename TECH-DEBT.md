@@ -167,14 +167,32 @@ section labels there. Investigated but not resolved.
 
 ---
 
-## 9. Accessibility checks are not enforced
+## 9. One axe rule is switched off, on the chart stories only
 
-**Status** `.storybook/preview.tsx` sets `a11y: { test: 'todo' }`, so
-violations are reported but do not fail the run. A full run from the Testing
-panel currently surfaces **103 findings** — real, and worth working through.
+**Status** Accessibility is now ENFORCED — `.storybook/preview.tsx` sets
+`a11y: { test: 'error' }`, so any violation fails the run. The suite is at zero.
+It was at 103 findings.
 
-**What would fix it** Flip to `'error'` once the known violations are cleared,
-so a regression fails CI rather than sitting in a panel nobody opens.
+**The exception** `role-img-alt` is disabled in five story files, all of which
+render a MUI X chart, via `parameters.a11y.config.rules`. Nowhere else, and no
+other rule anywhere.
+
+**Cause, and it is upstream** MUI X renders `ChartsAccessibilityProxy`
+(`@mui/x-charts/internals/components/ChartsAccessibilityProxy`). It creates two
+`role="img"` divs pointing at `voiceover-<chartId>-1|2` elements which the
+library creates EMPTY and fills only while the chart has keyboard focus. It is a
+live region for keyboard navigation, not a static image label — so at rest axe
+correctly sees `role="img"` with an empty accessible name, on every chart, in
+every story. 18 findings, one cause.
+
+**Why it is not fixed instead** The only two routes are passing
+`disableKeyboardNavigation`, which removes a real accessibility feature to
+satisfy a checker, or writing into MUI X's internal divs. Both are worse than
+the finding.
+
+**How to tell it can go** Delete the `CHART_A11Y` constant from the five story
+files and run `npm run test:storybook`. If it passes, MUI X now gives the proxy
+a name at rest.
 
 ---
 

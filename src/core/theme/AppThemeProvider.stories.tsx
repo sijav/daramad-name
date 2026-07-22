@@ -29,7 +29,26 @@ const Probe = () => {
         <Button data-testid="filled" variant="contained">
           Filled
         </Button>
-        <Chip data-testid="chip" color="primary" label="Chip" />
+        <Button data-testid="outlined" variant="outlined">
+          Outlined
+        </Button>
+        <Button data-testid="text" variant="text">
+          Text
+        </Button>
+        {/* `color="primary"` is deliberately NOT used here. MUI's filled
+            primary chip paints `contrastText` on `primary.main` — white on
+            #3b6ef5, 4.44:1 — and the app paints no such chip anywhere: this
+            probe was the only one in the repo, and it was asserting a
+            combination the product does not ship. `ChipSelect` and the nav rail
+            use `primary` as the CONTAINER pair (`primary.light` behind
+            `primary.dark`, 13.5:1) edged in `primary.main`, which is a border
+            and so held to 3:1. The probe now paints exactly that, and still
+            proves `primary.main` resolves to the chip blue. */}
+        <Chip
+          data-testid="chip"
+          label="Chip"
+          sx={{ backgroundColor: 'primary.light', color: 'primary.dark', border: '1px solid', borderColor: 'primary.main' }}
+        />
       </Stack>
 
       <Table>
@@ -173,17 +192,37 @@ export const FiguresStayRightAlignedInEnglish: Story = {
 }
 
 /**
- * The two blues, as painted.
+ * The two blues, as painted — and in the two jobs that keep them apart.
  *
- * #3460d6 fills a button, #3b6ef5 fills a chip. They are one step apart, so
- * merging them onto `primary.main` is invisible in review and obvious beside
- * the design.
+ * #3460d6 FILLS a button, because a fill carries type and has to reach 4.5:1
+ * against it. #3b6ef5 EDGES a chip, because a border is non-text and only has
+ * to reach 3:1. They are one step apart, so merging them onto `primary.main` is
+ * invisible in review and obvious beside the design.
  */
 export const TheTwoBluesArePainted: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
     await expect(styleOf(await canvas.findByTestId('filled')).backgroundColor).toBe('rgb(52, 96, 214)')
-    await expect(styleOf(await canvas.findByTestId('chip')).backgroundColor).toBe('rgb(59, 110, 245)')
+    await expect(styleOf(await canvas.findByTestId('chip')).borderTopColor).toBe('rgb(59, 110, 245)')
+  },
+}
+
+/**
+ * `primary` never draws type; `brandPrimary` does.
+ *
+ * The rule reads cleanly and paints wrongly the moment one MUI default slips
+ * through, which is exactly what happened: `variant="outlined"` resolved its
+ * label to `primary.main` and put 14/600 #3b6ef5 on `surface-default` at
+ * 4.39:1. Nothing about that is visible — it is one step of blue — so it is
+ * asserted rather than reviewed.
+ */
+export const EveryButtonInkIsTheBrandBlue: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    for (const id of ['outlined', 'text']) {
+      await expect(styleOf(await canvas.findByTestId(id)).color).toBe('rgb(52, 96, 214)')
+    }
   },
 }

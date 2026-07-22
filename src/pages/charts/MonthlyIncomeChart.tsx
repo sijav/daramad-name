@@ -28,7 +28,7 @@ const PLOT_HEIGHT = 220
  */
 export const MonthlyIncomeChart = ({ months, calendar }: MonthlyIncomeChartProps) => {
   const { t, i18n } = useLingui()
-  const { number } = useFormat()
+  const { number, digits } = useFormat()
   const { direction } = useTheme()
 
   const labels = monthNames(calendar, i18n)
@@ -43,6 +43,23 @@ export const MonthlyIncomeChart = ({ months, calendar }: MonthlyIncomeChartProps
   // «مرداد: ۵۸۹٫۲۵ م» — the design abbreviates to millions rather than printing
   // nine digits over a bar. The full figure lives in the ledger.
   const inMillions = (value: number) => t`${number(value / 1_000_000, 2)} M`
+
+  // A bar's alternative text is NOT its tooltip. The tooltip is width-bound and
+  // may abbreviate; a screen reader is not, so the label spells the month, the
+  // year it belongs to, and the exact figure with its unit. Read from the
+  // dashboard panel — whose title is «درآمد ماه‌به‌ماه», carrying neither year
+  // nor unit — «۵۸۹٫۲۵ M» on its own says nothing at all. Every number goes
+  // through `useFormat` so a Persian reader hears Persian numerals.
+  const barLabel = (label: string, calendarYear: number, totalToman: number) => {
+    const year = digits(calendarYear)
+    // An empty month is the one thing the chart exists to expose (scenario 4's
+    // Mordad), so it says so rather than announcing a bare zero.
+    if (totalToman <= 0) {
+      return t`${label} ${year}: no income recorded`
+    }
+    const amount = number(totalToman)
+    return t`${label} ${year}: ${amount} Toman`
+  }
 
   return (
     <Stack
@@ -72,7 +89,20 @@ export const MonthlyIncomeChart = ({ months, calendar }: MonthlyIncomeChartProps
                   borderRadius: `${radius.sm}px ${radius.sm}px 0 0`,
                   backgroundColor: month.totalToman > 0 ? theme.palette.brandPrimary : theme.palette.borderDefault,
                 })}
-                aria-label={`${label}: ${inMillions(month.totalToman)}`}
+                // `role="img"` is what makes the label legal, not decoration:
+                // `aria-label` is prohibited on a plain <div> (axe
+                // `aria-prohibited-attr`, 120 findings — twelve bars across ten
+                // stories), because a generic element has no role for a name to
+                // attach to. A bar IS a graphic conveying one value, so the
+                // month and its figure become that graphic's alternative text
+                // and the hover-only tooltip stops being the only way to read
+                // the chart.
+                //
+                // It also has to survive `Tooltip`: MUI copies a string `title`
+                // onto the child as `aria-label`, and only loses to an explicit
+                // one because `children.props` is spread last.
+                role="img"
+                aria-label={barLabel(label, month.year, month.totalToman)}
               />
             </Tooltip>
             <Typography variant="caption" sx={{ color: 'text.secondary', textAlign: 'center' }} noWrap>

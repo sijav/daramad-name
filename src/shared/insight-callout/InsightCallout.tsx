@@ -69,7 +69,12 @@ const toneColour = (tone: InsightTone, theme: Theme): string => dotColour(tone, 
 const dotColour = (tone: InsightTone, theme: Theme): string => {
   switch (tone) {
     case 'info':
-      return theme.palette.primary.main
+      // `brandPrimary`, not `primary.main`. The dot and the sentence are one
+      // colour here, and the sentence is 14/600 type on `brand-primary-subtle`:
+      // #3b6ef5 measures 3.99:1 there, under the 4.5:1 bar, while #3460d6
+      // reaches 4.99:1. `primary` is the container role in this palette — it
+      // never draws type — so the blue an insight speaks in is the brand one.
+      return theme.palette.brandPrimary
     case 'positive':
       return theme.palette.success.main
     case 'warning':

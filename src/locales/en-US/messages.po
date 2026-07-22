@@ -82,9 +82,21 @@ msgstr "{0}% of your income comes from a single client."
 #~ msgid "{0}% of your income comes from one client (“{1}”). If they leave, a large part of your income goes with them."
 #~ msgstr "{0}% of your income comes from one client (“{1}”). If they leave, a large part of your income goes with them."
 
+#: src/pages/charts/ClientShareChart.tsx
+msgid "{amount} Toman ({share}%)"
+msgstr "{amount} Toman ({share}%)"
+
 #: src/pages/settings/SettingsPage.tsx
 msgid "{count} sample receipts added."
 msgstr "{count} sample receipts added."
+
+#: src/pages/charts/MonthlyIncomeChart.tsx
+msgid "{label} {year}: {amount} Toman"
+msgstr "{label} {year}: {amount} Toman"
+
+#: src/pages/charts/MonthlyIncomeChart.tsx
+msgid "{label} {year}: no income recorded"
+msgstr "{label} {year}: no income recorded"
 
 #. placeholder {0}: number(month.totalToman)
 #: src/pages/charts/MonthlyIncomeChart.tsx
@@ -722,6 +734,10 @@ msgstr "Income in {0}"
 msgid "Income ledger"
 msgstr "Income ledger"
 
+#: src/pages/ledger/LedgerTable.tsx
+msgid "Income ledger table"
+msgstr "Income ledger table"
+
 #: src/pages/charts/ChartsPage.tsx
 #~ msgid "Income over 12 months"
 #~ msgstr "Income over 12 months"
@@ -812,6 +828,17 @@ msgstr "Light"
 msgid "Light, dark, or follow your device"
 msgstr "Light, dark, or follow your device"
 
+#: src/pages/certificate/CertificatePage.tsx
+#: src/pages/charts/ChartsPage.tsx
+#: src/pages/dashboard/DashboardPage.tsx
+#: src/pages/report/ReportPage.tsx
+msgid "Loading"
+msgstr "Loading"
+
+#: src/shared/ledger-state/LedgerState.tsx
+msgid "Loading the ledger"
+msgstr "Loading the ledger"
+
 #: src/pages/quick-entry/QuickEntryPage.tsx
 msgid "Log a new receipt in under 15 seconds."
 msgstr "Log a new receipt in under 15 seconds."
@@ -819,6 +846,10 @@ msgstr "Log a new receipt in under 15 seconds."
 #: src/pages/quick-entry/QuickEntryPage.tsx
 #~ msgid "Log it in under 15 seconds"
 #~ msgstr "Log it in under 15 seconds"
+
+#: src/shared/layouts/AppShell.tsx
+msgid "Main menu"
+msgstr "Main menu"
 
 #: src/shared/constants/labels.ts
 msgid "March"
@@ -1171,6 +1202,10 @@ msgstr "Restore from file"
 #: src/shared/page-control/PageControl.tsx
 #~ msgid "Rows"
 #~ msgstr "Rows"
+
+#: src/shared/page-control/PageControl.tsx
+msgid "Rows per page"
+msgstr "Rows per page"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Sample data"

@@ -19,11 +19,26 @@ import type { CertificateModel } from './certificateModel'
 
 const INK = '#18191b'
 const MUTED = '#494b50'
-const FAINT = '#7c7e83'
+// FAINT was #7c7e83, which measured 4.06:1 on the white sheet and 3.75:1 on the
+// TINT box — under the 4.5:1 body-text bar on both, at the SMALLEST type on the
+// page. It carries the footnote, the average basis, the serial label and the
+// «به حروف» label, so the least readable text was also the faintest. Darkened in
+// HSL lightness only (222.9°, 2.7% saturation held, 50% -> 44.5%) by the least
+// that clears 4.5:1 against BOTH backgrounds: now 4.96:1 on #ffffff and 4.58:1
+// on TINT. #707176 also clears, at 4.5006:1 on TINT — a margin thinner than one
+// rounding step, which is not a margin.
+const FAINT = '#6e7075'
 const RULE = '#c8cbcf'
 const HAIRLINE = '#e3e5e8'
 const TINT = '#f4f6fa'
 const BRAND = '#3460d6'
+
+// Nothing on this sheet is set smaller than this. The table header was already
+// 9.5px; the footnote sat at 8.5px, which is 6.4pt on the printed A4 — smaller
+// than any print style guide allows for a footnote, and this is a document an
+// embassy clerk or a landlord reads on paper. Contrast alone does not rescue
+// type that small, so the three sub-floor sizes come up to meet it.
+const FLOOR = 9.5
 
 export interface IncomeCertificateProps {
   model: CertificateModel
@@ -73,7 +88,7 @@ export const IncomeCertificate = ({ model, variant = 'page' }: IncomeCertificate
         </Box>
 
         <Box sx={{ textAlign: 'end', flexShrink: 0 }}>
-          <Typography sx={{ color: FAINT, fontSize: 9, letterSpacing: '.04em' }}>{model.serialLabel}</Typography>
+          <Typography sx={{ color: FAINT, fontSize: FLOOR, letterSpacing: '.04em' }}>{model.serialLabel}</Typography>
           <Typography sx={{ fontSize: 12, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{model.serial}</Typography>
         </Box>
       </Stack>
@@ -114,7 +129,7 @@ export const IncomeCertificate = ({ model, variant = 'page' }: IncomeCertificate
           borderCollapse: 'collapse',
           fontSize: 10.5,
           '& th, & td': { padding: '6px 8px', borderBottom: `1px solid ${HAIRLINE}`, textAlign: 'start' },
-          '& th': { color: MUTED, fontWeight: 600, fontSize: 9.5, borderBottom: `1px solid ${RULE}` },
+          '& th': { color: MUTED, fontWeight: 600, fontSize: FLOOR, borderBottom: `1px solid ${RULE}` },
           '& td.num, & th.num': { textAlign: 'end', fontVariantNumeric: 'tabular-nums' },
           '& thead': { display: 'table-header-group' },
           '& tr': { breakInside: 'avoid' },
@@ -138,10 +153,10 @@ export const IncomeCertificate = ({ model, variant = 'page' }: IncomeCertificate
         </tbody>
       </Box>
 
-      <Typography sx={{ color: FAINT, fontSize: 9, mt: 1.5, lineHeight: 1.7 }}>{model.averageBasis}</Typography>
+      <Typography sx={{ color: FAINT, fontSize: FLOOR, mt: 1.5, lineHeight: 1.7 }}>{model.averageBasis}</Typography>
 
       <Box sx={{ borderTop: `1px solid ${HAIRLINE}`, mt: 3, pt: 1.5 }}>
-        <Typography sx={{ color: FAINT, fontSize: 8.5, lineHeight: 1.8 }}>{model.footnote}</Typography>
+        <Typography sx={{ color: FAINT, fontSize: FLOOR, lineHeight: 1.8 }}>{model.footnote}</Typography>
       </Box>
     </Box>
   )

@@ -46,7 +46,12 @@ export const StatTile = ({ label, value, hint, emphasis = false }: StatTileProps
           sx={{ display: 'block', whiteSpace: 'normal', overflowWrap: 'anywhere', fontSize: 'clamp(1rem, 4.2cqw, 1.25rem)' }}
         />
       ) : (
-        <Typography variant="h3">{value}</Typography>
+        // `component="p"` for the same reason `MoneyText` renders a span: this
+        // is the tile's figure, not a heading. The `h3` variant is only how
+        // large the design draws it.
+        <Typography variant="h3" component="p">
+          {value}
+        </Typography>
       )}
 
       {hint ? (

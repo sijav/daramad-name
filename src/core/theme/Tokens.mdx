@@ -1,6 +1,21 @@
 import { Meta } from '@storybook/addon-docs/blocks'
 import { darkColors, lightColors, radius, typeScale } from './tokens'
 
+export const luminance = (hex) => {
+  const channel = (v) => {
+    const s = v / 255
+    return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4)
+  }
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16))
+  return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b)
+}
+
+export const contrast = (fg, bg) => {
+  const a = luminance(fg)
+  const b = luminance(bg)
+  return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)
+}
+
 <Meta title="Design/Tokens" />
 
 # Design tokens
@@ -17,8 +32,16 @@ jobs, and swapping them makes every call-to-action look faded.
 
 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 16, margin: '16px 0' }}>
   {[
-    ['brandPrimary', lightColors.brandPrimary, 'Filled buttons, the brand tile, the current page pill.'],
-    ['primary', lightColors.primary, 'Chips, segmented controls, the nav rail selection.'],
+    [
+      'brandPrimary',
+      lightColors.brandPrimary,
+      'Every blue that is TYPE, or a fill with type on it: filled / tonal / text / outlined buttons, links, the brand tile, the current page pill, the selected segment, an info callout.',
+    ],
+    [
+      'primary',
+      lightColors.primary,
+      'Never type. The container pair behind `primary.dark` (chips, nav rail, primary Tag), and non-text marks — a chip border, a summary-card edge, an icon on `primary.light`.',
+    ],
   ].map(([name, value, use]) => (
     <div key={name} style={{ border: `1px solid ${lightColors.borderDefault}`, borderRadius: 12, overflow: 'hidden' }}>
       <div style={{ background: value, height: 64 }} />
@@ -30,6 +53,98 @@ jobs, and swapping them makes every call-to-action look faded.
     </div>
   ))}
 </div>
+
+**The rule, in one line: `primary` is a container role and never draws type.** #3b6ef5 does not
+reach 4.5:1 on any surface this app paints — 4.39:1 on `surface-default`, 4.21:1 on `surface-subtle`,
+3.99:1 on `brand-primary-subtle` — and white on it is 4.44:1, so it cannot be a fill under type
+either. That is not a colour that can be made to work as ink at 12–16px; it is a colour for
+_containers_ and for _non-text_, where the bar is 3:1.
+
+So it appears in exactly two shapes: the container pair (`primary.light` background, `primary.dark`
+ink, 13.5:1), and marks that are not letters — a chip border, a summary-card edge, an icon glyph
+sitting on `primary.light`. Everything that is type is `brandPrimary` #3460d6, which clears 4.5:1 on
+all three surfaces above.
+
+Three things moved to get there, each one a MUI default that resolved `color="primary"` to
+`primary.main` behind our back: the selected segment's fill (white on #3b6ef5 → white on #3460d6,
+4.43:1 → 5.49:1), the outlined button's label (4.39:1 → 5.49:1 on `surface-default`), and the info
+`InsightCallout`'s sentence (3.99:1 → 4.99:1). `theme.test.ts` now asserts no component override
+paints `primary.main` as a `color` at all, because the difference is one step of blue and no reviewer
+will catch it.
+
+---
+
+## Contrast
+
+Measured, not eyeballed: WCAG 2.1 relative luminance on the exact token hexes. **4.5:1** is the bar
+for body text, **3:1** for text at 18.66px bold or 24px regular and for non-text such as a focus
+ring. Every pair the app actually paints is below; if you add a role, add its pair here.
+
+<div style={{ margin: '16px 0' }}>
+  {[
+    ['text.primary on surface-default', 'onSurface', 'surfaceDefault', 4.5],
+    ['text.secondary on surface-default', 'textSecondary', 'surfaceDefault', 4.5],
+    ['text.secondary on surface-subtle (privacy footer, table head)', 'textSecondary', 'surfaceSubtle', 4.5],
+    ['text.secondary on container-high (segment track, neutral Tag)', 'textSecondary', 'surfaceContainerHigh', 4.5],
+    ['textOnPrimary on brandPrimary (filled button, page pill, selected segment)', 'textOnPrimary', 'brandPrimary', 4.5],
+    ['brandPrimary on brandPrimarySubtle (tonal button, subtle segment, info callout)', 'brandPrimary', 'brandPrimarySubtle', 4.5],
+    ['brandPrimary on surface-default (text button, links, active sort)', 'brandPrimary', 'surfaceDefault', 4.5],
+    ['brandPrimary on surface-subtle (outlined button over the page)', 'brandPrimary', 'surfaceSubtle', 4.5],
+    ['onPrimaryContainer on primaryContainer (chips, nav rail, primary Tag)', 'onPrimaryContainer', 'primaryContainer', 4.5],
+    ['text.primary on brandPrimarySubtle (filter chip)', 'onSurface', 'brandPrimarySubtle', 4.5],
+    ['success on successContainer (success Tag, positive callout)', 'success', 'successContainer', 4.5],
+    ['warning on warningContainer (warning Tag, warning callout)', 'warning', 'warningContainer', 4.5],
+    ['error on surface-subtle (invalid field helper line, 12px)', 'error', 'surfaceSubtle', 4.5],
+    ['error on surface-default (delete row, outlined danger button)', 'error', 'surfaceDefault', 4.5],
+    ['onError on error (destructive confirm button)', 'onError', 'error', 4.5],
+    ['onErrorContainer on errorContainer', 'onErrorContainer', 'errorContainer', 4.5],
+    ['borderFocus against surface-default (focus ring, non-text)', 'borderFocus', 'surfaceDefault', 3],
+    ['outline against surface-default (outlined button edge, non-text)', 'outline', 'surfaceDefault', 3],
+    ['primary against surface-default (chip border, summary-card edge, non-text)', 'primary', 'surfaceDefault', 3],
+    ['primary against primaryContainer (chip border on its own fill, non-text)', 'primary', 'primaryContainer', 3],
+  ].map(([label, fg, bg, need]) => {
+    const cell = (colors) => {
+      const value = contrast(colors[fg], colors[bg])
+      return { value: value.toFixed(2), pass: value >= need }
+    }
+    const light = cell(lightColors)
+    const dark = cell(darkColors)
+    return (
+      <div
+        key={label}
+        style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 0', borderBottom: `1px solid ${lightColors.borderDefault}` }}
+      >
+        <span style={{ flex: 1, fontSize: 12 }}>{label}</span>
+        <code style={{ fontSize: 11, opacity: 0.6, minWidth: 60 }}>≥ {need}:1</code>
+        {[
+          ['light', light],
+          ['dark', dark],
+        ].map(([mode, result]) => (
+          <code key={mode} style={{ fontSize: 11, minWidth: 96, color: result.pass ? lightColors.success : lightColors.error }}>
+            {mode} {result.value}:1
+          </code>
+        ))}
+      </div>
+    )
+  })}
+</div>
+
+Three roles carry a value the Figma sheet does not. `success` and `warning` are drawn as text on
+their own containers — the `Tag` and the chart callout — and the sheet's success/40 #2e9e5b and
+warning/40 #e2a400 measure 3.12:1 and 2.06:1 there, which is unreadable rather than marginal.
+`error` is the same shape of problem at a smaller margin: the sheet's #dc362e is the 12px helper line
+under an invalid field, 4.32:1 on `surface-subtle`, and the fill under white on the destructive
+confirm button, 4.44:1 — both just short. It drops from 52.2% to 50.0% lightness, reaching 4.55:1 and
+4.79:1.
+
+All three were darkened in HSL **lightness only**, hue and saturation untouched, by the least that
+clears 4.5:1. The containers did not move, and `chartSeries` still carries the original tones: a
+donut slice is a filled area, not 12px type.
+
+One more thing that is not a colour at all: opacity. The privacy footer sat at `opacity: 0.75`, which
+composited `text.secondary` #626569 down to #888a8e over the page and measured 3.28:1 — a value no
+token audit can see, because no token has it. If a line needs to recede, reach for `text.secondary`
+rather than dimming it; the recession is already in the token, and it is 5.56:1.
 
 ---
 
@@ -76,9 +191,7 @@ Vazirmatn throughout. Line heights are unitless so they survive a user changing 
       <code style={{ fontSize: 11, minWidth: 90, opacity: 0.5 }}>
         {style.fontSize}/{style.fontWeight}
       </code>
-      <span style={{ fontSize: style.fontSize, fontWeight: style.fontWeight, lineHeight: style.lineHeight }}>
-        درآمدنامه ۱۲٬۵۰۰٬۰۰۰
-      </span>
+      <span style={{ fontSize: style.fontSize, fontWeight: style.fontWeight, lineHeight: style.lineHeight }}>درآمدنامه ۱۲٬۵۰۰٬۰۰۰</span>
     </div>
   ))}
 </div>

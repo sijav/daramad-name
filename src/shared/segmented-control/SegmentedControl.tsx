@@ -55,11 +55,23 @@ export const SegmentedControl = <T extends string>({
           borderRadius: `${variant === 'subtle' ? radius.sm : radius.full}px !important`,
           color: theme.palette.text.secondary,
           ...theme.typography.subtitle2,
+          // The filled segment is the ONE place in the app that puts white type
+          // on a solid `--md-sys-color-primary` #3b6ef5, and that pair measures
+          // 4.43:1 — 0.07 short of the 4.5:1 AA needs for 14px text. The design
+          // itself is under the bar, not the implementation.
+          //
+          // Everywhere else the design uses `primary` for a chip or the nav rail
+          // it uses the CONTAINER pair (`primary.light` / `primary.dark`, 13.5:1),
+          // so this control is the only solid fill affected. It moves to the
+          // palette's other, darker brand blue — `brandPrimary` #3460d6, already
+          // filling every contained button and the current-page pill — which
+          // carries `textOnPrimary` at 5.49:1. An existing token, one step
+          // darker, rather than a new hex invented for one control.
           '&.Mui-selected': {
-            backgroundColor: variant === 'subtle' ? theme.palette.surfaceDefault : theme.palette.primary.main,
-            color: variant === 'subtle' ? theme.palette.brandPrimary : theme.palette.primary.contrastText,
+            backgroundColor: variant === 'subtle' ? theme.palette.surfaceDefault : theme.palette.brandPrimary,
+            color: variant === 'subtle' ? theme.palette.brandPrimary : theme.palette.textOnPrimary,
             '&:hover': {
-              backgroundColor: variant === 'subtle' ? theme.palette.surfaceDefault : theme.palette.primary.main,
+              backgroundColor: variant === 'subtle' ? theme.palette.surfaceDefault : theme.palette.brandPrimary,
             },
           },
         },

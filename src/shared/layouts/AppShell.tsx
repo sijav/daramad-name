@@ -28,7 +28,8 @@ import { NAV_ITEMS } from 'src/shared/constants'
 import { PrivacyFooter } from 'src/shared/privacy-footer'
 import { setThemePreferenceMutation, settingsQueryKey } from 'src/shared/queries'
 
-const RAIL_WIDTH = 248
+// 264 in every desktop AND tablet frame; the app had it at 248.
+const RAIL_WIDTH = 264
 
 /**
  * The app frame: top bar, side rail on desktop, bottom navigation on mobile.
@@ -47,7 +48,12 @@ export const AppShell = () => {
   // Swapping the anchor ourselves double-flips it and puts the rail on the
   // wrong side — which is exactly what a manual swap did here before.
   const railAnchor = 'left' as const
-  const isDesktop = useMediaQuery(theme.breakpoints.up('md'))
+  // The design's tablet frames are 834px wide and every one of them draws the
+  // permanent rail. MUI's `md` is 900, so a tablet got the phone chrome —
+  // hamburger, temporary drawer and bottom bar — against a design that has
+  // none of them. 768 also covers an iPad in portrait while leaving phones on
+  // the bottom nav.
+  const isDesktop = useMediaQuery(theme.breakpoints.up(768))
   const [drawerOpen, setDrawerOpen] = useState(false)
   const navigate = useNavigate()
   const { pathname } = useLocation()

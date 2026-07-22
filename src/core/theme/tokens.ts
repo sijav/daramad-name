@@ -14,6 +14,7 @@ export interface ColorPalette {
   onPrimaryContainer: string
   brandPrimary: string
   brandPrimaryHover: string
+  brandPrimaryPressed: string
   brandPrimarySubtle: string
   textOnPrimary: string
   secondaryContainer: string
@@ -31,6 +32,14 @@ export interface ColorPalette {
   /** `--border-default`: the 1px hairline on chart cards. */
   borderDefault: string
   borderStrong: string
+  /**
+   * The focus ring. Equal to `brandPrimary` in light, but a role of its own —
+   * without it every focus state falls back to MUI's `primary.main` #3b6ef5,
+   * which is the OTHER blue.
+   */
+  borderFocus: string
+  surfaceDisabled: string
+  textDisabled: string
   /** `--surface-subtle`: the unfilled part of a progress track. */
   surfaceSubtle: string
   /** Categorical series colours for the donut, in the design's order. */
@@ -54,7 +63,8 @@ export const lightColors: ColorPalette = {
   onPrimaryContainer: '#0f1c3d',
   /** `--brand-primary`: a deeper blue the design uses for emphasis, distinct from `primary`. */
   brandPrimary: '#3460d6',
-  brandPrimaryHover: '#2b51b8',
+  brandPrimaryHover: '#2c53b8',
+  brandPrimaryPressed: '#254599',
   brandPrimarySubtle: '#eff3fe',
   textOnPrimary: '#fdfeff',
 
@@ -74,6 +84,9 @@ export const lightColors: ColorPalette = {
   neutralVariant: '#95989c',
   borderDefault: '#dadde1',
   borderStrong: '#7c7e83',
+  borderFocus: '#3460d6',
+  surfaceDisabled: '#eeeff1',
+  textDisabled: '#626569',
   surfaceSubtle: '#f8f9fb',
   // blue/40, success/40, warning/40, neutral-variant/60 — the design uses a
   // categorical set here, not a single-hue ramp.
@@ -82,12 +95,12 @@ export const lightColors: ColorPalette = {
   glassSurface: 'rgba(255, 255, 255, 0.6)',
 
   success: '#2e9e5b',
-  successContainer: '#e6f5ec',
+  successContainer: '#eef7f1',
   warning: '#e2a400',
   warningContainer: '#fdf7ea',
   error: '#dc362e',
   onError: '#ffffff',
-  errorContainer: '#f9dedc',
+  errorContainer: '#fceeee',
   onErrorContainer: '#410e0b',
 }
 
@@ -108,6 +121,7 @@ export const darkColors: ColorPalette = {
   onPrimaryContainer: '#dbe4ff',
   brandPrimary: '#8fb0ff',
   brandPrimaryHover: '#a8c2ff',
+  brandPrimaryPressed: '#c3d5ff',
   brandPrimarySubtle: '#1a2440',
   textOnPrimary: '#10131a',
 
@@ -127,6 +141,9 @@ export const darkColors: ColorPalette = {
   neutralVariant: '#6b6e72',
   borderDefault: '#3a3d42',
   borderStrong: '#6d7075',
+  borderFocus: '#8fb0ff',
+  surfaceDisabled: '#212328',
+  textDisabled: '#6d7075',
   surfaceSubtle: '#1d1f23',
   // Lightened so each series keeps its hue identity against a dark surface.
   chartSeries: ['#7ea6ff', '#5fc98a', '#f0c04a', '#a8abaf', '#9db8ff', '#8e9195'],

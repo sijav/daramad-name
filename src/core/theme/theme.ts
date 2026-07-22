@@ -68,9 +68,32 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
     },
     components: {
       MuiButton: {
-        defaultProps: { disableElevation: true },
         styleOverrides: {
-          root: { borderRadius: radius.full, height: 48, paddingInline: '24px' },
+          root: {
+            borderRadius: radius.full,
+            height: 48,
+            paddingInline: '24px',
+            // Written out rather than using `disableElevation`, which emits its
+            // own `box-shadow: none` that no override could beat — it swallowed
+            // the focus ring's separation shadow at any specificity. Same flat
+            // result, but now the rule below can win.
+            boxShadow: 'none',
+            '&:hover, &:active': { boxShadow: 'none' },
+            // The sheet draws focus as two rings: a 2px `surface-default`
+            // separation hugging the pill, then a 2px `border-focus` outside
+            // it. `outline-offset` produces the same result with one ring —
+            // the 2px gap shows the page, which IS `surface-default`
+            // everywhere a button sits. A box-shadow separation ring was tried
+            // first and could not be made to stick: something in MUI's own
+            // contained slot resets the shadow after every override.
+            //
+            // Either way it matters: MUI paints no visible focus ring on a
+            // contained button at all, so keyboard users previously had none.
+            '&.Mui-focusVisible': {
+              outline: `2px solid ${c.borderFocus}`,
+              outlineOffset: '2px',
+            },
+          },
           sizeSmall: { height: 40, paddingInline: '16px' },
           // The design outlines buttons in `--md-sys-color-outline`, not in a
           // half-transparent primary the way MUI does by default.
@@ -90,6 +113,7 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
               backgroundColor: c.brandPrimary,
               color: c.textOnPrimary,
               '&:hover': { backgroundColor: c.brandPrimaryHover },
+              '&:active': { backgroundColor: c.brandPrimaryPressed },
             },
           },
           {
@@ -101,7 +125,36 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
               '&:hover': { backgroundColor: c.primaryContainer },
             },
           },
+          {
+            // Tertiary. The sheet puts the text button on `--brand-primary`
+            // too — MUI would otherwise resolve it to `primary.main` #3b6ef5,
+            // the other blue, which is exactly the trap this palette documents.
+            props: { variant: 'text' as const, color: 'primary' as const },
+            style: {
+              color: c.brandPrimary,
+              '&:hover': { backgroundColor: c.brandPrimarySubtle },
+              '&:active': { backgroundColor: c.primaryContainer },
+            },
+          },
         ],
+      },
+      MuiIconButton: {
+        styleOverrides: {
+          root: {
+            '&.Mui-focusVisible': {
+              outline: `2px solid ${c.borderFocus}`,
+              outlineOffset: '2px',
+            },
+          },
+        },
+      },
+      MuiPaginationItem: {
+        styleOverrides: {
+          // The design tints an unselected page on hover; MUI's default action
+          // grey reads as a different component beside the brand-filled current
+          // page.
+          root: { '&:hover': { backgroundColor: c.brandPrimarySubtle } },
+        },
       },
       MuiChip: {
         styleOverrides: {
@@ -146,6 +199,15 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
             borderRadius: radius.md,
             backgroundColor: c.surfaceDefault,
             height: 52,
+            // `282:911` gives the field six states. Without these three, hover
+            // darkened the outline to near-black, focus resolved to
+            // `primary.main` #3b6ef5 rather than `border-focus` #3460d6, and a
+            // disabled field looked identical to an enabled one.
+            '&:hover': { backgroundColor: c.surfaceSubtle },
+            '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: c.borderStrong },
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: c.borderFocus, borderWidth: 2 },
+            '&.Mui-disabled': { backgroundColor: c.surfaceDisabled },
+            '&.Mui-disabled .MuiInputBase-input': { WebkitTextFillColor: c.textDisabled },
           },
           // A multiline note has to grow, so it opts out of the fixed height.
           //

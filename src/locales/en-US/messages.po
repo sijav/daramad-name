@@ -820,6 +820,10 @@ msgstr "Last receipt"
 msgid "Latest receipts"
 msgstr "Latest receipts"
 
+#: src/pages/dashboard/RecentReceipts.tsx
+msgid "Latest receipts table"
+msgstr "Latest receipts table"
+
 #: src/pages/settings/SettingsPage.tsx
 msgid "Light"
 msgstr "Light"

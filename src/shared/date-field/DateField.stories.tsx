@@ -124,7 +124,12 @@ export const WithError: Story = {
  * re-reads the same stored value rather than rewriting any data.
  */
 export const PickingADayReportsAnIsoInstant: Story = {
-  args: { label: 'Date received', value: new Date().toISOString(), onValueChange: fn() },
+  // A FIXED date, deliberately. Seeding from `new Date()` made this pass or
+  // fail depending on the day it ran: `disableFuture` disables everything after
+  // today, so on the 1st of a Jalali month the only enabled day IS the 1st —
+  // already selected, and clicking it fires no change. It broke exactly once a
+  // month and looked like flake.
+  args: { label: 'Date received', value: '2026-05-15T00:00:00.000Z', onValueChange: fn() },
   render: Controlled,
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement)

@@ -1,4 +1,5 @@
 import '@fontsource-variable/vazirmatn'
+import type { Messages } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import type { Decorator, Preview } from '@storybook/react-vite'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -17,7 +18,7 @@ import type { AppLocale, Settings, ThemePreference } from 'src/shared/types'
 // Locale and theme are Storybook globals rather than parameters, so every story
 // can be checked in all four combinations from the toolbar without editing it.
 
-const catalogs: Record<AppLocale, () => Promise<{ messages: Record<string, string> }>> = {
+const catalogs: Record<AppLocale, () => Promise<{ messages: Messages }>> = {
   'fa-IR': () => import('src/locales/fa-IR/messages'),
   'en-US': () => import('src/locales/en-US/messages'),
 }
@@ -57,7 +58,15 @@ const seededClient = (locale: AppLocale, themePreference: ThemePreference, pageD
     calendar: 'JALALI',
     locale,
     themePreference,
-    profile: { fullName: 'رها موسوی', nationalId: '', phone: '', address: '' },
+    profile: {
+      fullName: 'رها موسوی',
+      fullNameEn: 'Raha Mousavi',
+      nationalId: '',
+      passportNumber: '',
+      phone: '',
+      address: '',
+      addressEn: '',
+    },
   }
   client.setQueryData(settingsQueryKey, settings)
 

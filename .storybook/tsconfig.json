@@ -1,0 +1,22 @@
+{
+  // For the EDITOR, not for the build. `tsc -b` reaches these files through
+  // `tsconfig.app.json`, which already includes `.storybook` — but VS Code
+  // resolves an open file against the nearest `tsconfig.json`, and the root one
+  // is solution-style (`"files": []` plus references). It includes nothing, so
+  // `.storybook/preview.tsx` fell back to inferred defaults with no `paths` and
+  // no ambient declarations, and the editor reported errors the build never saw:
+  // `Cannot find module 'src/core/i18n'`, and TS2882 for the side-effect import
+  // of `@fontsource-variable/vazirmatn`.
+  //
+  // Extending the app config keeps one source of truth for compiler options.
+  // `paths` resolve relative to the file that DECLARES them, so `src/*` still
+  // points at the repository's `src`, not at `.storybook/src`.
+  "extends": "../tsconfig.app.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.storybook.tsbuildinfo"
+  },
+  // The ambient declarations are listed explicitly: nothing imports them, so
+  // they only enter the program if named. `vite-env.d.ts` is what declares the
+  // font package and Vite's `?url` imports.
+  "include": ["**/*.ts", "**/*.tsx", "../src/**/*.d.ts"]
+}

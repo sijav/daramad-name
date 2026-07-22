@@ -29,5 +29,5 @@
     "noUncheckedSideEffectImports": true,
     "exactOptionalPropertyTypes": false
   },
-  "include": ["src", ".storybook"]
+  "include": ["src", ".storybook/**/*.ts", ".storybook/**/*.tsx"]
 }

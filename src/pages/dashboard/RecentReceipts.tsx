@@ -39,7 +39,13 @@ export const RecentReceipts = ({ receipts }: RecentReceiptsProps) => {
   return (
     // The design's own bordered, 16px-rounded frame — it is a table INSIDE the
     // card, not the card's own edge.
+    // Scrollable, so it must be keyboard reachable — otherwise the columns past
+    // the fold cannot be reached without a mouse (axe
+    // `scrollable-region-focusable`). Named, because it is now in the tab order.
     <TableContainer
+      tabIndex={0}
+      role="group"
+      aria-label={t`Latest receipts table`}
       sx={(theme) => ({
         overflowX: 'auto',
         border: `1px solid ${theme.palette.borderDefault}`,

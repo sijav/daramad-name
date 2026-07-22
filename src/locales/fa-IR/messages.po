@@ -820,6 +820,10 @@ msgstr "آخرین دریافتی"
 msgid "Latest receipts"
 msgstr "آخرین دریافتی‌ها"
 
+#: src/pages/dashboard/RecentReceipts.tsx
+msgid "Latest receipts table"
+msgstr "جدول آخرین دریافتی‌ها"
+
 #: src/pages/settings/SettingsPage.tsx
 msgid "Light"
 msgstr "روشن"

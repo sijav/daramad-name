@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { App } from 'src/App'
 import { DEFAULT_LOCALE, activateLocale } from 'src/core/i18n'
+import { registerServiceWorker } from 'src/pwa/registerServiceWorker'
 
 // `BASE_URL` keeps routing correct on GitHub Pages, which serves the app from a
 // repository subpath rather than the domain root.
@@ -16,6 +17,12 @@ if (!container) {
 // switches to the persisted choice once Settings loads from IndexedDB — this
 // only avoids a flash of English message ids on a cold start.
 await activateLocale(DEFAULT_LOCALE)
+
+// The whole app is local-first, so working offline is its honest default rather
+// than an extra: the worker precaches the shell, the catalogs and the Vazirmatn
+// cuts the PDF certificate embeds. It is also what makes Chrome offer to
+// install the app at all.
+registerServiceWorker()
 
 createRoot(container).render(
   <StrictMode>

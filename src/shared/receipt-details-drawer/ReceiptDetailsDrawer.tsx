@@ -2,6 +2,7 @@ import { Trans, useLingui } from '@lingui/react/macro'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import LockRoundedIcon from '@mui/icons-material/LockRounded'
 import { Box, Button, Divider, Drawer, IconButton, Stack, Typography } from '@mui/material'
+import { useId } from 'react'
 import { CHANNEL_LABELS, CURRENCY_LABELS } from 'src/shared/constants'
 import { useFormat } from 'src/shared/format'
 import { MoneyText } from 'src/shared/money-text'
@@ -29,13 +30,24 @@ export interface ReceiptDetailsDrawerProps {
 export const ReceiptDetailsDrawer = ({ receipt, onClose, onEdit, onDelete }: ReceiptDetailsDrawerProps) => {
   const { t, i18n } = useLingui()
   const { amount, dateLong, number } = useFormat()
+  const titleId = useId()
 
   return (
-    <Drawer anchor="right" open={receipt !== null} onClose={onClose} slotProps={{ paper: { sx: { width: { xs: '100%', sm: 420 } } } }}>
+    <Drawer
+      anchor="right"
+      open={receipt !== null}
+      onClose={onClose}
+      // The drawer's paper IS the `role="dialog"`, and MUI cannot guess its
+      // name — it opened as an unnamed dialog (axe: `aria-dialog-name`,
+      // serious), so a screen reader announced "dialog" and left the user to
+      // work out what had appeared. Pointing at the heading rather than
+      // repeating it in an `aria-label` keeps the two from drifting apart.
+      slotProps={{ paper: { 'aria-labelledby': titleId, sx: { width: { xs: '100%', sm: 420 } } } }}
+    >
       {receipt ? (
         <Stack sx={{ height: '100%' }}>
           <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', p: 2.5 }}>
-            <Typography variant="h3">
+            <Typography id={titleId} variant="h3">
               <Trans>Receipt details</Trans>
             </Typography>
             <IconButton onClick={onClose} aria-label={t`Close`}>
@@ -105,9 +117,14 @@ export const ReceiptDetailsDrawer = ({ receipt, onClose, onEdit, onDelete }: Rec
   )
 }
 
+// `component="span"` is load-bearing, not tidiness: MUI maps the `subtitle2`
+// variant onto `<h6>` by default, so every one of these captions was published
+// as a level-6 heading directly under the drawer's `<h3>` — eight fake headings
+// in the document outline, and a level jump axe reports as `heading-order`. A
+// caption is not a heading; the block layout is kept with `display: block`.
 const Detail = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <Box>
-    <Typography variant="subtitle2" sx={{ color: 'text.secondary', mb: 0.75 }}>
+    <Typography variant="subtitle2" component="span" sx={{ color: 'text.secondary', display: 'block', mb: 0.75 }}>
       {label}
     </Typography>
     {children}

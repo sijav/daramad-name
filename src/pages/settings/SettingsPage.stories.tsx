@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { db, readSettings } from 'src/core/db'
 import { exportBackupMutation } from 'src/shared/queries'
 import { seedDatabase } from 'src/shared/story-fixtures'
+import { toPersianDigits, yearOf } from 'src/shared/utils'
 import { expect, userEvent, waitFor, within } from 'storybook/test'
 import { SettingsPage } from './SettingsPage'
 
@@ -121,6 +122,25 @@ export const DisplayPreferencesPersist: Story = {
       await userEvent.click(gregorian)
       await waitFor(async () => await expect((await readSettings()).calendar).toBe('GREGORIAN'))
       await waitFor(async () => await expect(gregorian).toHaveAttribute('aria-pressed', 'true'))
+    })
+
+    /**
+     * The pill on this very page is the one control the calendar switch can
+     * break. Its year is a number IN a calendar, while its options are
+     * re-derived from the receipts in the NEW one — so a stale «۱۴۰۵» is simply
+     * absent from a Gregorian list, MUI drops the value, and the pill renders
+     * empty on the screen that just changed it.
+     */
+    await step('and the range pill is renamed rather than emptied', async () => {
+      await waitFor(async () => await expect(await rangePill()).toContain(toPersianDigits(yearOf(new Date(), 'GREGORIAN'))))
+      await expect(await rangePill()).not.toContain(toPersianDigits(yearOf(new Date(), 'JALALI')))
+
+      // Blank is not the only failure: an option list that does not contain the
+      // value leaves nothing marked as chosen.
+      const body = within(canvasElement.ownerDocument.body)
+      await userEvent.click(await canvas.findByRole('combobox'))
+      await expect(await body.findByRole('option', { selected: true })).toHaveTextContent(toPersianDigits(yearOf(new Date(), 'GREGORIAN')))
+      await userEvent.keyboard('{Escape}')
     })
   },
 }

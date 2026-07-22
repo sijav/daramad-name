@@ -19,6 +19,17 @@ type Story = StoryObj<typeof meta>
 const seeded = { page: { data: 'full' } }
 
 /**
+ * The document cannot appear until `useCertificateModel` has finished — and it
+ * starts by DYNAMICALLY IMPORTING a second lingui instance plus a whole message
+ * catalog, so the certificate can be written in a language the interface is not
+ * in. On a cold module graph that import outruns testing-library's one-second
+ * default and the first story in this file fails while the rest pass, which
+ * reads like a bug in the page and is not one. The wait is stated instead.
+ */
+const findDocument = async (canvasElement: HTMLElement, title: string) =>
+  await within(canvasElement).findByText(title, undefined, { timeout: 10_000 })
+
+/**
  * Scenario 3. The fixture has a name set, so the "your name is not set" warning
  * is absent and the PDF button is live.
  */
@@ -31,7 +42,7 @@ export const WithData: Story = {
    */
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    await canvas.findByText('گواهی درآمد')
+    await findDocument(canvasElement, 'گواهی درآمد')
     await expect(canvas.queryByText(/اسمت هنوز ثبت نشده|Your name is not set yet/)).toBeNull()
   },
 }
@@ -53,7 +64,7 @@ export const ProducesBothLanguages: Story = {
     const canvas = within(canvasElement)
 
     await step('the Persian certificate', async () => {
-      await expect(await canvas.findByText('گواهی درآمد')).toBeInTheDocument()
+      await expect(await findDocument(canvasElement, 'گواهی درآمد')).toBeInTheDocument()
       // Persian numerals, and the figure written out «به حروف» as an Iranian
       // financial document states it.
       await expect(await canvas.findByText(/به حروف/)).toBeInTheDocument()
@@ -65,7 +76,7 @@ export const ProducesBothLanguages: Story = {
     })
 
     await step('the English certificate carries English values, not just labels', async () => {
-      await expect(await canvas.findByText('Statement of Income')).toBeInTheDocument()
+      await expect(await findDocument(canvasElement, 'Statement of Income')).toBeInTheDocument()
       await expect(await canvas.findByText('Raha Mousavi')).toBeInTheDocument()
       await expect(await canvas.findByText(/In words/)).toBeInTheDocument()
       // Latin grouping, and the amount spelled out in English.
@@ -100,7 +111,7 @@ export const AYearWithNoIncomeProducesNoDocument: Story = {
     const body = within(canvasElement.ownerDocument.body)
 
     await step('the current year has a document', async () => {
-      await expect(await canvas.findByText('گواهی درآمد')).toBeInTheDocument()
+      await expect(await findDocument(canvasElement, 'گواهی درآمد')).toBeInTheDocument()
       await expect(await canvas.findByRole('button', { name: /^دانلود PDF$|^Download PDF$/ })).toBeEnabled()
     })
 
@@ -149,7 +160,7 @@ export const WarnsWhenTheNameIsMissing: Story = {
     const canvas = within(canvasElement)
 
     await step('the document renders regardless, which is why the warning matters', async () => {
-      await expect(await canvas.findByText('گواهی درآمد')).toBeInTheDocument()
+      await expect(await findDocument(canvasElement, 'گواهی درآمد')).toBeInTheDocument()
       // The name row is dropped rather than printed blank, so nothing on the
       // document itself reveals that it is unusable.
       await expect(canvas.queryByText(/^نام و نام خانوادگی$|^Full name$/)).toBeNull()

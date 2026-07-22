@@ -733,6 +733,18 @@ msgstr "Income report"
 msgid "Income this month"
 msgstr "Income this month"
 
+#: src/pwa/InstallAppSection.tsx
+msgid "Install"
+msgstr "Install"
+
+#: src/pwa/InstallAppSection.tsx
+msgid "Install this app"
+msgstr "Install this app"
+
+#: src/pwa/InstallAppSection.tsx
+msgid "Installation"
+msgstr "Installation"
+
 #: src/shared/certificate/certificateModel.ts
 msgid "Issued by Daramadname"
 msgstr "Issued by Daramadname"
@@ -744,6 +756,10 @@ msgstr "Issued by Daramadname"
 #: src/shared/certificate/certificateModel.ts
 msgid "Issued on"
 msgstr "Issued on"
+
+#: src/pwa/InstallAppSection.tsx
+msgid "It opens in its own window and keeps working without a connection."
+msgstr "It opens in its own window and keeps working without a connection."
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Jalali"

@@ -12,6 +12,16 @@ import { CertificatePage } from './CertificatePage'
 // so `useSearchParams` reads a real search string here rather than a stub.
 const thisYear = yearOf(new Date(), 'JALALI')
 
+/**
+ * Nothing paints until `useCertificateModel` resolves, and it begins by
+ * DYNAMICALLY IMPORTING a second lingui instance plus a whole message catalog —
+ * that is what lets an English document be produced by a Persian interface. On
+ * a cold module graph the import can outrun testing-library's one-second
+ * default, so the wait is stated rather than left to flake.
+ */
+const findDocument = async (canvasElement: HTMLElement, text: string | RegExp) =>
+  await within(canvasElement).findByText(text, undefined, { timeout: 10_000 })
+
 const meta = {
   title: 'Pages/Certificate',
   component: CertificatePage,
@@ -38,7 +48,7 @@ export const Persian: Story = {
     const canvas = within(canvasElement)
 
     await step('the document renders in Persian', async () => {
-      await expect(await canvas.findByText('گواهی درآمد')).toBeInTheDocument()
+      await expect(await findDocument(canvasElement, 'گواهی درآمد')).toBeInTheDocument()
       // Persian numerals and the unit, not a bare figure.
       await expect(await canvas.findAllByText(/[۰-۹]{1,3}٬[۰-۹]{3}٬[۰-۹]{3} تومان/)).not.toHaveLength(0)
     })
@@ -75,7 +85,7 @@ export const English: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    const heading = await canvas.findByText('Statement of Income')
+    const heading = await findDocument(canvasElement, 'Statement of Income')
     await expect(await canvas.findByText('Raha Mousavi')).toBeInTheDocument()
 
     // The document carries its own direction and language, independent of the
@@ -104,6 +114,7 @@ export const AnotherYear: Story = {
     const canvas = within(canvasElement)
 
     // Every row of the breakdown belongs to the requested year, not to today's.
+    await findDocument(canvasElement, new RegExp(`^DN-${thisYear - 1}-`))
     await expect(await canvas.findAllByText(new RegExp(`فروردین ${toPersianDigits(thisYear - 1)}`))).not.toHaveLength(0)
     await expect(await canvas.findByText(new RegExp(`^DN-${thisYear - 1}-`))).toBeInTheDocument()
     await expect(canvas.queryByText(new RegExp(`فروردین ${toPersianDigits(thisYear)}`))).toBeNull()

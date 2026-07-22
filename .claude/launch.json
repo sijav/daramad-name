@@ -21,7 +21,8 @@
         "--no-open",
         "--quiet"
       ],
-      "port": 6006
+      "port": 6006,
+      "autoPort": true
     }
   ]
 }

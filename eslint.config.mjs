@@ -23,6 +23,12 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    // Build and tooling scripts run under Node, not in the browser, so they get
+    // Node's globals instead of the browser set every `src` file uses.
+    files: ['scripts/**/*.mjs', 'src/pwa/icons/*.mjs'],
+    languageOptions: { globals: { ...globals.node } },
+  },
+  {
     files: ['src/**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2023,

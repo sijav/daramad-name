@@ -1,3 +1,4 @@
+import * as a11yAddonAnnotations from '@storybook/addon-a11y/preview'
 import { setProjectAnnotations } from '@storybook/react-vite'
 import { beforeAll } from 'vitest'
 import preview from './preview'
@@ -16,6 +17,6 @@ import preview from './preview'
 // — a CJS/ESM interop break in a transitive dependency of addon-a11y. All 41
 // story files fail to load. Declaring the annotations here means the addon
 // skips that file entirely, which is what makes the suite run.
-const annotations = setProjectAnnotations([preview])
+const annotations = setProjectAnnotations([a11yAddonAnnotations, preview])
 
 beforeAll(annotations.beforeAll)

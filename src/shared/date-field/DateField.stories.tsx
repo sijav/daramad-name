@@ -47,6 +47,42 @@ export const Jalali: Story = {
   },
 }
 
+/**
+ * Everything a screen reader is given, asserted in one place.
+ *
+ * The picker is not a text box: it renders `role="group"` around three
+ * `role="spinbutton"` sections, and a group is not a labelable element — so the
+ * `<label>` `Field` wraps the control in names the picker's hidden input and
+ * leaves the visible group anonymous. Both halves used to be wrong at once: the
+ * group had no name, and the section names came from MUI X's untranslated
+ * default, so a Persian interface announced "Year", "Month", "Day".
+ */
+export const IsNamedForScreenReaders: Story = {
+  args: { label: 'Date received', value: new Date().toISOString(), onValueChange: fn() },
+  render: Controlled,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const body = within(canvasElement.ownerDocument.body)
+
+    await step('the group carries the field label', async () => {
+      await expect(await canvas.findByRole('group', { name: 'Date received' })).toBeInTheDocument()
+    })
+
+    await step('and each section is named in the interface language', async () => {
+      // From MUI X's own faIR catalogue, via `localeText` — not from ours.
+      await expect(await canvas.findByRole('spinbutton', { name: 'سال' })).toBeInTheDocument()
+      await expect(await canvas.findByRole('spinbutton', { name: 'ماه' })).toBeInTheDocument()
+      await expect(await canvas.findByRole('spinbutton', { name: 'روز' })).toBeInTheDocument()
+    })
+
+    await step('the calendar opens as a NAMED dialog', async () => {
+      await userEvent.click(await canvas.findByRole('button', { name: /تاریخ را انتخاب کنید/ }))
+      // Portalled, so it is looked up on the document rather than the canvas.
+      await expect(await body.findByRole('dialog', { name: 'Date received' })).toBeInTheDocument()
+    })
+  },
+}
+
 /** Filters allow future dates; the receipt form does not. */
 export const AllowsFuture: Story = {
   args: { label: 'To date', value: new Date().toISOString(), disableFuture: false, onValueChange: fn() },
@@ -95,7 +131,9 @@ export const PickingADayReportsAnIsoInstant: Story = {
     // The calendar is portalled out of the story canvas.
     const body = within(canvasElement.ownerDocument.body)
 
-    await userEvent.click(await canvas.findByRole('button', { name: /choose date/i }))
+    // Persian, because the picker's own copy now follows the interface
+    // language through `localeText`.
+    await userEvent.click(await canvas.findByRole('button', { name: /تاریخ را انتخاب کنید/ }))
 
     // The grid pads its first week with non-interactive spacers that also carry
     // the gridcell role, so the real days are the buttons.
@@ -127,6 +165,10 @@ export const EnglishKeepsTheJalaliCalendar: Story = {
 
     // Jalali components, in the enUS field order the adapter's locale sets.
     await expect(field(canvasElement).value).toBe('04/31/1405')
+
+    // The picker's announced copy follows the LANGUAGE, not the calendar — the
+    // Jalali adapter is still in charge, but nothing is spoken in Persian.
+    await expect(await canvas.findByRole('spinbutton', { name: 'Year' })).toBeInTheDocument()
 
     await userEvent.click(await canvas.findByRole('button', { name: /choose date/i }))
 

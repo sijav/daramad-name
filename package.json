@@ -19,8 +19,9 @@
     "format:check": "prettier --check \"**/*.{js,jsx,mjs,cjs,ts,tsx,json,css,md}\"",
     "i18n:extract": "lingui extract",
     "i18n:compile": "lingui compile",
+    "pwa:icons": "node src/pwa/icons/generate-icons.mjs",
     "prestorybook": "npm run i18n:compile",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "node scripts/storybook-dev.mjs",
     "prebuild-storybook": "npm run i18n:compile",
     "build-storybook": "storybook build",
     "pretest": "npm run i18n:compile",
@@ -86,11 +87,15 @@
     "playwright": "^1.61.1",
     "prettier": "^3.9.5",
     "prettier-plugin-organize-imports": "^4.3.0",
+    "sharp": "^0.35.3",
     "storybook": "^10.5.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.64.0",
     "vite": "^8.1.4",
-    "vitest": "^4.1.10"
+    "vite-plugin-pwa": "^1.3.0",
+    "vitest": "^4.1.10",
+    "workbox-build": "^7.4.1",
+    "workbox-window": "^7.4.1"
   },
   "engines": {
     "node": ">=22.12.0"

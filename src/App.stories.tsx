@@ -5,6 +5,21 @@ import { FIXTURE_RECEIPTS, seedDatabase } from 'src/shared/story-fixtures'
 import { expect, within } from 'storybook/test'
 import { App } from './App'
 
+// Every route but the dashboard is a `lazy()` chunk. Under the browser test
+// runner those chunks are fetched over HTTP at click time, and that fetch is
+// not reliable here — it failed with "Failed to fetch dynamically imported
+// module", which surfaces as the error boundary and, once React has torn down,
+// as a null `useContext`. Importing the same modules here puts them in the
+// story's own module graph, so `lazy()` resolves them from the registry instead
+// of going back to the network. The app still code-splits in production; only
+// the test stops depending on a live fetch.
+import 'src/pages/certificate'
+import 'src/pages/charts'
+import 'src/pages/ledger'
+import 'src/pages/quick-entry'
+import 'src/pages/report'
+import 'src/pages/settings'
+
 // The whole app, mounted at a route, over the real database.
 //
 // `App` is wiring, but the wiring decides three things that a page-level story
@@ -43,9 +58,8 @@ type Story = StoryObj<typeof meta>
 
 const CHROME = /تغییر تم|Switch theme/i
 
-// Every route but the dashboard is a lazy chunk, and the dev server compiles it
-// on first request. That is slower than the default one-second query timeout,
-// and it is a property of the harness rather than of the app.
+// The chunks are in the graph (see the imports above), but React still resolves
+// `lazy()` across a suspense boundary, so give the first paint room.
 const LAZY_ROUTE = { timeout: 10_000 }
 
 // Page titles are `h2`. The level is pinned because the nav rail's own labels

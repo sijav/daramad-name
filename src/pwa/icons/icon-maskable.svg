@@ -1,0 +1,20 @@
+<!--
+  The `purpose: maskable` variant.
+
+  A launcher clips a maskable icon to a shape of its own choosing — circle,
+  squircle, rounded square, teardrop — and is only guaranteed to keep the
+  centre 80%. So the fill runs edge to edge (no rounding of our own, or the
+  launcher's mask would cut into a corner that is already transparent), and the
+  glyph is scaled to 0.82 about the centre so its diagonal stays inside the
+  safe circle: the 264x288 glyph has a 391px diagonal, and 391 * 0.82 = 320,
+  comfortably under the 410px safe diameter.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Daramadname">
+  <rect width="512" height="512" fill="#3460d6" />
+  <g fill="#ffffff" transform="translate(256 256) scale(0.82) translate(-256 -256)">
+    <rect x="124" y="112" width="264" height="44" rx="8" />
+    <rect x="234" y="112" width="44" height="288" rx="8" />
+    <rect x="156" y="222" width="200" height="38" rx="8" />
+    <rect x="156" y="294" width="200" height="38" rx="8" />
+  </g>
+</svg>

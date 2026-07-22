@@ -3,6 +3,7 @@ import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRou
 import { Button, Stack } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { RangeSelect, type RangeSelectOption } from 'src/shared/range-select'
+import { selectableYears } from './selectableYears'
 
 export interface PageActionsProps {
   year: number
@@ -22,7 +23,10 @@ export const PageActions = ({ year, years, onYearChange, formatYear }: PageActio
   const { t } = useLingui()
   const navigate = useNavigate()
 
-  const options: RangeSelectOption[] = (years.length > 0 ? years : [year]).map((option) => ({
+  // The selected year is folded in rather than assumed present: `years` comes
+  // from the receipts that exist, and a pill whose value is not among its own
+  // options renders blank.
+  const options: RangeSelectOption[] = selectableYears(years, year).map((option) => ({
     value: option,
     label: t`year ${formatYear(option)}`,
   }))

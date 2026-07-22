@@ -1,0 +1,17 @@
+<!--
+  The apple-touch-icon source.
+
+  iOS applies its own corner radius and composites the icon over an opaque
+  background, so this one is drawn edge to edge with no rounding: transparent
+  corners would be filled in black on the home screen. The glyph keeps its full
+  size because the iOS mask is a modest rounded square, not a circle.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Daramadname">
+  <rect width="512" height="512" fill="#3460d6" />
+  <g fill="#ffffff">
+    <rect x="124" y="112" width="264" height="44" rx="8" />
+    <rect x="234" y="112" width="44" height="288" rx="8" />
+    <rect x="156" y="222" width="200" height="38" rx="8" />
+    <rect x="156" y="294" width="200" height="38" rx="8" />
+  </g>
+</svg>

@@ -10,13 +10,13 @@ import { radius } from 'src/core/theme'
 import { IncomeCertificate, useCertificateModel, type ReportLanguage } from 'src/shared/certificate'
 import { EmptyState } from 'src/shared/empty-state'
 import { useFormat } from 'src/shared/format'
-import { PageActions } from 'src/shared/page-actions'
+import { PageActions, selectableYears, useReportYear } from 'src/shared/page-actions'
 import { PageHeader } from 'src/shared/page-header'
 import { buildIncomeReport, loadPdfMake } from 'src/shared/pdf'
 import { getIncomeReportQuery, getIncomeReportQueryKey, getPopulatedYearsQuery, getPopulatedYearsQueryKey } from 'src/shared/queries'
 import { SegmentedControl } from 'src/shared/segmented-control'
 import { SurfaceCard } from 'src/shared/surface-card'
-import { yearOf, yearRange } from 'src/shared/utils'
+import { yearRange } from 'src/shared/utils'
 
 const CERTIFICATE_PATH = 'certificate'
 
@@ -25,7 +25,7 @@ export const ReportPage = () => {
   const { t } = useLingui()
   const { digits } = useFormat()
   const { calendar } = useSettings()
-  const [year, setYear] = useState(() => yearOf(new Date(), calendar))
+  const [year, setYear] = useReportYear(calendar)
   const [language, setLanguage] = useState<ReportLanguage>('fa')
   const [error, setError] = useState<string | null>(null)
 
@@ -121,7 +121,11 @@ export const ReportPage = () => {
                     '& .MuiSelect-select': { paddingBlock: '0px', paddingInlineStart: '14px' },
                   })}
                 >
-                  {years.map((option) => (
+                  {/* The selected year is always among the options, even before
+                      the query answers and even for a year with no receipts —
+                      a select whose value is missing renders blank, and the
+                      range is the one thing this document must state. */}
+                  {selectableYears(years, year).map((option) => (
                     <MenuItem key={option} value={option}>
                       {t`year ${digits(option)}`}
                     </MenuItem>

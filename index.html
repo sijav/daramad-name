@@ -8,6 +8,20 @@
       name="description"
       content="درآمدنامه — دفتر دریافتی‌ها و گزارش درآمد قابل ارائه برای فریلنسر ایرانی. همه‌ی داده‌ها فقط روی مرورگر خودت می‌مونه."
     />
+
+    <!-- Icons live in `public/` and are regenerated with `npm run pwa:icons`.
+         These paths are root-relative on purpose: Vite rewrites a leading `/`
+         in index.html to the configured `base`, so they stay correct on the
+         `/daramad-name/` subpath GitHub Pages serves from. The manifest link is
+         injected by vite-plugin-pwa. -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- `mobile-web-app-capable`, not `apple-mobile-web-app-capable`: the
+         Apple-prefixed name is deprecated and Safari reads the standard one. -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="درآمدنامه" />
+
     <title>درآمدنامه</title>
   </head>
   <body>

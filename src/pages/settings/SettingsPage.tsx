@@ -2,10 +2,11 @@ import { useLingui } from '@lingui/react/macro'
 import { Alert, Box, Snackbar, Stack, TextField } from '@mui/material'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRef, useState } from 'react'
+import { defaultSettings } from 'src/core/db'
 import { invalidateReceiptQueries, useSettings } from 'src/core/query'
 import { ConfirmDialog } from 'src/shared/confirm-dialog'
 import { useFormat } from 'src/shared/format'
-import { PageActions } from 'src/shared/page-actions'
+import { PageActions, useReportYear } from 'src/shared/page-actions'
 import { PageHeader } from 'src/shared/page-header'
 import {
   clearAllDataMutation,
@@ -23,7 +24,6 @@ import {
 import { SegmentedControl } from 'src/shared/segmented-control'
 import { SettingButton, SettingRow, SettingsSection } from 'src/shared/settings-section'
 import type { AppLocale, CalendarSystem, Profile, ThemePreference } from 'src/shared/types'
-import { yearOf } from 'src/shared/utils'
 
 export const SettingsPage = () => {
   const { t } = useLingui()
@@ -33,7 +33,10 @@ export const SettingsPage = () => {
   const { digits } = useFormat()
 
   // The design carries the same range pill and record button on every screen.
-  const [year, setYear] = useState(() => yearOf(new Date(), settings.calendar))
+  // The year follows the calendar setting this page itself can change — a
+  // Jalali year left selected against a Gregorian option list renders the pill
+  // blank.
+  const [year, setYear] = useReportYear(settings.calendar)
   const { data: years = [] } = useQuery({
     queryKey: getPopulatedYearsQueryKey(settings.calendar),
     queryFn: getPopulatedYearsQuery,
@@ -42,8 +45,16 @@ export const SettingsPage = () => {
   // `null` until the user edits, so the form reads straight from the saved
   // settings as they arrive from IndexedDB. Deriving rather than copying into
   // state on mount avoids a effect that would clobber typing on every refetch.
+  //
+  // Merged over the defaults because the settings reaching this component come
+  // from the query CACHE, which is not guaranteed to have been through
+  // `readSettings`: a profile written or seeded before `fullNameEn`,
+  // `passportNumber` and `addressEn` existed has no such keys. Feeding
+  // `undefined` to a TextField makes it uncontrolled for one paint and
+  // controlled on the next — React warns, and anything typed in between is
+  // dropped on the floor. Every field is a string from the first frame.
   const [draftProfile, setDraftProfile] = useState<Profile | null>(null)
-  const profile = draftProfile ?? settings.profile
+  const profile: Profile = draftProfile ?? { ...defaultSettings.profile, ...settings.profile }
   const setProfile = setDraftProfile
 
   const [toast, setToast] = useState<string | null>(null)

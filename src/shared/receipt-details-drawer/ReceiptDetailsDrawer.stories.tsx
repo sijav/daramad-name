@@ -111,6 +111,35 @@ export const TomanReceiptHidesTheRateBlock: Story = {
 }
 
 /**
+ * What the drawer announces when it opens.
+ *
+ * The paper IS the `role="dialog"`, and it had no accessible name (axe:
+ * `aria-dialog-name`) — a screen reader said "dialog" and stopped. It is now
+ * pointed at the heading it already draws, so the two cannot drift apart.
+ *
+ * The heading count is asserted too: MUI maps the `subtitle2` variant onto
+ * `<h6>`, so every one of the eight captions used to be published as a level-6
+ * heading under the drawer's single `<h3>` — a fake outline, and the level jump
+ * axe reports as `heading-order`.
+ */
+export const IsANamedDialogWithOneHeading: Story = {
+  ...ForeignCurrencyFrozen,
+  play: async ({ canvasElement, step }) => {
+    const body = within(canvasElement.ownerDocument.body)
+
+    await step('the dialog carries its own title', async () => {
+      await expect(await body.findByRole('dialog', { name: /^جزئیات دریافتی$|^Receipt details$/ })).toBeInTheDocument()
+    })
+
+    await step('and the captions inside it are captions, not headings', async () => {
+      const headings = await body.findAllByRole('heading')
+      await expect(headings).toHaveLength(1)
+      await expect(headings[0]).toHaveTextContent(/^جزئیات دریافتی$|^Receipt details$/)
+    })
+  },
+}
+
+/**
  * Both footer buttons hand the receipt back out. Passing the wrong object — or
  * nothing — would open the edit dialog on a different row, or delete one.
  */

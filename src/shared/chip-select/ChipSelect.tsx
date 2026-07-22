@@ -22,7 +22,10 @@ export interface ChipSelectProps<T extends string> {
 export const ChipSelect = <T extends string>({ label, value, options, onValueChange }: ChipSelectProps<T>) => (
   <Box>
     {label ? (
-      <Typography variant="subtitle2" sx={{ color: 'text.secondary', mb: 1 }}>
+      // `component="span"`, because MUI maps `subtitle2` onto `<h6>` and this
+      // caption is not a heading — it announced "Payment channel, heading level
+      // 6" in the middle of the record card. `Field` carries the same note.
+      <Typography variant="subtitle2" component="span" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
         {label}
       </Typography>
     ) : null}

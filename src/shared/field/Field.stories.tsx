@@ -1,6 +1,7 @@
 import { useLingui } from '@lingui/react/macro'
 import { TextField } from '@mui/material'
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { expect, within } from 'storybook/test'
 import { Field } from './Field'
 
 const meta = { title: 'Shared/Field', component: Field } satisfies Meta<typeof Field>
@@ -49,3 +50,35 @@ export const Invalid: Story = { args: base, render: () => <WithError /> }
 
 /** A multiline control opts out of the fixed 52px height so notes can grow. */
 export const WithMultiline: Story = { args: base, render: () => <Multiline /> }
+
+/**
+ * The wrapper is the `<label>`, which is what gives the control its name.
+ *
+ * It used to be a sibling `<Typography component="label">` with no `htmlFor`,
+ * associating nothing: every input in the app computed an EMPTY accessible
+ * name. The caption is also asserted NOT to be a heading — MUI maps the
+ * `subtitle2` variant onto `<h6>`, so a field label would otherwise publish
+ * itself as one.
+ */
+export const NamesItsControl: Story = {
+  args: base,
+  render: () => <Basic />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(await canvas.findByRole('textbox', { name: 'مشتری / پروژه' })).toBeInTheDocument()
+    await expect(canvas.queryAllByRole('heading')).toHaveLength(0)
+  },
+}
+
+/**
+ * A multiline control is named by the same wrapper — the `<label>` reaches a
+ * `<textarea>` exactly as it reaches an `<input>`.
+ */
+export const NamesAMultilineControl: Story = {
+  args: base,
+  render: () => <Multiline />,
+  play: async ({ canvasElement }) => {
+    await expect(await within(canvasElement).findByRole('textbox', { name: 'یادداشت (اختیاری)' })).toBeInTheDocument()
+  },
+}

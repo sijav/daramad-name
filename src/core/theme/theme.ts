@@ -1,5 +1,9 @@
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
 import { createTheme, type Theme } from '@mui/material'
+// Side-effect type import: it merges MUI X's own component keys (here
+// `MuiPickersOutlinedInput`) into MUI's `Components` map. Without it the
+// override below is a type error, and the picker keeps MUI X's defaults.
+import type {} from '@mui/x-date-pickers/themeAugmentation'
 import vazirFdRegular from 'vazirmatn/misc/Farsi-Digits/fonts/webfonts/Vazirmatn-FD-Regular.woff2?url'
 import vazirFdSemiBold from 'vazirmatn/misc/Farsi-Digits/fonts/webfonts/Vazirmatn-FD-SemiBold.woff2?url'
 import { darkColors, elevation, fontFamily, fontFamilyFarsiDigits, lightColors, radius, spacingUnit, typeScale } from './tokens'
@@ -148,6 +152,42 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
           },
         },
       },
+      MuiToggleButton: {
+        styleOverrides: {
+          // A segment had NO focus indicator at all: `ButtonBase` paints none on
+          // its own, and `SegmentedControl` sets `Mui-selected`'s background
+          // itself, so the only state MUI does express got overwritten. A
+          // keyboard user tabbing across the currency switch could not see
+          // where they were. Same ring as Button and IconButton.
+          root: {
+            '&.Mui-focusVisible': {
+              outline: `2px solid ${c.borderFocus}`,
+              outlineOffset: '2px',
+            },
+          },
+        },
+      },
+      // MUI X renders its own outlined input, so NOTHING in `MuiOutlinedInput`
+      // below reaches the date picker. The visible consequence was the focus
+      // ring: the picker resolved it to `primary.main` #3b6ef5 while every
+      // other field in the app focuses in `border-focus` #3460d6 — the two
+      // blues, one field apart.
+      MuiPickersOutlinedInput: {
+        styleOverrides: {
+          root: {
+            // The `:not(.Mui-error)` is not decoration — MUI X paints the focus
+            // colour from a `variants` entry whose selector carries exactly
+            // that clause, and a shorter selector here loses on specificity
+            // while looking perfectly correct in the source. It also leaves an
+            // invalid field focusing in `error.main`, which is what should
+            // happen.
+            '&.Mui-focused:not(.Mui-error) .MuiPickersOutlinedInput-notchedOutline': {
+              borderColor: c.borderFocus,
+              borderWidth: 2,
+            },
+          },
+        },
+      },
       MuiPaginationItem: {
         styleOverrides: {
           // The design tints an unselected page on hover; MUI's default action
@@ -161,7 +201,23 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
           // 38px and Medium weight, per the design's Chip component. MUI's
           // default small chip is 32px/400 and read visibly lighter than the
           // channel pills in the record card.
-          root: { borderRadius: radius.full, height: 38, fontWeight: 500 },
+          root: {
+            borderRadius: radius.full,
+            height: 38,
+            fontWeight: 500,
+            // Same story as the segments: `ChipSelect` paints the selected and
+            // unselected fills itself, which beats MUI's focus-visible
+            // background — the channel pills took keyboard focus and showed
+            // nothing at all.
+            //
+            // The offset is NEGATIVE so the ring hugs the inside of the pill.
+            // Outside a fully-rounded chip it would collide with its neighbour
+            // across the row's 8px gap.
+            '&.Mui-focusVisible': {
+              outline: `2px solid ${c.borderFocus}`,
+              outlineOffset: '-2px',
+            },
+          },
           sizeSmall: { height: 38 },
           label: { paddingInline: '16px' },
         },

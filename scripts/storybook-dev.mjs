@@ -27,13 +27,25 @@ const manifestPath = require.resolve('storybook/package.json')
 const { bin } = JSON.parse(readFileSync(manifestPath, 'utf8'))
 const entry = resolve(dirname(manifestPath), typeof bin === 'string' ? bin : bin.storybook)
 
+// The Vitest addon runs the whole browser suite INSIDE this process, so the
+// Storybook dev server needs the same headroom the CLI wrapper gives Vitest.
+// Without it a full run from the Testing panel climbs from ~400 MB to Node's
+// ~4.2 GB default ceiling and takes the dev server down with it — observed at
+// around 66 of 252 tests, reported to the user as "connection lost".
+//
+// SEE TECH-DEBT.md. A mitigation, not a fix: the growth is real, this only
+// buys room for a full run to finish.
+const heapMb = process.env.STORYBOOK_HEAP_MB || '20480'
+
 const port = process.env.PORT || process.env.SBCONFIG_PORT || '6006'
 // `--no-version-updates` because the nag is noise we cannot act on: newer
 // Storybook releases are held back by the 7-day release-age cap in the user's
 // npmrc, so the banner would advertise an upgrade npm refuses to install.
-const child = spawn(process.execPath, [entry, 'dev', '--port', port, '--no-version-updates', ...process.argv.slice(2)], {
-  stdio: 'inherit',
-})
+const child = spawn(
+  process.execPath,
+  [`--max-old-space-size=${heapMb}`, entry, 'dev', '--port', port, '--no-version-updates', ...process.argv.slice(2)],
+  { stdio: 'inherit' },
+)
 
 child.on('exit', (code, signal) => {
   process.exit(signal ? 1 : (code ?? 0))

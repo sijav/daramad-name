@@ -12,33 +12,52 @@ Ordered by how much it would hurt to leave forever.
 
 ---
 
-## 1. Coverage runs can exhaust the heap
+## 1. Test runs exhaust the heap, so both hosts run with a raised ceiling
 
-**Silenced by** `scripts/vitest.mjs`, which raises Node's heap ceiling from its
-~4.2 GB default to 8 GB for every test command.
+**Mitigated by** `scripts/vitest.mjs` and `scripts/storybook-dev.mjs`, which
+both raise Node's heap ceiling to 20 GB (`VITEST_HEAP_MB` /
+`STORYBOOK_HEAP_MB` override it).
 
-**Symptom** `FATAL ERROR: Reached heap limit Allocation failed` at ~4.09 GB,
-with `v8::ValueDeserializer::ReadValue` deep in the native stack.
+**Symptom** `FATAL ERROR: Ineffective mark-compacts near heap limit` at
+~4.09 GB, with `v8::ValueDeserializer::ReadValue` in the native stack. From the
+Storybook Testing panel it presents as **"Connection lost"** partway through —
+observed stopping at 66/252 and 113/252 — because the process being killed IS
+the Storybook dev server.
 
-**Cause** Vitest sends coverage reports to the main thread and holds them in
-memory for the whole run rather than streaming them to disk —
-[vitest-dev/vitest#4476](https://github.com/vitest-dev/vitest/issues/4476). The
-`ValueDeserializer` frames are the host deserialising those payloads. A browser
-project over an 80-file module graph produces a lot of them.
+**Cause** Vitest holds coverage reports in the main process for the whole run
+rather than streaming them to disk
+([vitest-dev/vitest#4476](https://github.com/vitest-dev/vitest/issues/4476)).
+The Vitest addon runs the browser suite INSIDE the Storybook dev server, so that
+process carries it. Node's default ceiling is 4288 MB.
 
-**Honest status** NOT REPRODUCED on a clean machine. `npm run test:coverage`
-completes at 570 tests with parallelism either on or off. The report came from a
-session that also had a Storybook dev server running on 6006, and the Vitest
-Storybook project starts a *second* Vite/Storybook instance of its own — two
-full builds plus Chromium plus the coverage payloads is a plausible path to
-4 GB that a clean run never reaches.
+**Measured** Baseline Storybook host 400 MB. A full run from the Testing panel
+with Interactions + Coverage + Accessibility enabled peaks at **7908 MB** —
+roughly 20x baseline, and nearly double the default ceiling. With the ceiling
+raised the same run completes: 252 tests, 89% coverage, 103 accessibility
+findings.
 
-**What would fix it** Upstream streaming coverage to disk. Until then, avoid
-running the Storybook dev server and the Storybook test project at the same
-time, and prefer `test:unit` / `test:storybook` separately when memory is tight.
+**Cheaper alternative** Unticking **Coverage** in the Testing panel removes most
+of the growth. Worth doing when only interaction or a11y results are wanted.
 
-**How to tell it can go** Raising `VITEST_HEAP_MB` is no longer needed — set it
-to `4096` and see whether a full coverage run survives.
+**What would fix it** Upstream streaming coverage to disk instead of
+accumulating it in memory.
+
+**How to tell it can go** Set `STORYBOOK_HEAP_MB=4096` and run the full suite
+with coverage from the Testing panel. If it finishes, the ceilings can come out.
+
+---
+
+## 1b. Two upstream deprecation notices we cannot silence
+
+**`vitest.init()` is deprecated. Use `vitest.standalone()` instead.**
+Emitted by the addon's own code — `@storybook/addon-vitest@10.5.0`,
+`dist/node/vitest.js:256`. Nothing in this repo calls it.
+
+**"You can safely remove the setProjectAnnotations call from your setup file."**
+We cannot; see entry 6. The notice is informational and there is no flag for it.
+
+**How to tell they can go** Both should clear when addon-vitest updates.
+Currently held at 10.5.0 by the 7-day release-age cap — see entry 3.
 
 ---
 
@@ -151,7 +170,8 @@ section labels there. Investigated but not resolved.
 ## 9. Accessibility checks are not enforced
 
 **Status** `.storybook/preview.tsx` sets `a11y: { test: 'todo' }`, so
-violations are reported but do not fail the run.
+violations are reported but do not fail the run. A full run from the Testing
+panel currently surfaces **103 findings** — real, and worth working through.
 
 **What would fix it** Flip to `'error'` once the known violations are cleared,
 so a regression fails CI rather than sitting in a panel nobody opens.

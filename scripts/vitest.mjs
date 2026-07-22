@@ -24,7 +24,7 @@ const manifestPath = require.resolve('vitest/package.json')
 const { bin } = JSON.parse(readFileSync(manifestPath, 'utf8'))
 const entry = resolve(dirname(manifestPath), typeof bin === 'string' ? bin : bin.vitest)
 
-const heapMb = process.env.VITEST_HEAP_MB || '8192'
+const heapMb = process.env.VITEST_HEAP_MB || '20480'
 const child = spawn(process.execPath, [`--max-old-space-size=${heapMb}`, entry, ...process.argv.slice(2)], { stdio: 'inherit' })
 
 child.on('exit', (code, signal) => {

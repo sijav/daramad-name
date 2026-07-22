@@ -12,7 +12,7 @@ import { AppErrorFallback } from 'src/shared/error-state'
 import { AppShell } from 'src/shared/layouts'
 
 // The dashboard is the landing page and stays in the main bundle. The rest are
-// split: the report page pulls in pdfmake, and it should not be paid for on
+// split: the report page pulls in pdfkit, and it should not be paid for on
 // first load. Half the demo traffic arrives on a phone, often on a slow
 // connection.
 const QuickEntryPage = lazy(() => import('src/pages/quick-entry').then((m) => ({ default: m.QuickEntryPage })))

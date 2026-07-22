@@ -7,7 +7,7 @@ import { buildIncomeReport } from './buildIncomeReport'
 // The PDF is the one-click path, and its output is only ever inspected after it
 // has been downloaded — which is exactly how it shipped printing English
 // headings for a Persian document without anyone noticing. These assertions run
-// against the document definition rather than a rendered file, so a field that
+// against the layout definition rather than a rendered file, so a field that
 // stops reaching the page fails here first.
 
 const report: IncomeReport = {
@@ -37,7 +37,7 @@ const build = async (language: ReportLanguage, overrides: Partial<IncomeReport> 
   return { model, doc: buildIncomeReport(model) }
 }
 
-/** Every string anywhere in the document tree, flattened. */
+/** Every string anywhere in the layout, flattened. */
 const textOf = (node: unknown): string[] => {
   if (typeof node === 'string') {
     return [node]
@@ -51,17 +51,19 @@ const textOf = (node: unknown): string[] => {
   return []
 }
 
+const rowsBlocks = (doc: ReturnType<typeof buildIncomeReport>) => doc.blocks.filter((block) => block.type === 'rows')
+
 describe('buildIncomeReport', () => {
-  it('is A4 and uses the embedded Persian font, not pdfmake’s default Roboto', async () => {
+  it('is A4 and names the embedded Persian font, not a default with no Arabic glyphs', async () => {
     const { doc } = await build('fa')
 
     expect(doc.pageSize).toBe('A4')
-    expect(doc.defaultStyle?.font).toBe('Vazirmatn')
+    expect(doc.font).toBe('Vazirmatn')
   })
 
   it('carries every figure the model holds', async () => {
     const { model, doc } = await build('fa')
-    const text = textOf(doc.content)
+    const text = textOf(doc.blocks)
 
     expect(text).toContain(model.title)
     expect(text).toContain(model.serial)
@@ -74,7 +76,7 @@ describe('buildIncomeReport', () => {
 
   it('keeps months with no income as their own row', async () => {
     const { doc } = await build('fa')
-    const text = textOf(doc.content)
+    const text = textOf(doc.blocks)
 
     // Ordibehesht earned nothing and must still appear — dropping empty months
     // makes a patchy year look continuous.
@@ -85,26 +87,35 @@ describe('buildIncomeReport', () => {
     const fa = await build('fa')
     const en = await build('en')
 
-    expect(fa.doc.defaultStyle?.alignment).toBe('right')
-    expect(en.doc.defaultStyle?.alignment).toBe('left')
+    expect(fa.doc.direction).toBe('rtl')
+    expect(fa.doc.align).toBe('right')
+    expect(en.doc.direction).toBe('ltr')
+    expect(en.doc.align).toBe('left')
   })
 
   it('titles the file metadata with the holder’s name', async () => {
     const { doc } = await build('en')
 
-    expect(doc.info?.author).toBe('Raha Mousavi')
+    expect(doc.author).toBe('Raha Mousavi')
   })
 
-  // pdfmake throws on a table with zero body rows. An unfilled profile used to
-  // be the way to reach that state.
-  it('omits the identity table entirely rather than emitting an empty one', async () => {
+  // A framed identity section with no rows reads as an unfilled form. An
+  // unfilled profile used to be the way to reach that state.
+  it('omits the identity block entirely rather than emitting an empty one', async () => {
     const { model, doc } = await build('fa', {
       profile: { fullName: '', fullNameEn: '', nationalId: '', passportNumber: '', phone: '', address: '', addressEn: '' },
     })
 
     expect(model.identity).toHaveLength(0)
-    const tables = (doc.content as { table?: { body: unknown[] } }[]).filter((node) => node?.table)
-    expect(tables.every((node) => (node.table?.body.length ?? 0) > 0)).toBe(true)
+    // Only the summary rows block survives; the identity one is gone.
+    expect(rowsBlocks(doc)).toHaveLength(1)
+    expect(rowsBlocks(doc).every((block) => block.rows.length > 0)).toBe(true)
+  })
+
+  it('has both an identity and a summary block when the profile is filled', async () => {
+    const { doc } = await build('fa')
+
+    expect(rowsBlocks(doc)).toHaveLength(2)
   })
 
   it('never prints a label with no value beside it', async () => {

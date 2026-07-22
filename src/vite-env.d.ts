@@ -6,7 +6,7 @@
 declare module '@fontsource-variable/vazirmatn'
 
 // Vite's `?url` suffix returns the emitted asset path as a string. The font
-// files are loaded this way so pdfmake and @font-face get a real URL rather
+// files are loaded this way so pdfkit and @font-face get a real URL rather
 // than an inlined blob.
 declare module '*.ttf?url' {
   const src: string

@@ -137,48 +137,81 @@ it passes, the upstream break is fixed.
 
 ---
 
-## 7. The one-click PDF reverses Persian text
+## 7. The one-click Persian PDF — fixed, and what the fix costs
 
-**Status** BROKEN for Persian, and the wording below was wrong until now.
+**Status** RESOLVED. The period line now reads `۱ فروردین ۱۴۰۵ - ۱ مرداد ۱۴۰۵`,
+digits intact, in the file the Report page downloads.
 
-**Symptom** The reporting-period line prints as
+**What was wrong** pdfmake → pdfkit → fontkit handed a whole line to fontkit's
+`layout`, which reverses an RTL run as one blob. Persian digits (U+06F0–06F9)
+are bidi class EN — a number run that stays LEFT-TO-RIGHT inside RTL text — so
+reversing the whole line turned «۱۴۰۵» into «۵۰۴۱». That is over-reversal, not
+absent bidi. Every JS PDF engine tried failed it identically: pdfmake/fontkit,
+and `pdfnative`, whose own bidi reversed the digits too (and mis-shaped the
+letters). The browser gets it right, which is why `/certificate` always worked.
 
-    ۵۰۴۱ مرداد ۱ - ۵۰۴۱ فروردین ۱
+**The fix** `src/shared/pdf/bidiText.ts` runs real UAX#9 bidi (`bidi-js`) FIRST,
+splitting each line into maximal same-direction runs. Each run is then
+pure-direction, so fontkit's own reversal is exactly right for it — an RTL word
+reverses, a digit run does not — and the shaped runs are concatenated in visual
+order. It is installed by patching fontkit's `layout`, the one choke point every
+pdfkit text call flows through. The PDF is drawn with pdfkit (replacing
+pdfmake), from the SAME `CertificateModel` the on-screen certificate uses, so
+the two cannot drift. Verified by `bidiText.test.ts` (the ۱۴۰۵ regression),
+`renderCertificatePdf.test.ts` (a valid, font-embedded, selectable PDF for both
+languages), and by hand in the dev server (a 42 KB selectable PDF).
 
-where it should read
+There is deliberately NO automated browser test for the download: pdfkit needs
+Buffer/stream/zlib/fs, and the polyfill plugin that supplies them in the dev
+server also rewrites Storybook's own `node:fs` imports and breaks the vitest
+browser runner. The Node tests exercise the identical `renderCertificatePdf` +
+`bidiText` code the browser runs, so the gap is the browser SHIMS, not the
+rendering — and those are proven by the manual download working.
 
-    ۱ فروردین ۱۴۰۵ - ۱ مرداد ۱۴۰۵
+The residual debt below is the price of drawing PDFs with a Node library in the
+browser. It is small, but it is real.
 
-**Cause, corrected** This entry previously said pdfmake "has no bidi
-implementation". The output says otherwise. «۱۴۰۵» comes out as «۵۰۴۱» — the
-digits themselves are reversed, the range endpoints swap, and day/month/year
-invert. That is the whole logical string reversed character by character. The
-Persian words survive only because glyph shaping handles their internal order.
+### 7a. pdfkit needs Node built-ins polyfilled in the browser
 
-The numerals are Persian, which is the detail that settles it. Arabic-Indic
-digits are bidi class AN, and under UAX#9 an AN run inside right-to-left text
-keeps its LEFT-TO-RIGHT order — exactly as a Latin EN run does. Only the
-surrounding RTL runs reverse. So reversed digits cannot come from a bidi
-algorithm at all; they are the signature of a naive whole-string reverse.
+**Workaround** `vite.config.ts` adds `vite-plugin-node-polyfills` for `buffer`,
+`stream`, `zlib`, `util`, `events`, `string_decoder` and `fs`, plus the `Buffer`
+/ `global` / `process` globals. pdfkit assumes all of these exist. The report
+path is dynamically imported, so they stay out of the initial bundle, and the
+Node unit project uses its own `vitest.config` and keeps the REAL modules.
 
-The problem is over-reversal, not absent bidi. Different bug, different fix. The
-model itself is correct — the digits ARE Persian, as the Persian certificate
-requires, so the two rendering surfaces have not drifted.
+**Cost** A whole-app polyfill layer, and ~700 KB of pdfkit + fontkit in the
+report chunk.
 
-**Workaround in place** `/certificate` renders the document as a page and lets
-the browser print it. The browser has a real text engine, so ordering, shaping
-and نیم‌فاصله are all correct. That route is the one to use and the one the
-Report page leads with.
+**How to tell it can go** pdfkit ships a browser build that does not reach for
+Node built-ins, or a maintained pure-browser PDF engine gains correct bidi.
 
-**What would fix the one-click path** Find what reverses — pdfmake's own text
-handling or pdfkit/fontkit picking a direction from the dominant script — then
-run proper UAX#9 bidi ourselves and hand over a visual-order string with the
-engine's reversal disabled, so it does not happen twice. Anything that WRAPS
-still needs explicit line-breaking, because bidi ordering is per visual line: in
-this document that is the footnote, the average-basis line and a long address.
+### 7b. The default font is switched off to avoid an `fs` read
 
-**How to tell it can go** Download a Persian certificate and read the period
-line. If it reads `1 فروردین 1405 - 1 مرداد 1405`, this entry is done.
+**Workaround** `renderCertificatePdf` passes `font: false` to the pdfkit
+constructor.
+
+**Cause** pdfkit otherwise loads Helvetica's AFM metrics with
+`fs.readFileSync` in its constructor — which has no file to read in the browser
+and throws `Cannot read properties of null (reading 'readFileSync')`. We only
+ever use the embedded Vazirmatn, set before every draw, so no built-in font is
+needed.
+
+**How to tell it can go** It does not need to; it is the correct setting. Noted
+because it looks odd without the reason.
+
+### 7c. The PDF is emitted uncompressed
+
+**Workaround** `renderCertificatePdf` passes `compress: false`.
+
+**Cause** pdfkit's compression path calls Node's `zlib.deflateSync`, which the
+browser zlib shim does not implement. pdfkit still SUBSETS the embedded font, so
+an uncompressed certificate is ~42 KB — small enough to leave.
+
+**What would fix it** A browser `deflateSync` (e.g. wiring `fflate` into the
+zlib shim), then `compress: true`. Worth it only if the file size ever matters.
+
+**How to tell it can go** Flip `compress` to `true` and download a certificate.
+If it opens, the shim now provides a working `deflateSync`.
 
 ---
 

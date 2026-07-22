@@ -1371,7 +1371,7 @@ msgstr "The monthly average divides the total by the {0} calendar months in the 
 msgid "The rate and Toman equivalent are stored at the moment you record a receipt. Later rate changes do not affect it."
 msgstr "The rate and Toman equivalent are stored at the moment you record a receipt. Later rate changes do not affect it."
 
-#: src/shared/pdf/loadPdfMake.ts
+#: src/shared/pdf/loadPdf.ts
 msgid "The report's Persian font failed to load. Reload the page."
 msgstr "The report's Persian font failed to load. Reload the page."
 

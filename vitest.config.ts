@@ -60,6 +60,13 @@ export default defineConfig({
           lingui(),
           // Turns every story into a test case: it renders, its play function
           // runs, and anything thrown fails the run.
+          //
+          // The report's PDF path (pdfkit under Node shims) is NOT exercised as a
+          // browser test here: pdfkit needs Buffer/stream/zlib/fs, and adding the
+          // polyfill plugin to this project also rewrites Storybook's own
+          // `node:fs` imports and breaks the runner's bundle. The path is covered
+          // by Node tests (`bidiText.test.ts`, `renderCertificatePdf.test.ts`) and
+          // verified by hand in the dev server. See TECH-DEBT.md entry 7.
           storybookTest({ configDir: join(rootDir, '.storybook') }),
         ],
         test: {

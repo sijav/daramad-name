@@ -1371,7 +1371,7 @@ msgstr "میانگین ماهانه از تقسیم جمع کل بر {0} ماه 
 msgid "The rate and Toman equivalent are stored at the moment you record a receipt. Later rate changes do not affect it."
 msgstr "نرخ تبدیل و معادل تومانی در لحظه ثبت ذخیره می‌شود و تغییرات بعدی نرخ روی این دریافتی اثر نمی‌گذارد."
 
-#: src/shared/pdf/loadPdfMake.ts
+#: src/shared/pdf/loadPdf.ts
 msgid "The report's Persian font failed to load. Reload the page."
 msgstr "فونت فارسی گزارش بارگذاری نشد. صفحه را دوباره باز کن."
 

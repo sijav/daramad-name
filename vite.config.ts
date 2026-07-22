@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react-swc'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // `base` is read from an env var so the same build works on both deploy targets:
@@ -18,6 +19,22 @@ export default defineConfig({
   plugins: [
     react({
       plugins: [['@lingui/swc-plugin', {}]],
+    }),
+    // The report certificate is drawn with pdfkit, which is a Node library:
+    // it reaches for `Buffer`, `stream`, `zlib` and `fs`. In the browser those
+    // do not exist, so this shims them. It is deliberately NOT gated behind
+    // `isStorybook` — the browser test project renders the report story too and
+    // needs the same shims. The Node unit project uses its own `vitest.config`
+    // and never loads this file, so its tests keep the real Node modules.
+    // Only the four subsystems pdfkit touches are polyfilled, and the report
+    // chunk is dynamically imported, so this stays out of the initial bundle.
+    // See TECH-DEBT.md — pdfkit in the browser.
+    nodePolyfills({
+      include: ['buffer', 'stream', 'zlib', 'util', 'events', 'string_decoder', 'fs'],
+      // `process` is needed too: pdfkit's stream shim (readable-stream) calls
+      // `process.nextTick`. `Buffer` and `global` are the other two globals its
+      // Node code assumes exist.
+      globals: { Buffer: true, global: true, process: true },
     }),
     ...(isStorybook
       ? []
@@ -75,12 +92,12 @@ export default defineConfig({
               // once the shell and the fonts are cached the whole product works
               // with the network off, which is its honest default rather than a
               // bonus. `ttf` is not in workbox's default list and matters most —
-              // those two files are the Vazirmatn cuts pdfmake embeds, and
+              // those two files are the Vazirmatn cuts pdfkit embeds, and
               // without them the PDF certificate renders Persian as empty boxes.
               globPatterns: ['**/*.{js,css,html,svg,png,ico,webmanifest,woff2,ttf}'],
-              // The pdfmake chunk is ~950KB on its own; the default 2MiB ceiling
-              // clears it today, but a bump would silently drop the report from
-              // the precache instead of failing the build.
+              // The pdfkit and fontkit chunks are ~700KB combined; the default
+              // 2MiB ceiling clears them today, but a bump would silently drop
+              // the report from the precache instead of failing the build.
               maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
               // A stale precache from a previous deploy is worse than no cache:
               // it can pair an old chunk with a new entry point.
@@ -110,10 +127,10 @@ export default defineConfig({
     },
   },
   build: {
-    // pdfmake carries embedded font tables and is by far the largest dependency.
-    // It is loaded with a dynamic `import()` at the point of use rather than
-    // being split by name here, which keeps it off the initial page load
-    // without depending on the bundler's chunking API.
+    // pdfkit and fontkit carry embedded font machinery and are the largest
+    // dependencies. They are loaded with a dynamic `import()` at the point of
+    // use rather than being split by name here, which keeps them off the initial
+    // page load without depending on the bundler's chunking API.
     chunkSizeWarningLimit: 900,
   },
 })

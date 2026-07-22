@@ -12,7 +12,7 @@ import { EmptyState } from 'src/shared/empty-state'
 import { useFormat } from 'src/shared/format'
 import { PageActions, selectableYears, useReportYear } from 'src/shared/page-actions'
 import { PageHeader } from 'src/shared/page-header'
-import { buildIncomeReport, loadPdfMake } from 'src/shared/pdf'
+import { loadPdf } from 'src/shared/pdf'
 import { getIncomeReportQuery, getIncomeReportQueryKey, getPopulatedYearsQuery, getPopulatedYearsQueryKey } from 'src/shared/queries'
 import { SegmentedControl } from 'src/shared/segmented-control'
 import { SurfaceCard } from 'src/shared/surface-card'
@@ -51,8 +51,17 @@ export const ReportPage = () => {
       if (!model) {
         return
       }
-      const pdfMake = await loadPdfMake()
-      pdfMake.createPdf(buildIncomeReport(model)).download(`${model.serial}.pdf`)
+      const renderer = await loadPdf()
+      const blob = await renderer.createCertificate(model)
+      // A one-click download from a Blob: the report never leaves the browser,
+      // so there is no URL to navigate to — the object URL is created, clicked
+      // and revoked in place.
+      const url = window.URL.createObjectURL(blob)
+      const anchor = window.document.createElement('a')
+      anchor.href = url
+      anchor.download = `${model.serial}.pdf`
+      anchor.click()
+      window.URL.revokeObjectURL(url)
     },
     onError: (cause: Error) => setError(cause.message),
   })

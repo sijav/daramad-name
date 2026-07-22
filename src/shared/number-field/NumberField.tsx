@@ -45,8 +45,17 @@ export const NumberField = ({ value, onValueChange, decimals = 0, grouped = true
     const normalised = toEnglishDigits(raw).replace(/[^\d.-]/g, '')
     const parsed = parseUserNumber(normalised)
 
-    setDraft(grouped && parsed !== null ? formatNumber(parsed, locale, countDecimals(normalised, decimals)) : normalised)
-    onValueChange(parsed)
+    // Report the value the field is SHOWING, not the raw parse.
+    //
+    // Rounding the display while reporting the unrounded number meant a field
+    // reading «۱٫۵۶» stored 1.555, and every surface afterwards — the ledger,
+    // the drawer, the certificate — printed 1.56 beside a Toman figure derived
+    // from 1.555. Nothing downstream could detect the mismatch, because the
+    // stored value looked plausible.
+    const shown = parsed === null ? null : Number(parsed.toFixed(countDecimals(normalised, decimals)))
+
+    setDraft(grouped && shown !== null ? formatNumber(shown, locale, countDecimals(normalised, decimals)) : normalised)
+    onValueChange(shown)
   }
 
   return (

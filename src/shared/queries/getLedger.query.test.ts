@@ -268,18 +268,14 @@ describe('the monthly average', () => {
     expect(summary.monthlyAverageToman).toBe(30_000_000)
   })
 
-  // KNOWN DEFECT, left failing-by-omission rather than papered over.
-  //
-  // The rows are read with the RAW filter range (getLedger.query.ts:48) but the
-  // divisor comes from the CLAMPED one (getLedger.query.ts:32). Pick a range
-  // that ends in the future — "this year" does, for most of the year — and any
-  // receipt dated ahead of today is counted in the total while contributing no
-  // months to the divisor. With the numbers below the ledger reports an average
-  // of ۱۱۰٬۰۰۰٬۰۰۰ where the report, for the same period, reports ۱۰٬۰۰۰٬۰۰۰.
-  //
-  // The report clamps both (getIncomeReport.query.ts:23-27), which is the
-  // behaviour the two surfaces are supposed to share.
-  it.skip('should not count income dated after today while dividing only by the months elapsed', async () => {
+  // The rows were once read with the RAW filter range while the divisor came
+  // from the CLAMPED one. Pick a range that ends in the future — "this year"
+  // does, for most of the year — and any receipt dated ahead of today counted
+  // toward the total while contributing no months to the divisor. The ledger
+  // reported an average of ۱۱۰٬۰۰۰٬۰۰۰ where the report, for the same period,
+  // reported ۱۰٬۰۰۰٬۰۰۰: eleven times apart, under the same label, with
+  // nothing on screen to say which was right.
+  it('should not count income dated after today while dividing only by the months elapsed', async () => {
     await db.receipts.bulkAdd([
       receipt({ id: 'past', occurredAt: '2026-04-10T12:00:00.000Z', amountToman: 40_000_000 }),
       receipt({ id: 'future', occurredAt: '2026-11-10T12:00:00.000Z', amountToman: 400_000_000 }),

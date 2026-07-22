@@ -18,6 +18,12 @@ import { QuickEntryAside } from './QuickEntryAside'
 export const QuickEntryPage = () => {
   const { t } = useLingui()
   const form = useReceiptForm()
+  const { patch } = form
+  // Destructured rather than called as `form.patch(...)`: the lingui rule reads
+  // the key's type through the generic parameter, and only sees it as a union
+  // of ReceiptFormState's keys when `patch` is referenced directly. Every other
+  // call site in the app destructures for the same reason.
+  const pickClient = (name: string) => patch('clientName', name)
   const [toast, setToast] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -91,7 +97,7 @@ export const QuickEntryPage = () => {
         </Grid>
 
         <Grid size={{ xs: 12, lg: 5 }}>
-          <QuickEntryAside />
+          <QuickEntryAside onPickClient={pickClient} />
         </Grid>
       </Grid>
 

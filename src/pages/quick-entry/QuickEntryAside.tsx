@@ -20,7 +20,17 @@ import { dayRange, formatDate } from 'src/shared/utils'
  * whole point of a 15-second entry flow. Every panel reads from queries the
  * ledger already populates, so recording a receipt refreshes all three.
  */
-export const QuickEntryAside = () => {
+export interface QuickEntryAsideProps {
+  /**
+   * Fills the form's client field. Without it the "recent clients" chips are
+   * inert — an outlined chip in a form column reads as tappable, so a user taps
+   * one, nothing happens, and they type the name by hand. That is also how a
+   * second «Aria Trading » gets created and splits a client's totals.
+   */
+  onPickClient?: (name: string) => void
+}
+
+export const QuickEntryAside = ({ onPickClient }: QuickEntryAsideProps) => {
   const { t, i18n } = useLingui()
   const navigate = useNavigate()
   const { calendar } = useSettings()
@@ -111,7 +121,12 @@ export const QuickEntryAside = () => {
             <Typography variant="h3">{t`Recent clients`}</Typography>
             <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1 }}>
               {clients.slice(0, 6).map((client) => (
-                <Chip key={client.id} label={client.name} variant="outlined" />
+                <Chip
+                  key={client.id}
+                  label={client.name}
+                  variant="outlined"
+                  onClick={onPickClient ? () => onPickClient(client.name) : undefined}
+                />
               ))}
             </Stack>
           </Stack>

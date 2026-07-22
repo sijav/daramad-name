@@ -109,13 +109,12 @@ const rowContaining = (canvasElement: HTMLElement, text: string): HTMLTableRowEl
 }
 
 /**
- * `Field` renders its label as a sibling of the control rather than wrapping it
- * or pointing at it with `htmlFor`, so the inputs in the receipt form have no
- * accessible name to query by. Walking from the label is the closest stand-in.
+ * `Field` wraps its control in the `<label>`, so an input's accessible name is
+ * its field label — this walks the same association a screen reader would.
  */
 const fieldInput = (root: ParentNode, label: RegExp): HTMLInputElement => {
-  const node = [...root.querySelectorAll('label')].find((candidate) => label.test(candidate.textContent ?? ''))
-  const input = node?.parentElement?.querySelector('input')
+  const node = [...root.querySelectorAll('label')].find((candidate) => label.test(candidate.querySelector('span')?.textContent ?? ''))
+  const input = node?.querySelector('input')
   if (!input) {
     throw new Error(`no input under the label matching ${label}`)
   }
@@ -350,11 +349,13 @@ export const PickingOneEndOfTheRangeFillsTheOtherVisibly: Story = {
 
     const popover = canvasElement.ownerDocument.querySelector('.MuiPopover-paper')!
     const box = (label: RegExp): HTMLElement => {
-      const node = [...popover.querySelectorAll('label')].find((candidate) => label.test(candidate.textContent ?? ''))
-      if (!node?.parentElement) {
+      const node = [...popover.querySelectorAll('label')].find((candidate) =>
+        label.test(candidate.querySelector('span')?.textContent ?? ''),
+      )
+      if (!node) {
         throw new Error(`no field labelled ${label}`)
       }
-      return node.parentElement
+      return node
     }
     // The picker renders ASCII digits behind a Persian-glyph font, so a digit
     // in the text is the test for "this field is showing a date".

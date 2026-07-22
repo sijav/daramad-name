@@ -88,8 +88,23 @@ export const useReceiptForm = (initial?: ReceiptWithClient) => {
     isBackdated,
     tomanPreview,
     markSubmitted: () => setSubmitted(true),
-    /** Resets for the next entry, keeping the client so a batch of receipts is fast to log. */
-    resetKeepingClient: () => setState((current) => ({ ...emptyState(), clientName: current.clientName, channel: current.channel })),
+    /**
+     * Resets for the next entry, keeping the client so a batch is fast to log.
+     *
+     * The DATE is kept too. Resetting it to today silently undid backdating on
+     * every receipt after the first — which is precisely what this button is
+     * for when someone works through a stack of old invoices. The warning
+     * disappeared with the date, so the receipts landed in the wrong month and
+     * the totals, the charts and the certificate's breakdown were all quietly
+     * wrong.
+     */
+    resetKeepingClient: () =>
+      setState((current) => ({
+        ...emptyState(),
+        clientName: current.clientName,
+        channel: current.channel,
+        occurredAt: current.occurredAt,
+      })),
     reset: () => {
       setState(emptyState())
       setSubmitted(false)

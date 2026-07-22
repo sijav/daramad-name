@@ -77,6 +77,15 @@ export const loadPdfMake = async (): Promise<PdfMakeModule> => {
 
       return instance
     })()
+
+    // Forget a FAILED attempt, so a flaky font fetch does not poison the rest
+    // of the session. `cached` is assigned before the promise settles, so
+    // without this every later call returns the same rejection and the report
+    // page keeps refusing long after the network recovered — with no way out
+    // but a reload, which throws away the range and profile just filled in.
+    cached.catch(() => {
+      cached = null
+    })
   }
 
   return cached

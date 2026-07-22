@@ -56,12 +56,12 @@ export const RowRangeFollowsThePage: Story = {
     })
 
     await step('a middle page reports its own slice', async () => {
-      await userEvent.click(await canvas.findByRole('button', { name: /page 2$/ }))
+      await userEvent.click(await canvas.findByRole('button', { name: new RegExp('صفحه' + '‌' + 'ی ۲$|page 2$') }))
       await expect(await canvas.findByText(/^نمایش ۲۶ تا ۵۰ از ۱۲۶ دریافتی$|^Showing 26 to 50 of 126 receipts$/)).toBeInTheDocument()
     })
 
     await step('the last page stops at the total, not at page × pageSize', async () => {
-      await userEvent.click(await canvas.findByRole('button', { name: /page 6$/ }))
+      await userEvent.click(await canvas.findByRole('button', { name: new RegExp('صفحه' + '‌' + 'ی ۶$|page 6$') }))
       // 6 × 25 is 150; the sentence must still end at 126.
       await expect(await canvas.findByText(/^نمایش ۱۲۶ تا ۱۲۶ از ۱۲۶ دریافتی$|^Showing 126 to 126 of 126 receipts$/)).toBeInTheDocument()
     })

@@ -651,6 +651,26 @@ msgstr "Full name in English"
 msgid "Generating…"
 msgstr "Generating…"
 
+#: src/shared/page-control/PageControl.tsx
+msgid "Go to page {spoken}"
+msgstr "Go to page {spoken}"
+
+#: src/shared/page-control/PageControl.tsx
+msgid "Go to the first page"
+msgstr "Go to the first page"
+
+#: src/shared/page-control/PageControl.tsx
+msgid "Go to the last page"
+msgstr "Go to the last page"
+
+#: src/shared/page-control/PageControl.tsx
+msgid "Go to the next page"
+msgstr "Go to the next page"
+
+#: src/shared/page-control/PageControl.tsx
+msgid "Go to the previous page"
+msgstr "Go to the previous page"
+
 #: src/pages/settings/SettingsPage.tsx
 msgid "Gregorian"
 msgstr "Gregorian"
@@ -951,6 +971,10 @@ msgstr "Others"
 msgid "Overview"
 msgstr "Overview"
 
+#: src/shared/page-control/PageControl.tsx
+msgid "Page {spoken}, current page"
+msgstr "Page {spoken}, current page"
+
 #: src/pages/settings/SettingsPage.tsx
 #: src/shared/certificate/certificateModel.ts
 msgid "Passport number"
@@ -1074,6 +1098,10 @@ msgstr "Reload"
 #: src/shared/error-state/AppErrorFallback.tsx
 msgid "Reload the page"
 msgstr "Reload the page"
+
+#: src/shared/filter-chip/FilterChip.tsx
+msgid "Remove the {field} filter"
+msgstr "Remove the {field} filter"
 
 #: src/shared/constants/navigation.tsx
 msgid "Report"

@@ -651,6 +651,26 @@ msgstr "نام و نام خانوادگی به انگلیسی"
 msgid "Generating…"
 msgstr "در حال ساخت…"
 
+#: src/shared/page-control/PageControl.tsx
+msgid "Go to page {spoken}"
+msgstr "برو به صفحه‌ی {spoken}"
+
+#: src/shared/page-control/PageControl.tsx
+msgid "Go to the first page"
+msgstr "برو به صفحه‌ی اول"
+
+#: src/shared/page-control/PageControl.tsx
+msgid "Go to the last page"
+msgstr "برو به صفحه‌ی آخر"
+
+#: src/shared/page-control/PageControl.tsx
+msgid "Go to the next page"
+msgstr "برو به صفحه‌ی بعد"
+
+#: src/shared/page-control/PageControl.tsx
+msgid "Go to the previous page"
+msgstr "برو به صفحه‌ی قبل"
+
 #: src/pages/settings/SettingsPage.tsx
 msgid "Gregorian"
 msgstr "میلادی"
@@ -951,6 +971,10 @@ msgstr "بقیه"
 msgid "Overview"
 msgstr "نمای کلی"
 
+#: src/shared/page-control/PageControl.tsx
+msgid "Page {spoken}, current page"
+msgstr "صفحه‌ی {spoken}، صفحه‌ی فعلی"
+
 #: src/pages/settings/SettingsPage.tsx
 #: src/shared/certificate/certificateModel.ts
 msgid "Passport number"
@@ -1074,6 +1098,10 @@ msgstr "بارگذاری دوباره"
 #: src/shared/error-state/AppErrorFallback.tsx
 msgid "Reload the page"
 msgstr "بارگذاری دوباره‌ی صفحه"
+
+#: src/shared/filter-chip/FilterChip.tsx
+msgid "Remove the {field} filter"
+msgstr "حذف فیلتر {field}"
 
 #: src/shared/constants/navigation.tsx
 msgid "Report"

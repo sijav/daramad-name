@@ -96,7 +96,12 @@ export const AppShell = () => {
             })}
           >
             <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
-            <ListItemText slotProps={{ primary: { variant: 'subtitle2' } }}>{i18n._(item.label)}</ListItemText>
+            {/* `component: 'span'` matters: MUI maps the `subtitle2` variant to
+                an <h6>, so all six nav labels landed in the accessibility tree
+                as headings. A screen-reader user navigating by heading met six
+                meaningless entries before any content on every page, and could
+                not tell the nav entry from the page title of the same name. */}
+            <ListItemText slotProps={{ primary: { variant: 'subtitle2', component: 'span' } }}>{i18n._(item.label)}</ListItemText>
           </ListItemButton>
         )
       })}

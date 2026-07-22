@@ -1,5 +1,6 @@
 import Dexie, { type EntityTable } from 'dexie'
 import type { Client, Receipt, Settings } from 'src/shared/types'
+import { toPersianLetters } from 'src/shared/utils'
 
 // IndexedDB is the whole persistence layer. There is no server: the brief
 // mandates local-first data, and the footer promises nothing ever leaves the
@@ -79,7 +80,12 @@ export const upsertClientByName = async (name: string): Promise<Client | null> =
   if (!trimmed) {
     return null
   }
-  const nameKey = trimmed.toLowerCase()
+  // Fold Arabic letterforms before keying. An Iranian keyboard and an Arabic
+  // one produce different codepoints for the same letters — «كيان» and «کیان»
+  // look identical and are the same client — and without folding they become
+  // two rows, splitting that client's income across the ledger and halving
+  // their share in the concentration insight.
+  const nameKey = toPersianLetters(trimmed).toLowerCase()
   const existing = await db.clients.where('nameKey').equals(nameKey).first()
   if (existing) {
     return existing

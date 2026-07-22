@@ -19,8 +19,19 @@ export interface FieldProps {
  * this treatment, so it is a wrapper rather than a per-field style override.
  */
 export const Field = ({ label, children, helperText, error = false, fullWidth = true }: FieldProps) => (
-  <Box sx={{ width: fullWidth ? '100%' : 'auto', minWidth: 0 }}>
-    <Typography variant="subtitle2" component="label" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
+  // The WRAPPER is the `<label>`, so the control is a descendant and the
+  // association is implicit — no `htmlFor`/`id` plumbing, and it works for MUI
+  // X's picker, which renders a section list rather than a plain input.
+  //
+  // It used to be a sibling `<Typography component="label">` with no `htmlFor`,
+  // which associated nothing: every input in the app computed an EMPTY
+  // accessible name. A screen-reader user filling the receipt form heard four
+  // unlabelled text boxes and could not tell which one was the exchange rate —
+  // on the one form where the wrong number freezes a permanently wrong Toman
+  // value. The inner label is now a span, because a label inside a label is
+  // invalid and would break the association it is meant to create.
+  <Box component="label" sx={{ display: 'block', width: fullWidth ? '100%' : 'auto', minWidth: 0 }}>
+    <Typography variant="subtitle2" component="span" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
       {label}
     </Typography>
 

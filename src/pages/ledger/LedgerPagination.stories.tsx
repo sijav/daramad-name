@@ -102,7 +102,7 @@ export const SecondPageShowsTheRemainingRows: Story = {
     const firstPageTop = dataRows(canvasElement)[0].textContent
 
     await step('go to the second page', async () => {
-      await userEvent.click(await canvas.findByRole('button', { name: /page 2$/ }))
+      await userEvent.click(await canvas.findByRole('button', { name: new RegExp('صفحه' + '‌' + 'ی ۲$|page 2$') }))
       await canvas.findByText(/^نمایش ۲۶ تا ۲۸ از ۲۸ دریافتی$|^Showing 26 to 28 of 28 receipts$/)
     })
 
@@ -128,7 +128,7 @@ export const ChangingPageSizeReturnsToTheFirstPage: Story = {
     await canvas.findByText(/^نمایش ۱ تا ۲۵ از ۲۸ دریافتی$|^Showing 1 to 25 of 28 receipts$/)
 
     await step('stand on page two', async () => {
-      await userEvent.click(await canvas.findByRole('button', { name: /page 2$/ }))
+      await userEvent.click(await canvas.findByRole('button', { name: new RegExp('صفحه' + '‌' + 'ی ۲$|page 2$') }))
       await canvas.findByText(/^نمایش ۲۶ تا ۲۸ از ۲۸ دریافتی$|^Showing 26 to 28 of 28 receipts$/)
     })
 
@@ -170,7 +170,7 @@ export const ClearAllResetsFilterSearchAndPage: Story = {
     await step('search within them, then walk to page two', async () => {
       await userEvent.type(await canvas.findByRole('textbox', { name: /^جست‌وجو در دریافتی‌ها$|^Search receipts$/ }), 'bulk')
       await canvas.findByText(/^نمایش ۱ تا ۱۰ از ۲۰ دریافتی$|^Showing 1 to 10 of 20 receipts$/)
-      await userEvent.click(await canvas.findByRole('button', { name: /page 2$/ }))
+      await userEvent.click(await canvas.findByRole('button', { name: new RegExp('صفحه' + '‌' + 'ی ۲$|page 2$') }))
       await canvas.findByText(/^نمایش ۱۱ تا ۲۰ از ۲۰ دریافتی$|^Showing 11 to 20 of 20 receipts$/)
     })
 

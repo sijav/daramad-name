@@ -46,6 +46,11 @@ export const AmountField = ({ label, value, currency, onValueChange, error, help
           value={value}
           onValueChange={onValueChange}
           decimals={currencyDecimals[currency]}
+          // Forwarded so MUI sets `aria-invalid`. The error state reached the
+          // label and the box border but never the input, so the amount — the
+          // field most likely to be blocking the save — signalled its problem
+          // by a red hairline and nothing else.
+          error={error}
           autoFocus={autoFocus}
           variant="standard"
           fullWidth

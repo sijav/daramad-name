@@ -1,5 +1,5 @@
 import { useLingui } from '@lingui/react/macro'
-import { MenuItem, Pagination, Stack, TextField, Typography } from '@mui/material'
+import { MenuItem, Pagination, PaginationItem, Stack, TextField, Typography } from '@mui/material'
 import { radius } from 'src/core/theme'
 import { useFormat } from 'src/shared/format'
 import { PAGE_SIZE_OPTIONS } from './pageSizes'
@@ -30,6 +30,25 @@ export const PageControl = ({ page, pageCount, pageSize, totalCount, onPageChang
   const firstRow = totalCount === 0 ? 0 : (page - 1) * pageSize + 1
   const lastRow = Math.min(page * pageSize, totalCount)
 
+  // MUI's defaults are English sentences. Built here so the page number inside
+  // them is spoken in the user's own numerals too.
+  const ariaLabel = (type: string, itemPage: number | null, selected: boolean): string => {
+    const spoken = itemPage === null ? '' : digits(itemPage)
+    if (type === 'first') {
+      return t`Go to the first page`
+    }
+    if (type === 'last') {
+      return t`Go to the last page`
+    }
+    if (type === 'next') {
+      return t`Go to the next page`
+    }
+    if (type === 'previous') {
+      return t`Go to the previous page`
+    }
+    return selected ? t`Page ${spoken}, current page` : t`Go to page ${spoken}`
+  }
+
   return (
     <Stack
       direction={{ xs: 'column', md: 'row' }}
@@ -46,6 +65,12 @@ export const PageControl = ({ page, pageCount, pageSize, totalCount, onPageChang
         onChange={(_event, next) => onPageChange(next)}
         siblingCount={0}
         boundaryCount={1}
+        // MUI renders `item.page` raw and labels it in English. Everything else
+        // on this control goes through `digits()`, so an Iranian user saw
+        // «۱ ۲ ۳ … ۶» spelled in LATIN numerals sitting beside Persian ones,
+        // and a Persian screen reader read out "Go to page 2".
+        renderItem={(item) => <PaginationItem {...item} page={item.page === null ? null : digits(item.page)} />}
+        getItemAriaLabel={(type, itemPage, selected) => ariaLabel(type, itemPage, selected)}
         sx={(theme) => ({
           flex: 1,
           display: 'flex',

@@ -1,5 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { expect, userEvent, within } from 'storybook/test'
 import { SurfaceCard } from 'src/shared/surface-card'
 import type { ReceiptWithClient } from 'src/shared/types'
 import { ReceiptForm } from './ReceiptForm'
@@ -78,5 +79,64 @@ export const Backdated: Story = {
         })}
       />
     )
+  },
+}
+
+/**
+ * Scenario 1, driven rather than read from a fixture: type an amount, pick
+ * Tether, type the day's rate, and the Toman equivalent appears immediately and
+ * is marked frozen.
+ *
+ * This is the number the whole tool exists to be right about — it is stored on
+ * write and never recomputed, so a wrong one here is wrong permanently.
+ */
+export const RecordsAForeignReceipt: Story = {
+  args: { form: {} as never, submitLabel: '', onSubmit: () => {} },
+  render: () => <Harness />,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    // Every query is async: the form mounts behind providers, so a synchronous
+    // `getBy` runs against an empty canvas.
+    const inputs = async () => [...canvasElement.querySelectorAll('input')]
+
+    await step('type the amount', async () => {
+      await canvas.findByText(/مبلغ دریافتی|Amount received/i)
+      // The amount box is the one the form autofocuses.
+      const amount = (await inputs()).find((input) => input === canvasElement.ownerDocument.activeElement) ?? (await inputs())[1]
+      await userEvent.type(amount, '500')
+    })
+
+    await step('switch the currency to Tether', async () => {
+      await userEvent.click(await canvas.findByRole('button', { name: /تتر|Tether|USDT/i }))
+    })
+
+    await step('enter the rate for that day', async () => {
+      await canvas.findByText(/نرخ تبدیل|exchange rate/i)
+      const rate = (await inputs()).find((input) => input.value === '')
+      await userEvent.type(rate!, '98500')
+    })
+
+    await step('the toman equivalent is computed and frozen', async () => {
+      // 500 x 98,500 = 49,250,000, rendered in Persian numerals.
+      await expect(await canvas.findByText(/۴۹٬۲۵۰٬۰۰۰|49,250,000/)).toBeInTheDocument()
+      await expect(await canvas.findByText(/فریز|Frozen/i)).toBeInTheDocument()
+    })
+  },
+}
+
+/**
+ * Scenario 5. A past date must change what the rate field ASKS FOR: entering
+ * today's rate against a two-month-old receipt freezes a wrong number forever,
+ * and nothing downstream can detect it.
+ */
+export const WarnsWhenBackdated: Story = {
+  ...Backdated,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // The label asks for the rate on THAT date, not today's.
+    await expect(await canvas.findByText(/در همان تاریخ|on that date/i)).toBeInTheDocument()
+    // And the permanence is stated rather than implied.
+    await expect(await canvas.findByRole('alert')).toBeInTheDocument()
   },
 }

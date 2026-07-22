@@ -132,9 +132,11 @@ const preview: Preview = {
   parameters: {
     controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
     a11y: { test: 'todo' },
-    // The theme paints its own background, so Storybook's backgrounds addon
-    // would only fight it.
-    backgrounds: { disable: true },
+    // Every `onSomething` prop logs to the Actions panel without each story
+    // wiring its own handler. Stories that ASSERT on a callback still pass an
+    // explicit `fn()` spy: args inferred from this regex are not spies, so a
+    // play function cannot make expectations against them.
+    actions: { argTypesRegex: '^on[A-Z].*' },
   },
   decorators: [withProviders],
 }

@@ -2,7 +2,6 @@ import { Trans, useLingui } from '@lingui/react/macro'
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded'
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded'
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded'
-import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneRounded'
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded'
 import {
   AppBar,
@@ -144,13 +143,15 @@ export const AppShell = () => {
             </Typography>
           </Stack>
 
-          {/* Theme toggle, notifications and account, as in the design. */}
+          {/* Theme toggle and account. The design also draws a notification
+              bell, but there is nothing to notify about in a local-first tool
+              with no background work — it had no panel and merely navigated to
+              the ledger. A control that does something other than what its
+              icon promises is worse than an absent one, so it stays out until
+              there is a panel behind it. */}
           <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
             <IconButton onClick={toggleTheme} aria-label={t`Switch theme`}>
               {resolvedMode === 'dark' ? <LightModeRoundedIcon /> : <DarkModeRoundedIcon />}
-            </IconButton>
-            <IconButton aria-label={t`Notifications`} onClick={() => navigate('/ledger')}>
-              <NotificationsNoneRoundedIcon />
             </IconButton>
             <IconButton
               aria-label={t`Your details`}
@@ -224,7 +225,12 @@ export const AppShell = () => {
           })}
         >
           {NAV_ITEMS.map((item) => (
-            <BottomNavigationAction key={item.to} label={i18n._(item.label)} icon={item.icon} sx={{ minWidth: 0, px: 0.5 }} />
+            <BottomNavigationAction
+              key={item.to}
+              label={i18n._(item.shortLabel ?? item.label)}
+              icon={item.icon}
+              sx={{ minWidth: 0, px: 0.5 }}
+            />
           ))}
         </BottomNavigation>
       ) : null}

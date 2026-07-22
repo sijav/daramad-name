@@ -11,6 +11,13 @@ import type { ReactNode } from 'react'
 export interface NavItem {
   to: string
   label: MessageDescriptor
+  /**
+   * Used by the bottom bar, where six labels share the width of a phone.
+   * «گزارش درآمد» wraps to two lines there and the second one falls outside
+   * the bar. The desktop rail has the room and keeps the full label, which is
+   * what the design draws.
+   */
+  shortLabel?: MessageDescriptor
   icon: ReactNode
 }
 
@@ -26,6 +33,6 @@ export const NAV_ITEMS: NavItem[] = [
   { to: '/quick-entry', label: msg`Quick entry`, icon: <BoltRoundedIcon /> },
   { to: '/ledger', label: msg`Income ledger`, icon: <MenuBookRoundedIcon /> },
   { to: '/charts', label: msg`Charts`, icon: <BarChartRoundedIcon /> },
-  { to: '/report', label: msg`Income report`, icon: <DescriptionRoundedIcon /> },
+  { to: '/report', label: msg`Income report`, shortLabel: msg`Report`, icon: <DescriptionRoundedIcon /> },
   { to: '/settings', label: msg`Settings`, icon: <TuneRoundedIcon /> },
 ]

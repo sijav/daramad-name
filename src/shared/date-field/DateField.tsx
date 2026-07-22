@@ -10,8 +10,14 @@ import type { CalendarSystem } from 'src/shared/types'
 
 export interface DateFieldProps {
   label: string
-  /** ISO-8601 instant. */
-  value: string
+  /**
+   * ISO-8601 instant, or `null` for an empty field.
+   *
+   * Empty is a real state, not a missing one: the ledger's filter opens with no
+   * range set, and showing today's date there would advertise a filter that is
+   * not applied.
+   */
+  value: string | null
   onValueChange: (iso: string) => void
   /** Blocks future dates — a receipt cannot arrive tomorrow. */
   disableFuture?: boolean
@@ -45,7 +51,7 @@ export const DateField = ({ label, value, onValueChange, disableFuture = true, e
     <Field label={label} error={error} helperText={helperText}>
       <LocalizationProvider {...adapterProps(calendar, isPersian)}>
         <DatePicker
-          value={new Date(value)}
+          value={value ? new Date(value) : null}
           disableFuture={disableFuture}
           onChange={(next) => next && !Number.isNaN(next.getTime()) && onValueChange(next.toISOString())}
           slotProps={{

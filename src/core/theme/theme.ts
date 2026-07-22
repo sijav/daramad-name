@@ -147,6 +147,27 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
             backgroundColor: c.surfaceDefault,
             height: 52,
           },
+          // A multiline note has to grow, so it opts out of the fixed height.
+          //
+          // This MUST live on MuiOutlinedInput, not MuiInputBase. Emotion emits
+          // the inner component's styles first, so an InputBase override lands
+          // BEFORE the `height: 52` above in the same generated class — equal
+          // specificity, and source order decides. The opt-out silently lost,
+          // and the address field's text overflowed its own border by 20px in
+          // either direction once it grew past two lines.
+          //
+          // `padding` shorthand rather than `paddingBlock`, so it also cancels
+          // MUI's own multiline variants (`8.5px 14px` / `16.5px 14px`).
+          //
+          // Inline padding is deliberately ZERO here: the inset stays on the
+          // input slot below, exactly as it does for single-line fields. Set it
+          // on both and the address sits twice as far in as the name field
+          // directly above it.
+          multiline: {
+            height: 'auto',
+            minHeight: 52,
+            padding: '12px 0',
+          },
           input: {
             paddingBlock: '0px',
             // The inset lives on the INPUT slot, not the root. A Select's click
@@ -218,12 +239,6 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
             color: c.textSecondary,
             '&.Mui-focused': { color: c.textSecondary },
           },
-        },
-      },
-      MuiInputBase: {
-        styleOverrides: {
-          // A multiline note has to grow, so it opts out of the fixed 52px.
-          multiline: { height: 'auto', minHeight: 52, paddingBlock: '12px' },
         },
       },
       // Tables carry the design's ramp themselves, so a row never needs an

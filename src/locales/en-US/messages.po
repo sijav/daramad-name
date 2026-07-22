@@ -862,8 +862,8 @@ msgid "Nothing recorded in this range yet."
 msgstr "Nothing recorded in this range yet."
 
 #: src/shared/layouts/AppShell.tsx
-msgid "Notifications"
-msgstr "Notifications"
+#~ msgid "Notifications"
+#~ msgstr "Notifications"
 
 #: src/shared/constants/labels.ts
 msgid "November"
@@ -1050,6 +1050,10 @@ msgstr "Reload"
 #: src/shared/error-state/AppErrorFallback.tsx
 msgid "Reload the page"
 msgstr "Reload the page"
+
+#: src/shared/constants/navigation.tsx
+msgid "Report"
+msgstr "Report"
 
 #: src/pages/report/ReportPage.tsx
 msgid "Report language"

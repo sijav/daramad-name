@@ -26,10 +26,32 @@ export const LedgerFilterPopover = ({ anchorEl, filter, onApply, onClose }: Ledg
   const { data: clients = [] } = useQuery({ queryKey: clientsQueryKey, queryFn: getClientsQuery })
   const [draft, setDraft] = useState<LedgerFilter>(filter)
 
+  /**
+   * Sets one end of the range and makes the other end VISIBLE.
+   *
+   * The fields start empty, because a popover that opens showing today in both
+   * boxes advertises a range that is not applied — pressing Apply on it filtered
+   * nothing. And the previous fallback silently invented the missing end, so
+   * picking only a "to" date built `{from: today, to: <past date>}`, an inverted
+   * range Dexie matches nothing for, with no explanation on screen.
+   *
+   * So whatever the counterpart becomes, it is written into the draft and shown
+   * in its own field. What the user reads is what gets applied.
+   */
   const patchRange = (key: 'from' | 'to', iso: string) => {
-    const now = new Date().toISOString()
-    const range = draft.range ?? { from: now, to: now }
-    setDraft({ ...draft, range: { ...range, [key]: iso } })
+    const today = new Date().toISOString()
+    const from = key === 'from' ? iso : draft.range?.from
+    const to = key === 'to' ? iso : draft.range?.to
+
+    if (key === 'from') {
+      // A range must not end before it starts; today is the natural other end
+      // unless the chosen start is itself in the future.
+      const end = to && to >= iso ? to : iso > today ? iso : today
+      setDraft({ ...draft, range: { from: iso, to: end } })
+      return
+    }
+    const start = from && from <= iso ? from : iso
+    setDraft({ ...draft, range: { from: start, to: iso } })
   }
 
   return (
@@ -44,14 +66,14 @@ export const LedgerFilterPopover = ({ anchorEl, filter, onApply, onClose }: Ledg
       <Stack spacing={2}>
         <DateField
           label={t`From date`}
-          value={draft.range?.from ?? new Date().toISOString()}
+          value={draft.range?.from ?? null}
           onValueChange={(iso) => patchRange('from', iso)}
           disableFuture={false}
         />
 
         <DateField
           label={t`To date`}
-          value={draft.range?.to ?? new Date().toISOString()}
+          value={draft.range?.to ?? null}
           onValueChange={(iso) => patchRange('to', iso)}
           disableFuture={false}
         />

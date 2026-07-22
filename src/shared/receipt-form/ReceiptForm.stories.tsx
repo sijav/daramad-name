@@ -1,8 +1,8 @@
 import { useLingui } from '@lingui/react/macro'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { expect, userEvent, within } from 'storybook/test'
 import { SurfaceCard } from 'src/shared/surface-card'
 import type { ReceiptWithClient } from 'src/shared/types'
+import { expect, userEvent, within } from 'storybook/test'
 import { ReceiptForm } from './ReceiptForm'
 import { useReceiptForm } from './useReceiptForm'
 

@@ -70,6 +70,7 @@ const LABELS = {
   serial: msg`Reference`,
   fullName: msg`Full name`,
   nationalId: msg`National ID`,
+  passportNumber: msg`Passport number`,
   phone: msg`Phone`,
   address: msg`Address`,
   period: msg`Reporting period`,
@@ -136,16 +137,33 @@ export const buildCertificateModel = (
   // certificate whose every other date reads ۱۴۰۵.
   const year = yearOf(new Date(report.range.to), calendar)
 
+  // A row with no value is DROPPED, never printed with an empty right-hand
+  // side. A certificate listing «تلفن» against blank space reads as an
+  // unfinished form, and an unfinished form is the one thing this document
+  // cannot afford to look like.
   const identity: CertificateRow[] = []
   const pushIdentity = (label: string, value: string) => {
     if (value.trim()) {
       identity.push({ label, value: value.trim() })
     }
   }
-  pushIdentity(t('fullName'), report.profile.fullName)
+
+  // The English certificate prefers the Latin spellings the holder entered —
+  // only they know which one matches their passport, and an official comparing
+  // the two cares about exactly that. Falls back to the Persian rather than
+  // printing nothing.
+  const name = (persian ? report.profile.fullName : report.profile.fullNameEn) || report.profile.fullName
+  const address = (persian ? report.profile.address : report.profile.addressEn) || report.profile.address
+
+  pushIdentity(t('fullName'), name)
   pushIdentity(t('nationalId'), digits(report.profile.nationalId))
+  // The passport number keeps ASCII digits in BOTH documents. A national ID
+  // card is printed in Persian numerals so rendering it that way matches the
+  // card, but a passport is not — its number appears in Latin, and «K۱۲۳۴۵۶۷۸»
+  // on a certificate would not match the document an official is holding.
+  pushIdentity(t('passportNumber'), toEnglishDigits(report.profile.passportNumber))
   pushIdentity(t('phone'), digits(report.profile.phone))
-  pushIdentity(t('address'), report.profile.address)
+  pushIdentity(t('address'), address)
 
   const words = numberToWords(report.totalToman, locale)
 

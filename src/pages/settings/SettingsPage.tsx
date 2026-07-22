@@ -146,12 +146,33 @@ export const SettingsPage = () => {
               sx={{ minWidth: 280 }}
             />
           </SettingRow>
+          <SettingRow
+            label={t`Full name in English`}
+            description={t`Used on the English certificate — spell it exactly as your passport does`}
+          >
+            <TextField
+              size="small"
+              value={profile.fullNameEn}
+              onChange={(event) => setProfile({ ...profile, fullNameEn: event.target.value })}
+              sx={{ minWidth: 280 }}
+              slotProps={{ htmlInput: { dir: 'ltr' } }}
+            />
+          </SettingRow>
           <SettingRow label={t`National ID`} description={t`Optional, shown on the report when set`}>
             <TextField
               size="small"
               value={profile.nationalId}
               onChange={(event) => setProfile({ ...profile, nationalId: event.target.value })}
               sx={{ minWidth: 280 }}
+            />
+          </SettingRow>
+          <SettingRow label={t`Passport number`} description={t`Optional. Worth setting if the report is for a visa application`}>
+            <TextField
+              size="small"
+              value={profile.passportNumber}
+              onChange={(event) => setProfile({ ...profile, passportNumber: event.target.value })}
+              sx={{ minWidth: 280 }}
+              slotProps={{ htmlInput: { dir: 'ltr' } }}
             />
           </SettingRow>
           <SettingRow label={t`Phone`} description={t`Optional contact line on the report`}>
@@ -170,6 +191,20 @@ export const SettingsPage = () => {
               multiline
               minRows={2}
               sx={{ minWidth: 280 }}
+            />
+          </SettingRow>
+          <SettingRow
+            label={t`Address in English`}
+            description={t`Used on the English certificate; falls back to the Persian address when empty`}
+          >
+            <TextField
+              size="small"
+              value={profile.addressEn}
+              onChange={(event) => setProfile({ ...profile, addressEn: event.target.value })}
+              multiline
+              minRows={2}
+              sx={{ minWidth: 280 }}
+              slotProps={{ htmlInput: { dir: 'ltr' } }}
             />
           </SettingRow>
           <SettingRow label={t`Save details`} description={t`Store these on this device`}>

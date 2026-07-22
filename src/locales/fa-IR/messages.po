@@ -178,6 +178,10 @@ msgstr "عملیات"
 msgid "Address"
 msgstr "نشانی"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Address in English"
+msgstr "نشانی به انگلیسی"
+
 #: src/pages/ledger/LedgerFilterPopover.tsx
 msgid "All channels"
 msgstr "همه‌ی کانال‌ها"
@@ -639,6 +643,10 @@ msgstr "فریز‌شده"
 msgid "Full name"
 msgstr "نام و نام خانوادگی"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Full name in English"
+msgstr "نام و نام خانوادگی به انگلیسی"
+
 #: src/pages/report/ReportPage.tsx
 msgid "Generating…"
 msgstr "در حال ساخت…"
@@ -916,6 +924,10 @@ msgstr "اختیاری، زیر نامت چاپ می‌شود"
 msgid "Optional, shown on the report when set"
 msgstr "اختیاری، در صورت تکمیل روی گزارش می‌آید"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Optional. Worth setting if the report is for a visa application"
+msgstr "اختیاری. اگر گزارش برای درخواست ویزاست، پرش کن"
+
 #: src/shared/constants/labels.ts
 msgid "Ordibehesht"
 msgstr "اردیبهشت"
@@ -938,6 +950,11 @@ msgstr "بقیه"
 #: src/shared/constants/navigation.tsx
 msgid "Overview"
 msgstr "نمای کلی"
+
+#: src/pages/settings/SettingsPage.tsx
+#: src/shared/certificate/certificateModel.ts
+msgid "Passport number"
+msgstr "شماره‌ی پاسپورت"
 
 #: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
 #: src/shared/receipt-form/ReceiptForm.tsx
@@ -1409,6 +1426,14 @@ msgstr "نامشخص"
 #: src/shared/constants/labels.ts
 msgid "USD"
 msgstr "دلار"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Used on the English certificate — spell it exactly as your passport does"
+msgstr "روی گواهی انگلیسی چاپ می‌شود؛ همان‌طور بنویس که توی پاسپورتت آمده"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Used on the English certificate; falls back to the Persian address when empty"
+msgstr "روی گواهی انگلیسی چاپ می‌شود؛ خالی بگذاری، همان نشانی فارسی می‌آید"
 
 #: src/shared/queries/seedSampleData.mutation.ts
 msgid "UX consulting"

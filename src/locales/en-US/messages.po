@@ -178,6 +178,10 @@ msgstr "Actions"
 msgid "Address"
 msgstr "Address"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Address in English"
+msgstr "Address in English"
+
 #: src/pages/ledger/LedgerFilterPopover.tsx
 msgid "All channels"
 msgstr "All channels"
@@ -639,6 +643,10 @@ msgstr "Frozen"
 msgid "Full name"
 msgstr "Full name"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Full name in English"
+msgstr "Full name in English"
+
 #: src/pages/report/ReportPage.tsx
 msgid "Generating…"
 msgstr "Generating…"
@@ -916,6 +924,10 @@ msgstr "Optional, printed under your name"
 msgid "Optional, shown on the report when set"
 msgstr "Optional, shown on the report when set"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Optional. Worth setting if the report is for a visa application"
+msgstr "Optional. Worth setting if the report is for a visa application"
+
 #: src/shared/constants/labels.ts
 msgid "Ordibehesht"
 msgstr "Ordibehesht"
@@ -938,6 +950,11 @@ msgstr "Others"
 #: src/shared/constants/navigation.tsx
 msgid "Overview"
 msgstr "Overview"
+
+#: src/pages/settings/SettingsPage.tsx
+#: src/shared/certificate/certificateModel.ts
+msgid "Passport number"
+msgstr "Passport number"
 
 #: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
 #: src/shared/receipt-form/ReceiptForm.tsx
@@ -1409,6 +1426,14 @@ msgstr "Unknown"
 #: src/shared/constants/labels.ts
 msgid "USD"
 msgstr "USD"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Used on the English certificate — spell it exactly as your passport does"
+msgstr "Used on the English certificate — spell it exactly as your passport does"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Used on the English certificate; falls back to the Persian address when empty"
+msgstr "Used on the English certificate; falls back to the Persian address when empty"
 
 #: src/shared/queries/seedSampleData.mutation.ts
 msgid "UX consulting"

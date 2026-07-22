@@ -41,7 +41,7 @@ export const defaultSettings: Settings = {
   locale: 'fa-IR',
   // Following the OS is the least surprising default; the user can pin it.
   themePreference: 'system',
-  profile: { fullName: '', nationalId: '', phone: '', address: '' },
+  profile: { fullName: '', fullNameEn: '', nationalId: '', passportNumber: '', phone: '', address: '', addressEn: '' },
 }
 
 /**

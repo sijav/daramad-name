@@ -65,9 +65,21 @@ export interface Receipt {
 /** Identity block printed on the income report. There is no login, so the user types this in Settings. */
 export interface Profile {
   fullName: string
+  /**
+   * Latin transliteration of the name, for the English certificate.
+   *
+   * Separate rather than transliterated on the fly: only the holder knows
+   * which spelling matches their passport, and an embassy comparing a
+   * certificate against a passport cares about exactly that.
+   */
+  fullNameEn: string
   nationalId: string
+  /** More useful than the national ID on a visa application. */
+  passportNumber: string
   phone: string
   address: string
+  /** The address in Latin script; falls back to `address` when unset. */
+  addressEn: string
 }
 
 export interface Settings {

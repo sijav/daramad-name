@@ -90,7 +90,11 @@ export const TakesABackupBeforeErasing: Story = {
     const download = await canvas.findByRole('button', { name: /^دانلود$|^Download$/ })
     await userEvent.click(download)
 
-    await expect(await canvas.findByRole('button', { name: /^دانلود شد$|^Downloaded$/ })).toBeInTheDocument()
+    // Generous, because the export is real work racing the rest of the suite:
+    // it validates every row in the shared IndexedDB while other story files
+    // are seeding and clearing the same database in parallel. The default
+    // one-second window made this pass alone and fail in a full run.
+    await expect(await canvas.findByRole('button', { name: /^دانلود شد$|^Downloaded$/ }, { timeout: 10_000 })).toBeInTheDocument()
   },
 }
 

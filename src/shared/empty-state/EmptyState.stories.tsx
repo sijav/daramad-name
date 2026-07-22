@@ -3,6 +3,7 @@ import ReceiptLongRoundedIcon from '@mui/icons-material/ReceiptLongRounded'
 import SearchOffRoundedIcon from '@mui/icons-material/SearchOffRounded'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { SurfaceCard } from 'src/shared/surface-card'
+import { fn } from 'storybook/test'
 import { EmptyState } from './EmptyState'
 
 const meta = { title: 'Shared/EmptyState', component: EmptyState } satisfies Meta<typeof EmptyState>
@@ -18,7 +19,7 @@ const FirstRunView = () => {
         title={t`You have not recorded any receipts yet`}
         description={t`The ledger is where every payment you have received adds up in one place — exactly what you need when it is time to produce a report.`}
         actionLabel={t`Record your first receipt`}
-        onAction={() => {}}
+        onAction={fn()}
       />
     </SurfaceCard>
   )
@@ -33,7 +34,7 @@ const NoMatchView = () => {
         title={t`Nothing matched these filters`}
         description={t`Change the date range or client, or clear the filters to see every receipt.`}
         actionLabel={t`Clear filters`}
-        onAction={() => {}}
+        onAction={fn()}
       />
     </SurfaceCard>
   )

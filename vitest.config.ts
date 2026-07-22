@@ -64,6 +64,15 @@ export default defineConfig({
         ],
         test: {
           name: 'storybook',
+          // Story files run ONE AT A TIME.
+          //
+          // They all share a single IndexedDB — it is the browser's, keyed by
+          // origin, not per-worker state that isolation could separate. So a
+          // file seeding fixtures runs alongside one wiping the database for a
+          // backup test, and whichever asserts on row counts loses. That
+          // produced a suite which passed and failed on alternate runs with no
+          // code change, which is worse than a suite that simply fails.
+          fileParallelism: false,
           setupFiles: [join(rootDir, '.storybook/vitest.setup.ts')],
           browser: {
             enabled: true,

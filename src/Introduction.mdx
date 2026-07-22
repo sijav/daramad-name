@@ -1,0 +1,66 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Introduction" />
+
+# درآمدنامه — Daramadname
+
+A receipts ledger and a presentable income report, for Iranian freelancers.
+
+The problem it solves is not bookkeeping. It is that a freelancer here is **بی‌سند** — without
+documents. No payslip, no certificate of income, nothing to hand an embassy applying for a visa, a
+landlord asking for proof, or an accountant filing a return. Employees have always had that piece of
+paper. This produces it.
+
+---
+
+## Reading this Storybook
+
+Two toolbar controls sit above every story, and both matter more than they look:
+
+| Control | Why it is there |
+| --- | --- |
+| **Language** — فارسی (RTL) / English (LTR) | Not a translation toggle. It flips text direction, numerals and date formatting together. Persian is the default because that is who the product is for. |
+| **Theme** — Light / Dark / System | Dark mode is real, and three components have already shipped broken in it by hardcoding a hex instead of using a palette role. |
+
+**Check a change in all four combinations before calling it done.** English strings are longer than
+Persian, so a layout that fits one can clip in the other — that has happened here, to the ledger's
+total tile.
+
+---
+
+## What the parts are for
+
+- **Pages** — one per route. They hold no styling of their own; they compose shared components and
+  own the queries.
+- **Shared** — the component library. Each folder is one component with a barrel, a story, and its
+  own props interface. The JSDoc on those interfaces is what fills the Description column of the
+  generated **Docs** tab.
+- **Core** — the database, the theme, the i18n instance and the query client. No UI.
+
+---
+
+## Three rules that explain most of the code
+
+**The Toman value is frozen.** A receipt in Tether or dollars stores the rate you typed and the
+Toman figure computed from it, once, at the moment you record it. Nothing recomputes it on read. A
+rate change next month must not restate what you earned last month — that is the whole reason the
+number can be trusted on a document.
+
+**There is no backend, deliberately.** Every receipt lives in the browser's IndexedDB and nothing is
+ever sent anywhere. The footer says so, and it has to stay true. A JSON backup file is what moves a
+ledger between devices, which is why the restore path is one of the most heavily tested things here.
+
+**Every user-facing string goes through Lingui.** Message ids are written in English; Persian lives
+in the catalog. A bare string — in either language — fails lint.
+
+---
+
+## Where the interesting behaviour lives
+
+- **`Pages/QuickEntry`** — the fifteen-second entry path, and what happens when you backdate a
+  receipt.
+- **`Pages/Ledger`** — filtering, the running total, and how the table sheds columns on a phone
+  rather than hiding the income.
+- **`Shared/Certificate`** — the document itself. The on-screen preview and the printed page render
+  from one model, so they cannot say different things.
+- **`Design/Tokens`** — the palette and type ramp, including the two blues that are easy to confuse.

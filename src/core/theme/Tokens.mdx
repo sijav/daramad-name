@@ -1,0 +1,109 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import { darkColors, lightColors, radius, typeScale } from './tokens'
+
+<Meta title="Design/Tokens" />
+
+# Design tokens
+
+Everything here comes from the Figma Foundations sheet. Components read these roles rather than
+hexes — a hardcoded colour is how three components once shipped unreadable in dark mode.
+
+---
+
+## The two blues
+
+The single easiest thing to get wrong in this palette. They are different colours with different
+jobs, and swapping them makes every call-to-action look faded.
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 16, margin: '16px 0' }}>
+  {[
+    ['brandPrimary', lightColors.brandPrimary, 'Filled buttons, the brand tile, the current page pill.'],
+    ['primary', lightColors.primary, 'Chips, segmented controls, the nav rail selection.'],
+  ].map(([name, value, use]) => (
+    <div key={name} style={{ border: `1px solid ${lightColors.borderDefault}`, borderRadius: 12, overflow: 'hidden' }}>
+      <div style={{ background: value, height: 64 }} />
+      <div style={{ padding: 12 }}>
+        <div style={{ fontWeight: 600, fontSize: 14 }}>{name}</div>
+        <code style={{ fontSize: 12 }}>{value}</code>
+        <p style={{ fontSize: 12, opacity: 0.75, margin: '6px 0 0' }}>{use}</p>
+      </div>
+    </div>
+  ))}
+</div>
+
+---
+
+## Every colour role
+
+Each swatch shows light above dark. A role that looks identical in both is a bug waiting to happen.
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))', gap: 12, margin: '16px 0' }}>
+  {Object.keys(lightColors)
+    .filter((name) => typeof lightColors[name] === 'string')
+    .map((name) => (
+      <div key={name} style={{ border: `1px solid ${lightColors.borderDefault}`, borderRadius: 10, overflow: 'hidden' }}>
+        <div style={{ display: 'flex', height: 44 }}>
+          <div style={{ flex: 1, background: lightColors[name] }} />
+          <div style={{ flex: 1, background: darkColors[name] }} />
+        </div>
+        <div style={{ padding: '8px 10px' }}>
+          <div style={{ fontSize: 12, fontWeight: 600 }}>{name}</div>
+          <code style={{ fontSize: 10, opacity: 0.7 }}>{lightColors[name]}</code>
+        </div>
+      </div>
+    ))}
+</div>
+
+---
+
+## Type ramp
+
+Vazirmatn throughout. Line heights are unitless so they survive a user changing their font size.
+
+<div style={{ margin: '16px 0' }}>
+  {Object.entries(typeScale).map(([name, style]) => (
+    <div
+      key={name}
+      style={{
+        display: 'flex',
+        alignItems: 'baseline',
+        gap: 16,
+        padding: '10px 0',
+        borderBottom: `1px solid ${lightColors.borderDefault}`,
+      }}
+    >
+      <code style={{ fontSize: 11, minWidth: 130, opacity: 0.7 }}>{name}</code>
+      <code style={{ fontSize: 11, minWidth: 90, opacity: 0.5 }}>
+        {style.fontSize}/{style.fontWeight}
+      </code>
+      <span style={{ fontSize: style.fontSize, fontWeight: style.fontWeight, lineHeight: style.lineHeight }}>
+        درآمدنامه ۱۲٬۵۰۰٬۰۰۰
+      </span>
+    </div>
+  ))}
+</div>
+
+---
+
+## Radii
+
+<div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', margin: '16px 0' }}>
+  {Object.entries(radius).map(([name, value]) => (
+    <div key={name} style={{ textAlign: 'center' }}>
+      <div
+        style={{
+          width: 88,
+          height: 88,
+          borderRadius: value,
+          background: lightColors.brandPrimarySubtle,
+          border: `1px solid ${lightColors.borderDefault}`,
+        }}
+      />
+      <div style={{ fontSize: 12, marginTop: 6 }}>{name}</div>
+      <code style={{ fontSize: 11, opacity: 0.6 }}>{value}</code>
+    </div>
+  ))}
+</div>
+
+Content cards use **xl**, chart panels **lg**, and nested figure boxes **md**. The 28px frosted card
+from an older revision is gone — the current system is flat surfaces with a hairline border.

@@ -1,5 +1,6 @@
 import { Trans, useLingui } from '@lingui/react/macro'
-import { Dialog, DialogContent, DialogTitle } from '@mui/material'
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
+import { Dialog, DialogContent, DialogTitle, IconButton, Stack } from '@mui/material'
 import { useMutation } from '@tanstack/react-query'
 import { invalidateReceiptQueries } from 'src/core/query'
 import { updateReceiptMutation } from 'src/shared/queries'
@@ -47,8 +48,16 @@ export const EditReceiptDialog = ({ receipt, onClose }: EditReceiptDialogProps) 
 
   return (
     <Dialog open onClose={onClose} maxWidth="sm" fullWidth>
+      {/* A visible way out. The dialog previously closed only on Escape or a
+          backdrop click — neither of which exists on a phone, where this opens
+          nearly full-screen and the only apparent options are save or nothing. */}
       <DialogTitle>
-        <Trans>Edit receipt</Trans>
+        <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
+          <Trans>Edit receipt</Trans>
+          <IconButton onClick={onClose} aria-label={t`Close`} edge="end">
+            <CloseRoundedIcon />
+          </IconButton>
+        </Stack>
       </DialogTitle>
       <DialogContent sx={{ pt: 1 }}>
         <ReceiptForm form={form} submitLabel={t`Save changes`} pending={isPending} onSubmit={submit} />

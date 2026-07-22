@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
 import { toPersianDigits } from 'src/shared/utils'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, fn, userEvent, within } from 'storybook/test'
 import { PageActions } from './PageActions'
 
 // The cluster every page header carries. The pill is a MUI Select, which means
@@ -14,7 +14,11 @@ const THIS_YEAR = 1405
 const Harness = ({ years, from }: { years: number[]; from: number }) => {
   const [year, setYear] = useState(from)
 
-  return <PageActions year={year} years={years} onYearChange={setYear} formatYear={toPersianDigits} />
+  // The spy runs beside the state setter, so the panel shows the change AND
+  // the control still moves.
+  const onYearChange = fn((next: number) => setYear(next))
+
+  return <PageActions year={year} years={years} onYearChange={onYearChange} formatYear={toPersianDigits} />
 }
 
 const meta = {

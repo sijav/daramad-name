@@ -57,8 +57,10 @@ const Harness = ({ initial, onSaved, pending, withNext = true }: HarnessProps) =
         form={form}
         submitLabel={t`Record a receipt`}
         pending={pending}
-        onSubmit={() => submit(false)}
-        onSubmitAndNext={withNext ? () => submit(true) : undefined}
+        // Spies rather than bare arrows, so both submit paths show up in the
+        // Actions panel and a play function can assert which one ran.
+        onSubmit={fn(() => submit(false))}
+        onSubmitAndNext={withNext ? fn(() => submit(true)) : undefined}
       />
     </SurfaceCard>
   )

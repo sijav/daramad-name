@@ -386,6 +386,7 @@ msgstr "Client share of income"
 #~ msgid "Clients"
 #~ msgstr "Clients"
 
+#: src/pages/ledger/EditReceiptDialog.tsx
 #: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
 msgid "Close"
 msgstr "Close"

@@ -16,10 +16,7 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "run",
-        "storybook",
-        "--",
-        "--no-open",
-        "--quiet"
+        "storybook"
       ],
       "port": 6006,
       "autoPort": true

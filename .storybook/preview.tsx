@@ -129,14 +129,28 @@ const preview: Preview = {
     },
   },
   initialGlobals: { locale: 'fa-IR', theme: 'light' },
+  // Every component gets a generated Docs page — props table, description and
+  // rendered source — without each `meta` opting in. The prop tables are only
+  // as good as the types and doc comments behind them, which is why the props
+  // interfaces carry JSDoc: those comments become the Description column.
+  tags: ['autodocs'],
   parameters: {
     controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
     a11y: { test: 'todo' },
-    // Every `onSomething` prop logs to the Actions panel without each story
-    // wiring its own handler. Stories that ASSERT on a callback still pass an
-    // explicit `fn()` spy: args inferred from this regex are not spies, so a
-    // play function cannot make expectations against them.
-    actions: { argTypesRegex: '^on[A-Z].*' },
+    docs: {
+      // A component with six state variants is a page worth navigating.
+      toc: true,
+    },
+    // No `actions.argTypesRegex` here on purpose.
+    //
+    // It looked like free coverage — every `onSomething` logging to the Actions
+    // panel without each story wiring a handler — but it is deprecated, and the
+    // visual-test addon's build ignores it, so a snapshot that depends on an
+    // action prop breaks in a way that is very hard to trace back. Args it
+    // infers are not spies either, so a play function can never assert on them.
+    //
+    // Every story passes an explicit `fn()` from `storybook/test` instead,
+    // which both logs to the panel and is assertable.
   },
   decorators: [withProviders],
 }

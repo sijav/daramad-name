@@ -1,7 +1,8 @@
 import type { StorybookConfig } from '@storybook/react-vite'
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.stories.@(ts|tsx)'],
+  // `.mdx` first so hand-written pages sort ahead of the generated ones.
+  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(ts|tsx)'],
   addons: ['@storybook/addon-docs', '@storybook/addon-a11y', '@chromatic-com/storybook', '@storybook/addon-vitest'],
   framework: { name: '@storybook/react-vite', options: {} },
   // The theme paints its own surface and the Theme toolbar already switches

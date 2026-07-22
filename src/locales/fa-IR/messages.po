@@ -386,6 +386,7 @@ msgstr "سهم مشتری‌ها از درآمد"
 #~ msgid "Clients"
 #~ msgstr "مشتری‌ها"
 
+#: src/pages/ledger/EditReceiptDialog.tsx
 #: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
 msgid "Close"
 msgstr "بستن"

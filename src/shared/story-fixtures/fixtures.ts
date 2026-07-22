@@ -1,4 +1,5 @@
 import type { QueryClient } from '@tanstack/react-query'
+import { db } from 'src/core/db'
 import {
   clientsQueryKey,
   getClientSharesQueryKey,
@@ -129,7 +130,15 @@ export const seedPageData = (client: QueryClient, { empty = false }: { empty?: b
   client.setQueryData(getLedgerQueryKey({ range }, { field: 'occurredAt', direction: 'desc' }, CALENDAR), ledger)
 
   client.setQueryData(getIncomeReportQueryKey(range, CALENDAR), {
-    profile: { fullName: 'Raha Mousavi', nationalId: '0012345678', phone: '', address: '' },
+    profile: {
+      fullName: 'رها موسوی',
+      fullNameEn: 'Raha Mousavi',
+      nationalId: '۰۰۱۲۳۴۵۶۷۸',
+      passportNumber: 'A98765432',
+      phone: '',
+      address: 'تهران، خیابان کریم‌خان',
+      addressEn: 'Karimkhan St, Tehran',
+    },
     range,
     totalToman: ledger.summary.totalToman,
     monthlyAverageToman: ledger.summary.monthlyAverageToman,
@@ -137,4 +146,34 @@ export const seedPageData = (client: QueryClient, { empty = false }: { empty?: b
     months,
     generatedAt: new Date().toISOString(),
   })
+}
+
+/**
+ * Writes the fixtures into the REAL database.
+ *
+ * Seeding the query cache is enough for a story that only renders, but not for
+ * one that filters: changing a filter changes the query key, the cache misses,
+ * and the query falls through to Dexie — which is empty, so the table would go
+ * blank mid-test and prove nothing. The Storybook browser project runs in real
+ * Chromium with real IndexedDB, so scenario tests seed it properly and exercise
+ * the actual query.
+ *
+ * Returns a cleanup that empties the tables again, so one scenario cannot leak
+ * rows into the next.
+ */
+export const seedDatabase = async (): Promise<() => Promise<void>> => {
+  const clear = async () => {
+    await Promise.all([db.receipts.clear(), db.clients.clear()])
+  }
+  await clear()
+
+  await db.clients.bulkAdd(FIXTURE_CLIENTS.map(({ id, name }) => ({ id, name, nameKey: name.toLowerCase(), createdAt: iso(12, 1) })))
+  await db.receipts.bulkAdd(
+    FIXTURE_RECEIPTS.map(({ clientName: _clientName, ...receipt }) => ({
+      ...receipt,
+      clientId: FIXTURE_CLIENTS.find((client) => client.name === _clientName)?.id ?? null,
+    })),
+  )
+
+  return clear
 }

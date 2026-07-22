@@ -355,3 +355,17 @@ Package manager is **npm**. There is no yarn.lock and no workspace.
    en-US/light and en-US/dark. English strings are longer than Persian and the
    direction flips, so layout bugs hide in exactly one of the four.
 7. Report honestly. If something is partial, say which part.
+
+## Suppressions and workarounds
+
+Nothing gets silenced without an entry in [TECH-DEBT.md](./TECH-DEBT.md): what
+is suppressed, what causes it, what would fix it, and the check that tells you
+it can be removed. That covers lint disables, ignore patterns, CLI flags that
+hide output, pinned or held-back versions, raised resource limits, widened test
+timeouts, and anything routed around rather than fixed.
+
+A suppressed warning with no record is a decision nobody can revisit — the
+reason is the first thing lost. "Nothing to do right now" is the reason to
+write it down, not to skip it.
+
+Deliberate scope cuts go in PHASE-NEXT.md instead. Those are decisions, not debt.

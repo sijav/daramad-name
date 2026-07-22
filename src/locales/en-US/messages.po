@@ -173,14 +173,17 @@ msgstr "Actions"
 #~ msgid "Add sample data"
 #~ msgstr "Add sample data"
 
-#: src/pages/settings/SettingsPage.tsx
 #: src/shared/certificate/certificateModel.ts
 msgid "Address"
-msgstr "Address in Farsi"
+msgstr ""
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Address in English"
 msgstr "Address"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Address in Farsi"
+msgstr "Address in Farsi"
 
 #: src/pages/ledger/LedgerFilterPopover.tsx
 msgid "All channels"
@@ -639,14 +642,17 @@ msgstr "From date"
 msgid "Frozen"
 msgstr "Frozen"
 
-#: src/pages/settings/SettingsPage.tsx
 #: src/shared/certificate/certificateModel.ts
 msgid "Full name"
-msgstr "Full name in Farsi"
+msgstr ""
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Full name in English"
 msgstr "Full name"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Full name in Farsi"
+msgstr "Full name in Farsi"
 
 #: src/pages/report/ReportPage.tsx
 msgid "Generating…"

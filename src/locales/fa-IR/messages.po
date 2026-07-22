@@ -173,7 +173,6 @@ msgstr "عملیات"
 #~ msgid "Add sample data"
 #~ msgstr "افزودن داده‌ی نمونه"
 
-#: src/pages/settings/SettingsPage.tsx
 #: src/shared/certificate/certificateModel.ts
 msgid "Address"
 msgstr "نشانی"
@@ -181,6 +180,10 @@ msgstr "نشانی"
 #: src/pages/settings/SettingsPage.tsx
 msgid "Address in English"
 msgstr "نشانی به انگلیسی"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Address in Farsi"
+msgstr "نشانی"
 
 #: src/pages/ledger/LedgerFilterPopover.tsx
 msgid "All channels"
@@ -639,7 +642,6 @@ msgstr "از تاریخ"
 msgid "Frozen"
 msgstr "فریز‌شده"
 
-#: src/pages/settings/SettingsPage.tsx
 #: src/shared/certificate/certificateModel.ts
 msgid "Full name"
 msgstr "نام و نام خانوادگی"
@@ -647,6 +649,10 @@ msgstr "نام و نام خانوادگی"
 #: src/pages/settings/SettingsPage.tsx
 msgid "Full name in English"
 msgstr "نام و نام خانوادگی به انگلیسی"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Full name in Farsi"
+msgstr "نام و نام خانوادگی"
 
 #: src/pages/report/ReportPage.tsx
 msgid "Generating…"

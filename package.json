@@ -25,11 +25,11 @@
     "prebuild-storybook": "npm run i18n:compile",
     "build-storybook": "storybook build",
     "pretest": "npm run i18n:compile",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:unit": "vitest run --project unit",
-    "test:storybook": "vitest run --project storybook",
-    "test:coverage": "vitest run --coverage"
+    "test": "node scripts/vitest.mjs run",
+    "test:watch": "node scripts/vitest.mjs",
+    "test:unit": "node scripts/vitest.mjs run --project unit",
+    "test:storybook": "node scripts/vitest.mjs run --project storybook",
+    "test:coverage": "node scripts/vitest.mjs run --coverage"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",

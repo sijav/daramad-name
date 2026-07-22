@@ -155,13 +155,13 @@ export const SettingsPage = () => {
             row — and these are the fields that end up printed on the
             certificate, so getting the wrong one is not recoverable. */}
         <SettingsSection title={t`Personal details`}>
-          <SettingRow label={t`Full name`} description={t`Printed at the top of the income report`}>
+          <SettingRow label={t`Full name in Farsi`} description={t`Printed at the top of the income report`}>
             <TextField
               size="small"
               value={profile.fullName}
               onChange={(event) => setProfile({ ...profile, fullName: event.target.value })}
               sx={{ minWidth: 280 }}
-              slotProps={{ htmlInput: { 'aria-label': t`Full name` } }}
+              slotProps={{ htmlInput: { 'aria-label': t`Full name in Farsi` } }}
             />
           </SettingRow>
           <SettingRow
@@ -203,7 +203,7 @@ export const SettingsPage = () => {
               slotProps={{ htmlInput: { 'aria-label': t`Phone` } }}
             />
           </SettingRow>
-          <SettingRow label={t`Address`} description={t`Optional, printed under your name`}>
+          <SettingRow label={t`Address in Farsi`} description={t`Optional, printed under your name`}>
             <TextField
               size="small"
               value={profile.address}
@@ -211,7 +211,7 @@ export const SettingsPage = () => {
               multiline
               minRows={2}
               sx={{ minWidth: 280 }}
-              slotProps={{ htmlInput: { 'aria-label': t`Address` } }}
+              slotProps={{ htmlInput: { 'aria-label': t`Address in Farsi` } }}
             />
           </SettingRow>
           <SettingRow

@@ -1153,6 +1153,10 @@ msgstr "داده‌هایت را در یک فایل ذخیره کن، برنام
 msgid "Search by client, note or amount"
 msgstr "جست‌وجو بر اساس مشتری، یادداشت یا مبلغ"
 
+#: src/shared/search-field/SearchField.tsx
+msgid "Search receipts"
+msgstr "جست‌وجو در دریافتی‌ها"
+
 #: src/shared/pdf/buildIncomeReport.ts
 #~ msgid "Self-recorded freelance income report"
 #~ msgstr "گزارش درآمد ثبت‌شده‌ی فریلنسری"

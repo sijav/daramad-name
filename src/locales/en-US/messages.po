@@ -1153,6 +1153,10 @@ msgstr "Save your data to a file, wipe the app clean, then bring it back from Se
 msgid "Search by client, note or amount"
 msgstr "Search by client, note or amount"
 
+#: src/shared/search-field/SearchField.tsx
+msgid "Search receipts"
+msgstr "Search receipts"
+
 #: src/shared/pdf/buildIncomeReport.ts
 #~ msgid "Self-recorded freelance income report"
 #~ msgstr "Self-recorded freelance income report"

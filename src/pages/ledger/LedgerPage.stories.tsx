@@ -57,3 +57,28 @@ export const FiltersByClientAndRetotals: Story = {
     })
   },
 }
+
+/**
+ * Search accepts PERSIAN numerals.
+ *
+ * A Persian keyboard types «۱۸۰۰۰۰۰۰», the amount is stored as 18000000, and a
+ * naive `includes` would find nothing — the user would conclude the receipt was
+ * never recorded. The normalisation that prevents that is one call deep and
+ * silent when it breaks, so it gets its own assertion.
+ */
+export const SearchesByPersianNumerals: Story = {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const target = FIXTURE_RECEIPTS.find((receipt) => receipt.amountToman === 18_000_000)!
+
+    await step('type the amount in Persian digits', async () => {
+      await userEvent.type(await canvas.findByRole('textbox', { name: /جست|Search receipts/i }), '۱۸۰۰۰۰۰۰')
+    })
+
+    await step('the one matching receipt is found', async () => {
+      await expect(await canvas.findAllByText(target.clientName!)).toHaveLength(1)
+      // And the result count agrees with the table rather than the pre-search set.
+      await expect(await canvas.findByText(/^۱ نتیجه$|^1 results?$/)).toBeInTheDocument()
+    })
+  },
+}

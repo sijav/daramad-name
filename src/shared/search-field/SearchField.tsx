@@ -30,6 +30,10 @@ export const SearchField = ({ value, onValueChange, placeholder, sx, ...props }:
       onChange={(event) => onValueChange(event.target.value)}
       placeholder={placeholder ?? t`Search by client, note or amount`}
       slotProps={{
+        // The design draws no label above this field, so a screen reader had
+        // nothing to announce but "edit text" — a placeholder is not an
+        // accessible name, and it disappears the moment anything is typed.
+        htmlInput: { 'aria-label': t`Search receipts` },
         input: {
           startAdornment: (
             <InputAdornment position="start">

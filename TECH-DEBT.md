@@ -137,21 +137,48 @@ it passes, the upstream break is fixed.
 
 ---
 
-## 7. The PDF cannot lay out Persian correctly
+## 7. The one-click PDF reverses Persian text
 
-**Not silenced — routed around.** `/certificate` renders the document as a page
-and lets the browser print it. The one-click PDF button remains, with the
-limitation documented at `src/shared/pdf/buildIncomeReport.ts`.
+**Status** BROKEN for Persian, and the wording below was wrong until now.
 
-**Cause** pdfmake has no bidi implementation. It shapes Arabic-script glyphs but
-does not reorder runs per visual line, so mixed Persian/Latin text and anything
-that WRAPS can come out in the wrong word order. Reordering before handing the
-string over does not help, because pdfmake line-breaks afterwards and bidi
-ordering is per visual line.
+**Symptom** The reporting-period line prints as
 
-**What would fix it** A PDF library with real UAX#9 support, or generating the
-PDF from the print route via a headless browser — which needs a server, and this
-app deliberately has none.
+    ۵۰۴۱ مرداد ۱ - ۵۰۴۱ فروردین ۱
+
+where it should read
+
+    ۱ فروردین ۱۴۰۵ - ۱ مرداد ۱۴۰۵
+
+**Cause, corrected** This entry previously said pdfmake "has no bidi
+implementation". The output says otherwise. «۱۴۰۵» comes out as «۵۰۴۱» — the
+digits themselves are reversed, the range endpoints swap, and day/month/year
+invert. That is the whole logical string reversed character by character. The
+Persian words survive only because glyph shaping handles their internal order.
+
+The numerals are Persian, which is the detail that settles it. Arabic-Indic
+digits are bidi class AN, and under UAX#9 an AN run inside right-to-left text
+keeps its LEFT-TO-RIGHT order — exactly as a Latin EN run does. Only the
+surrounding RTL runs reverse. So reversed digits cannot come from a bidi
+algorithm at all; they are the signature of a naive whole-string reverse.
+
+The problem is over-reversal, not absent bidi. Different bug, different fix. The
+model itself is correct — the digits ARE Persian, as the Persian certificate
+requires, so the two rendering surfaces have not drifted.
+
+**Workaround in place** `/certificate` renders the document as a page and lets
+the browser print it. The browser has a real text engine, so ordering, shaping
+and نیم‌فاصله are all correct. That route is the one to use and the one the
+Report page leads with.
+
+**What would fix the one-click path** Find what reverses — pdfmake's own text
+handling or pdfkit/fontkit picking a direction from the dominant script — then
+run proper UAX#9 bidi ourselves and hand over a visual-order string with the
+engine's reversal disabled, so it does not happen twice. Anything that WRAPS
+still needs explicit line-breaking, because bidi ordering is per visual line: in
+this document that is the footnote, the average-basis line and a long address.
+
+**How to tell it can go** Download a Persian certificate and read the period
+line. If it reads `1 فروردین 1405 - 1 مرداد 1405`, this entry is done.
 
 ---
 

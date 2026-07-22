@@ -11,13 +11,14 @@ import type { CertificateModel } from 'src/shared/certificate'
  * downloaded file. Content now has one home; only layout lives in the two
  * renderers.
  *
- * KNOWN LIMITATION, kept honest: pdfmake has no bidi implementation. It can
- * shape Arabic-script glyphs but does not reorder runs per visual line, so
- * mixed Persian/Latin text and anything that WRAPS can come out in the wrong
- * word order. Reordering before handing the string over does not fix it,
- * because pdfmake line-breaks afterwards and bidi ordering is per visual line.
- * The `/certificate` print route exists for that reason and is the correct
- * output; this path is kept because it produces a file in one click.
+ * KNOWN LIMITATION, kept honest: this path REVERSES Persian text. The period
+ * line prints as «۵۰۴۱ مرداد ۱ - ۵۰۴۱ فروردین ۱» instead of
+ * «۱ فروردین ۱۴۰۵ - ۱ مرداد ۱۴۰۵» — note ۱۴۰۵ coming out as ۵۰۴۱, so the digits
+ * themselves are reversed. That is the whole logical string reversed character
+ * by character, not missing bidi: Persian digits are bidi class AN, and UAX#9
+ * keeps an AN run left-to-right inside RTL text. The `/certificate` print route renders the
+ * same model through the browser's own text engine and is correct. See
+ * TECH-DEBT.md entry 7.
  */
 export const buildIncomeReport = (model: CertificateModel): TDocumentDefinitions => {
   const alignment: Alignment = model.direction === 'rtl' ? 'right' : 'left'

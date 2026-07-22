@@ -20,6 +20,7 @@ const LedgerPage = lazy(() => import('src/pages/ledger').then((m) => ({ default:
 const ChartsPage = lazy(() => import('src/pages/charts').then((m) => ({ default: m.ChartsPage })))
 const ReportPage = lazy(() => import('src/pages/report').then((m) => ({ default: m.ReportPage })))
 const SettingsPage = lazy(() => import('src/pages/settings').then((m) => ({ default: m.SettingsPage })))
+const CertificatePage = lazy(() => import('src/pages/certificate').then((m) => ({ default: m.CertificatePage })))
 
 const PageLoader = () => (
   <Box sx={{ display: 'grid', placeItems: 'center', minHeight: '50vh' }}>
@@ -42,6 +43,9 @@ const LocalisedApp = () => {
           <ErrorBoundary FallbackComponent={AppErrorFallback}>
             <Suspense fallback={<PageLoader />}>
               <Routes>
+                {/* Outside the shell on purpose: the printed sheet must carry
+                    no navigation, header or footer. */}
+                <Route path="certificate" element={<CertificatePage />} />
                 <Route element={<AppShell />}>
                   <Route index element={<DashboardPage />} />
                   <Route path="quick-entry" element={<QuickEntryPage />} />

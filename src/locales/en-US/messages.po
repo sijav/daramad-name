@@ -151,6 +151,10 @@ msgstr "A receipt in {where} uses a currency this app does not know."
 msgid "A receipt in {where} uses a payment channel this app does not know."
 msgstr "A receipt in {where} uses a payment channel this app does not know."
 
+#: src/shared/certificate/certificateModel.ts
+msgid "A self-recorded statement of freelance income"
+msgstr "A self-recorded statement of freelance income"
+
 #. placeholder {0}: digits(year)
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "A summary of the income and receipts recorded in {0}"
@@ -170,7 +174,7 @@ msgstr "Actions"
 #~ msgstr "Add sample data"
 
 #: src/pages/settings/SettingsPage.tsx
-#: src/shared/pdf/buildIncomeReport.ts
+#: src/shared/certificate/certificateModel.ts
 msgid "Address"
 msgstr "Address"
 
@@ -195,7 +199,7 @@ msgstr "All data was erased."
 msgid "All your data stays in your own browser and is never sent anywhere."
 msgstr "All your data stays in your own browser and is never sent anywhere."
 
-#: src/shared/pdf/buildIncomeReport.ts
+#: src/shared/certificate/certificateModel.ts
 msgid "Amount"
 msgstr "Amount"
 
@@ -239,8 +243,8 @@ msgstr "Aria Trading"
 msgid "August"
 msgstr "August"
 
-#: src/pages/report/ReportPage.tsx
-#: src/shared/pdf/buildIncomeReport.ts
+#: src/core/i18n/i18n.test.ts
+#: src/shared/certificate/certificateModel.ts
 msgid "Average monthly income"
 msgstr "Average monthly income"
 
@@ -314,8 +318,8 @@ msgid "Card transfer"
 msgstr "Card transfer"
 
 #: src/pages/report/ReportPage.tsx
-msgid "Certificate of income"
-msgstr "Certificate of income"
+#~ msgid "Certificate of income"
+#~ msgstr "Certificate of income"
 
 #: src/shared/ledger-state/LedgerState.tsx
 msgid "Change the date range or client, or clear the filters to see every receipt."
@@ -624,7 +628,7 @@ msgid "Frozen"
 msgstr "Frozen"
 
 #: src/pages/settings/SettingsPage.tsx
-#: src/shared/pdf/buildIncomeReport.ts
+#: src/shared/certificate/certificateModel.ts
 msgid "Full name"
 msgstr "Full name"
 
@@ -647,6 +651,10 @@ msgstr "Homa Cafe"
 #: src/pages/settings/SettingsPage.tsx
 msgid "Import a backup file to bring your ledger back"
 msgstr "Import a backup file to bring your ledger back"
+
+#: src/shared/certificate/certificateModel.ts
+msgid "In words"
+msgstr "In words"
 
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Income by month"
@@ -690,11 +698,15 @@ msgstr "Income report"
 msgid "Income this month"
 msgstr "Income this month"
 
-#: src/pages/report/ReportPage.tsx
-msgid "Issued by Daramadname — a personal record of freelance income"
-msgstr "Issued by Daramadname — a personal record of freelance income"
+#: src/shared/certificate/certificateModel.ts
+msgid "Issued by Daramadname"
+msgstr "Issued by Daramadname"
 
 #: src/pages/report/ReportPage.tsx
+#~ msgid "Issued by Daramadname — a personal record of freelance income"
+#~ msgstr "Issued by Daramadname — a personal record of freelance income"
+
+#: src/shared/certificate/certificateModel.ts
 msgid "Issued on"
 msgstr "Issued on"
 
@@ -766,15 +778,15 @@ msgstr "Mehr"
 msgid "Menu design"
 msgstr "Menu design"
 
-#: src/shared/pdf/buildIncomeReport.ts
+#: src/shared/certificate/certificateModel.ts
 msgid "Month"
 msgstr "Month"
 
 #: src/pages/report/ReportPage.tsx
-msgid "Month by month"
-msgstr "Month by month"
+#~ msgid "Month by month"
+#~ msgstr "Month by month"
 
-#: src/shared/pdf/buildIncomeReport.ts
+#: src/shared/certificate/certificateModel.ts
 msgid "Month-by-month breakdown"
 msgstr "Month-by-month breakdown"
 
@@ -800,11 +812,11 @@ msgid "Naghsh Studio"
 msgstr "Naghsh Studio"
 
 #: src/pages/report/ReportPage.tsx
-msgid "Name"
-msgstr "Name"
+#~ msgid "Name"
+#~ msgstr "Name"
 
 #: src/pages/settings/SettingsPage.tsx
-#: src/shared/pdf/buildIncomeReport.ts
+#: src/shared/certificate/certificateModel.ts
 msgid "National ID"
 msgstr "National ID"
 
@@ -881,6 +893,10 @@ msgstr "Once you record a few receipts, this shows how your income rose and fell
 msgid "Open menu"
 msgstr "Open menu"
 
+#: src/pages/report/ReportPage.tsx
+msgid "Open printable document"
+msgstr "Open printable document"
+
 #: src/pages/settings/SettingsPage.tsx
 msgid "Optional contact line on the report"
 msgstr "Optional contact line on the report"
@@ -935,9 +951,13 @@ msgid "Phase two settlement"
 msgstr "Phase two settlement"
 
 #: src/pages/settings/SettingsPage.tsx
-#: src/shared/pdf/buildIncomeReport.ts
+#: src/shared/certificate/certificateModel.ts
 msgid "Phone"
 msgstr "Phone"
+
+#: src/pages/certificate/CertificatePage.tsx
+msgid "Print or save as PDF"
+msgstr "Print or save as PDF"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Printed at the top of the income report"
@@ -974,7 +994,7 @@ msgid "Receipt saved."
 msgstr "Receipt saved."
 
 #: src/pages/ledger/LedgerPage.tsx
-#: src/shared/pdf/buildIncomeReport.ts
+#: src/shared/certificate/certificateModel.ts
 msgid "Receipts"
 msgstr "Receipts"
 
@@ -1019,6 +1039,10 @@ msgstr "Record a receipt quickly"
 msgid "Record your first receipt"
 msgstr "Record your first receipt"
 
+#: src/shared/certificate/certificateModel.ts
+msgid "Reference"
+msgstr "Reference"
+
 #: src/shared/error-state/AppErrorFallback.tsx
 msgid "Reload"
 msgstr "Reload"
@@ -1049,7 +1073,7 @@ msgstr "Report settings"
 #~ msgid "Report year"
 #~ msgstr "Report year"
 
-#: src/shared/pdf/buildIncomeReport.ts
+#: src/shared/certificate/certificateModel.ts
 msgid "Reporting period"
 msgstr "Reporting period"
 
@@ -1102,8 +1126,8 @@ msgid "Search by client, note or amount"
 msgstr "Search by client, note or amount"
 
 #: src/shared/pdf/buildIncomeReport.ts
-msgid "Self-recorded freelance income report"
-msgstr "Self-recorded freelance income report"
+#~ msgid "Self-recorded freelance income report"
+#~ msgstr "Self-recorded freelance income report"
 
 #: src/shared/constants/labels.ts
 msgid "September"
@@ -1144,7 +1168,7 @@ msgstr "Something went wrong"
 msgid "Starts the app fresh. Your data stays where it is."
 msgstr "Starts the app fresh. Your data stays where it is."
 
-#: src/shared/pdf/buildIncomeReport.ts
+#: src/shared/certificate/certificateModel.ts
 msgid "Statement of Income"
 msgstr "Statement of Income"
 
@@ -1153,8 +1177,8 @@ msgid "Store these on this device"
 msgstr "Store these on this device"
 
 #: src/shared/pdf/buildIncomeReport.ts
-msgid "Summary"
-msgstr "Summary"
+#~ msgid "Summary"
+#~ msgstr "Summary"
 
 #: src/shared/layouts/AppShell.tsx
 msgid "Switch theme"
@@ -1208,6 +1232,11 @@ msgstr "The ledger could not be loaded"
 msgid "The ledger is where every payment you have received adds up in one place — exactly what you need when it is time to produce a report."
 msgstr "The ledger is where every payment you have received adds up in one place — exactly what you need when it is time to produce a report."
 
+#. placeholder {0}: digits(report.monthsInRange)
+#: src/shared/certificate/certificateModel.ts
+msgid "The monthly average divides the total by the {0} calendar months in the period, including months with no income."
+msgstr "The monthly average divides the total by the {0} calendar months in the period, including months with no income."
+
 #: src/pages/quick-entry/QuickEntryAside.tsx
 msgid "The rate and Toman equivalent are stored at the moment you record a receipt. Later rate changes do not affect it."
 msgstr "The rate and Toman equivalent are stored at the moment you record a receipt. Later rate changes do not affect it."
@@ -1233,8 +1262,8 @@ msgid "This backup file's version is not supported. It was made by a newer versi
 msgstr "This backup file's version is not supported. It was made by a newer version of the app."
 
 #: src/pages/report/ReportPage.tsx
-msgid "This document is generated from the data you recorded in Daramadname and is informational."
-msgstr "This document is generated from the data you recorded in Daramadname and is informational."
+#~ msgid "This document is generated from the data you recorded in Daramadname and is informational."
+#~ msgstr "This document is generated from the data you recorded in Daramadname and is informational."
 
 #: src/shared/queries/restoreBackup.mutation.ts
 msgid "This file is not from Daramadname. Did you pick a backup from another tool?"
@@ -1258,8 +1287,12 @@ msgid "This receipt is removed from the ledger and the totals and charts update.
 msgstr "This receipt is removed from the ledger and the totals and charts update. This cannot be undone."
 
 #: src/shared/pdf/buildIncomeReport.ts
-msgid "This report was generated from records entered by the user in the Daramadname application."
-msgstr "This report was generated from records entered by the user in the Daramadname application."
+#~ msgid "This report was generated from records entered by the user in the Daramadname application."
+#~ msgstr "This report was generated from records entered by the user in the Daramadname application."
+
+#: src/shared/certificate/certificateModel.ts
+msgid "This statement was produced from receipts the holder recorded themselves in Daramadname. It is a personal record, not a bank or tax authority document, and is intended to be read alongside supporting bank statements."
+msgstr "This statement was produced from receipts the holder recorded themselves in Daramadname. It is a personal record, not a bank or tax authority document, and is intended to be read alongside supporting bank statements."
 
 #: src/shared/queries/seedSampleData.mutation.ts
 msgid "Three-month contract"
@@ -1270,7 +1303,6 @@ msgid "Tir"
 msgstr "Tir"
 
 #: src/shared/format/useFormat.ts
-#: src/shared/pdf/buildIncomeReport.ts
 msgid "to"
 msgstr "to"
 
@@ -1286,8 +1318,8 @@ msgstr "Today so far"
 msgid "Today's exchange rate (Toman)"
 msgstr "Today's exchange rate (Toman)"
 
+#: src/shared/certificate/certificateModel.ts
 #: src/shared/constants/labels.ts
-#: src/shared/pdf/buildIncomeReport.ts
 msgid "Toman"
 msgstr "Toman"
 
@@ -1314,8 +1346,8 @@ msgstr "Total"
 #~ msgid "Total ({0} receipts)"
 #~ msgstr "Total ({0} receipts)"
 
-#: src/pages/report/ReportPage.tsx
-#: src/shared/pdf/buildIncomeReport.ts
+#: src/core/i18n/i18n.test.ts
+#: src/shared/certificate/certificateModel.ts
 msgid "Total income"
 msgstr "Total income"
 

@@ -1,2 +1,2 @@
-export { buildIncomeReport, type ReportLanguage } from './buildIncomeReport'
+export { buildIncomeReport } from './buildIncomeReport'
 export { loadPdfMake } from './loadPdfMake'

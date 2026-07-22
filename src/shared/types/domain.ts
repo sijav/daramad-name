@@ -151,6 +151,13 @@ export interface IncomeReport {
   range: DateRange
   totalToman: number
   monthlyAverageToman: number
+  /**
+   * The divisor behind `monthlyAverageToman` — months ELAPSED in the range, not
+   * months that had income. The certificate prints it, because an average whose
+   * basis is unstated is the kind of number a clerk discards the whole document
+   * over.
+   */
+  monthsInRange: number
   months: MonthlyTotal[]
   generatedAt: string
 }

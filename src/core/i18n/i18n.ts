@@ -26,7 +26,15 @@ export const activateLocale = async (locale: AppLocale): Promise<void> => {
 export const loadReportI18n = async (locale: AppLocale): Promise<I18n> => {
   const { setupI18n } = await import('@lingui/core')
   const { messages } = await import(`src/locales/${locale}/messages.ts`)
-  return setupI18n({ locale, messages })
+
+  // `setupI18n` takes `AllMessages` — a map KEYED BY LOCALE — whereas
+  // `loadAndActivate` takes the flat catalog for one locale. Passing the flat
+  // catalog here loads nothing: lookup of `messages[locale]` is undefined, so
+  // every label silently falls back to its message id. Under an English source
+  // locale those ids ARE English, which is how a Persian certificate printed
+  // "Total income" instead of «جمع کل درآمد». The dynamic import types as
+  // `any`, so TypeScript could not catch it.
+  return setupI18n({ locale, messages: { [locale]: messages } })
 }
 
 export { i18n }

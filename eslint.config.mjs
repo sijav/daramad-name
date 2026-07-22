@@ -74,7 +74,9 @@ export default tseslint.config(
             '^[a-z0-9_.:/#-]+$',
             // BCP-47 locale tags, brand and format constants.
             '^[a-z]{2}-[A-Z]{2}$',
-            '^(Vazirmatn|Daramadname|A4|TOMAN|USD|USDT|JALALI|GREGORIAN)$',
+            // `DN` is the certificate's reference prefix — an identifier
+            // printed verbatim on the document, not copy to be translated.
+            '^(Vazirmatn|Daramadname|DN|A4|TOMAN|USD|USDT|JALALI|GREGORIAN)$',
             // Asset filenames.
             '[.](ttf|woff2?|json|png|svg|pdf)$',
             // Dexie index declarations: 'id, occurredAt, clientId'.

@@ -48,12 +48,14 @@ export const getIncomeReportQuery = async ({
   }
 
   const months = [...buckets.values()].sort((left, right) => left.year - right.year || left.month - right.month)
+  const monthsInRange = monthsSpanned(range, calendar)
 
   return {
     profile: settings.profile,
     range,
     totalToman,
-    monthlyAverageToman: Math.round(totalToman / monthsSpanned(range, calendar)),
+    monthlyAverageToman: Math.round(totalToman / monthsInRange),
+    monthsInRange,
     months,
     generatedAt: new Date().toISOString(),
   }

@@ -38,13 +38,20 @@ export const BackupSurvivesAWipe: Story = {
     const canvas = within(canvasElement)
     const body = within(canvasElement.ownerDocument.body)
 
+    // Wait for a rendered Persian label before touching any mutation. The
+    // backup path validates through `i18n._()`, and Lingui THROWS rather than
+    // falling back when no locale is active yet — in the app that cannot happen
+    // because routes are gated behind `localeReady`, but a story mounts the
+    // page directly and the play function can outrun activation.
+    const eraseButton = await canvas.findByRole('button', { name: /^پاک کردن همه$|^Erase all$/ })
+
     const before = (await db.receipts.toArray()).sort((left, right) => left.id.localeCompare(right.id))
     await expect(before.length).toBeGreaterThan(0)
 
     const json = JSON.stringify(await exportBackupMutation())
 
     await step('erase everything, typing the confirmation word', async () => {
-      await userEvent.click(await canvas.findByRole('button', { name: /^پاک کردن همه$|^Erase all$/ }))
+      await userEvent.click(eraseButton)
       await userEvent.type(await body.findByRole('textbox'), 'پاک کن')
       await userEvent.click(await body.findByRole('button', { name: /^همه را پاک کن$|^Erase everything$/ }))
       await waitFor(async () => await expect(await db.receipts.count()).toBe(0))

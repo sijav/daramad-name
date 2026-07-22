@@ -2,6 +2,7 @@ import { useLingui } from '@lingui/react/macro'
 import { Button } from '@mui/material'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
+import { fn } from 'storybook/test'
 import { ConfirmDialog } from './ConfirmDialog'
 
 const meta = { title: 'Shared/ConfirmDialog', component: ConfirmDialog } satisfies Meta<typeof ConfirmDialog>
@@ -35,7 +36,7 @@ const Harness = ({ typeToConfirm }: { typeToConfirm?: boolean }) => {
   )
 }
 
-const base = { open: true, title: '', description: '', confirmLabel: '', onConfirm: () => {}, onClose: () => {} }
+const base = { open: true, title: '', description: '', confirmLabel: '', onConfirm: fn(), onClose: fn() }
 
 export const DeleteReceipt: Story = { args: base, render: () => <Harness /> }
 

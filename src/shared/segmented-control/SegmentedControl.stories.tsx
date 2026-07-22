@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
+import { fn } from 'storybook/test'
 import { SegmentedControl } from './SegmentedControl'
 
 const meta = {
@@ -19,7 +20,7 @@ export const Currency: Story = {
       { value: 'USD', label: 'USD' },
       { value: 'TOMAN', label: 'Toman' },
     ],
-    onValueChange: () => {},
+    onValueChange: fn(),
   },
   render: function Render(args) {
     const [value, setValue] = useState(args.value)
@@ -36,6 +37,6 @@ export const TwoOptions: Story = {
       { value: 'fa', label: 'Persian' },
       { value: 'en', label: 'English' },
     ],
-    onValueChange: () => {},
+    onValueChange: fn(),
   },
 }

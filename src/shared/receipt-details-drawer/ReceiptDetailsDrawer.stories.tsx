@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ReceiptWithClient } from 'src/shared/types'
+import { fn } from 'storybook/test'
 import { ReceiptDetailsDrawer } from './ReceiptDetailsDrawer'
 
 const meta = {
@@ -29,7 +30,7 @@ const receipt = (overrides: Partial<ReceiptWithClient>): ReceiptWithClient => ({
 
 /** A toman receipt has no conversion, so no rate block and no frozen badge. */
 export const TomanReceipt: Story = {
-  args: { receipt: receipt({}), onClose: () => {}, onEdit: () => {}, onDelete: () => {} },
+  args: { receipt: receipt({}), onClose: fn(), onEdit: fn(), onDelete: fn() },
 }
 
 /**
@@ -48,13 +49,13 @@ export const ForeignCurrencyFrozen: Story = {
       channel: 'TETHER',
       note: 'پیش‌پرداخت فاز اول طراحی',
     }),
-    onClose: () => {},
-    onEdit: () => {},
-    onDelete: () => {},
+    onClose: fn(),
+    onEdit: fn(),
+    onDelete: fn(),
   },
 }
 
 /** A receipt with no note must not leave an empty labelled block. */
 export const WithoutNote: Story = {
-  args: { receipt: receipt({ note: null }), onClose: () => {}, onEdit: () => {}, onDelete: () => {} },
+  args: { receipt: receipt({ note: null }), onClose: fn(), onEdit: fn(), onDelete: fn() },
 }

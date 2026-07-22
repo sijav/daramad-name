@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
 import { SurfaceCard } from 'src/shared/surface-card'
 import type { Currency } from 'src/shared/types'
+import { fn } from 'storybook/test'
 import { AmountField } from './AmountField'
 
 const meta = { title: 'Shared/AmountField', component: AmountField } satisfies Meta<typeof AmountField>
@@ -43,7 +44,7 @@ const Invalid = () => {
   )
 }
 
-const base = { label: '', value: null, currency: 'TOMAN' as Currency, onValueChange: () => {} }
+const base = { label: '', value: null, currency: 'TOMAN' as Currency, onValueChange: fn() }
 
 /** Toman has no sub-unit, so no decimals are accepted. */
 export const Toman: Story = { args: base, render: () => <Harness currency="TOMAN" initial={2500000} /> }

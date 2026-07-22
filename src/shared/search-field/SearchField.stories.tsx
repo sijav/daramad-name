@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
+import { fn } from 'storybook/test'
 import { SearchField } from './SearchField'
 
 const meta = { title: 'Shared/SearchField', component: SearchField } satisfies Meta<typeof SearchField>
@@ -11,7 +12,7 @@ const Controlled: Story['render'] = function Render(args) {
   return <SearchField {...args} value={value} onValueChange={setValue} sx={{ width: 420 }} />
 }
 
-export const Empty: Story = { args: { value: '', onValueChange: () => {} }, render: Controlled }
+export const Empty: Story = { args: { value: '', onValueChange: fn() }, render: Controlled }
 
 /** The clear button only appears once there is something to clear. */
-export const WithQuery: Story = { args: { value: 'آریا', onValueChange: () => {} }, render: Controlled }
+export const WithQuery: Story = { args: { value: 'آریا', onValueChange: fn() }, render: Controlled }

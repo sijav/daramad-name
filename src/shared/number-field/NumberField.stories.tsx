@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
+import { fn } from 'storybook/test'
 import { NumberField } from './NumberField'
 
 const meta = {
@@ -21,18 +22,18 @@ const Controlled: Story['render'] = function Render(args) {
  * outright and would leave the field looking broken to a Persian typist.
  */
 export const Toman: Story = {
-  args: { label: 'Amount received', value: 2500000, onValueChange: () => {} },
+  args: { label: 'Amount received', value: 2500000, onValueChange: fn() },
   render: Controlled,
 }
 
 /** Two decimals for USD and USDT — toman has no sub-unit. */
 export const WithDecimals: Story = {
-  args: { label: 'Amount received', value: 1200.5, decimals: 2, onValueChange: () => {} },
+  args: { label: 'Amount received', value: 1200.5, decimals: 2, onValueChange: fn() },
   render: Controlled,
 }
 
 export const Empty: Story = {
-  args: { label: "Today's exchange rate (Toman)", value: null, onValueChange: () => {} },
+  args: { label: "Today's exchange rate (Toman)", value: null, onValueChange: fn() },
   render: Controlled,
 }
 
@@ -42,7 +43,7 @@ export const WithError: Story = {
     value: null,
     error: true,
     helperText: 'Enter an amount greater than zero.',
-    onValueChange: () => {},
+    onValueChange: fn(),
   },
   render: Controlled,
 }

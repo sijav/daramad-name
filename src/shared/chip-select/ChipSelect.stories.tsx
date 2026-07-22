@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
+import { fn } from 'storybook/test'
 import { ChipSelect } from './ChipSelect'
 
 const meta = {
@@ -19,7 +20,7 @@ const CHANNELS = [
 
 /** The receipt channel picker. The selected pill takes the primary container fill. */
 export const Channels: Story = {
-  args: { label: 'Payment channel', value: 'TETHER', options: CHANNELS, onValueChange: () => {} },
+  args: { label: 'Payment channel', value: 'TETHER', options: CHANNELS, onValueChange: fn() },
   render: function Render(args) {
     const [value, setValue] = useState(args.value)
     return <ChipSelect {...args} value={value} onValueChange={setValue} />
@@ -29,5 +30,5 @@ export const Channels: Story = {
 /** Without a label, for use inside a field that already has one. */
 export const Unlabelled: Story = {
   ...Channels,
-  args: { value: 'CARD_TO_CARD', options: CHANNELS, onValueChange: () => {} },
+  args: { value: 'CARD_TO_CARD', options: CHANNELS, onValueChange: fn() },
 }

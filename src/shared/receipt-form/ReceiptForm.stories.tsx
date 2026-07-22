@@ -2,7 +2,7 @@ import { useLingui } from '@lingui/react/macro'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { SurfaceCard } from 'src/shared/surface-card'
 import type { ReceiptWithClient } from 'src/shared/types'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, fn, userEvent, within } from 'storybook/test'
 import { ReceiptForm } from './ReceiptForm'
 import { useReceiptForm } from './useReceiptForm'
 
@@ -48,13 +48,13 @@ const receipt = (overrides: Partial<ReceiptWithClient>): ReceiptWithClient => ({
 
 /** The 15-second path: today's date, toman, card-to-card, amount autofocused. */
 export const Empty: Story = {
-  args: { form: {} as never, submitLabel: '', onSubmit: () => {} },
+  args: { form: {} as never, submitLabel: '', onSubmit: fn() },
   render: () => <Harness />,
 }
 
 /** A non-toman currency reveals the rate field and the live toman equivalent. */
 export const ForeignCurrency: Story = {
-  args: { form: {} as never, submitLabel: '', onSubmit: () => {} },
+  args: { form: {} as never, submitLabel: '', onSubmit: fn() },
   render: () => <Harness initial={receipt({ currency: 'USDT', amountOriginal: 500, rate: 98500, amountToman: 49250000 })} />,
 }
 
@@ -64,7 +64,7 @@ export const ForeignCurrency: Story = {
  * today's rate against a two-month-old receipt would be silently wrong forever.
  */
 export const Backdated: Story = {
-  args: { form: {} as never, submitLabel: '', onSubmit: () => {} },
+  args: { form: {} as never, submitLabel: '', onSubmit: fn() },
   render: () => {
     const twoMonthsAgo = new Date()
     twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2)
@@ -91,7 +91,7 @@ export const Backdated: Story = {
  * write and never recomputed, so a wrong one here is wrong permanently.
  */
 export const RecordsAForeignReceipt: Story = {
-  args: { form: {} as never, submitLabel: '', onSubmit: () => {} },
+  args: { form: {} as never, submitLabel: '', onSubmit: fn() },
   render: () => <Harness />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)

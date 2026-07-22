@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
+import { fn } from 'storybook/test'
 import { RangeSelect } from './RangeSelect'
 
 const meta = {
@@ -19,7 +20,7 @@ export const Default: Story = {
       { value: 1403, label: '۱۴۰۳' },
       { value: 1402, label: '۱۴۰۲' },
     ],
-    onSelect: () => {},
+    onSelect: fn(),
   },
   render: function Render(args) {
     const [year, setYear] = useState('1403')

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { SurfaceCard } from 'src/shared/surface-card'
 import type { ReceiptWithClient } from 'src/shared/types'
+import { fn } from 'storybook/test'
 import { LedgerTable } from './LedgerTable'
 
 const meta = {
@@ -66,10 +67,10 @@ export const Default: Story = {
     summary,
     sort: { field: 'occurredAt', direction: 'desc' },
     calendar: 'JALALI',
-    onSortChange: () => {},
-    onView: () => {},
-    onEdit: () => {},
-    onDelete: () => {},
+    onSortChange: fn(),
+    onView: fn(),
+    onEdit: fn(),
+    onDelete: fn(),
   },
   render: (args) => (
     <SurfaceCard>

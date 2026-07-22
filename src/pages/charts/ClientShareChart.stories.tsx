@@ -50,7 +50,7 @@ export const Balanced: Story = { args: base, render: () => <View shares={BALANCE
 /** Above 50% the dependency warning fires; shown with the callout it explains. */
 export const Concentrated: Story = {
   args: base,
-  render: () => <View shares={CONCENTRATED} insight="۷۳٪ از درآمد شما از یک مشتری تأمین شده است." />,
+  render: () => <View shares={CONCENTRATED} insight="۷۳٪ درآمدت از یک مشتری است." />,
 }
 
 /** A single client — the extreme concentration case. */

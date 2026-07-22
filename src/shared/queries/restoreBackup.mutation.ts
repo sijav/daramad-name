@@ -45,7 +45,7 @@ const parseBackup = (json: string): BackupFile => {
   }
 
   if (typeof parsed !== 'object' || parsed === null) {
-    throw new Error(i18n._(msg`The file is empty or corrupt.`))
+    throw new Error(i18n._(msg`The file is empty or corrupt. Pick a different backup file.`))
   }
 
   const candidate = parsed as Partial<BackupFile>
@@ -54,10 +54,10 @@ const parseBackup = (json: string): BackupFile => {
     throw new Error(i18n._(msg`This file is not from Daramadname. Did you pick a backup from another tool?`))
   }
   if (candidate.version !== 1) {
-    throw new Error(i18n._(msg`This backup file's version is not supported. It was made by a newer version of the app.`))
+    throw new Error(i18n._(msg`This backup file was made by a newer version of the app. Update Daramadname and try again.`))
   }
   if (!Array.isArray(candidate.receipts) || !Array.isArray(candidate.clients)) {
-    throw new Error(i18n._(msg`The backup file is incomplete — it has no receipts or clients list.`))
+    throw new Error(i18n._(msg`The backup file is incomplete — it has no receipts or clients list. Pick a complete backup file.`))
   }
 
   // Same checks the app uses on write and on export, so a file cannot be

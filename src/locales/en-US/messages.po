@@ -1216,8 +1216,12 @@ msgid "The backup failed. Try again."
 msgstr "The backup failed. Try again."
 
 #: src/shared/queries/restoreBackup.mutation.ts
-msgid "The backup file is incomplete — it has no receipts or clients list."
-msgstr "The backup file is incomplete — it has no receipts or clients list."
+#~ msgid "The backup file is incomplete — it has no receipts or clients list."
+#~ msgstr "The backup file is incomplete — it has no receipts or clients list."
+
+#: src/shared/queries/restoreBackup.mutation.ts
+msgid "The backup file is incomplete — it has no receipts or clients list. Pick a complete backup file."
+msgstr "The backup file is incomplete — it has no receipts or clients list. Pick a complete backup file."
 
 #: src/pages/quick-entry/QuickEntryPage.tsx
 msgid "The conversion rate is stored as you record it and does not change later."
@@ -1228,8 +1232,12 @@ msgid "The file could not be read. Make sure it is intact and pick it again."
 msgstr "The file could not be read. Make sure it is intact and pick it again."
 
 #: src/shared/queries/restoreBackup.mutation.ts
-msgid "The file is empty or corrupt."
-msgstr "The file is empty or corrupt."
+#~ msgid "The file is empty or corrupt."
+#~ msgstr "The file is empty or corrupt."
+
+#: src/shared/queries/restoreBackup.mutation.ts
+msgid "The file is empty or corrupt. Pick a different backup file."
+msgstr "The file is empty or corrupt. Pick a different backup file."
 
 #: src/pages/report/ReportPage.tsx
 msgid "The income report is built from the receipts you record. Add a few receipts first, then produce the document here."
@@ -1269,8 +1277,12 @@ msgid "this backup file"
 msgstr "this backup file"
 
 #: src/shared/queries/restoreBackup.mutation.ts
-msgid "This backup file's version is not supported. It was made by a newer version of the app."
-msgstr "This backup file's version is not supported. It was made by a newer version of the app."
+msgid "This backup file was made by a newer version of the app. Update Daramadname and try again."
+msgstr "This backup file was made by a newer version of the app. Update Daramadname and try again."
+
+#: src/shared/queries/restoreBackup.mutation.ts
+#~ msgid "This backup file's version is not supported. It was made by a newer version of the app."
+#~ msgstr "This backup file's version is not supported. It was made by a newer version of the app."
 
 #: src/pages/report/ReportPage.tsx
 #~ msgid "This document is generated from the data you recorded in Daramadname and is informational."

@@ -143,9 +143,9 @@ describe('averagingPeriod: one rule for every monthly average', () => {
   })
 })
 
-// Everything below is display. None of it can throw, a mistake here prints a
-// date that is off by a month, or Persian numerals on an English certificate,
-// and the page still looks finished on its way to an embassy.
+// Everything below is display, and none of it throws: a mistake here prints a
+// date off by a month, or Persian numerals on an English certificate, and the
+// page still looks finished.
 
 const at = (year: number, monthIndex: number, day: number) => new Date(year, monthIndex, day, 12).toISOString()
 

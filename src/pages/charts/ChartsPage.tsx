@@ -60,12 +60,12 @@ export const ChartsPage = () => {
 
   // A read that failed is not a year with nothing in it. Falling through to the
   // empty state would tell a user with three years of receipts to record their
-  // first one, and a Dexie failure, a blocked upgrade, a full quota, private
-  // browsing, is exactly the case where that is most alarming.
+  // first one, and the causes (a blocked Dexie upgrade, a full quota, private
+  // browsing) are exactly where that is most alarming.
   //
   // Either query failing takes the whole page, because both halves describe the
-  // same year: a page that drew the bars but silently lost the concentration
-  // warning would be advice about the user's livelihood, minus the warning.
+  // same year: a page that drew the bars but dropped the concentration warning
+  // would be advice about the user's livelihood, minus the warning.
   const failed = monthly.isError || clientShares.isError
   const retry = () => {
     void monthly.refetch()

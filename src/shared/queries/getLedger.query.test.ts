@@ -7,10 +7,10 @@ import { getLedgerQuery, getLedgerQueryKey } from './getLedger.query'
 
 // The ledger answers two questions at once, and only one of them is visible.
 // The table is easy to check by eye; the summary strip above it is not. Its
-// total and its monthly average must describe the rows CURRENTLY filtered
-// scenario 2 is literally "what did this one client pay me over these six
-// months", and a summary quietly computed over the whole database would answer
-// something else while looking entirely plausible.
+// total and monthly average must describe the rows CURRENTLY filtered, since
+// scenario 2 is "what did this one client pay me over these six months", and a
+// summary computed over the whole database would answer something else while
+// looking entirely plausible.
 
 const NOW = new Date('2026-07-22T09:00:00.000Z')
 

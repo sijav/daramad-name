@@ -19,7 +19,7 @@ export interface RecentReceiptsProps {
  * there", and reusing the ledger table would drag its whole toolbar with it.
  *
  * The Toman figure is the one column that matters at a glance, so the design
- * gives it 20/600 while everything else sits at 14, this is a summary, not a
+ * gives it 20/600 while everything else sits at 14. This is a summary, not a
  * grid to scan.
  */
 export const RecentReceipts = ({ receipts }: RecentReceiptsProps) => {
@@ -35,11 +35,10 @@ export const RecentReceipts = ({ receipts }: RecentReceiptsProps) => {
   }
 
   return (
-    // The design's own bordered, 16px-rounded frame, it is a table INSIDE the
-    // card, not the card's own edge.
-    // Scrollable, so it must be keyboard reachable, otherwise the columns past
-    // the fold cannot be reached without a mouse (axe
-    // `scrollable-region-focusable`). Named, because it is now in the tab order.
+    // A bordered, 16px-rounded frame INSIDE the card, not the card's own edge.
+    // It scrolls, so it has to be keyboard reachable or the columns past the
+    // fold need a mouse (axe `scrollable-region-focusable`), and named once it
+    // is in the tab order.
     <TableContainer
       tabIndex={0}
       role="group"

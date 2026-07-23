@@ -87,8 +87,8 @@ describe('certificate identity block', () => {
 
 // Everything a reader of the certificate actually looks at: the direction it
 // reads in, the numerals it is written in, and the figures. None of these fail
-// loudly, a wrong one produces a finished-looking page that is simply not
-// true, handed to someone with no way to check it.
+// loudly; a wrong one produces a finished-looking page that is simply not true,
+// handed to someone with no way to check it.
 
 const everyString = (model: Awaited<ReturnType<typeof build>>): string[] => [
   model.title,

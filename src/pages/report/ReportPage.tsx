@@ -141,8 +141,8 @@ export const ReportPage = () => {
                   })}
                 >
                   {/* The selected year is always among the options, even before
-                      the query answers and even for a year with no receipts, 
-                      a select whose value is missing renders blank, and the
+                      the query answers and even for a year with no receipts.
+                      A select whose value is missing renders blank, and the
                       range is the one thing this document must state. */}
                   {selectableYears(years, year).map((option) => (
                     <MenuItem key={option} value={option}>

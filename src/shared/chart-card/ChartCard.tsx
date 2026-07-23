@@ -14,10 +14,9 @@ export interface ChartCardProps extends Omit<PaperProps, 'title' | 'variant'> {
  * The surface the design uses for charts: 16px radius, solid `surface-default`
  * and a 1px `border-default` hairline.
  *
- * Deliberately NOT `SurfaceCard`. The redesign moved chart panels off the heavy
- * 28px frosted treatment, a blurred translucent backdrop behind a data
- * visualisation costs contrast exactly where it matters most, and the flat
- * bordered card reads cleaner behind bars and arcs.
+ * NOT `SurfaceCard`: chart panels take the 16px radius and no shadow, and a
+ * blurred backdrop behind a data visualisation would cost contrast where it
+ * matters most.
  */
 export const ChartCard = ({ title, subtitle, variant = 'chart', action, children, sx, ...props }: ChartCardProps) => (
   <Paper

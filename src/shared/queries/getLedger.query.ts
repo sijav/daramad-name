@@ -9,19 +9,17 @@ export const getLedgerQueryKey = (filter: LedgerFilter, sort: LedgerSort, calend
 /**
  * The ledger table, its filters and its running total.
  *
- * The summary is computed over the FILTERED rows, not the whole database
- * scenario 2 is exactly "what did this one client pay me over these six
- * months", and a total that ignored the filter would answer a different
- * question while looking correct.
+ * The summary is computed over the FILTERED rows. A total that ignored the
+ * filter would answer a different question from the one on screen while looking
+ * correct.
  */
 export const getLedgerQuery = async ({
   queryKey: [, filter, sort, calendar],
 }: QueryFunctionContext<ReturnType<typeof getLedgerQueryKey>>): Promise<Ledger> => {
   // Read the rows over the SAME period the average divides by. Reading the raw
-  // range while dividing by the clamped one counted future-dated receipts in
-  // the total but gave them no months, so a range ending in the future, which
-  // is what "this year" means for eleven months of every year, inflated the
-  // ledger's average against the report's. The report has always clamped both.
+  // range while dividing by the clamped one counts future-dated receipts in the
+  // total but gives them no months, and "this year" ends in the future for
+  // eleven months of every year, so the ledger's average ran above the report's.
   const period = averagingPeriod(filter.range ?? (await unfilteredPeriod()), calendar)
 
   const receipts = await readFilteredReceipts({ ...filter, range: period.range })
@@ -49,13 +47,13 @@ export const getLedgerQuery = async ({
   }
 }
 
-/** Applies the date range through the indexed `occurredAt`, then the cheap equality filters. */
-const readFilteredReceipts = async (filter: LedgerFilter): Promise<Receipt[]> => {
-  const collection = filter.range
-    ? db.receipts.where('occurredAt').between(filter.range.from, filter.range.to, true, true)
-    : db.receipts.toCollection()
-
-  const receipts = await collection.toArray()
+/**
+ * Applies the range through the indexed `occurredAt`, then the cheap equality
+ * filters. The range is required, not optional: the only caller always has one,
+ * because `averagingPeriod` returns a clamped range even for an unfiltered read.
+ */
+const readFilteredReceipts = async (filter: LedgerFilter & { range: DateRange }): Promise<Receipt[]> => {
+  const receipts = await db.receipts.where('occurredAt').between(filter.range.from, filter.range.to, true, true).toArray()
   return receipts.filter(
     (receipt) => (!filter.clientId || receipt.clientId === filter.clientId) && (!filter.channel || receipt.channel === filter.channel),
   )
@@ -86,12 +84,9 @@ const sortRows = (rows: ReceiptWithClient[], sort: LedgerSort): void => {
 
 /**
  * With no filter the period runs from the first receipt to TODAY, not to the
- * last receipt.
- *
- * Ending at the last receipt drops every quiet month since, which is precisely
- * the "months with income" divisor the rule forbids: income clustered in three
- * months of a year divided by three, printing an average four times the one the
- * report showed for the same data. Months you earned nothing are still months.
+ * last one. Ending at the last receipt drops every quiet month since, which is
+ * the "months with income" divisor the averaging rule forbids: three earning
+ * months out of twelve would print four times the report's figure.
  */
 const unfilteredPeriod = async (): Promise<DateRange> => {
   const now = new Date().toISOString()

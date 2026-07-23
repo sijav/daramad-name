@@ -14,18 +14,16 @@ export type NumberFieldProps = Omit<TextFieldProps, 'value' | 'onChange' | 'type
 }
 
 /**
- * Numeric input that accepts Persian *and* English keyboards and normalises on
- * change, rule 3 of the brief.
+ * Numeric input that takes Persian and English keyboards and normalises on
+ * change.
  *
- * Deliberately NOT `<input type="number">`: that control rejects Persian digits
- * outright, so a user typing «۲۵۰۰» on a Persian keyboard would see nothing
- * appear at all. This is a text input with its own parsing, displaying Persian
- * digits while reporting a plain JS number upward.
+ * NOT `<input type="number">`: that rejects Persian digits outright, so «۲۵۰۰»
+ * typed on a Persian keyboard produces nothing at all. This is a text input
+ * with its own parsing, showing Persian digits and reporting a JS number up.
  *
- * The displayed text is derived from `value` except while the field is focused,
- * when a local draft takes over. That keeps the component in sync with external
- * resets (form reset, loading a record to edit) without an effect, and without
- * reformatting mid-keystroke.
+ * The text derives from `value` except while focused, when a local draft takes
+ * over. That follows external resets (form reset, loading a record to edit)
+ * without an effect, and without reformatting mid-keystroke.
  */
 export const NumberField = ({ value, onValueChange, decimals = 0, grouped = true, ...props }: NumberFieldProps) => {
   const { locale } = useSettings()
@@ -45,16 +43,14 @@ export const NumberField = ({ value, onValueChange, decimals = 0, grouped = true
     const normalised = toEnglishDigits(raw).replace(/[^\d.-]/g, '')
     const parsed = parseUserNumber(normalised)
 
-    // Report the value the field is SHOWING, not the raw parse.
-    //
-    // Rounding the display while reporting the unrounded number meant a field
-    // reading «۱٫۵۶» stored 1.555, and every surface afterwards, the ledger,
-    // the drawer, the certificate, printed 1.56 beside a Toman figure derived
-    // from 1.555. Nothing downstream could detect the mismatch, because the
-    // stored value looked plausible.
-    const shown = parsed === null ? null : Number(parsed.toFixed(countDecimals(normalised, decimals)))
+    // Report the value the field is SHOWING, not the raw parse. Rounding the
+    // display while reporting the unrounded number meant a field reading «۱٫۵۶»
+    // stored 1.555, and every surface after it printed 1.56 beside a Toman
+    // figure derived from 1.555.
+    const places = countDecimals(normalised, decimals)
+    const shown = parsed === null ? null : Number(parsed.toFixed(places))
 
-    setDraft(grouped && shown !== null ? formatNumber(shown, locale, countDecimals(normalised, decimals)) : normalised)
+    setDraft(grouped && shown !== null ? formatNumber(shown, locale, places) : normalised)
     onValueChange(shown)
   }
 

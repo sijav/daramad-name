@@ -12,6 +12,7 @@ import {
   useTheme,
 } from '@mui/material'
 import type { ReactNode } from 'react'
+import { typeScale } from 'src/core/theme'
 import { CHANNEL_LABELS } from 'src/shared/constants'
 import { useFormat } from 'src/shared/format'
 import { MoneyText } from 'src/shared/money-text'
@@ -32,18 +33,26 @@ export interface LedgerTableProps {
 
 type ColumnKey = 'date' | 'client' | 'channel' | 'original' | 'toman' | 'actions'
 
+interface Column {
+  key: ColumnKey
+  /** Null for a column the design does not sort by. */
+  field: LedgerSortField | null
+  label: string
+  align: 'start' | 'center' | 'right'
+  width?: number
+  visible: boolean
+  cell: (receipt: ReceiptWithClient) => ReactNode
+}
+
 /**
- * Scenario 2's ledger.
+ * The ledger table.
  *
- * The totals row is inside the same `<Table>` rather than a separate card so it
- * cannot scroll out of sync with the rows it sums, the brief requires the
- * total to stay visible and to track the active filter.
+ * The totals row is inside the same `<Table>` rather than a separate card, so it
+ * cannot scroll out of sync with the rows it sums and it tracks the filter.
  *
- * Columns are dropped on narrow screens, which is what the design does: the
- * phone and tablet frames use this same table component and simply hide cells.
- * It rendered all six at a fixed 900px inside a horizontal scroller instead, so
- * on a 390px phone both money columns sat outside the frame, an income ledger
- * showing everything except the income.
+ * Narrow screens drop columns rather than scrolling, which is what the design
+ * does: the phone and tablet frames use this component and hide cells. Rendering
+ * all six at a fixed 900px put both money columns off a 390px screen.
  */
 export const LedgerTable = ({ receipts, summary, sort, filtered = false, onSortChange, onView, onEdit, onDelete }: LedgerTableProps) => {
   const { t, i18n } = useLingui()
@@ -58,17 +67,9 @@ export const LedgerTable = ({ receipts, summary, sort, filtered = false, onSortC
   const showSecondary = useMediaQuery(theme.breakpoints.up('md'))
 
   // Built inside the component so labels follow the active locale. Widths,
-  // alignment and sortability all come from `267:984`; everything is
+  // alignment and sortability come from Figma `267:984`; everything is
   // start-aligned except the channel tag and the row actions, which centre.
-  const allColumns: {
-    key: ColumnKey
-    field: LedgerSortField | null
-    label: string
-    align: 'start' | 'center' | 'right'
-    width?: number
-    visible: boolean
-    cell: (receipt: ReceiptWithClient) => ReactNode
-  }[] = [
+  const allColumns: Column[] = [
     {
       key: 'date',
       field: 'occurredAt',
@@ -111,7 +112,14 @@ export const LedgerTable = ({ receipts, summary, sort, filtered = false, onSortC
       align: 'right',
       width: 190,
       visible: true,
-      cell: (receipt) => <MoneyText value={receipt.amountToman} sx={{ fontWeight: 600, lineHeight: '24px' }} />,
+      // FA/Number/Table. The size comes from the cell's `bodyMedium`, which is
+      // the same 14, so only weight and leading are set here.
+      cell: (receipt) => (
+        <MoneyText
+          value={receipt.amountToman}
+          sx={{ fontWeight: typeScale.numberTable.fontWeight, lineHeight: typeScale.numberTable.lineHeight }}
+        />
+      ),
     },
     {
       key: 'actions',
@@ -163,25 +171,27 @@ export const LedgerTable = ({ receipts, summary, sort, filtered = false, onSortC
       >
         <TableHead>
           <TableRow>
-            {columns.map((column) => (
+            {columns.map(({ key, align, width, label, field }) => (
               <TableCell
-                key={column.key}
-                align={column.align === 'start' ? undefined : column.align}
+                key={key}
+                align={align === 'start' ? undefined : align}
                 // Widths come from the desktop frame. Pinning them on a phone
-                // holds the date column at 130px it does not need and pushes
+                // holds the date column at a 130px it does not need and pushes
                 // the row wider than the screen.
-                sx={{ width: showSecondary ? column.width : undefined }}
+                sx={{ width: showSecondary ? width : undefined }}
               >
-                {column.field ? (
+                {/* Destructured so `field` narrows to non-null inside the
+                    branch; reading `column.field` here would not. */}
+                {field ? (
                   <TableSortLabel
-                    active={sort.field === column.field}
-                    direction={sort.field === column.field ? sort.direction : 'desc'}
-                    onClick={() => toggleSort(column.field as LedgerSortField)}
+                    active={sort.field === field}
+                    direction={sort.field === field ? sort.direction : 'desc'}
+                    onClick={() => toggleSort(field)}
                   >
-                    {column.label}
+                    {label}
                   </TableSortLabel>
                 ) : (
-                  column.label
+                  label
                 )}
               </TableCell>
             ))}
@@ -215,10 +225,10 @@ export const LedgerTable = ({ receipts, summary, sort, filtered = false, onSortC
             Toman column rather than floating at the end of the row. */}
         <TableBody>
           <TableRow
-            sx={(theme) => ({
+            sx={{
               backgroundColor: theme.palette.brandPrimarySubtle,
               '& td': { borderTop: `2px solid ${theme.palette.borderStrong}`, borderBottom: 'none', paddingBlock: '16px' },
-            })}
+            }}
           >
             <TableCell colSpan={tomanIndex}>
               <Typography variant="subtitle2">

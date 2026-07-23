@@ -25,9 +25,8 @@ export const registerServiceWorker = () => {
     // evaluate installability sooner.
     immediate: true,
     onRegisterError: (error: unknown) => {
-      // Nothing to recover: without a worker the app still works, it just is
-      // not installable or offline-capable. Surfacing it in the console is the
-      // honest amount of noise.
+      // Nothing to recover: without a worker the app still works, it is just
+      // not installable or offline-capable.
       console.error('Service worker registration failed', error)
     },
   })

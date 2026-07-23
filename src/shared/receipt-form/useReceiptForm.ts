@@ -40,17 +40,13 @@ const fromReceipt = (receipt: ReceiptWithClient): ReceiptFormState => ({
 })
 
 /**
- * Form state for recording and editing a receipt.
+ * Form state for recording and editing a receipt, and the home of the
+ * backdating rule.
  *
- * Also the home of the backdating rule. Scenario 1 asks for "today's rate";
- * scenario 5 records a receipt from two months ago. Combined naively those
- * produce a receipt valued at today's Tether price but dated to Mordad, and
- * because the toman value is frozen on save, that error becomes permanent and
- * silently wrong in every total, chart and PDF thereafter.
- *
- * So the form tracks whether the date is today and tells the UI to relabel and
- * warn. It cannot know the historical rate (there is no rate API by design),
- * but it can stop the user from assuming the default is right.
+ * A rate field defaulting to "today's rate" on a receipt dated two months back
+ * values it at today's Tether price, and the toman value is frozen on save, so
+ * the error is permanent. The form cannot know the historical rate, there is no
+ * rate API by design, so it exposes `isBackdated` and the UI relabels and warns.
  */
 export const useReceiptForm = (initial?: ReceiptWithClient) => {
   const { t } = useLingui()
@@ -89,14 +85,10 @@ export const useReceiptForm = (initial?: ReceiptWithClient) => {
     tomanPreview,
     markSubmitted: () => setSubmitted(true),
     /**
-     * Resets for the next entry, keeping the client so a batch is fast to log.
-     *
-     * The DATE is kept too. Resetting it to today silently undid backdating on
-     * every receipt after the first, which is precisely what this button is
-     * for when someone works through a stack of old invoices. The warning
-     * disappeared with the date, so the receipts landed in the wrong month and
-     * the totals, the charts and the certificate's breakdown were all quietly
-     * wrong.
+     * Resets for the next entry, keeping the client, channel and DATE, so a
+     * stack of old invoices stays fast to log. Resetting the date to today
+     * would undo the backdating on every receipt after the first, and the
+     * warning would go with it.
      */
     resetKeepingClient: () => {
       setState((current) => ({
@@ -105,10 +97,9 @@ export const useReceiptForm = (initial?: ReceiptWithClient) => {
         channel: current.channel,
         occurredAt: current.occurredAt,
       }))
-      // The submit flag has to go with the values. Without this the emptied
-      // amount field is invalid again the instant it clears, so a saved receipt
-      // is answered with a red "enter an amount" on the next one, on the very
-      // button whose job is to make a batch feel uninterrupted.
+      // The submit flag goes with the values, or the emptied amount is invalid
+      // the instant it clears and a saved receipt is answered with a red
+      // "enter an amount" on the next one.
       setSubmitted(false)
     },
     reset: () => {

@@ -16,8 +16,14 @@ export type AppLocale = 'fa-IR' | 'en-US'
 /** Colour-scheme preference. `system` follows the OS and keeps following it. */
 export type ThemePreference = 'light' | 'dark' | 'system'
 
+// Every union above gets its values as a runtime array here, beside the type,
+// so anything validating a stored or imported value has one list to check
+// against and adding a member is a single edit.
 export const CURRENCIES: readonly Currency[] = ['TOMAN', 'USD', 'USDT']
 export const CHANNELS: readonly Channel[] = ['CARD_TO_CARD', 'REMITTANCE', 'TETHER', 'OTHER']
+export const CALENDAR_SYSTEMS: readonly CalendarSystem[] = ['JALALI', 'GREGORIAN']
+export const APP_LOCALES: readonly AppLocale[] = ['fa-IR', 'en-US']
+export const THEME_PREFERENCES: readonly ThemePreference[] = ['light', 'dark', 'system']
 
 /** Toman is a whole-number currency; USD and USDT carry two decimals. */
 export const currencyDecimals: Record<Currency, number> = {

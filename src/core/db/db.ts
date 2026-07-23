@@ -2,13 +2,9 @@ import Dexie, { type EntityTable } from 'dexie'
 import type { Client, Receipt, Settings } from 'src/shared/types'
 import { toPersianLetters } from 'src/shared/utils'
 
-// IndexedDB is the whole persistence layer. There is no server: the brief
-// mandates local-first data, and the footer promises nothing ever leaves the
-// browser. JSON backup/restore is the substitute for sync.
-//
-// IndexedDB rather than localStorage because the ledger is unbounded, we need
-// indexed range queries on `occurredAt`, and localStorage's ~5MB string cap
-// would eventually silently truncate someone's financial history.
+// IndexedDB rather than localStorage: the ledger is unbounded, every query
+// filters by date range, and localStorage caps at about 5MB of string with no
+// error when it fills.
 
 /** Single-row table; `key` is always `'settings'`. */
 interface SettingsRow extends Settings {
@@ -46,14 +42,13 @@ export const defaultSettings: Settings = {
 }
 
 /**
- * Reads settings, seeding the single row on first run so callers never handle
+ * Reads settings, seeding the row on first run so callers never handle
  * undefined.
  *
- * The stored row is merged OVER the defaults rather than returned as-is. A row
- * written by an earlier version has no `locale` field, and returning it raw
- * hands `undefined` to `Intl.NumberFormat`, which silently falls back to the
- * system locale, an Iranian user would see Latin digits with no way to tell
- * why. Merging makes every added setting self-migrating.
+ * The stored row is merged over the defaults rather than returned as-is, which
+ * makes every setting added later self-migrating. A row written before `locale`
+ * existed would otherwise hand `undefined` to `Intl.NumberFormat`, which falls
+ * back to the system locale without complaining.
  */
 export const readSettings = async (): Promise<Settings> => {
   const row = await db.settings.get('settings')
@@ -62,7 +57,9 @@ export const readSettings = async (): Promise<Settings> => {
     return { ...defaultSettings, ...stored, profile: { ...defaultSettings.profile, ...stored.profile } }
   }
   await db.settings.put({ key: 'settings', ...defaultSettings })
-  return defaultSettings
+  // A copy, not the module constant: callers treat this as their own object,
+  // and one of them mutating it would change the defaults for the session.
+  return { ...defaultSettings, profile: { ...defaultSettings.profile } }
 }
 
 export const writeSettings = async (settings: Settings): Promise<Settings> => {
@@ -71,20 +68,19 @@ export const writeSettings = async (settings: Settings): Promise<Settings> => {
 }
 
 /**
- * Finds a client by name (case-insensitive) or creates one. Free-text entry in
- * the quick-record form must not produce «آریا» and «آریا » as two clients
- * that would silently split a client's totals across the ledger and charts.
+ * Finds a client by name or creates one.
+ *
+ * The key is trimmed, lowercased and folded to Persian letterforms, so three
+ * ways of typing the same name reach the same row: trailing space, casing, and
+ * the Arabic ك/ي an Arabic keyboard produces where an Iranian one produces
+ * ک/ی. Two rows for one client would split their income across the ledger and
+ * halve their share in the concentration insight.
  */
 export const upsertClientByName = async (name: string): Promise<Client | null> => {
   const trimmed = name.trim()
   if (!trimmed) {
     return null
   }
-  // Fold Arabic letterforms before keying. An Iranian keyboard and an Arabic
-  // one produce different codepoints for the same letters, «كيان» and «کیان»
-  // look identical and are the same client, and without folding they become
-  // two rows, splitting that client's income across the ledger and halving
-  // their share in the concentration insight.
   const nameKey = toPersianLetters(trimmed).toLowerCase()
   const existing = await db.clients.where('nameKey').equals(nameKey).first()
   if (existing) {

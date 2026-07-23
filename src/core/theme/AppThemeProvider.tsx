@@ -7,17 +7,13 @@ import type { AppLocale, ThemePreference } from 'src/shared/types'
 import { prefixer } from 'stylis'
 import { getTheme, type ThemeMode } from './theme'
 
-// Full direction support, not just `dir` on the body. The stylis plugin flips
-// logical properties in the generated CSS, so margins, paddings, borders and
-// drawer anchors mirror without any component writing direction-aware styles by
-// hand.
+// Direction is done in the generated CSS, not with `dir` alone: the stylis
+// plugin mirrors margins, paddings, borders and drawer anchors, so no component
+// writes direction-aware styles by hand.
 //
-// Two caches are built up front and selected by direction; rebuilding a cache
-// on every switch would orphan the styles already injected under the old one.
-// `stylis` is pinned to 4.2.0 in package.json, the copy `@emotion/cache`
-// bundles. Emotion walks the element tree with its own stylis, so feeding it a
-// `prefixer` from a different major-minor produced elements it could not lift,
-// crashing on every `::placeholder` rule in the app. Keep them in lockstep.
+// Both caches are built up front and picked by direction. Rebuilding one on a
+// switch would orphan the styles already injected under it. `stylis` must stay
+// on the version `@emotion/cache` bundles; see TECH-DEBT.md entry 5.
 const rtlCache = createCache({ key: 'mui-rtl', stylisPlugins: [prefixer, rtlPlugin] })
 const ltrCache = createCache({ key: 'mui-ltr', stylisPlugins: [prefixer] })
 

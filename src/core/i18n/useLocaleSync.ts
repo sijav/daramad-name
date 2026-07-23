@@ -5,10 +5,10 @@ import { activateLocale, i18n } from './i18n'
 /**
  * Keeps the active catalog in step with the persisted Settings locale.
  *
- * Loading a catalog is async (the compiled messages are a dynamic import), so
- * this is a genuine external-system synchronisation, the one thing effects are
- * actually for. `ready` gates the first render so no component paints with
- * English message ids before the Persian catalog lands.
+ * Loading a catalog is async, so this is a real external-system
+ * synchronisation rather than derived state. `ready` gates the first render, so
+ * nothing paints English message ids while the Persian catalog is still in
+ * flight.
  */
 export const useLocaleSync = (): boolean => {
   const { locale } = useSettings()
@@ -16,15 +16,11 @@ export const useLocaleSync = (): boolean => {
 
   useEffect(() => {
     let cancelled = false
-    // Open the gate even when the catalog fails to load.
-    //
-    // The messages are a dynamic import, so a dropped connection or a stale
-    // chunk after a deploy rejects it. Gating render on success alone left the
-    // whole app on a spinner forever, with nothing shown and nothing to press
-    // the one failure a user cannot act on. Rendering in whatever catalog is
-    // already active degrades to the previous language, or to the English
-    // message ids on a cold start, both of which are usable and recoverable by
-    // a reload.
+    // The gate opens whether or not the catalog loads. A dropped connection or
+    // a chunk stale after a deploy rejects the import, and gating on success
+    // alone left the app on its spinner with nothing to press. Falling through
+    // renders the previously active catalog, or the English message ids on a
+    // cold start; both are usable and a reload fixes them.
     void activateLocale(locale)
       .catch(() => undefined)
       .finally(() => {

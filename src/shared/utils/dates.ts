@@ -106,21 +106,18 @@ export const monthsSpanned = (range: DateRange, calendar: CalendarSystem): numbe
 /**
  * THE rule behind every "monthly average" in the app.
  *
- * One definition, used by the report, the ledger and the dashboard alike:
- * total ÷ the calendar months of the period on screen, where that period never
- * runs past today, minimum one month. Each surface prints the divisor beside
- * the figure, an average whose basis is unstated is exactly the number a
- * clerk throws the whole document out over.
+ * One definition for the report, the ledger and the dashboard: total divided by
+ * the calendar months of the period on screen, never running past today,
+ * minimum one. Every surface prints the divisor beside the figure.
  *
- * Two live bugs came from not having this in one place. The ledger divided by
- * the span between the FIRST and LAST receipt, so a freelancer earning in
- * three months of twelve saw an average four times the report's under the same
- * label. And the report divided a year still in progress by 12, understating
- * four months of real income by three times on the document that goes to an
- * embassy.
+ * Two bugs came from not having it in one place. The ledger divided by the span
+ * between the first and last receipt, so three earning months out of twelve
+ * showed an average four times the report's under the same label. The report
+ * divided a year still in progress by 12, understating four months of income
+ * threefold.
  *
- * Returns the clamped period too, so callers can bucket and label against the
- * same range they divided by rather than re-deriving it.
+ * Returns the clamped period as well, so callers bucket and label against the
+ * range they divided by instead of deriving it a second time.
  */
 export const averagingPeriod = (range: DateRange, calendar: CalendarSystem): { range: DateRange; months: number } => {
   const now = new Date().toISOString()

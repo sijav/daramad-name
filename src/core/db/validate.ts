@@ -1,39 +1,40 @@
 import { msg } from '@lingui/core/macro'
 import { i18n } from 'src/core/i18n'
 import {
+  APP_LOCALES,
+  CALENDAR_SYSTEMS,
   CHANNELS,
   CURRENCIES,
-  type AppLocale,
-  type CalendarSystem,
+  THEME_PREFERENCES,
   type Client,
   type Receipt,
   type Settings,
-  type ThemePreference,
 } from 'src/shared/types'
 
 /**
  * The one place a receipt, client or settings row is checked before it is
  * written, exported or restored.
  *
- * Every persistence path funnels through here so a corrupt row cannot enter the
- * database from one direction and then be trusted from another. The checks are
- * about the invariants the whole app leans on rather than about types: a
- * receipt missing `amountToman` type-checks fine and then contributes zero to
- * every total silently, which is the failure mode this exists to prevent.
+ * Every persistence path funnels through here, so a corrupt row cannot enter
+ * from one direction and be trusted from another. The checks are about
+ * invariants rather than types: a receipt with no `amountToman` type-checks
+ * fine and then contributes zero to every total.
  *
- * Errors are phrased for a person, per rule 9, they say which record and what
- * is wrong with it, because the user is the only one who can decide whether to
- * fix the file or abandon it.
+ * Errors name the record and what is wrong with it, per rule 9. The user is the
+ * only one who can decide whether to repair the file or abandon it.
  */
 
 const isFiniteNumber = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value)
 
 const isIsoInstant = (value: unknown): value is string => typeof value === 'string' && value.length > 0 && !Number.isNaN(Date.parse(value))
 
-/** Throws if the receipt could not be rendered or totalled correctly. */
-// Plain throwing checks rather than `asserts` signatures: an assertion
-// function loses its narrowing when re-exported through a barrel, and the
-// repo imports everything through barrels.
+/**
+ * Throws if the receipt could not be rendered or totalled correctly.
+ *
+ * A plain throwing check rather than an `asserts` signature: assertion
+ * functions lose their narrowing when re-exported through a barrel, and
+ * everything here is imported through one.
+ */
 export const assertValidReceipt = (receipt: unknown, where: string): void => {
   const r = receipt as Partial<Receipt>
 
@@ -52,8 +53,8 @@ export const assertValidReceipt = (receipt: unknown, where: string): void => {
   if (r.channel === undefined || !CHANNELS.includes(r.channel)) {
     throw new Error(i18n._(msg`A receipt in ${where} uses a payment channel this app does not know.`))
   }
-  // The frozen conversion is the app's core promise; a missing or zero rate on a
-  // foreign-currency receipt means the Toman figure can never be trusted again.
+  // The Toman figure is frozen on write and never recomputed, so a foreign
+  // receipt without its rate can never be reconciled again.
   if (r.currency !== 'TOMAN' && (!isFiniteNumber(r.rate) || r.rate <= 0)) {
     throw new Error(i18n._(msg`A receipt in ${where} is in a foreign currency but has no stored conversion rate.`))
   }
@@ -86,26 +87,18 @@ export const assertReferencesResolve = (receipts: Receipt[], clients: Client[], 
   }
 }
 
-// The three settings enums are bare union types with no runtime array beside
-// them the way `CURRENCIES` and `CHANNELS` have, so the accepted values are
-// listed here, this is the only place that has to check a stored preference
-// against them.
-const CALENDAR_SYSTEMS: readonly CalendarSystem[] = ['JALALI', 'GREGORIAN']
-const APP_LOCALES: readonly AppLocale[] = ['fa-IR', 'en-US']
-const THEME_PREFERENCES: readonly ThemePreference[] = ['light', 'dark', 'system']
-
 const oneOf = <T>(value: unknown, allowed: readonly T[], fallback: T): T => (allowed.includes(value as T) ? (value as T) : fallback)
 
 /**
- * Settings are repaired rather than rejected, a bad preference is not worth
- * losing data over.
+ * Settings are repaired rather than rejected. A bad preference is not worth
+ * losing a ledger over.
  *
- * Repair means each value is checked, not just each key: a spread alone lets a
- * present-but-unknown value win over the fallback, and an unknown one is worse
- * than a missing one. An unrecognised `calendar` falls through every
- * `calendar === 'JALALI' ? … : …` in `dates.ts` and silently renders the whole
- * ledger in the other calendar; an unrecognised `locale` makes the catalog
- * import reject, which leaves the app on its opening spinner.
+ * Each VALUE is checked, not just each key. A spread alone lets a
+ * present-but-unknown value win over the fallback, and an unknown value does
+ * more damage than a missing one: an unrecognised `calendar` falls through
+ * every `calendar === 'JALALI' ? … : …` in `dates.ts` and renders the ledger in
+ * the other calendar, and an unrecognised `locale` makes the catalog import
+ * reject, leaving the app on its opening spinner.
  */
 export const coerceSettings = (settings: Partial<Settings> | undefined, fallback: Settings): Settings => ({
   ...fallback,

@@ -41,8 +41,9 @@ export const toEnglishDigits = (input: string): string => {
 }
 
 /**
- * Normalises Arabic letterforms that Persian keyboards and pasted text smuggle
- * in. Checked before every demo per pre-flight item 5.
+ * Folds the Arabic letterforms that pasted text and non-Iranian keyboards bring
+ * in: ي to ی, ك to ک, ة to ه. The pairs look identical on screen and sort
+ * differently, so anything used as a key goes through here first.
  */
 export const toPersianLetters = (input: string): string => input.replace(/ي/g, 'ی').replace(/ك/g, 'ک').replace(/ة/g, 'ه')
 

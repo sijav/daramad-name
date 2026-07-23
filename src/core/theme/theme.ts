@@ -81,34 +81,26 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
       caption: typeScale.caption,
     },
     components: {
-      // The typography ramp above names SIZES, not outline levels: `h5` is the
-      // design's `titleSmall` (16/600), and a component reaches for it because
-      // it wants 16px semibold, not because it is the fifth level of the
-      // document. MUI's default mapping renders each variant as the matching
-      // tag, so those two ideas were welded together and the outline lost: a
-      // settings section title picked `h5` and emitted a real `<h5>` directly
-      // under the page's `<h2>`, which is axe's `heading-order` (82 findings
-      // across the suite, nearly all of them this).
+      // The ramp above names SIZES, not outline levels. `h5` is the design's
+      // `titleSmall` (16/600), reached for because a thing wants 16px semibold,
+      // not because it is the fifth level of the document. MUI's default
+      // mapping welds the two together: a settings section title picked `h5`,
+      // emitted a real `<h5>` under the page's `<h2>`, and that one mistake was
+      // 82 of the suite's `heading-order` findings.
       //
-      // `variantMapping` is MUI's documented answer for exactly this, see
-      // mui.com/material-ui/react-typography/#changing-the-semantic-element.
-      // It moves the decision to one place instead of asking every call site to
-      // remember `component`, and `component` still wins wherever a component
-      // means a specific level (AppShell's wordmark is `variant="h3"
-      // component="h1"`, PageHeader's title is `component="h2"`).
+      // `variantMapping` decides it once instead of asking every call site to
+      // remember `component`, which still wins where a component means a level
+      // (AppShell's wordmark is `variant="h3" component="h1"`).
+      // mui.com/material-ui/react-typography/#changing-the-semantic-element
       //
-      // The app's outline is genuinely three deep and no deeper:
-      //   h1  the wordmark in the app bar (AppShell)
-      //   h2  the page title (PageHeader)
-      //   h3  a section or card title inside the page
-      // so the four title sizes all land on `h3`, and the two ramp entries that
-      // are figures rather than titles, `h1`/`numberLarge`, and the `subtitle`
-      // pair, which this app uses for field labels and row values, land on
-      // `p`. MUI merges a partial map over its own defaults, so `body*`,
-      // `caption` and `overline` keep their normal elements.
+      // The outline is three deep: h1 the wordmark, h2 the page title, h3 a
+      // section or card title. So the four title sizes land on `h3`, and the
+      // entries that are figures or labels rather than titles, `h1`, and the
+      // `subtitle` pair, land on `p`. A partial map merges over MUI's defaults,
+      // so `body*`, `caption` and `overline` keep their usual elements.
       //
-      // Nothing moves visually: `Typography`'s root sets `margin: 0`, so a `p`
-      // and an `h5` carrying the same variant class render identically.
+      // Nothing moves visually: `Typography` sets `margin: 0`, so a `p` and an
+      // `h5` with the same variant class render identically.
       MuiTypography: {
         defaultProps: {
           variantMapping: {

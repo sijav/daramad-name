@@ -2,16 +2,12 @@ import type { AppLocale } from 'src/shared/types'
 
 // Amounts written out in words.
 //
-// Every Iranian financial document that matters, a cheque, a contract, a
-// receipt, states its figure twice: once in digits and once «به حروف». It is
-// the convention that makes a page read as a financial instrument rather than
-// a printout, and it exists because words cannot be altered by adding a zero.
-// The income certificate does the same, in whichever language it is issued.
+// Iranian financial documents state a figure twice, once in digits and once
+// «به حروف», because words cannot be altered by adding a zero. The certificate
+// follows the convention in whichever language it is issued.
 //
-// The word tables below are a numeral system, not user-facing copy, the same
-// category as the codepoint tables in `digits.ts`, and exempt from the lingui
-// rule for the same reason. Translating «هزار» through a message catalog would
-// be translating an algorithm's alphabet.
+// The tables below are a numeral system rather than copy, the same category as
+// the codepoint tables in `digits.ts`, which is why lingui does not see them.
 
 const FA_ONES = ['', 'یک', 'دو', 'سه', 'چهار', 'پنج', 'شش', 'هفت', 'هشت', 'نه']
 const FA_TEENS = ['ده', 'یازده', 'دوازده', 'سیزده', 'چهارده', 'پانزده', 'شانزده', 'هفده', 'هجده', 'نوزده']

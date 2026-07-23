@@ -22,8 +22,13 @@ const formatter = (locale: AppLocale, decimals: number): Intl.NumberFormat => {
 
 /**
  * The single place toman is computed. Rounded to a whole number because toman
- * has no sub-unit, and called exactly once per receipt, at write time, so the
- * stored value is frozen against later rate changes.
+ * has no sub-unit, and called once per receipt at write time, so the stored
+ * value is frozen against later rate changes.
+ *
+ * A foreign amount with no usable rate returns 0 rather than throwing, because
+ * this runs while the user is still typing. Callers must have validated first:
+ * `assertValidReceipt` refuses a foreign receipt with no rate, which is what
+ * stops a zero reaching the database and sitting in the totals as nothing.
  */
 export const computeToman = (amountOriginal: number, currency: Currency, rate: number | null): number => {
   if (currency === 'TOMAN') {

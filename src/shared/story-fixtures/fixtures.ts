@@ -83,44 +83,65 @@ export const FIXTURE_SHARES: ClientShare[] = ['Aria Trading', 'Dadepardaz Co.', 
   .sort((a, b) => b.totalToman - a.totalToman)
 
 /**
- * Twelve buckets: millions earned, and how many receipts made up that month.
+ * Twelve buckets: what was earned, and how many receipts made it up.
  *
- * The counts vary deliberately. A ledger where every single month holds exactly
- * one receipt reads as invented, and the certificate's «تعداد دریافتی» column is
- * one of the first things a reader checks against the amounts. Two months are
- * left empty to exercise the zero-bar case and because a freelance year that
- * never has a quiet month is not a believable one either.
+ * The spread is the point. A ledger where every month holds exactly one receipt
+ * reads as invented, and the certificate's «تعداد دریافتی» column is one of the
+ * first things a reader checks against the amounts beside it. So about half the
+ * months carry a single receipt, several carry two, and a couple of good months
+ * carry four or five — with the amounts moving roughly WITH the count, which is
+ * what makes the two columns believable together.
+ *
+ * How precisely a payment happens to be quoted, and how often that occurs.
+ *
+ * Real amounts are not uniformly random — their PRECISION follows a power law.
+ * A round million is ordinary, a half million happens, a hundred thousand is
+ * unusual, and landing exactly on a ten thousand is rare enough to notice.
+ * Nothing finer exists: nobody is paid ۲۲٬۳۴۷٬۸۹۱.
+ *
+ * Each month carries its tier so the year scaling can round back onto the SAME
+ * step — otherwise the earlier years lose the texture and read as a column of
+ * arbitrary digits.
  */
-const MONTH_SHAPE: readonly (readonly [millions: number, receipts: number])[] = [
-  [22, 1],
-  [108, 4],
-  [125, 3],
-  [67, 2],
-  [41, 1],
-  [0, 0],
-  [33, 2],
-  [15, 1],
-  [0, 0],
-  [52, 3],
-  [70, 4],
-  [28, 2],
+const COMMON = 1_000_000
+const UNCOMMON = 500_000
+const RARE = 100_000
+const LEGENDARY = 10_000 // :D
+
+const MONTH_SHAPE: readonly (readonly [toman: number, receipts: number, step: number])[] = [
+  [22_000_000, 1, COMMON],
+  [58_500_000, 2, UNCOMMON],
+  [31_000_000, 1, COMMON],
+  [112_000_000, 4, COMMON],
+  [41_000_000, 1, COMMON],
+  [64_300_000, 2, RARE],
+  [19_500_000, 1, UNCOMMON],
+  [147_000_000, 5, COMMON],
+  [27_000_000, 1, COMMON],
+  [70_000_000, 2, COMMON],
+  [35_240_000, 1, LEGENDARY],
+  [55_000_000, 2, COMMON],
 ]
 
+const toToman = (value: number, step: number): number => Math.round(value / step) * step
+
+// Earlier years read lighter, so moving the year picker visibly changes the
+// page instead of repeating one set of twelve numbers four times over.
+const YEAR_SCALE = [1, 0.82, 0.65, 0.5]
+
 export const FIXTURE_MONTHS = (year: number): MonthlyTotal[] => {
-  // Earlier years read lighter, so moving the year picker visibly changes the
-  // page instead of repeating one set of twelve numbers three times over.
   const yearsBack = Math.max(0, yearOf(new Date(), CALENDAR) - year)
-  const scale = [1, 0.82, 0.65][Math.min(yearsBack, 2)]
-  return MONTH_SHAPE.map(([millions, receipts], index) => ({
+  const scale = YEAR_SCALE[Math.min(yearsBack, YEAR_SCALE.length - 1)]
+  return MONTH_SHAPE.map(([toman, receipts, step], index) => ({
     month: index + 1,
     year,
-    totalToman: Math.round(millions * scale) * 1_000_000,
+    totalToman: toToman(toman * scale, step),
     receiptCount: receipts,
   }))
 }
 
-/** Years the demo has history for — back to 1403, which is 2024. */
-export const FIXTURE_YEARS = (year: number): number[] => [year, year - 1, year - 2]
+/** Years the demo has history for — back to 1402, which is 2023/24. */
+export const FIXTURE_YEARS = (year: number): number[] => YEAR_SCALE.map((_, index) => year - index)
 
 export const FIXTURE_CLIENTS = FIXTURE_SHARES.map((s) => ({
   id: s.clientId,
@@ -148,8 +169,8 @@ export const seedPageData = (client: QueryClient, { empty = false }: { empty?: b
 
   client.setQueryData(clientsQueryKey, empty ? [] : FIXTURE_CLIENTS)
 
-  // Three years of history, so the year picker has somewhere to go and the demo
-  // reaches back to 1403 — 2024. Each year is seeded, not just the current one;
+  // Four years of history, so the year picker has somewhere to go and the demo
+  // reaches back to 1402. Each year is seeded, not just the current one;
   // selecting an earlier year otherwise landed on an empty page.
   const years = FIXTURE_YEARS(year)
   client.setQueryData(getPopulatedYearsQueryKey(CALENDAR), years)

@@ -5,24 +5,15 @@ import { toPersianDigits, yearOf, yearRange } from 'src/shared/utils'
 import { expect, waitFor, within } from 'storybook/test'
 import { CertificatePage } from './CertificatePage'
 
-// The printable route takes its ENTIRE configuration from the query string
-// there is no state, no props and no picker on the page. So these stories
-// differ only in the URL the router is handed, which is exactly how the report
-// page opens it in a new tab.
-//
-// The story harness supplies a `MemoryRouter` seeded from `parameters.page.route`,
-// so `useSearchParams` reads a real search string here rather than a stub.
+// The route is configured entirely by its query string, so these stories differ
+// only in `parameters.page.route`, which the harness hands to a `MemoryRouter`.
+
 const thisYear = yearOf(new Date(), 'JALALI')
 
-/**
- * Nothing paints until `useCertificateModel` resolves, and it begins by
- * DYNAMICALLY IMPORTING a second lingui instance plus a whole message catalog
- * that is what lets an English document be produced by a Persian interface. On
- * a cold module graph the import can outrun testing-library's one-second
- * default, so the wait is stated rather than left to flake.
- */
-const findDocument = async (canvasElement: HTMLElement, text: string | RegExp) =>
-  await within(canvasElement).findByText(text, undefined, { timeout: 10_000 })
+// The document waits on `loadReportI18n`, a dynamic catalog import that on a
+// cold module graph outruns testing-library's 1s default.
+const findDocument = (canvasElement: HTMLElement, text: string | RegExp) =>
+  within(canvasElement).findByText(text, undefined, { timeout: 10_000 })
 
 /** Any Persian money figure, «۱۸۷٬۲۶۰٬۰۰۰ تومان», as opposed to «۰ تومان». */
 const MONEY = /[۰-۹]{1,3}٬[۰-۹]{3}٬[۰-۹]{3} تومان/
@@ -32,12 +23,11 @@ const MONEY = /[۰-۹]{1,3}٬[۰-۹]{3}٬[۰-۹]{3} تومان/
  *
  * The page fixtures seed one report key, for the current year. `?year=` builds a
  * different key, so a past-year story misses the cache and reads Dexie, and an
- * empty Dexie still produces a complete-looking certificate, because the report
- * query buckets every month of a finished year whether or not anything is in it.
- * Every assertion below would then pass against a document reading zero.
+ * empty Dexie totals zero, which the page answers with the no-income notice
+ * rather than a document.
  */
 const seedPreviousYear = async (): Promise<() => Promise<void>> => {
-  const clear = async () => await db.receipts.clear()
+  const clear = () => db.receipts.clear()
   await clear()
 
   const range = yearRange(thisYear - 1, 'JALALI')
@@ -57,8 +47,8 @@ const seedPreviousYear = async (): Promise<() => Promise<void>> => {
   })
 
   // The first instant of the year, so the row lands in Farvardin, the month the
-  // play looks for by name.
-  await db.receipts.bulkAdd([paid('prev-1', range.from, 187_260_000), paid('prev-2', midYear, 92_500_000)])
+  // play looks for by name. `bulkPut` so a re-seed cannot hit ConstraintError.
+  await db.receipts.bulkPut([paid('prev-1', range.from, 187_260_000), paid('prev-2', midYear, 92_500_000)])
   return clear
 }
 
@@ -77,15 +67,13 @@ export const Persian: Story = {
 
     await step('the document renders in Persian', async () => {
       await expect(await findDocument(canvasElement, 'گواهی درآمد')).toBeInTheDocument()
-      // Persian numerals and the unit, not a bare figure.
-      await expect(await canvas.findAllByText(/[۰-۹]{1,3}٬[۰-۹]{3}٬[۰-۹]{3} تومان/)).not.toHaveLength(0)
+      await expect(await canvas.findAllByText(MONEY)).not.toHaveLength(0)
     })
 
     await step('nothing but the document and one print button', async () => {
       const buttons = await canvas.findAllByRole('button')
       await expect(buttons).toHaveLength(1)
       await expect(buttons[0]).toHaveAccessibleName(/^چاپ یا ذخیره به‌صورت PDF$|^Print or save as PDF$/)
-      // Inside the `no-print` wrapper, so the button itself never prints.
       await expect(buttons[0].closest('.no-print')).not.toBeNull()
       await expect(canvas.queryByRole('navigation')).toBeNull()
       await expect(canvas.queryByRole('banner')).toBeNull()
@@ -106,15 +94,15 @@ export const English: Story = {
     const heading = await findDocument(canvasElement, 'Statement of Income')
     await expect(await canvas.findByText('Raha Mousavi')).toBeInTheDocument()
 
-    // The document carries its own direction and language, independent of the
-    // interface, which stays Persian and RTL around it.
+    // The sheet carries its own language and direction; the interface around it
+    // stays Persian and RTL.
     const sheet = heading.closest('[lang]')
     await expect(sheet).not.toBeNull()
     await expect(sheet).toHaveAttribute('lang', 'en-US')
     await expect(sheet).toHaveAttribute('dir', 'ltr')
 
-    // Latin grouping present, Persian numerals absent, everywhere, including
-    // the month table and the amount written out in words.
+    // Read across the whole sheet, so the month table and the amount written out
+    // in words are covered too.
     await expect(sheet?.textContent).toMatch(/\d{1,3},\d{3},\d{3}/)
     await expect(sheet?.textContent).not.toMatch(/[۰-۹]/)
   },
@@ -131,8 +119,7 @@ export const AnotherYear: Story = {
     await expect(await canvas.findAllByText(new RegExp(`فروردین ${toPersianDigits(thisYear - 1)}`))).not.toHaveLength(0)
     await expect(canvas.queryByText(new RegExp(`فروردین ${toPersianDigits(thisYear)}`))).toBeNull()
 
-    // And it carries that year's money. Without this the story passed just as
-    // happily against twelve zero rows.
+    // The seeded rows reach the page as money, not as «۰ تومان».
     await expect(await canvas.findAllByText(MONEY)).not.toHaveLength(0)
   },
 }

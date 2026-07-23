@@ -15,10 +15,8 @@ import { type PdfDocumentConstructor, renderCertificatePdf } from './renderCerti
 // default PDF fonts carry no Arabic-script glyphs and Persian would render as
 // empty boxes.
 //
-// Before anything is drawn, `installBidiLayout` patches fontkit's `layout` so
-// mixed Persian text, an RTL word beside Persian digits, is reordered by the
-// real Unicode bidi algorithm instead of blindly reversed. Without it ۱۴۰۵ would
-// print as ۵۰۴۱. See `bidiText.ts`.
+// The bidi patch that keeps ۱۴۰۵ from printing as ۵۰۴۱ is applied by
+// `renderCertificatePdf`, on the font pdfkit itself builds. See `bidiText.ts`.
 
 export interface CertificateRenderer {
   createCertificate: (model: CertificateModel) => Promise<Blob>
@@ -37,17 +35,13 @@ const fetchBytes = async (url: string): Promise<Uint8Array> => {
 export const loadPdf = async (): Promise<CertificateRenderer> => {
   if (!cached) {
     cached = (async () => {
-      const [{ default: PDFDocument }, { installBidiLayout, fontkit }, regular, bold] = await Promise.all([
+      // Only pdfkit is worth splitting out. `bidiText` is already in this
+      // module's graph, `renderCertificatePdf` imports it statically.
+      const [{ default: PDFDocument }, regular, bold] = await Promise.all([
         import('pdfkit'),
-        import('./bidiText'),
         fetchBytes(vazirRegularUrl),
         fetchBytes(vazirBoldUrl),
       ])
-
-      // Patch the shared fontkit prototype once, using a probe font. pdfkit
-      // creates its own fontkit fonts from the same module, so the patch reaches
-      // them too.
-      installBidiLayout(fontkit.create(Buffer.from(regular)))
 
       // @types/pdfkit types the default export as an instance; at runtime it is
       // the constructor renderCertificatePdf calls.

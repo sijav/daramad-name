@@ -6,22 +6,38 @@ import { loadReportI18n } from 'src/core/i18n'
 import { buildCertificateModel } from 'src/shared/certificate'
 import type { IncomeReport } from 'src/shared/types'
 import { describe, expect, it } from 'vitest'
-import { fontkit, installBidiLayout } from './bidiText'
+import { installBidiLayout } from './bidiText'
 import { buildIncomeReport } from './buildIncomeReport'
 import { type PdfDocumentConstructor, renderCertificatePdf } from './renderCertificatePdf'
+
+// The whole download pipeline in Node: model -> blocks -> pdfkit. Nothing here
+// looks at a rendered page, so the assertions cover what a terminal still can
+// check: a valid file, the embedded font, a ToUnicode map, visual word order and
+// page breaks.
 
 // @types/pdfkit types the default export as an instance; at runtime it is the constructor.
 const PdfCtor = PDFDocument as unknown as PdfDocumentConstructor
 
-// The full one-click pipeline, end to end, in Node: model -> layout -> pdfkit.
-// It cannot render a page in a terminal, but it CAN prove the file is a real,
-// font-embedded, selectable PDF that the browser path also produces, the parts
-// that would silently ship a broken download if they regressed.
-
 const fontUrl = (name: string) => fileURLToPath(new URL(`../../../node_modules/vazirmatn/fonts/ttf/${name}`, import.meta.url))
 const regular = readFileSync(fontUrl('Vazirmatn-Regular.ttf'))
 const bold = readFileSync(fontUrl('Vazirmatn-Bold.ttf'))
-installBidiLayout(fontkit.create(regular))
+
+/** The prototype that owns `layout`, which is where the bidi patch and the recorder both go. */
+const layoutOwner = (font: object): { layout: (...args: unknown[]) => unknown } => {
+  let proto = Object.getPrototypeOf(font)
+  while (proto && !Object.prototype.hasOwnProperty.call(proto, 'layout')) proto = Object.getPrototypeOf(proto)
+  return proto
+}
+
+// pdfkit `require`s the CommonJS fontkit build, which need not be the ESM copy
+// `bidiText.ts` imports, so everything here targets pdfkit's own. Patching now
+// rather than leaving it to the first render keeps the recorder wrapped AROUND
+// the bidi patch: the other way round it records run fragments, and restoring
+// `layout` afterwards would drop the patch for the rest of the file.
+const cjsFontkit: typeof import('fontkit') = createRequire(import.meta.url)('fontkit')
+const pdfkitFont = cjsFontkit.create(regular)
+installBidiLayout(pdfkitFont)
+const fontProto = layoutOwner(pdfkitFont)
 
 const report: IncomeReport = {
   profile: {
@@ -44,14 +60,7 @@ const report: IncomeReport = {
   generatedAt: '2026-07-22T00:00:00.000Z',
 }
 
-/**
- * A certificate that does not fit on one sheet: twelve month rows, the most
- * `getIncomeReportQuery` can bucket, under the kind of Persian postal address
- * people actually type, with the district, the landmark and the PO box in it.
- *
- * This is the shape that used to run off the bottom of page one and keep
- * drawing at coordinates below the paper: in the file, rendered by nothing.
- */
+/** A full year of month rows under a long postal address: more than one A4 sheet holds. */
 const fullYear: IncomeReport = {
   ...report,
   range: { from: '2026-03-21T00:00:00.000Z', to: '2027-03-20T00:00:00.000Z' },
@@ -71,7 +80,7 @@ const fullYear: IncomeReport = {
   })),
 }
 
-/** pdfkit writes one `/Type /Page` object per sheet, and `/Type /Pages` for the tree. */
+/** One `/Type /Page` object per sheet. The `\b` keeps the `/Type /Pages` tree node out of the count. */
 const pageCount = (raw: string): number => (raw.match(/\/Type \/Page\b/g) ?? []).length
 
 const render = async (language: 'fa' | 'en', source: IncomeReport = report) => {
@@ -86,30 +95,22 @@ const render = async (language: 'fa' | 'en', source: IncomeReport = report) => {
  * Records every string pdfkit lays out, in order.
  *
  * pdfkit measures and draws ONE WORD at a time and places them left to right in
- * the order it receives them, so this sequence IS the visual order on the page.
- * For a right-to-left line that must be the REVERSE of the logical word order.
- * Getting this wrong is invisible to every other assertion here: the file is
- * still a valid, font-embedded, selectable PDF, it just reads backwards.
+ * the order it receives them, so this sequence is the visual order on the page,
+ * which for a right-to-left line is the REVERSE of the logical word order. No
+ * other assertion here would notice: a backwards line is still a valid,
+ * font-embedded, selectable PDF.
  */
 const recordDrawnWords = async (language: 'fa' | 'en', source: IncomeReport = report) => {
-  // Instrument the fontkit pdfkit itself uses. This file imports fontkit as ESM
-  // while pdfkit `require`s the CommonJS build, and in Node those are two
-  // different copies of the Font class, instrumenting ours would record
-  // nothing.
-  const cjsFontkit = createRequire(import.meta.url)('fontkit') as { create: (bytes: Uint8Array) => object }
-  let proto = Object.getPrototypeOf(cjsFontkit.create(regular))
-  while (proto && !Object.prototype.hasOwnProperty.call(proto, 'layout')) proto = Object.getPrototypeOf(proto)
-  const owner = proto as { layout: (...args: unknown[]) => unknown }
-  const patched = owner.layout
+  const original = fontProto.layout
   const words: string[] = []
-  owner.layout = function record(this: unknown, ...args: unknown[]) {
+  fontProto.layout = function record(this: unknown, ...args: unknown[]) {
     if (typeof args[0] === 'string' && args[0].trim()) words.push(args[0].trim())
-    return patched.apply(this, args)
+    return original.apply(this, args)
   }
   try {
     await render(language, source)
   } finally {
-    owner.layout = patched
+    fontProto.layout = original
   }
   return words
 }
@@ -139,9 +140,8 @@ describe('renderCertificatePdf', () => {
   it('draws a right-to-left line with its words in visual order, not logical', async () => {
     const words = await recordDrawnWords('fa')
 
-    // The subtitle reads «گزارش درآمد فریلنسری بر پایه‌ی ثبت‌های شخصی». Drawn left
-    // to right, «شخصی» has to come first and «گزارش» last, the reverse. It
-    // previously drew logical-first, which printed the sentence backwards.
+    // The subtitle «گزارش درآمد فریلنسری بر پایه‌ی ثبت‌های شخصی», drawn left to
+    // right, puts «شخصی» first and «گزارش» last, the reverse of reading order.
     const first = words.lastIndexOf('شخصی')
     const last = words.lastIndexOf('گزارش')
     expect(first).toBeGreaterThanOrEqual(0)
@@ -152,7 +152,7 @@ describe('renderCertificatePdf', () => {
   it('draws a month name after its year, so the year sits to the left', async () => {
     const words = await recordDrawnWords('fa')
 
-    // «فروردین ۱۴۰۵» must be drawn ۱۴۰۵ first (leftmost), then فروردین.
+    // «فروردین ۱۴۰۵» is drawn ۱۴۰۵ first (leftmost), then فروردین.
     const year = words.lastIndexOf('۱۴۰۵')
     const month = words.lastIndexOf('فروردین')
     expect(year).toBeGreaterThanOrEqual(0)
@@ -171,8 +171,7 @@ describe('renderCertificatePdf', () => {
   it('carries the overflow onto the second page rather than losing it', async () => {
     const words = await recordDrawnWords('fa', fullYear)
 
-    // The closing footnote is the last thing drawn, and it is what used to land
-    // below the paper. Present here means the whole document made it onto pages.
+    // «خودش» belongs to the footnote, the last block `buildIncomeReport` emits.
     expect(words).toContain('خودش')
   })
 

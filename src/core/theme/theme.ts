@@ -193,24 +193,17 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
             },
           },
           {
-            // The secondary button, the year picker in `PageHeader`, "clear
-            // filters", "cancel", "download PDF". It was the last route by
-            // which `primary.main` reached the screen AS TYPE, and #3b6ef5 is
-            // not a colour type can be: 4.39:1 on `surface-default` and 4.21:1
-            // on `surface-subtle`, against a 4.5:1 bar at 14/600. `brandPrimary`
-            // is 5.49:1 and 5.26:1 on the same two.
+            // The secondary button was the last route by which `primary.main`
+            // reached the screen as TYPE, and #3b6ef5 does not clear the 4.5:1
+            // bar at 14/600: 4.39:1 on `surface-default`, 4.21:1 on
+            // `surface-subtle`. `brandPrimary` is 5.49:1 and 5.26:1 there.
             //
-            // The rule the whole palette now follows: **`primary` is a
-            // container role.** It fills a background under `primary.dark`, and
-            // it draws non-text marks, a border, a dot, an icon on
-            // `primary.light`, where the bar is 3:1. Anything that is TYPE, or
-            // a fill with type on top of it, is `brandPrimary`. That is why
-            // every `variants` entry above lands on the same blue: filled,
-            // tonal, text and now outlined are one ink, and no call site has to
-            // remember which.
+            // Hence the rule the palette follows: `primary` is a CONTAINER
+            // role. It fills backgrounds and draws non-text marks, held to 3:1.
+            // Type, and any fill with type on it, is `brandPrimary`, which is
+            // why filled, tonal, text and outlined all land on one ink.
             //
-            // The border stays `outline` (the `outlined` slot above), the
-            // design edges this button in neutral grey, not in blue.
+            // The border stays `outline`, the design edges this button in grey.
             props: { variant: 'outlined' as const, color: 'primary' as const },
             style: {
               color: c.brandPrimary,
@@ -343,22 +336,18 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
             '&.Mui-disabled': { backgroundColor: c.surfaceDisabled },
             '&.Mui-disabled .MuiInputBase-input': { WebkitTextFillColor: c.textDisabled },
           },
-          // A multiline note has to grow, so it opts out of the fixed height.
+          // A multiline note grows, so it opts out of the fixed height above.
           //
-          // This MUST live on MuiOutlinedInput, not MuiInputBase. Emotion emits
-          // the inner component's styles first, so an InputBase override lands
-          // BEFORE the `height: 52` above in the same generated class, equal
-          // specificity, and source order decides. The opt-out silently lost,
-          // and the address field's text overflowed its own border by 20px in
-          // either direction once it grew past two lines.
+          // MUST be on MuiOutlinedInput, not MuiInputBase: Emotion emits the
+          // inner component's styles first, so an InputBase override lands
+          // before `height: 52` at equal specificity and loses on source order.
+          // The address field then overflowed its border by 20px past two lines.
           //
-          // `padding` shorthand rather than `paddingBlock`, so it also cancels
-          // MUI's own multiline variants (`8.5px 14px` / `16.5px 14px`).
-          //
-          // Inline padding is deliberately ZERO here: the inset stays on the
-          // input slot below, exactly as it does for single-line fields. Set it
-          // on both and the address sits twice as far in as the name field
-          // directly above it.
+          // `padding` shorthand, not `paddingBlock`, so it also cancels MUI's
+          // own multiline variants (`8.5px 14px` / `16.5px 14px`). Inline
+          // padding is zero because the inset lives on the input slot below,
+          // as it does for single-line fields; set on both, the address sits
+          // twice as far in as the name field above it.
           multiline: {
             height: 'auto',
             minHeight: 52,

@@ -7,15 +7,9 @@ export interface ChipOption<T extends string> {
 }
 
 export interface ChipSelectProps<T extends string> {
-  /** Names the group. Required unless `labelId` names it instead. */
   label?: string
-  /**
-   * Id of a label drawn elsewhere, `Field`'s `labelId`, for a ChipSelect
-   * sitting inside a field that already prints one. A `role="radiogroup"` is
-   * not a labelable element, so a wrapping `<label>` never reaches it and the
-   * association has to be spelled out. Without either prop the group has no
-   * accessible name at all.
-   */
+  // A `role="radiogroup"` is not a labelable element, so a wrapping `<label>`
+  // never names it. `Field` passes its `labelId` here instead.
   labelId?: string
   value: T
   options: readonly ChipOption<T>[]
@@ -23,28 +17,24 @@ export interface ChipSelectProps<T extends string> {
 }
 
 /**
- * The row of selectable pills used for the receipt channel.
+ * `Chip` supplies the click target, keyboard activation and focus ring;
+ * `filled` vs `outlined` carries the selected state.
  *
- * MUI's `Chip` gives the click target, keyboard handling and focus ring;
- * `filled` vs `outlined` carries the selected state, matching the design's
- * primary-container fill on the active pill.
- *
- * The `radiogroup` roles are backed by the behaviour they promise: one tab
- * stop, arrows moving the selection, wrapping at the ends. Nothing in MUI
- * supplies that for a row of chips, `ToggleButtonGroup`, which
- * `SegmentedControl` builds on, is a group of pressable buttons rather than
- * radios, so it is written out here. The roles without the traversal were
- * worse than plain buttons, because they tell a screen-reader user to reach
- * for arrow keys that did nothing.
+ * The radiogroup traversal is written out here because `ToggleButtonGroup`,
+ * which `SegmentedControl` uses, is a group of pressable buttons rather than
+ * radios. Claiming the role commits to the behaviour: one tab stop, arrows
+ * moving the selection, wrapping at the ends.
  */
 export const ChipSelect = <T extends string>({ label, labelId, value, options, onValueChange }: ChipSelectProps<T>) => {
   const { direction } = useTheme()
   const chips = useRef<(HTMLDivElement | null)[]>([])
 
-  const selectedIndex = options.findIndex((option) => option.value === value)
-  // A value matching no option would otherwise leave the group with no tab stop
-  // at all, so the first pill takes it.
-  const tabStop = selectedIndex === -1 ? 0 : selectedIndex
+  // A value matching no option would leave the group with no tab stop, so the
+  // first pill takes it.
+  const tabStop = Math.max(
+    options.findIndex((option) => option.value === value),
+    0,
+  )
 
   const select = (index: number) => {
     const wrapped = (index + options.length) % options.length
@@ -53,34 +43,35 @@ export const ChipSelect = <T extends string>({ label, labelId, value, options, o
   }
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    // Persian paints the row right-to-left, so ArrowRight walks towards the
-    // PREVIOUS option. Taken from the theme, which is where the app's direction
-    // is decided.
-    const next = direction === 'rtl' ? -1 : 1
-    const steps: Record<string, number | undefined> = {
-      ArrowRight: next,
-      ArrowLeft: -next,
-      ArrowDown: 1,
-      ArrowUp: -1,
-      Home: -tabStop,
-      End: options.length - 1 - tabStop,
+    if (options.length === 0) {
+      return
+    }
+    // In RTL the row runs right to left, so ArrowRight moves to the PREVIOUS
+    // option. Direction comes from the theme, which owns it.
+    const forward = direction === 'rtl' ? -1 : 1
+    const targets: Record<string, number | undefined> = {
+      ArrowRight: tabStop + forward,
+      ArrowLeft: tabStop - forward,
+      ArrowDown: tabStop + 1,
+      ArrowUp: tabStop - 1,
+      Home: 0,
+      End: options.length - 1,
     }
 
-    const step = steps[event.key]
-    if (step === undefined || options.length === 0) {
+    const target = targets[event.key]
+    if (target === undefined) {
       return
     }
     // Arrows would scroll the page under the group, Home/End would jump it.
     event.preventDefault()
-    select(tabStop + step)
+    select(target)
   }
 
   return (
     <Box>
       {label ? (
-        // `component="span"`, because MUI maps `subtitle2` onto `<h6>` and this
-        // caption is not a heading, it announced "Payment channel, heading level
-        // 6" in the middle of the record card. `Field` carries the same note.
+        // MUI's default variant mapping sends `subtitle2` to `<h6>`; the theme
+        // redirects it to `<p>`, and this caption is not a paragraph either.
         <Typography variant="subtitle2" component="span" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
           {label}
         </Typography>
@@ -106,8 +97,8 @@ export const ChipSelect = <T extends string>({ label, labelId, value, options, o
               label={option.label}
               role="radio"
               aria-checked={selected}
-              // The roving tab stop: Tab reaches the group once and lands on the
-              // current choice, exactly as it does for native radios.
+              // Roving tab stop: Tab reaches the group once and lands on the
+              // current choice, as it does for native radios.
               tabIndex={index === tabStop ? 0 : -1}
               variant={selected ? 'filled' : 'outlined'}
               onClick={() => onValueChange(option.value)}

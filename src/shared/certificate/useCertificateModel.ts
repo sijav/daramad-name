@@ -15,12 +15,11 @@ import { buildCertificateModel, type CertificateModel, type ReportLanguage } fro
  * Both the preview on the report page and the printable route call this, which
  * is what guarantees the preview shows exactly what prints.
  *
- * @param onLoadError Called when the document's catalog cannot be loaded. The
- *   catalog arrives through two dynamic imports, which reject on a stale chunk
- *   URL after a redeploy or on a cold offline load, and without this the hook
- *   just keeps returning `null`, which a caller cannot tell apart from "still
- *   loading". On the printable route that is an indefinite spinner on the one
- *   page whose entire purpose is to be printed.
+ * @param onLoadError Called when the document's catalog cannot be loaded. It
+ *   arrives through a dynamic import, which rejects on a stale chunk URL after
+ *   a redeploy or on a cold offline load. Without this the hook keeps returning
+ *   `null`, which a caller cannot tell apart from "still loading", and the
+ *   printable route shows an indefinite spinner.
  */
 export const useCertificateModel = (
   report: IncomeReport | undefined,

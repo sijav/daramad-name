@@ -3,73 +3,50 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
-// The app DEFAULTS to Persian, so a gap in the fa-IR catalog is not a missing
-// translation, it is an English string on an Iranian user's screen, shipped.
-// Nothing in the build fails when that happens: lingui falls back to the
-// message id, and because English is the source locale those ids ARE English.
-//
-// Parsed from the `.po` rather than the compiled catalog because the compiled
-// form has already collapsed the fallback, which is precisely what we are
-// looking for.
+// The app defaults to Persian, so an untranslated entry puts an English string
+// on an Iranian user's screen with nothing in the build failing: English is the
+// source locale, so the ids lingui falls back to ARE English. Read from the
+// `.po` because `lingui compile` inlines the en-US fallback and hides the gap.
 
 const CATALOG = join(dirname(fileURLToPath(import.meta.url)), '../../locales/fa-IR/messages.po')
+const lines = readFileSync(CATALOG, 'utf8').split('\n')
 
 interface Entry {
   id: string
-  /** The `msgid_plural` of a gettext plural entry, absent on an ordinary one. */
-  idPlural: string | null
-  /** Every `msgstr` form: one for a singular entry, one per plural form otherwise. */
-  translations: string[]
+  translation: string
 }
 
-/**
- * Minimal PO reader: `msgid`/`msgid_plural`/`msgstr`, continuation lines,
- * obsolete entries dropped.
- *
- * The plural forms are read even though the catalog holds none today. Matching
- * only `msgstr `, with the trailing space, silently DISCARDED any entry
- * written as `msgstr[0]`, so the first `plural` macro anyone adds would have
- * reopened the exact hole these tests exist to close: an untranslated string
- * shipping to a Persian screen with nothing failing.
- */
-const parseCatalog = (source: string): Entry[] => {
+// Minimal PO reader: `msgid`, `msgstr`, and the continuation lines a translator
+// saving from Poedit adds to every long entry. Gettext plural entries
+// (`msgid_plural`, `msgstr[0]`) are not handled, `@lingui/format-po` keeps ICU
+// plurals inside one `msgstr` and never writes them. A formatter that did would
+// fail the entry count below rather than slip past it.
+const parseCatalog = (source: string[]): Entry[] => {
   const entries: Entry[] = []
   let id: string | null = null
-  let idPlural: string | null = null
-  let translations: string[] | null = null
-  let field: 'id' | 'idPlural' | 'translation' | null = null
-  let form = 0
+  let translation: string | null = null
+  let field: 'id' | 'translation' | null = null
 
   const flush = () => {
-    if (id !== null && translations !== null && id !== '') {
-      entries.push({ id, idPlural, translations })
+    if (id && translation !== null) {
+      entries.push({ id, translation })
     }
     id = null
-    idPlural = null
-    translations = null
+    translation = null
     field = null
-    form = 0
   }
 
   const unquote = (line: string): string => line.slice(line.indexOf('"') + 1, line.lastIndexOf('"'))
 
-  for (const line of source.split('\n')) {
+  for (const line of source) {
     const trimmed = line.trim()
-    // `#~` marks an entry lingui no longer extracts; it is dead weight in the
-    // file, not a string the app can render.
-    if (trimmed.startsWith('#~')) {
+    // A blank line closes an entry. `#~` opens one lingui no longer extracts,
+    // which the app can no longer render.
+    if (trimmed === '' || trimmed.startsWith('#~')) {
       flush()
       continue
     }
-    if (trimmed.startsWith('#') || trimmed === '') {
-      if (trimmed === '') {
-        flush()
-      }
-      continue
-    }
-    if (trimmed.startsWith('msgid_plural ')) {
-      idPlural = unquote(trimmed)
-      field = 'idPlural'
+    if (trimmed.startsWith('#')) {
       continue
     }
     if (trimmed.startsWith('msgid ')) {
@@ -78,21 +55,16 @@ const parseCatalog = (source: string): Entry[] => {
       field = 'id'
       continue
     }
-    if (trimmed.startsWith('msgstr ') || trimmed.startsWith('msgstr[')) {
-      form = Number(/^msgstr\[(\d+)]/.exec(trimmed)?.[1] ?? 0)
-      translations = translations ?? []
-      translations[form] = unquote(trimmed)
+    if (trimmed.startsWith('msgstr ')) {
+      translation = unquote(trimmed)
       field = 'translation'
       continue
     }
-    if (trimmed.startsWith('"') && field) {
-      const continuation = unquote(trimmed)
+    if (trimmed.startsWith('"')) {
       if (field === 'id') {
-        id = (id ?? '') + continuation
-      } else if (field === 'idPlural') {
-        idPlural = (idPlural ?? '') + continuation
-      } else if (translations) {
-        translations[form] += continuation
+        id = (id ?? '') + unquote(trimmed)
+      } else if (field === 'translation') {
+        translation = (translation ?? '') + unquote(trimmed)
       }
     }
   }
@@ -101,35 +73,33 @@ const parseCatalog = (source: string): Entry[] => {
   return entries
 }
 
-const entries = parseCatalog(readFileSync(CATALOG, 'utf8'))
+const entries = parseCatalog(lines)
 
-/** `{0}`, `{name}`, the values the sentence is actually about. */
+/** The `{0}` and `{name}` names a message interpolates. */
 const placeholders = (message: string): string[] => [...message.matchAll(/\{([a-zA-Z0-9_]+)\}/g)].map((match) => match[1]).sort()
 
-/** What every form of a translation has to carry: the singular's names, plus the plural's. */
-const declared = (entry: Entry): string[] => [...new Set([...placeholders(entry.id), ...placeholders(entry.idPlural ?? '')])].sort()
-
 describe('the fa-IR catalog', () => {
-  it('has entries to check, so a broken parse cannot pass silently', () => {
+  // Anything the reader does not recognise is dropped, and a dropped entry is an
+  // unchecked one. The count is one short of the `msgid` lines because the first
+  // entry is the header, which carries the file metadata and no message.
+  it('parses every entry in the file', () => {
+    const declared = lines.filter((line) => line.startsWith('msgid ')).length - 1
+
     expect(entries.length).toBeGreaterThan(100)
+    expect(entries).toHaveLength(declared)
   })
 
-  // An untranslated entry renders its English id. On a Persian screen that is
-  // a visible defect that no test, type or lint rule catches. Every plural form
-  // counts separately: Persian needs both, and a filled "one" beside an empty
-  // "other" ships English on exactly the counts nobody tests with.
   it('translates every message', () => {
-    const untranslated = entries.filter((entry) => entry.translations.some((form) => form === '')).map((entry) => entry.id)
+    const untranslated = entries.filter((entry) => entry.translation === '').map((entry) => entry.id)
 
     expect(untranslated).toEqual([])
   })
 
-  // Dropping `{0}` from a translation deletes the number from the sentence:
-  // «۳ دریافتی» silently becomes «دریافتی». The string still reads as Persian,
-  // so a reviewer skimming the catalog would not notice.
+  // A translation that drops `{0}` loses the number: «{0} دریافتی» renders as
+  // «دریافتی» and still reads as fluent Persian.
   it('keeps every placeholder the English message declares', () => {
     const dropped = entries
-      .filter((entry) => entry.translations.some((form) => placeholders(form).join() !== declared(entry).join()))
+      .filter((entry) => placeholders(entry.translation).join() !== placeholders(entry.id).join())
       .map((entry) => entry.id)
 
     expect(dropped).toEqual([])

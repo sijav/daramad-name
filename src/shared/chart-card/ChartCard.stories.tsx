@@ -7,8 +7,6 @@ import { ChartCard, type ChartCardProps } from './ChartCard'
 const meta = {
   title: 'Shared/ChartCard',
   component: ChartCard,
-  // `ChartCard` forwards the rest of `PaperProps`, so docgen offers all of
-  // MUI's surface props. These are the four the design actually varies.
   argTypes: {
     title: { control: 'text' },
     subtitle: { control: 'text' },
@@ -16,35 +14,19 @@ const meta = {
       control: 'inline-radio',
       options: ['chart', 'content'],
     },
+    // Slots the render fills with nodes, so no control can drive them.
     action: { control: false },
     children: { control: false },
   },
-  // `children` is required by the props but supplied by `View`, whose JSX
-  // children win over anything spread in, so this only satisfies the type.
+  // `View` passes its own JSX children, which win over the spread, so this only satisfies the required prop.
   args: { title: '', subtitle: '', variant: 'chart', children: null },
 } satisfies Meta<typeof ChartCard>
 export default meta
 type Story = StoryObj<typeof meta>
 
 /**
- * The panel the design puts a chart on: solid `surface-default` with a 1px
- * `border-default` hairline, in one of two treatments. `chart` is the Charts
- * page's componentised panel, 16px, no shadow. `content` is the dashboard's
- * 20px with Elevation/1. The Figma file draws the same panel both ways
- * depending on the screen, so the variant follows the call site.
- *
- * Both are flat. The redesign moved chart panels off the frosted 28px card
- * (`SurfaceCard`'s old `GlassCard` form, gone from the app entirely), because a
- * blurred translucent backdrop behind a data visualisation costs contrast
- * exactly where it matters most.
- */
-/**
- * Sample copy comes from the catalog so the Language toolbar switches it, and a
- * per-field fallback lets anything typed into Controls override it.
- *
- * `withSubtitle` picks whether the story has a second line AT ALL, an empty
- * subtitle arg cannot express that, since blank is what "fall back to the
- * sample" means.
+ * Sample copy comes from the catalog so the Language toolbar switches it, and a blank arg falls back to it. `withSubtitle` is a
+ * separate flag because blank already means "use the sample", so it cannot also mean "no subtitle".
  */
 const View = ({ withSubtitle, ...args }: { withSubtitle?: boolean } & ChartCardProps) => {
   const { t } = useLingui()
@@ -63,13 +45,17 @@ const View = ({ withSubtitle, ...args }: { withSubtitle?: boolean } & ChartCardP
   )
 }
 
-/**
- * The heading is pinned to `h3` in BOTH variants, the variant only picks the
- * SIZE the design draws it at. Asserted because the `chart` variant's `h5`
- * typography once emitted an actual `<h5>` under the page's `<h2>`, skipping
- * two levels, and the a11y addon's heading-order rule cannot see it in a canvas
- * holding a single card.
- */
+const ViewAll = () => {
+  const { t } = useLingui()
+  return (
+    <Button size="small" variant="text">
+      {t`View all`}
+    </Button>
+  )
+}
+
+// `variant` picks the title's size, not its level. The `chart` variant draws it with `h5` typography and once emitted a literal
+// `<h5>` under the page's `<h2>`, skipping two levels; axe's heading-order rule cannot catch that in a canvas holding one heading.
 const headingIsLevelThree: Story['play'] = async ({ canvasElement }) => {
   const canvas = within(canvasElement)
 
@@ -94,13 +80,4 @@ export const Content: Story = {
 export const WithAction: Story = {
   args: { variant: 'content' },
   render: (args) => <View {...args} action={<ViewAll />} />,
-}
-
-const ViewAll = () => {
-  const { t } = useLingui()
-  return (
-    <Button size="small" variant="text">
-      {t`View all`}
-    </Button>
-  )
 }

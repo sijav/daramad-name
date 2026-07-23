@@ -399,6 +399,16 @@ the user sees Persian. The inner `.MuiPickersSectionList-sectionContent` spans
 carry their own `font-family` and must be targeted explicitly, inheriting from
 the root is not enough.
 
+**The PWA manifest is the one place the product is named in Latin.**
+`pwa-manifest.json`'s `name` and `short_name` are `DaramadName`, not
+«درآمدنامه», because the OS prints them under the installed icon, in the
+launcher and in the app switcher, none of which is guaranteed to shape Persian
+correctly, and a product needs one spelling people can type and search for. The
+interface itself stays Persian. The manifest's description cannot be a lingui
+message either: the OS reads the manifest before any locale is chosen. That is
+also why the copy lives in the JSON file rather than in `vite.config.ts`, where
+only the build knobs belong.
+
 **`muiPalette.d.ts` is not named `theme.d.ts`.** A `.d.ts` beside a same-named
 `.ts` is treated by TypeScript as that file's generated declaration output and
 silently dropped from the program. The augmentation vanishes with no error.

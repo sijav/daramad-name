@@ -21,7 +21,8 @@ yourself.
 - 📄 Generate a bilingual (Persian/English) PDF income certificate.
 - 📈 See a 12-month income chart, with a warning when one client is too much of
   your income.
-- 💾 Local-first: your ledger stays in the browser and exports as a JSON backup.
+- 💾 Local-first: your data never leaves the browser, with JSON backup and
+  restore to move between devices.
 
 ## Quick start
 
@@ -60,9 +61,10 @@ the only copy outside the browser.
 Vibe-coded, but the agent runs on a rulebook, not a vibe. It works to a fixed
 set of instructions in [AGENTS.md](./AGENTS.md), enforced by the tooling rather
 than by good faith: a string that skips localization fails the build, the
-Storybook docs fail the moment a translation drifts, types are checked with no
-escape hatches allowed, and nothing is called done until lint, typecheck, tests
-and build all pass and the change has been seen running in the browser.
+Storybook docs fail their test when a translation drifts out of sync, types are
+checked with no escape hatches allowed, and nothing is called done until lint,
+typecheck, tests and build all pass and the change has been seen running in the
+browser.
 
 Built with React 19, TypeScript, MUI, Lingui, Dexie over IndexedDB, Storybook
 and Vitest.

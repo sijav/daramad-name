@@ -70,27 +70,28 @@ browser once: `npx playwright install chromium`.
 
 ## How this was built
 
-This is a vibe-coded project. The code, the tests and the documentation were
-written by **Claude Code** (Anthropic's AI coding agent), directed by Sina
-(thirteen years of web development) and designed by Gandom in Figma. Sina set
-the direction and reviewed every change; Claude did the typing, under a fixed
-set of rules rather than free rein.
+The code, the tests and the documentation were written by **Claude Code**,
+Anthropic's AI coding agent. Sina directed the build and reviewed every change;
+Gandom designed it in Figma.
 
-Those rules live in **[`AGENTS.md`](./AGENTS.md)**, the repository's working
-agreement, the first thing any agent (or human) reads before touching the code.
-`CLAUDE.md` only points at it, so there is one file to maintain rather than two
-that drift. It records the decisions that are not up for renegotiation: every
-user-facing string goes through lingui in English, documentation prose lives in
-markdown and never in the code, colours come from the theme and never a
-hardcoded hex, library versions are checked against the registry rather than
-recalled from memory. Each rule carries the reason it exists, usually a bug it
-was written in answer to.
+"Vibe coding" is the fashionable name for building with an agent, but it is a
+poor fit here, which is rather the point. Vibe coding means trusting whatever
+the model emits without reading it; this was the opposite. The agent worked to a
+written agreement, and the agreement is held up by the tooling rather than by
+good intentions.
 
-What keeps the agent honest is that most of these rules are **enforced by the
-tooling**, not merely stated:
+Those rules live in **[`AGENTS.md`](./AGENTS.md)**, the first thing any agent (or
+human) reads before touching the code. `CLAUDE.md` only points at it, so there is
+one file to maintain rather than two that drift. It records the decisions that
+are not up for renegotiation, each with the reason it exists: every user-facing
+string goes through lingui in English, documentation prose lives in markdown and
+never in the code, colours come from the theme and never a hardcoded hex, library
+versions are checked against the registry rather than recalled from memory.
+
+Most of those rules fail the build when broken, so they cannot quietly rot:
 
 - `eslint-plugin-lingui` rejects any unlocalized string, English as readily as
-  Persian, so a stray label fails the build.
+  Persian.
 - `storyDocs.test.ts` fails the moment a Docs page and its translation drift
   apart.
 - `tsc` runs with the escape hatches banned (`as`, `@ts-ignore`), so a type

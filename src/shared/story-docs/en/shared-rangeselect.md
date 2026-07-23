@@ -3,6 +3,7 @@
 - `prefix`: Prefixed to the selected label, e.g. "Report range: year 1403".
 - `onSelect`: The chosen value, always as a string: it arrives from a DOM select.
 - `options`: Every choice, in the order they should appear. Newest first, for years.
+- `value`: The selected option's value. MUI renders nothing, no label and no fallback, when this is absent from `options`, so callers fold the selection in rather than letting the two disagree. See `selectableYears`.
 
 ## stories
 

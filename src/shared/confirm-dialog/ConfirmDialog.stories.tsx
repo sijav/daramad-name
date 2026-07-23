@@ -16,7 +16,7 @@ const meta = {
     title: { control: false },
     description: { control: false },
     confirmLabel: { control: false },
-    cancelLabel: { description: "Defaults to the catalog's «انصراف».", control: false },
+    cancelLabel: { control: false },
     confirmationWord: {
       control: false,
     },

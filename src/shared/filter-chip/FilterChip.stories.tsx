@@ -8,7 +8,7 @@ const meta = {
   title: 'Shared/FilterChip',
   component: FilterChip,
   argTypes: {
-    field: { description: "The filter's field name, shown before the value." },
+    field: { control: 'text' },
   },
 } satisfies Meta<typeof FilterChip>
 export default meta

@@ -20,7 +20,7 @@ const meta = {
   title: 'Shared/SettingsSection',
   component: SettingsSection,
   argTypes: {
-    title: { description: "The group's name, rendered as an `h3` so the page is navigable by heading." },
+    title: { control: 'text' },
   },
   // `title` and `children` are both composed inside the render, the copy goes
   // through the catalog like the settings page's does, and `children` is a tree

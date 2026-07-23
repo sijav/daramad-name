@@ -6,6 +6,7 @@
 - `description`: Exactly what happens on confirm, including what cannot be undone.
 - `confirmLabel`: Names the ACTION rather than saying "OK", so the button reads on its own.
 - `confirmationWord`: When set, the user must type this exact word to enable the confirm button. This is the second step of the two-step confirmation the brief requires before wiping all data.
+- `cancelLabel`: Defaults to the catalog's «انصراف».
 
 ## stories
 

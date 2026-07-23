@@ -6,6 +6,7 @@
 - `error`: Marks the field, and turns the helper text red.
 - `helperText`: What is wrong, or what the field expects.
 - `fullWidth`: Stretches the picker to its container.
+- `value`: ISO-8601 instant, or `null` for an empty field. Empty is a real state, not a missing one: the ledger's filter opens with no range set, and showing today's date there would advertise a filter that is not applied.
 
 ## stories
 

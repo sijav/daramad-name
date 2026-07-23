@@ -1,6 +1,8 @@
 ## props
 
 - `onEdit`: Opens the edit dialog on that row.
+- `onView`: Opens the details drawer, the only way to read a receipt's note and its frozen rate.
+- `onDelete`: Asks to delete. The confirmation belongs to the caller, not to this menu.
 
 ## stories
 

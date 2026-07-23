@@ -5,6 +5,7 @@
 - `totalCount`: Rows across every page, the "N of M" line, not just what is on screen.
 - `pageSize`: Rows per page. Changing it resets to page 1, since the old page may not exist.
 - `pageCount`: How many pages there are. The control hides itself when there is only one.
+- `page`: The current page, 1-based, the way MUI's `Pagination` counts.
 
 ## stories
 

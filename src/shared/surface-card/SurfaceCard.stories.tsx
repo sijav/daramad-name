@@ -7,13 +7,10 @@ const meta = {
   component: SurfaceCard,
   argTypes: {
     radius: {
-      description:
-        "`xl` (20px) for a screen's primary panel, `lg` (16px) for supporting ones.\nThe design draws this distinction on every screen — the Quick Entry form is\n20 while the three panels beside it are 16.",
       control: 'inline-radio',
       options: ['lg', 'xl'],
     },
     tone: {
-      description: "`subtle` is the `brand-primary-subtle` tint the design uses for callouts and\nthe dashboard's report shortcut.",
       control: 'inline-radio',
       options: ['default', 'subtle'],
     },

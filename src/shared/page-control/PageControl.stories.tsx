@@ -7,7 +7,6 @@ const meta = {
   title: 'Shared/PageControl',
   component: PageControl,
   argTypes: {
-    page: { description: "The current page, 1-based, as MUI's `Pagination` counts." },
     // Derived by the harness from `totalCount` and the live page size, the way
     // `useLedgerView` derives it. An editable second copy could only contradict
     // the row-range sentence, and every story's value was already discarded.

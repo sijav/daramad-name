@@ -5,10 +5,6 @@ import { RowActionsMenu } from './RowActionsMenu'
 const meta = {
   title: 'Shared/RowActionsMenu',
   component: RowActionsMenu,
-  argTypes: {
-    onView: { description: "Opens the details drawer. The only way to read a receipt's note and frozen rate." },
-    onDelete: { description: "Asks to delete. The confirmation is the caller's, not this menu's." },
-  },
 } satisfies Meta<typeof RowActionsMenu>
 export default meta
 type Story = StoryObj<typeof meta>

@@ -7,10 +7,7 @@ const meta = {
   title: 'Shared/DateField',
   component: DateField,
   argTypes: {
-    value: {
-      description:
-        "ISO-8601 instant, or `null` for an empty field.\n\nEmpty is a real state, not a missing one: the ledger's filter opens with no\nrange set, and showing today's date there would advertise a filter that is\nnot applied.",
-    },
+    value: { control: 'text' },
   },
 } satisfies Meta<typeof DateField>
 

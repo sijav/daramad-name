@@ -2,6 +2,7 @@
 
 - `shares`: Ranked clients. The arc order follows the array, not the values.
 - `limit`: Rows past this fold into a single "others" slice.
+- `othersLabel`: The folded slice's name, passed in so the caller owns the wording.
 
 ## stories
 

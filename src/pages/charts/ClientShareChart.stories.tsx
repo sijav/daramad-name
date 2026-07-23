@@ -26,7 +26,7 @@ const meta = {
   component: ClientShareChart,
   parameters: { ...CHART_A11Y },
   argTypes: {
-    othersLabel: { description: "The folded slice's name, passed in so the caller owns the wording." },
+    othersLabel: { control: 'text' },
     // The fold threshold is the component's one real setting and had no control
     // and no arg on any story, so the "others" slice could not be reached from
     // the Controls panel at all.

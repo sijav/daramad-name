@@ -8,8 +8,6 @@ const meta = {
   component: RangeSelect,
   argTypes: {
     value: {
-      description:
-        "The selected option's value.\n\nMUI renders NOTHING — no label, no fallback — when this is absent from\n`options`, so callers fold the selection in rather than letting the two\ndisagree. See `selectableYears`.",
       control: 'select',
       options: [1403, 1402],
     },

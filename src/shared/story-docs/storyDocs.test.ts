@@ -41,10 +41,27 @@ const pageOf = (source: string): Page | undefined => {
   return { slug: docSlug(title), stories }
 }
 
-const PAGES = storyFiles(SRC)
-  .map((path) => pageOf(readFileSync(path, 'utf8')))
+const SOURCES = storyFiles(SRC).map((path) => ({ path, source: readFileSync(path, 'utf8') }))
+
+const PAGES = SOURCES.map(({ source }) => pageOf(source))
   .filter((page): page is Page => Boolean(page))
   .sort((a, b) => a.slug.localeCompare(b.slug))
+
+/** The `argTypes` object literal, by brace matching, or '' when there is none. */
+const argTypesBlock = (source: string): string => {
+  const start = source.indexOf('argTypes: {')
+  if (start === -1) return ''
+  let depth = 0
+  for (let i = source.indexOf('{', start); i < source.length; i += 1) {
+    if (source[i] === '{') depth += 1
+    else if (source[i] === '}' && (depth -= 1) === 0) return source.slice(start, i + 1)
+  }
+  return source.slice(start)
+}
+
+// A prop's own `description` entry is fine (`description: { control: 'text' }`);
+// what is banned is prose assigned to one, which is documentation in code.
+const PROSE = /\bdescription:\s*\n?\s*['"`]/
 
 describe('the Storybook documentation', () => {
   // A guard on the guard: if the regex stops matching, every assertion below
@@ -52,6 +69,22 @@ describe('the Storybook documentation', () => {
   it('finds the stories', () => {
     expect(PAGES.length).toBeGreaterThan(40)
     expect(PAGES.find((page) => page.slug === 'shared-tag')?.stories).toEqual(['Channel', 'Frozen', 'All Tones'])
+  })
+
+  // AGENTS.md: no `description:` inside `argTypes`. A prop documented in code
+  // renders the same English text on the Persian page, because `LocalizedDocs`
+  // swaps descriptions in from markdown and has nothing to swap.
+  it('keeps prop descriptions out of the code', () => {
+    const offenders = SOURCES.filter(({ source }) => PROSE.test(argTypesBlock(source))).map(({ path }) => path.replace(SRC, 'src'))
+    expect(offenders).toEqual([])
+  })
+
+  // The check above reads an empty string when the brace matching fails, and an
+  // empty string never matches, so prove it fires on a planted case.
+  it('would catch a description in argTypes', () => {
+    const planted = `const meta = {\n  argTypes: {\n    limit: { control: { type: 'number' } },\n    label: { description: 'prose' },\n  },\n}`
+    expect(PROSE.test(argTypesBlock(planted))).toBe(true)
+    expect(argTypesBlock(planted)).toContain('limit')
   })
 
   it('has an English file for every page', () => {

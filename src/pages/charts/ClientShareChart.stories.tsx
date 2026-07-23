@@ -27,11 +27,10 @@ const meta = {
   parameters: { ...CHART_A11Y },
   argTypes: {
     othersLabel: { description: "The folded slice's name, passed in so the caller owns the wording." },
-    shares: { description: 'Ranked clients. The arc order follows the array, not the values.' },
     // The fold threshold is the component's one real setting and had no control
     // and no arg on any story, so the "others" slice could not be reached from
     // the Controls panel at all.
-    limit: { description: 'Rows past this fold into a single "others" slice.', control: { type: 'number', min: 1, max: 10 } },
+    limit: { control: { type: 'number', min: 1, max: 10 } },
   },
   // A literal rather than `t`, so the fold assertions read the arg itself and do
   // not depend on where the Language toolbar happens to be.
@@ -78,25 +77,15 @@ const View = ({ insight, ...props }: ClientShareChartProps & { insight?: string 
 
 const render: Story['render'] = (args) => <View {...args} />
 
-/** Balanced book — no single client dominates, so no warning appears. */
 export const Balanced: Story = { args: { shares: BALANCED }, render }
 
-/** Above 50% the dependency warning fires; shown with the callout it explains. */
 export const Concentrated: Story = {
   args: { shares: CONCENTRATED },
   render: (args) => <View {...args} insight="۷۳٪ درآمدت از یک مشتری است." />,
 }
 
-/** A single client — the extreme concentration case. */
 export const SingleClient: Story = { args: { shares: [share('Aria Trading', 235830000, 100)] }, render }
 
-/**
- * More clients than legend rows: the tail folds into one "others" slice.
- *
- * Asserted rather than described. `foldOthers` could return its input unchanged
- * and the story would still draw a donut and a legend — the only visible sign
- * would be two extra rows nobody counted.
- */
 export const ManyClients: Story = {
   args: { shares: [...CONCENTRATED, share('Mr. Chen', 8000000, 2), share('Studio B', 4000000, 1)] },
   render,
@@ -118,11 +107,6 @@ export const ManyClients: Story = {
   },
 }
 
-/**
- * No clients at all. The dashboard passes `shares={shareData?.shares ?? []}`, so
- * this reaches the component in production — and it divides by the total, which
- * is zero here, and reads `rows[0]` for the figure in the hole.
- */
 export const NoClients: Story = {
   args: { shares: [] },
   render,

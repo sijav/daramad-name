@@ -51,11 +51,6 @@ const Harness = () => {
   )
 }
 
-/**
- * Holds the selected report year, and re-expresses it when the calendar system
- * changes. Without that, a Jalali year stays selected against a list of
- * Gregorian options and the range pill renders blank.
- */
 const meta = {
   title: 'Shared/useReportYear',
   component: Harness,
@@ -70,9 +65,6 @@ const press = async (canvasElement: HTMLElement, name: string) => {
 
 const shown = async (canvasElement: HTMLElement, testId: string) => (await within(canvasElement).findByTestId(testId)).textContent
 
-/**
- * The default: today's year, in the calendar in force, and it is on the list.
- */
 export const StartsOnTheCurrentYear: Story = {
   play: async ({ canvasElement }) => {
     await expect(await shown(canvasElement, 'year')).toBe(String(THIS_JALALI))
@@ -80,14 +72,6 @@ export const StartsOnTheCurrentYear: Story = {
   },
 }
 
-/**
- * The bug, from both directions.
- *
- * A Jalali year is not a Gregorian one, so the number itself has to change —
- * and it has to keep naming the period the user chose rather than snapping back
- * to today, which would silently swap the range under a report they were part
- * way through configuring.
- */
 export const SwitchingTheCalendarRenamesTheYear: Story = {
   play: async ({ canvasElement, step }) => {
     await step('the Gregorian name for the same stretch of time', async () => {
@@ -111,11 +95,6 @@ export const SwitchingTheCalendarRenamesTheYear: Story = {
   },
 }
 
-/**
- * The invariant MUI actually needs: whatever the calendar, and whichever year is
- * selected, the option list contains it. A select that cannot find its own value
- * renders blank and warns, and neither of those is recoverable from the UI.
- */
 export const TheSelectedYearIsAlwaysAnOption: Story = {
   play: async ({ canvasElement, step }) => {
     const holdsItsValue = async () => {

@@ -27,21 +27,11 @@ const Controlled: Story['render'] = function Render(args) {
 
 export const Empty: Story = { args: { value: '', onValueChange: fn() }, render: Controlled }
 
-/** The clear button only appears once there is something to clear. */
 export const WithQuery: Story = { args: { value: 'آریا', onValueChange: fn() }, render: Controlled }
 
 const CLEAR = /^پاک کردن جست‌وجو$|^Clear search$/
 const SEARCH = /^جست‌وجو در دریافتی‌ها$|^Search receipts$/
 
-/**
- * Two things that are invisible when they break.
- *
- * The field has no visible label by design, so its only accessible name is the
- * `aria-label` — lose it and a screen-reader user hears "edit text" on the one
- * control that filters the whole ledger. And the clear button is conditional:
- * a permanent ✕ reads as "a filter is active" on an empty ledger, which sends
- * the user hunting for a filter that was never applied.
- */
 export const ClearAppearsOnlyWithAQuery: Story = {
   ...Empty,
   play: async ({ args, canvasElement, step }) => {

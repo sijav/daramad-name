@@ -15,7 +15,6 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-/** The currency picker from the record card: a filled primary pill on a recessed track. */
 export const Currency: Story = {
   args: {
     value: 'USDT',
@@ -44,7 +43,6 @@ export const Currency: Story = {
   },
 }
 
-/** Two segments — the report's language switch. */
 export const TwoOptions: Story = {
   ...Currency,
   args: {
@@ -57,7 +55,6 @@ export const TwoOptions: Story = {
   },
 }
 
-/** The report config's lighter treatment: a recessed track with a raised segment. */
 export const Subtle: Story = {
   ...Currency,
   args: {
@@ -71,12 +68,6 @@ export const Subtle: Story = {
   },
 }
 
-/**
- * `disabled` is not a prop this component declares — it rides the rest spread
- * through to `ToggleButtonGroup`. No page passes it yet, so this story is the
- * only thing showing what the state looks like and the only proof that the
- * spread reaches the group at all.
- */
 export const Disabled: Story = {
   ...Currency,
   args: {
@@ -100,15 +91,6 @@ export const Disabled: Story = {
   },
 }
 
-/**
- * A focused segment has to be visible.
- *
- * `ButtonBase` paints no focus indicator of its own, and this control sets the
- * selected segment's background itself — which overwrote the one state MUI does
- * express. Tabbing across the currency switch moved nothing on screen. The
- * theme now gives `ToggleButton` the same `border-focus` ring Button and
- * IconButton already had.
- */
 export const AFocusedSegmentIsRinged: Story = {
   ...Currency,
   play: async ({ canvasElement }) => {
@@ -128,12 +110,6 @@ export const AFocusedSegmentIsRinged: Story = {
   },
 }
 
-/**
- * A segmented control can never end up with nothing selected. `ToggleButtonGroup`
- * reports `null` when the user clicks the segment that is already on — taking
- * that at face value would leave the currency unset, and an unset currency means
- * an amount with no meaning.
- */
 export const ClickingTheSelectedSegmentIsIgnored: Story = {
   args: {
     value: 'USDT',

@@ -18,26 +18,16 @@ const RANKED = [
   share('Homa Cafe', 39300000, 9),
 ]
 
-/**
- * The ranked client list beside the donut, in the card it always sits in.
- *
- * `shares` is a live object control: add a row, change a figure, or push the
- * list past `limit` and the fold appears. The label for the folded row comes
- * from the catalog so it follows the Language toolbar, and anything typed into
- * Controls overrides it.
- */
 const meta = {
   title: 'Shared/TopCustomers',
   component: TopCustomers,
   argTypes: {
-    shares: { control: 'object', description: 'Ranked clients. The component does not sort — it prints what the query ordered.' },
+    shares: { control: 'object' },
     limit: {
       control: { type: 'number', min: 1, max: 10 },
-      description: 'Rows past this fold into one "others" row rather than being dropped.',
     },
     othersLabel: {
       control: 'text',
-      description: 'The folded row’s name. Passed in rather than translated inside, so the caller owns the wording.',
     },
   },
   args: { shares: RANKED, othersLabel: '' },
@@ -53,15 +43,12 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-/** Complements the donut: legible at any share, with exact figures beside each name. */
 export const Ranked: Story = {}
 
-/** Anything past the limit folds into an "others" row rather than being dropped. */
 export const WithOthers: Story = {
   args: { shares: [...RANKED, share('Dadepardaz Co.', 13100000, 3)], limit: 3 },
 }
 
-/** A long client name must truncate rather than push the figure off the row. */
 export const LongName: Story = {
   args: { shares: [share('Dadepardaz Pars Software Engineering & Partners', 235830000, 100)] },
 }

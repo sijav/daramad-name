@@ -42,7 +42,6 @@ type Story = StoryObj<typeof meta>
 
 const seeded = { page: { data: 'full' } }
 
-/** «نمای کلی» — summary tiles, the year chart, client share, latest receipts and the report shortcut. */
 export const WithData: Story = {
   parameters: seeded,
   /**
@@ -59,7 +58,6 @@ export const WithData: Story = {
   },
 }
 
-/** First run: nothing recorded, so the page offers the first action instead of empty charts. */
 export const Empty: Story = { parameters: { page: { data: 'empty' } } }
 
 // The money on a card, read back out of the rendered text rather than from the
@@ -71,20 +69,6 @@ const figureIn = (card: Element | null | undefined): number =>
 const cardFor = async (canvasElement: HTMLElement, label: RegExp): Promise<Element | null> =>
   (await within(canvasElement).findByText(label)).closest('.MuiPaper-root')
 
-/**
- * The monthly average prints its own divisor, and this checks the two agree.
- *
- * An average with an unstated basis is the single most dangerous figure on this
- * screen: the same person "earns" 41 million a month divided by twelve and 123
- * million divided by four, and a reader has no way to tell which they are being
- * shown. The rule is months ELAPSED, so a year still in progress is never
- * divided by 12 and a quiet month still counts.
- *
- * Rather than recompute the average the same way the page does — which would
- * pass even if both were wrong — this reads the year total, the printed
- * divisor and the printed average out of the DOM and asserts they are one
- * consistent statement.
- */
 export const MonthlyAverageStatesItsDivisor: Story = {
   parameters: seeded,
   play: async ({ canvasElement, step }) => {
@@ -123,16 +107,6 @@ export const MonthlyAverageStatesItsDivisor: Story = {
   },
 }
 
-/**
- * The first card reads the CURRENT calendar month's bucket out of whichever
- * year the picker is on, so on a past year it holds that year's Mordad.
- *
- * Left headed «درآمد این ماه» that is income from a year ago under the words
- * "this month" — on the one screen someone opens to find out what they earn,
- * and the figure they would repeat to a landlord. The neighbouring cards
- * already name their year; this one has to name its month as well, because the
- * month is the part that moved.
- */
 export const APastYearNamesTheMonthOnTheCard: Story = {
   parameters: seeded,
   play: async ({ canvasElement, step }) => {
@@ -164,16 +138,6 @@ export const APastYearNamesTheMonthOnTheCard: Story = {
   },
 }
 
-/**
- * «آخرین دریافتی‌ها» is the "is the thing I just recorded in there?" panel, and
- * the link out of it is how someone gets from a glance to the full ledger.
- *
- * The six-row cap matters: the panel is a reassurance, not a table to scan, and
- * a dashboard that quietly renders every receipt ever recorded stops being a
- * dashboard. The Toman column matters more — it shows the FROZEN equivalent, so
- * a row printing the original 500 USDT there instead of 49,250,000 Toman would
- * misreport the receipt on the first screen the user sees.
- */
 export const LatestReceiptsLinkToTheLedger: Story = {
   parameters: seeded,
   render: () => (
@@ -206,12 +170,6 @@ export const LatestReceiptsLinkToTheLedger: Story = {
   },
 }
 
-/**
- * The first-run path. A new user has no receipts, so the page must not show
- * four zeroed cards and an empty chart — it has to say what to do and take them
- * there — a landing page whose one call to action leads nowhere is worse than
- * no landing page.
- */
 export const EmptyStateLeadsToQuickEntry: Story = {
   parameters: { page: { data: 'empty' } },
   render: () => (
@@ -250,17 +208,6 @@ const tomanReceipt = (id: string, clientId: string, amountToman: number): Receip
   updatedAt: new Date().toISOString(),
 })
 
-/**
- * The other half of the concentration rule, driven through the REAL database so
- * the threshold itself is exercised rather than a fixture that hard-codes the
- * answer: four clients paying equally is a 25% top share, and the warning must
- * stay silent.
- *
- * A callout that fires regardless would be worse than none. This page is meant
- * to tell a freelancer something true about their business; one that cries
- * dependency at an evenly spread year teaches them to ignore it, and then the
- * real 80% year goes unread.
- */
 export const ConcentrationInsightStaysQuietWhenSpread: Story = {
   beforeEach: async () => {
     const clear = async () => {

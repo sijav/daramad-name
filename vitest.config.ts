@@ -68,7 +68,7 @@ export default defineConfig({
           // polyfill plugin to this project also rewrites Storybook's own
           // `node:fs` imports and breaks the runner's bundle. The path is covered
           // by Node tests (`bidiText.test.ts`, `renderCertificatePdf.test.ts`) and
-          // verified by hand in the dev server. See TECH-DEBT.md entry 7.
+          // verified by hand in the dev server. See TECH-DEBT.md entry 6.
           storybookTest({ configDir: join(rootDir, '.storybook') }),
         ],
         test: {
@@ -82,7 +82,6 @@ export default defineConfig({
           // produced a suite which passed and failed on alternate runs with no
           // code change, which is worse than a suite that simply fails.
           fileParallelism: false,
-          setupFiles: [join(rootDir, '.storybook/vitest.setup.ts')],
           browser: {
             enabled: true,
             headless: true,

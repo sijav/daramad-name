@@ -13,13 +13,12 @@ const meta = {
   // figure SAYS. Only the control shape is set — the descriptions come from the
   // JSDoc on `MoneyTextProps`, so the table cannot drift from the source.
   argTypes: {
-    value: { description: 'The amount, in whichever currency is passed below.', control: { type: 'number', step: 1000 } },
+    value: { control: { type: 'number', step: 1000 } },
     currency: {
-      description: 'Omit for toman; pass a currency to render the original amount instead.',
       control: 'inline-radio',
       options: ['TOMAN', 'USD', 'USDT'],
     },
-    showUnit: { description: 'Appends the currency name.', control: 'boolean' },
+    showUnit: { control: 'boolean' },
     variant: { control: 'select' },
   },
   args: { value: 12_500_000, currency: 'TOMAN', showUnit: true },
@@ -30,11 +29,6 @@ type Story = StoryObj<typeof meta>
 
 const money = (canvasElement: HTMLElement, text: string | RegExp) => within(canvasElement).findByText(text)
 
-/**
- * The default: toman, grouped, with its unit. Every figure in the app comes
- * through here, so the grouping and the unit can never differ between the
- * ledger, the charts and the certificate.
- */
 export const Toman: Story = {
   args: { value: 12500000 },
   play: async ({ canvasElement }) => {
@@ -42,7 +36,6 @@ export const Toman: Story = {
   },
 }
 
-/** Toman never shows decimals, even for an amount that has them. */
 export const TomanRounded: Story = {
   args: { value: 9500000.4, variant: 'h3' },
   play: async ({ canvasElement }) => {
@@ -52,7 +45,6 @@ export const TomanRounded: Story = {
   },
 }
 
-/** USD and USDT carry two decimals — the brief's edge case. */
 export const Dollars: Story = {
   args: { value: 1200.5, currency: 'USD' },
   play: async ({ canvasElement }) => {
@@ -68,7 +60,6 @@ export const Tether: Story = {
   },
 }
 
-/** A zero month must render as «۰», not as an empty cell. */
 export const Zero: Story = {
   args: { value: 0 },
   play: async ({ canvasElement }) => {
@@ -76,10 +67,6 @@ export const Zero: Story = {
   },
 }
 
-/**
- * Without the unit, for a column whose header already says «تومان». The figure
- * still has to be the same figure — the unit is the only thing that goes.
- */
 export const WithoutUnit: Story = {
   args: { value: 12500000, showUnit: false },
   play: async ({ canvasElement }) => {
@@ -88,11 +75,6 @@ export const WithoutUnit: Story = {
   },
 }
 
-/**
- * Money is a bidirectional hazard: the digits run left to right inside a line
- * that runs right to left, so an unmarked amount can render with its unit on
- * the wrong end. The span states its own direction rather than inheriting it.
- */
 export const DirectionIsExplicit: Story = {
   args: { value: 12500000 },
   play: async ({ canvasElement }) => {
@@ -100,10 +82,6 @@ export const DirectionIsExplicit: Story = {
   },
 }
 
-/**
- * English mode: Latin digits, commas, and the unit spelled out in English —
- * and the direction flips with it.
- */
 export const English: Story = {
   args: { value: 12500000 },
   globals: { locale: 'en-US' },
@@ -114,7 +92,6 @@ export const English: Story = {
   },
 }
 
-/** English dollars: two decimals survive the locale switch. */
 export const EnglishDollars: Story = {
   args: { value: 1200.5, currency: 'USD' },
   globals: { locale: 'en-US' },

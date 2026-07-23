@@ -58,14 +58,6 @@ type Story = StoryObj<typeof meta>
 
 const DEFAULTS = `${defaultSettings.calendar}/${defaultSettings.locale}/${defaultSettings.themePreference}`
 
-/**
- * A first-ever visitor, with nothing persisted yet.
- *
- * The first paint happens before IndexedDB answers, so every component on
- * screen formats its dates and numbers against this fallback. Without it they
- * would read `undefined.calendar` and the app would not render at all; with a
- * partial one they would quietly format Jalali dates as Gregorian for a frame.
- */
 export const FirstEverVisit: Story = {
   beforeEach: async () => {
     await db.settings.clear()
@@ -81,13 +73,6 @@ export const FirstEverVisit: Story = {
   },
 }
 
-/**
- * A returning user who has changed their settings.
- *
- * The fallback must yield the moment the stored row arrives. If it did not —
- * or if the query key drifted so the read never matched — the user's saved
- * calendar and language would be silently ignored on every visit.
- */
 export const PersistedSettingsReplaceTheFallback: Story = {
   beforeEach: async () => {
     await db.settings.put({

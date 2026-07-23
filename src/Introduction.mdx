@@ -5,9 +5,9 @@ import { Localized } from 'src/shared/story-docs/Localized'
 
 {/* This page is bilingual: every line is wrapped in <Localized>, which reads the
     "Language" toolbar and re-renders when it changes. Switch the toolbar and the
-    whole page follows — Persian and English from one source. */}
+    whole page follows, Persian and English from one source. */}
 
-# درآمدنامه — Daramadname
+# درآمدنامه / Daramadname
 
 <Localized
   fa="یک دفتر دریافتی‌ها و یک گزارش درآمدِ قابل‌ارائه، برای فریلنسرهای ایرانی."
@@ -24,10 +24,10 @@ import { Localized } from 'src/shared/story-docs/Localized'
   }
   en={
     <>
-      The problem it solves is not bookkeeping. It is that a freelancer here is <strong>بی‌سند</strong> — without
-      documents. No payslip, no certificate of income, nothing to hand an embassy applying for a visa, a landlord
-      asking for proof, or an accountant filing a return. Employees have always had that piece of paper. This produces
-      it.
+      The problem it solves is not bookkeeping. It is that a freelancer here is <strong>بی‌سند</strong> (bi-sanad), a
+      person without documents. No payslip, no certificate of income, nothing to hand an embassy applying for a visa, a
+      landlord asking for proof, or an accountant filing a return. Employees have always had that piece of paper. This
+      produces it.
     </>
   }
 />
@@ -54,7 +54,7 @@ import { Localized } from 'src/shared/story-docs/Localized'
   <tbody>
     <tr>
       <td>
-        <strong><Localized fa="زبان" en="Language" /></strong> — فارسی (RTL) / English (LTR)
+        <strong><Localized fa="زبان" en="Language" /></strong>: فارسی (RTL) / English (LTR)
       </td>
       <td>
         <Localized
@@ -65,7 +65,7 @@ import { Localized } from 'src/shared/story-docs/Localized'
     </tr>
     <tr>
       <td>
-        <strong><Localized fa="پوسته" en="Theme" /></strong> — Light / Dark / System
+        <strong><Localized fa="پوسته" en="Theme" /></strong>: Light / Dark / System
       </td>
       <td>
         <Localized
@@ -81,13 +81,13 @@ import { Localized } from 'src/shared/story-docs/Localized'
   fa={
     <>
       <strong>هر تغییری را در هر چهار حالت ببین و بعد تمام‌شده بدان.</strong> رشته‌های انگلیسی بلندتر از فارسی‌اند، پس
-      چیدمانی که یکی را جا می‌دهد می‌تواند در دیگری بریده شود — همین‌جا هم افتاده، برای کاشیِ جمعِ دفتر.
+      چیدمانی که یکی را جا می‌دهد می‌تواند در دیگری بریده شود، همین‌جا هم افتاده، برای کاشیِ جمعِ دفتر.
     </>
   }
   en={
     <>
       <strong>Check a change in all four combinations before calling it done.</strong> English strings are longer than
-      Persian, so a layout that fits one can clip in the other — that has happened here, to the ledger's total tile.
+      Persian, so a layout that fits one can clip in the other, that has happened here, to the ledger's total tile.
     </>
   }
 />
@@ -96,9 +96,9 @@ import { Localized } from 'src/shared/story-docs/Localized'
 
 ## <Localized fa="هر بخش برای چیست" en="What the parts are for" />
 
-- **Pages** — <Localized fa="یکی برای هر مسیر. خودشان هیچ استایلی ندارند؛ کامپوننت‌های مشترک را می‌چینند و صاحبِ کوئری‌ها هستند." en="one per route. They hold no styling of their own; they compose shared components and own the queries." />
-- **Shared** — <Localized fa="کتابخانه‌ی کامپوننت‌ها. هر پوشه یک کامپوننت است با یک بارل، یک استوری و اینترفیسِ props خودش. همان JSDoc روی این اینترفیس‌ها ستونِ Description تبِ Docs را پر می‌کند." en="the component library. Each folder is one component with a barrel, a story, and its own props interface. The JSDoc on those interfaces is what fills the Description column of the generated Docs tab." />
-- **Core** — <Localized fa="پایگاه‌داده، پوسته، نمونه‌ی i18n و کلاینتِ کوئری. بدون UI." en="the database, the theme, the i18n instance and the query client. No UI." />
+- **Pages**: <Localized fa="یکی برای هر مسیر. خودشان هیچ استایلی ندارند؛ کامپوننت‌های مشترک را می‌چینند و صاحبِ کوئری‌ها هستند." en="one per route. They hold no styling of their own; they compose shared components and own the queries." />
+- **Shared**: <Localized fa="کتابخانه‌ی کامپوننت‌ها. هر پوشه یک کامپوننت است با یک بارل، یک استوری و اینترفیسِ props خودش. همان JSDoc روی این اینترفیس‌ها ستونِ Description تبِ Docs را پر می‌کند." en="the component library. Each folder is one component with a barrel, a story, and its own props interface. The JSDoc on those interfaces is what fills the Description column of the generated Docs tab." />
+- **Core**: <Localized fa="پایگاه‌داده، پوسته، نمونه‌ی i18n و کلاینتِ کوئری. بدون UI." en="the database, the theme, the i18n instance and the query client. No UI." />
 
 ---
 
@@ -109,14 +109,14 @@ import { Localized } from 'src/shared/story-docs/Localized'
     <>
       <strong>مقدارِ تومان منجمد است.</strong> دریافتی به تتر یا دلار، نرخی را که تایپ کردی و رقمِ تومانِ محاسبه‌شده از
       آن را یک‌بار، در همان لحظه‌ی ثبت، ذخیره می‌کند. هیچ‌چیز هنگام خواندن دوباره حسابش نمی‌کند. تغییرِ نرخ در ماهِ بعد
-      نباید آنچه ماهِ پیش درآوردی را بازنویسی کند — همین دلیلِ کل ماجراست که بشود روی سند به آن عدد اعتماد کرد.
+      نباید آنچه ماهِ پیش درآوردی را بازنویسی کند، همین دلیلِ کل ماجراست که بشود روی سند به آن عدد اعتماد کرد.
     </>
   }
   en={
     <>
       <strong>The Toman value is frozen.</strong> A receipt in Tether or dollars stores the rate you typed and the
       Toman figure computed from it, once, at the moment you record it. Nothing recomputes it on read. A rate change
-      next month must not restate what you earned last month — that is the whole reason the number can be trusted on a
+      next month must not restate what you earned last month, that is the whole reason the number can be trusted on a
       document.
     </>
   }
@@ -143,13 +143,13 @@ import { Localized } from 'src/shared/story-docs/Localized'
   fa={
     <>
       <strong>هر رشته‌ای که کاربر می‌بیند از Lingui رد می‌شود.</strong> شناسه‌ی پیام‌ها به انگلیسی نوشته می‌شود؛ فارسی
-      در کاتالوگ است. یک رشته‌ی لخت — به هر زبانی — لینت را رد می‌کند.
+      در کاتالوگ است. یک رشته‌ی لخت، به هر زبانی، لینت را رد می‌کند.
     </>
   }
   en={
     <>
       <strong>Every user-facing string goes through Lingui.</strong> Message ids are written in English; Persian lives
-      in the catalog. A bare string — in either language — fails lint.
+      in the catalog. A bare string, in either language, fails lint.
     </>
   }
 />
@@ -158,7 +158,7 @@ import { Localized } from 'src/shared/story-docs/Localized'
 
 ## <Localized fa="رفتارِ جالب کجا زندگی می‌کند" en="Where the interesting behaviour lives" />
 
-- **`Pages/QuickEntry`** — <Localized fa="مسیرِ ثبتِ پانزده‌ثانیه‌ای، و آنچه وقتی دریافتی را عقب‌تاریخ می‌زنی می‌افتد." en="the fifteen-second entry path, and what happens when you backdate a receipt." />
-- **`Pages/Ledger`** — <Localized fa="فیلتر کردن، جمعِ جاری، و اینکه جدول روی موبایل به‌جای پنهان‌کردنِ درآمد، ستون می‌اندازد." en="filtering, the running total, and how the table sheds columns on a phone rather than hiding the income." />
-- **`Shared/IncomeCertificate`** — <Localized fa="خودِ سند. پیش‌نمایشِ روی صفحه و صفحه‌ی چاپی از یک مدل می‌سازند، پس نمی‌توانند دو چیزِ متفاوت بگویند." en="the document itself. The on-screen preview and the printed page render from one model, so they cannot say different things." />
-- **`Design/Tokens`** — <Localized fa="پالت و نردبانِ تایپ، از جمله دو آبی‌ای که به‌راحتی اشتباه گرفته می‌شوند." en="the palette and type ramp, including the two blues that are easy to confuse." />
+- **`Pages/QuickEntry`**: <Localized fa="مسیرِ ثبتِ پانزده‌ثانیه‌ای، و آنچه وقتی دریافتی را عقب‌تاریخ می‌زنی می‌افتد." en="the fifteen-second entry path, and what happens when you backdate a receipt." />
+- **`Pages/Ledger`**: <Localized fa="فیلتر کردن، جمعِ جاری، و اینکه جدول روی موبایل به‌جای پنهان‌کردنِ درآمد، ستون می‌اندازد." en="filtering, the running total, and how the table sheds columns on a phone rather than hiding the income." />
+- **`Shared/IncomeCertificate`**: <Localized fa="خودِ سند. پیش‌نمایشِ روی صفحه و صفحه‌ی چاپی از یک مدل می‌سازند، پس نمی‌توانند دو چیزِ متفاوت بگویند." en="the document itself. The on-screen preview and the printed page render from one model, so they cannot say different things." />
+- **`Design/Tokens`**: <Localized fa="پالت و نردبانِ تایپ، از جمله دو آبی‌ای که به‌راحتی اشتباه گرفته می‌شوند." en="the palette and type ramp, including the two blues that are easy to confuse." />

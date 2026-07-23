@@ -33,18 +33,8 @@ type Story = StoryObj<typeof meta>
 
 const seeded = { page: { data: 'full' } }
 
-/** Scenario 4: the year bar chart, the donut with its insight, and the ranked client list. */
 export const WithData: Story = { parameters: seeded }
 
-/**
- * A year with nothing recorded — the empty state rather than twelve zero bars.
- *
- * The distinction is the point. `ShowsTheWholeYearAndTheRisk` proves a quiet
- * MONTH keeps its bar, because dropping it would make a patchy year look
- * continuous. A quiet YEAR is a different thing: twelve empty bars and a donut
- * with no slices read as a broken page, and the one useful thing to say to
- * someone who has recorded nothing is how to record something.
- */
 export const Empty: Story = {
   parameters: { page: { data: 'empty', route: '/charts' } },
   render: () => (
@@ -70,15 +60,6 @@ export const Empty: Story = {
   },
 }
 
-/**
- * Scenario 4, asserted rather than eyeballed.
- *
- * The brief is explicit that a month with no income keeps a zero bar instead of
- * disappearing — a chart that silently drops empty months makes a patchy year
- * look continuous, which is the opposite of what this page is for. And the
- * concentration warning has to actually fire, because a freelancer usually
- * learns about that dependency only once the client has gone.
- */
 export const ShowsTheWholeYearAndTheRisk: Story = {
   parameters: seeded,
   play: async ({ canvasElement }) => {
@@ -111,16 +92,6 @@ const tomanReceipt = (id: string, clientId: string, amountToman: number): Receip
   updatedAt: new Date().toISOString(),
 })
 
-/**
- * The other half of the concentration rule, and the reason it needs the REAL
- * database: the seeded fixture sets the insight whenever any share exists, so
- * `ShowsTheWholeYearAndTheRisk` would stay green with the >50% threshold
- * deleted. Four clients paying equally is a 25% top share, and the callout has
- * to stay silent.
- *
- * A warning that always fires is worse than none. It teaches a freelancer to
- * skip past it, and then the real 80% year goes unread.
- */
 export const ConcentrationStaysQuietWhenSpread: Story = {
   beforeEach: async () => {
     const clear = async () => {

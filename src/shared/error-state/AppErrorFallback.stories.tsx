@@ -12,22 +12,10 @@ type Story = StoryObj<typeof meta>
 
 const CAUSE = 'Failed to open IndexedDB: QuotaExceededError'
 
-/**
- * Rule 9: no «خطایی رخ داد». It says what happened, reassures that the data is
- * intact, and gives the next step. The raw message is shown too — in a tool
- * holding financial history, hiding the cause would leave the user unable to
- * tell a glitch from real data loss.
- */
 export const Default: Story = {
   args: { error: new Error(CAUSE), resetErrorBoundary: fn() },
 }
 
-/**
- * The screen as a whole has to answer "what do I do now". Asserting the heading
- * alone would pass on a page that says «یه جای کار خطا خورد» and nothing else,
- * which is exactly the screen rule 9 forbids — so this checks the reassurance,
- * the raw cause, and all three numbered ways out.
- */
 export const TellsTheUserWhatToDo: Story = {
   args: { error: new Error(CAUSE), resetErrorBoundary: fn() },
   play: async ({ canvasElement }) => {
@@ -58,11 +46,6 @@ export const TellsTheUserWhatToDo: Story = {
   },
 }
 
-/**
- * Step 1 claims "nothing is changed or reloaded". The only thing that can be
- * true of is re-rendering the boundary, so that is what the button must call —
- * a button that quietly reloaded instead would lose whatever the user had typed.
- */
 export const TryAgainRerenders: Story = {
   args: { error: new Error(CAUSE), resetErrorBoundary: fn() },
   play: async ({ args, canvasElement }) => {
@@ -74,12 +57,6 @@ export const TryAgainRerenders: Story = {
   },
 }
 
-/**
- * Step 3A is the only thing standing between the user and losing everything at
- * step 3B, so the backup has to actually run — and it runs through
- * `exportBackupMutation`, which validates every row and throws on a corrupt
- * one. The label flipping to «دانلود شد» is the proof it resolved.
- */
 export const TakesABackupBeforeErasing: Story = {
   args: { error: new Error(CAUSE), resetErrorBoundary: fn() },
   play: async ({ canvasElement }) => {
@@ -98,11 +75,6 @@ export const TakesABackupBeforeErasing: Story = {
   },
 }
 
-/**
- * Step 3B erases every receipt the user has. It must not be one click away from
- * a screen someone lands on in a panic: the dialog spells out what goes, and
- * the confirm button stays dead until the word is typed.
- */
 export const ErasingNeedsTheWordTyped: Story = {
   args: { error: new Error(CAUSE), resetErrorBoundary: fn() },
   play: async ({ canvasElement }) => {
@@ -125,11 +97,6 @@ export const ErasingNeedsTheWordTyped: Story = {
   },
 }
 
-/**
- * English mode. The step numbers are user-visible text, so they follow the
- * locale — «۱ ۲ ۳» on an English screen is the same bug as Persian numerals in
- * the ledger, and the enumeration letters are الف/ب rather than A/B in Persian.
- */
 export const English: Story = {
   args: { error: new Error(CAUSE), resetErrorBoundary: fn() },
   globals: { locale: 'en-US' },

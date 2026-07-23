@@ -10,15 +10,14 @@ const meta = {
   // `ChartCard` forwards the rest of `PaperProps`, so docgen offers all of
   // MUI's surface props. These are the four the design actually varies.
   argTypes: {
-    title: { control: 'text', description: 'The panel heading. Left blank, each story falls back to its translated sample.' },
-    subtitle: { control: 'text', description: 'A line under the title saying what the figures cover.' },
+    title: { control: 'text' },
+    subtitle: { control: 'text' },
     variant: {
       control: 'inline-radio',
       options: ['chart', 'content'],
-      description: '`chart` is the Charts page treatment — 16px, no shadow. `content` is the dashboard’s — 20px with Elevation/1.',
     },
-    action: { control: false, description: 'A control aligned opposite the title, such as a link to the full page.' },
-    children: { control: false, description: 'The chart, or whatever the panel is wrapping.' },
+    action: { control: false },
+    children: { control: false },
   },
   // `children` is required by the props but supplied by `View`, whose JSX
   // children win over anything spread in — so this only satisfies the type.
@@ -77,30 +76,21 @@ const headingIsLevelThree: Story['play'] = async ({ canvasElement }) => {
   await expect(await canvas.findByRole('heading', { level: 3, name: /^مشتری‌های برتر$|^Top clients$/ })).toBeInTheDocument()
 }
 
-/** The Charts page treatment: a heading and the panel, nothing else. */
 export const TitleOnly: Story = {
   render: (args) => <View {...args} />,
   play: headingIsLevelThree,
 }
 
-/** The second line, for a panel whose figures need their range stated. */
 export const WithSubtitle: Story = {
   render: (args) => <View withSubtitle {...args} />,
 }
 
-/** The dashboard's treatment: 20px and Elevation/1, for a panel among cards rather than among charts. */
 export const Content: Story = {
   args: { variant: 'content' },
   render: (args) => <View withSubtitle {...args} />,
   play: headingIsLevelThree,
 }
 
-/**
- * The `action` slot: a control aligned opposite the title, which on the
- * dashboard is «مشاهده همه» out of the latest-receipts panel. It sits in the
- * title row, so a long English title has to wrap around it rather than push it
- * off the card.
- */
 export const WithAction: Story = {
   args: { variant: 'content' },
   render: (args) => <View {...args} action={<ViewAll />} />,

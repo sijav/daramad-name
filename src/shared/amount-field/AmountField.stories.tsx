@@ -10,16 +10,14 @@ const meta = {
   title: 'Shared/AmountField',
   component: AmountField,
   argTypes: {
-    onValueChange: { description: 'Fires on every keystroke, with `null` while the field is empty.' },
-    value: { description: 'The amount, or `null` for an empty field — which is not the same as zero.' },
     currency: { control: 'select', options: [...CURRENCIES] },
     error: { control: 'boolean' },
     autoFocus: { control: 'boolean' },
     // The label and the helper text are caller-supplied, and every caller
     // passes a catalog message. The harness does the same, so switching the
     // Language toolbar cannot leave an English label on a Persian card.
-    label: { description: 'The caption above the field.', control: false },
-    helperText: { description: 'What is wrong, or what the field expects.', control: false },
+    label: { control: false },
+    helperText: { control: false },
   },
 } satisfies Meta<typeof AmountField>
 
@@ -59,7 +57,6 @@ const base = { label: 'Amount received', value: null, currency: 'TOMAN' as const
 
 const amountBox = async (canvasElement: HTMLElement) => within(canvasElement).findByRole<HTMLInputElement>('textbox')
 
-/** Toman has no sub-unit, so no decimals are accepted. */
 export const Toman: Story = {
   args: { ...base, value: 2500000 },
   render: Controlled,
@@ -71,12 +68,6 @@ export const Toman: Story = {
   },
 }
 
-/**
- * Tether and USD carry two decimals. The field takes its decimal count from the
- * currency, so a Tether amount keeps its cents — dropping them here would
- * silently round every foreign receipt to a whole unit before the rate is even
- * applied.
- */
 export const Tether: Story = {
   args: { ...base, value: 1500, currency: 'USDT' },
   render: Controlled,
@@ -88,7 +79,6 @@ export const Tether: Story = {
   },
 }
 
-/** The third currency, so every member of the union has a rendered unit label. */
 export const Dollar: Story = {
   args: { ...base, value: 1200.5, currency: 'USD' },
   render: Controlled,
@@ -100,13 +90,8 @@ export const Dollar: Story = {
   },
 }
 
-/** Empty state — the placeholder box keeps its full height so the form does not jump. */
 export const Empty: Story = { args: base, render: Controlled }
 
-/**
- * The reason, not just a red outline — a colour alone says nothing about what
- * to do next.
- */
 export const Invalidated: Story = {
   args: { ...base, error: true },
   render: Controlled,

@@ -7,18 +7,12 @@ const meta = {
   component: RowActionsMenu,
   argTypes: {
     onView: { description: "Opens the details drawer. The only way to read a receipt's note and frozen rate." },
-    onEdit: { description: 'Opens the edit dialog on that row.' },
     onDelete: { description: "Asks to delete. The confirmation is the caller's, not this menu's." },
   },
 } satisfies Meta<typeof RowActionsMenu>
 export default meta
 type Story = StoryObj<typeof meta>
 
-/**
- * One trigger per ledger row. A menu rather than three inline icon buttons:
- * the row already carries a channel Tag and two money columns, and each action
- * gets a readable label instead of an icon to decode.
- */
 export const Default: Story = { args: { onView: fn(), onEdit: fn(), onDelete: fn() } }
 
 const TRIGGER = /^عملیات$|^Actions$/
@@ -26,15 +20,6 @@ const VIEW = /^مشاهده جزئیات$|^View details$/
 const EDIT = /^ویرایش$|^Edit$/
 const DELETE = /^حذف$|^Delete$/
 
-/**
- * Every action in this menu is wired through the same `run()` helper, so a
- * swapped argument would send "delete" where "view" was clicked and nothing
- * would look wrong until a receipt disappeared. Each item is therefore clicked
- * separately and the other two spies are asserted to be untouched.
- *
- * The menu is portalled — it is NOT inside `canvasElement`, which is why the
- * items are queried from the document body.
- */
 export const EachActionRunsItsOwnCallback: Story = {
   args: { onView: fn(), onEdit: fn(), onDelete: fn() },
   play: async ({ args, canvasElement, step }) => {
@@ -82,11 +67,6 @@ export const EachActionRunsItsOwnCallback: Story = {
   },
 }
 
-/**
- * Dismissing the menu must not run anything. The delete item sits one row below
- * the pointer, and this ledger has no server copy — a close that fired the
- * highlighted action would be unrecoverable.
- */
 export const DismissingRunsNothing: Story = {
   args: { onView: fn(), onEdit: fn(), onDelete: fn() },
   play: async ({ args, canvasElement }) => {

@@ -12,6 +12,7 @@ import { settingsQueryKey } from 'src/shared/queries'
 import { FIXTURE_SETTINGS_PROFILE, seedPageData } from 'src/shared/story-fixtures'
 import type { AppLocale, Settings, ThemePreference } from 'src/shared/types'
 import { LocalizedDocs } from './LocalizedDocs'
+import { LocalizedDocsContainer } from './LocalizedDocsContainer'
 
 // Stories render through the same providers as the app: lingui for copy,
 // TanStack Query because several components read settings via a query, and the
@@ -181,11 +182,9 @@ const preview: Preview = {
     docs: {
       // A component with six state variants is a page worth navigating.
       toc: true,
-      // The generated Docs page, with its description chosen by the Language
-      // toolbar. Autodocs reads the JSDoc above each `meta` at build time, so
-      // without this the pages are permanently English while every story beside
-      // them switches. The Persian lives in `src/shared/story-docs/fa`.
+      // Both language-aware. See `src/shared/story-docs/README.md`.
       page: LocalizedDocs,
+      container: LocalizedDocsContainer,
     },
     // No `actions.argTypesRegex` here on purpose.
     //

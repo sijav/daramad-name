@@ -69,19 +69,17 @@ const meta = {
   title: 'Core/useLocaleSync',
   component: Harness,
   args: { locale: 'fa-IR' },
-  argTypes: { locale: { control: 'inline-radio', options: ['fa-IR', 'en-US'] } },
+  argTypes: {
+    locale: {
+      control: 'inline-radio',
+      options: ['fa-IR', 'en-US'],
+    },
+  },
 } satisfies Meta<typeof Harness>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
-/**
- * The ordinary case: the persisted locale is already the active one.
- *
- * The gate must be open on the FIRST paint. If `ready` started false here, every
- * reload and every route change would flash a full-page spinner before the
- * dashboard appeared.
- */
 export const AlreadyActiveLocalePaintsImmediately: Story = {
   // Persisted locale AND active catalog are both fa-IR, which is what "already
   // active" means. Under the English toolbar this story tests the opposite case.
@@ -94,13 +92,6 @@ export const AlreadyActiveLocalePaintsImmediately: Story = {
   },
 }
 
-/**
- * The user has switched to English in Settings and reloaded.
- *
- * The persisted locale no longer matches the active catalog, so the gate must
- * hold — and then open onto the English catalog, not onto the message ids that
- * happen to look like English.
- */
 export const AWaitingLocaleHoldsTheGateShut: Story = {
   args: { locale: 'en-US' },
   // The MISMATCH is the fixture: en-US persisted against the fa-IR catalog the

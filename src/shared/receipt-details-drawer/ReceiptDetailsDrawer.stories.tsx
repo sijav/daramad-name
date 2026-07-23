@@ -6,12 +6,6 @@ import { ReceiptDetailsDrawer } from './ReceiptDetailsDrawer'
 const meta = {
   title: 'Shared/ReceiptDetailsDrawer',
   component: ReceiptDetailsDrawer,
-  argTypes: {
-    receipt: { description: 'The receipt to show; `null` closes the drawer. Selection is what opens it.' },
-    onClose: { description: 'Backdrop, Escape and the close button all arrive here.' },
-    onEdit: { description: 'Hands the same receipt back, so the caller need not track the selection twice.' },
-    onDelete: { description: 'Asks to delete. The confirmation belongs to the page, not the drawer.' },
-  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -36,16 +30,10 @@ const receipt = (overrides: Partial<ReceiptWithClient>): ReceiptWithClient => ({
   ...overrides,
 })
 
-/** A toman receipt has no conversion, so no rate block and no frozen badge. */
 export const TomanReceipt: Story = {
   args: { receipt: receipt({}), onClose: fn(), onEdit: fn(), onDelete: fn() },
 }
 
-/**
- * The drawer is where the freeze rule becomes visible: the original amount, the
- * rate it was captured at, and a badge saying it will not move. Without this a
- * Tether receipt whose toman value never changes looks like a bug.
- */
 export const ForeignCurrencyFrozen: Story = {
   args: {
     receipt: receipt({
@@ -63,7 +51,6 @@ export const ForeignCurrencyFrozen: Story = {
   },
 }
 
-/** A receipt with no note must not leave an empty labelled block. */
 export const WithoutNote: Story = {
   args: { receipt: receipt({ note: null }), onClose: fn(), onEdit: fn(), onDelete: fn() },
 }
@@ -72,12 +59,6 @@ const EDIT = /^ویرایش$|^Edit$/
 const DELETE = /^حذف$|^Delete$/
 const FROZEN = /فریز|Frozen/
 
-/**
- * The three numbers on this panel are the only place the user can audit a
- * conversion: 1,500 USDT × 98,500 = 147,750,000. If the rate were rendered from
- * anywhere other than the stored `rate`, the arithmetic printed here would stop
- * reconciling and the "frozen" badge would be a false claim.
- */
 export const ShowsTheStoredConversion: Story = {
   ...ForeignCurrencyFrozen,
   play: async ({ canvasElement, step }) => {
@@ -99,11 +80,6 @@ export const ShowsTheStoredConversion: Story = {
   },
 }
 
-/**
- * A toman receipt was never converted, so there is no rate to show. A "frozen at
- * 0" row here would tell the user their receipt is pinned to an exchange rate
- * that does not exist.
- */
 export const TomanReceiptHidesTheRateBlock: Story = {
   ...TomanReceipt,
   play: async ({ canvasElement }) => {
@@ -118,18 +94,6 @@ export const TomanReceiptHidesTheRateBlock: Story = {
   },
 }
 
-/**
- * What the drawer announces when it opens.
- *
- * The paper IS the `role="dialog"`, and it had no accessible name (axe:
- * `aria-dialog-name`) — a screen reader said "dialog" and stopped. It is now
- * pointed at the heading it already draws, so the two cannot drift apart.
- *
- * The heading count is asserted too: MUI maps the `subtitle2` variant onto
- * `<h6>`, so every one of the eight captions used to be published as a level-6
- * heading under the drawer's single `<h3>` — a fake outline, and the level jump
- * axe reports as `heading-order`.
- */
 export const IsANamedDialogWithOneHeading: Story = {
   ...ForeignCurrencyFrozen,
   play: async ({ canvasElement, step }) => {
@@ -147,10 +111,6 @@ export const IsANamedDialogWithOneHeading: Story = {
   },
 }
 
-/**
- * Both footer buttons hand the receipt back out. Passing the wrong object — or
- * nothing — would open the edit dialog on a different row, or delete one.
- */
 export const FooterActionsCarryTheReceipt: Story = {
   ...ForeignCurrencyFrozen,
   play: async ({ args, canvasElement, step }) => {

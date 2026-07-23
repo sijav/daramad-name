@@ -1,4 +1,5 @@
 import { Meta } from '@storybook/addon-docs/blocks'
+import { Localized } from 'src/shared/story-docs/Localized'
 import { darkColors, lightColors, radius, typeScale } from './tokens'
 
 export const luminance = (hex) => {
@@ -18,17 +19,21 @@ export const contrast = (fg, bg) => {
 
 <Meta title="Design/Tokens" />
 
-# Design tokens
+# <Localized fa="توکن‌های دیزاین" en="Design tokens" />
 
-Everything here comes from the Figma Foundations sheet. Components read these roles rather than
-hexes — a hardcoded colour is how three components once shipped unreadable in dark mode.
+<Localized
+  fa="همه‌ی این‌ها از شیتِ Foundations فیگما می‌آید. کامپوننت‌ها همین نقش‌ها را می‌خوانند نه هگز را؛ رنگِ هاردکدشده همان چیزی است که یک‌بار باعث شد سه کامپوننت در حالتِ تیره ناخوانا منتشر شوند."
+  en="Everything here comes from the Figma Foundations sheet. Components read these roles rather than hexes, a hardcoded colour is how three components once shipped unreadable in dark mode."
+/>
 
 ---
 
-## The two blues
+## <Localized fa="آن دو آبی" en="The two blues" />
 
-The single easiest thing to get wrong in this palette. They are different colours with different
-jobs, and swapping them makes every call-to-action look faded.
+<Localized
+  fa="ساده‌ترین چیزی که در این پالت می‌شود اشتباه گرفت. دو رنگِ متفاوت با دو کارِ متفاوت‌اند، و جابه‌جا کردنشان هر دکمه‌ی اصلی را کم‌رنگ و بی‌جان نشان می‌دهد."
+  en="The single easiest thing to get wrong in this palette. They are different colours with different jobs, and swapping them makes every call-to-action look faded."
+/>
 
 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 16, margin: '16px 0' }}>
   {[
@@ -40,7 +45,7 @@ jobs, and swapping them makes every call-to-action look faded.
     [
       'primary',
       lightColors.primary,
-      'Never type. The container pair behind `primary.dark` (chips, nav rail, primary Tag), and non-text marks — a chip border, a summary-card edge, an icon on `primary.light`.',
+      'Never type. The container pair behind `primary.dark` (chips, nav rail, primary Tag), and non-text marks, a chip border, a summary-card edge, an icon on `primary.light`.',
     ],
   ].map(([name, value, use]) => (
     <div key={name} style={{ border: `1px solid ${lightColors.borderDefault}`, borderRadius: 12, overflow: 'hidden' }}>
@@ -54,31 +59,45 @@ jobs, and swapping them makes every call-to-action look faded.
   ))}
 </div>
 
-**The rule, in one line: `primary` is a container role and never draws type.** #3b6ef5 does not
-reach 4.5:1 on any surface this app paints — 4.39:1 on `surface-default`, 4.21:1 on `surface-subtle`,
-3.99:1 on `brand-primary-subtle` — and white on it is 4.44:1, so it cannot be a fill under type
-either. That is not a colour that can be made to work as ink at 12–16px; it is a colour for
-_containers_ and for _non-text_, where the bar is 3:1.
+<Localized
+  fa={
+    <>
+      <strong>قاعده، در یک خط: `primary` نقشِ ظرف است و هرگز حرف نمی‌کشد.</strong> رنگ #3b6ef5 روی هیچ سطحی که این
+      برنامه می‌کشد به ۴٫۵:۱ نمی‌رسد؛ ۴٫۳۹:۱ روی `surface-default`، ۴٫۲۱:۱ روی `surface-subtle`، ۳٫۹۹:۱ روی
+      `brand-primary-subtle`، و سفید رویش ۴٫۴۴:۱ است، پس زیرِ متن هم نمی‌تواند پس‌زمینه باشد. این رنگی نیست که بشود در
+      اندازه‌ی ۱۲ تا ۱۶ پیکسل به‌عنوانِ جوهر سرِ پا نگهش داشت؛ رنگی است برای <em>ظرف‌ها</em> و برای{' '}
+      <em>غیرمتن</em>، جایی که حدِ لازم ۳:۱ است.
+    </>
+  }
+  en={
+    <>
+      <strong>The rule, in one line: `primary` is a container role and never draws type.</strong> #3b6ef5 does not
+      reach 4.5:1 on any surface this app paints, 4.39:1 on `surface-default`, 4.21:1 on `surface-subtle`, 3.99:1 on
+      `brand-primary-subtle`, and white on it is 4.44:1, so it cannot be a fill under type either. That is not a colour
+      that can be made to work as ink at 12 to 16px; it is a colour for <em>containers</em> and for <em>non-text</em>,
+      where the bar is 3:1.
+    </>
+  }
+/>
 
-So it appears in exactly two shapes: the container pair (`primary.light` background, `primary.dark`
-ink, 13.5:1), and marks that are not letters — a chip border, a summary-card edge, an icon glyph
-sitting on `primary.light`. Everything that is type is `brandPrimary` #3460d6, which clears 4.5:1 on
-all three surfaces above.
+<Localized
+  fa="پس دقیقاً در دو شکل ظاهر می‌شود: جفتِ ظرف (پس‌زمینه‌ی `primary.light` با جوهرِ `primary.dark`، ۱۳٫۵:۱)، و نشانه‌هایی که حرف نیستند؛ کادرِ یک چیپ، لبه‌ی یک کارتِ خلاصه، آیکونی که روی `primary.light` نشسته. هرچه متن است `brandPrimary` #3460d6 است، که روی هر سه سطحِ بالا از ۴٫۵:۱ رد می‌شود."
+  en="So it appears in exactly two shapes: the container pair (`primary.light` background, `primary.dark` ink, 13.5:1), and marks that are not letters, a chip border, a summary-card edge, an icon glyph sitting on `primary.light`. Everything that is type is `brandPrimary` #3460d6, which clears 4.5:1 on all three surfaces above."
+/>
 
-Three things moved to get there, each one a MUI default that resolved `color="primary"` to
-`primary.main` behind our back: the selected segment's fill (white on #3b6ef5 → white on #3460d6,
-4.43:1 → 5.49:1), the outlined button's label (4.39:1 → 5.49:1 on `surface-default`), and the info
-`InsightCallout`'s sentence (3.99:1 → 4.99:1). `theme.test.ts` now asserts no component override
-paints `primary.main` as a `color` at all, because the difference is one step of blue and no reviewer
-will catch it.
+<Localized
+  fa="برای رسیدن به اینجا سه چیز جابه‌جا شد، و هرکدام یک پیش‌فرضِ MUI بود که پشتِ سرِ ما `color=&quot;primary&quot;` را به `primary.main` حل می‌کرد: پس‌زمینه‌ی سگمنتِ انتخاب‌شده (سفید روی #3b6ef5 به سفید روی #3460d6، از ۴٫۴۳:۱ به ۵٫۴۹:۱)، برچسبِ دکمه‌ی outlined (از ۴٫۳۹:۱ به ۵٫۴۹:۱ روی `surface-default`)، و جمله‌ی `InsightCallout` در حالتِ info (از ۳٫۹۹:۱ به ۴٫۹۹:۱). حالا `theme.test.ts` اثبات می‌کند که هیچ override کامپوننتی `primary.main` را به‌عنوانِ `color` نمی‌کشد، چون فاصله‌شان یک پله آبی است و هیچ ریویوئری آن را نمی‌گیرد."
+  en="Three things moved to get there, each one a MUI default that resolved `color=&quot;primary&quot;` to `primary.main` behind our back: the selected segment's fill (white on #3b6ef5 to white on #3460d6, 4.43:1 to 5.49:1), the outlined button's label (4.39:1 to 5.49:1 on `surface-default`), and the info `InsightCallout`'s sentence (3.99:1 to 4.99:1). `theme.test.ts` now asserts no component override paints `primary.main` as a `color` at all, because the difference is one step of blue and no reviewer will catch it."
+/>
 
 ---
 
-## Contrast
+## <Localized fa="کنتراست" en="Contrast" />
 
-Measured, not eyeballed: WCAG 2.1 relative luminance on the exact token hexes. **4.5:1** is the bar
-for body text, **3:1** for text at 18.66px bold or 24px regular and for non-text such as a focus
-ring. Every pair the app actually paints is below; if you add a role, add its pair here.
+<Localized
+  fa="اندازه‌گیری‌شده، نه چشمی: روشناییِ نسبیِ WCAG 2.1 روی همان هگزِ دقیقِ توکن‌ها. حدِ لازم برای متنِ معمولی ۴٫۵:۱ است، و ۳:۱ برای متنِ ۱۸٫۶۶ پیکسلِ بولد یا ۲۴ پیکسلِ معمولی و برای چیزهای غیرمتنی مثلِ حلقه‌ی فوکوس. هر جفتی که برنامه واقعاً می‌کشد پایین آمده؛ اگر نقشی اضافه کردی، جفتش را هم همین‌جا اضافه کن."
+  en="Measured, not eyeballed: WCAG 2.1 relative luminance on the exact token hexes. 4.5:1 is the bar for body text, 3:1 for text at 18.66px bold or 24px regular and for non-text such as a focus ring. Every pair the app actually paints is below; if you add a role, add its pair here."
+/>
 
 <div style={{ margin: '16px 0' }}>
   {[
@@ -129,28 +148,29 @@ ring. Every pair the app actually paints is below; if you add a role, add its pa
   })}
 </div>
 
-Three roles carry a value the Figma sheet does not. `success` and `warning` are drawn as text on
-their own containers — the `Tag` and the chart callout — and the sheet's success/40 #2e9e5b and
-warning/40 #e2a400 measure 3.12:1 and 2.06:1 there, which is unreadable rather than marginal.
-`error` is the same shape of problem at a smaller margin: the sheet's #dc362e is the 12px helper line
-under an invalid field, 4.32:1 on `surface-subtle`, and the fill under white on the destructive
-confirm button, 4.44:1 — both just short. It drops from 52.2% to 50.0% lightness, reaching 4.55:1 and
-4.79:1.
+<Localized
+  fa="سه نقش مقداری دارند که شیتِ فیگما ندارد. `success` و `warning` به‌شکلِ متن روی ظرفِ خودشان کشیده می‌شوند، در `Tag` و در کالوتِ نمودار، و مقادیرِ شیت یعنی success/40 با #2e9e5b و warning/40 با #e2a400 آنجا ۳٫۱۲:۱ و ۲٫۰۶:۱ اندازه می‌گیرند، که ناخواناست نه مرزی. `error` همان مشکل است با حاشیه‌ی کمتر: مقدارِ شیت یعنی #dc362e هم خطِ راهنمای ۱۲ پیکسلیِ زیرِ فیلدِ نامعتبر است با ۴٫۳۲:۱ روی `surface-subtle`، و هم پس‌زمینه‌ی زیرِ سفیدِ دکمه‌ی تأییدِ مخرب با ۴٫۴۴:۱، هر دو کمی کم. روشنایی‌اش از ۵۲٫۲٪ به ۵۰٫۰٪ می‌آید و به ۴٫۵۵:۱ و ۴٫۷۹:۱ می‌رسد."
+  en="Three roles carry a value the Figma sheet does not. `success` and `warning` are drawn as text on their own containers, the `Tag` and the chart callout, and the sheet's success/40 #2e9e5b and warning/40 #e2a400 measure 3.12:1 and 2.06:1 there, which is unreadable rather than marginal. `error` is the same shape of problem at a smaller margin: the sheet's #dc362e is the 12px helper line under an invalid field, 4.32:1 on `surface-subtle`, and the fill under white on the destructive confirm button, 4.44:1, both just short. It drops from 52.2% to 50.0% lightness, reaching 4.55:1 and 4.79:1."
+/>
 
-All three were darkened in HSL **lightness only**, hue and saturation untouched, by the least that
-clears 4.5:1. The containers did not move, and `chartSeries` still carries the original tones: a
-donut slice is a filled area, not 12px type.
+<Localized
+  fa="هر سه فقط در روشناییِ HSL تیره شدند، فام و اشباع دست‌نخورده، و به کمترین اندازه‌ای که از ۴٫۵:۱ رد می‌شود. ظرف‌ها تکان نخوردند، و `chartSeries` هنوز تُنِ اصلی را دارد: یک برشِ دونات یک سطحِ رنگ‌شده است، نه متنِ ۱۲ پیکسلی."
+  en="All three were darkened in HSL lightness only, hue and saturation untouched, by the least that clears 4.5:1. The containers did not move, and `chartSeries` still carries the original tones: a donut slice is a filled area, not 12px type."
+/>
 
-One more thing that is not a colour at all: opacity. The privacy footer sat at `opacity: 0.75`, which
-composited `text.secondary` #626569 down to #888a8e over the page and measured 3.28:1 — a value no
-token audit can see, because no token has it. If a line needs to recede, reach for `text.secondary`
-rather than dimming it; the recession is already in the token, and it is 5.56:1.
+<Localized
+  fa="یک چیزِ دیگر که اصلاً رنگ نیست: شفافیت. فوترِ حریمِ خصوصی روی `opacity: 0.75` بود، که `text.secondary` با #626569 را روی صفحه تا #888a8e ترکیب می‌کرد و ۳٫۲۸:۱ اندازه می‌گرفت، عددی که هیچ ممیزیِ توکنی نمی‌بیند، چون هیچ توکنی آن را ندارد. اگر خطی باید عقب بنشیند، سراغِ `text.secondary` برو نه کم‌کردنِ شفافیت؛ آن عقب‌نشینی از قبل داخلِ توکن هست، و ۵٫۵۶:۱ است."
+  en="One more thing that is not a colour at all: opacity. The privacy footer sat at `opacity: 0.75`, which composited `text.secondary` #626569 down to #888a8e over the page and measured 3.28:1, a value no token audit can see, because no token has it. If a line needs to recede, reach for `text.secondary` rather than dimming it; the recession is already in the token, and it is 5.56:1."
+/>
 
 ---
 
-## Every colour role
+## <Localized fa="همه‌ی نقش‌های رنگ" en="Every colour role" />
 
-Each swatch shows light above dark. A role that looks identical in both is a bug waiting to happen.
+<Localized
+  fa="هر نمونه، روشن را بالای تیره نشان می‌دهد. نقشی که در هر دو یکسان به نظر برسد، خرابی‌ای است که هنوز اتفاق نیفتاده."
+  en="Each swatch shows light above dark. A role that looks identical in both is a bug waiting to happen."
+/>
 
 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))', gap: 12, margin: '16px 0' }}>
   {Object.keys(lightColors)
@@ -171,9 +191,12 @@ Each swatch shows light above dark. A role that looks identical in both is a bug
 
 ---
 
-## Type ramp
+## <Localized fa="نردبانِ تایپ" en="Type ramp" />
 
-Vazirmatn throughout. Line heights are unitless so they survive a user changing their font size.
+<Localized
+  fa="همه‌جا وزیرمتن. ارتفاعِ خط بدونِ واحد است تا وقتی کاربر اندازه‌ی فونتش را عوض می‌کند سرِ پا بماند."
+  en="Vazirmatn throughout. Line heights are unitless so they survive a user changing their font size."
+/>
 
 <div style={{ margin: '16px 0' }}>
   {Object.entries(typeScale).map(([name, style]) => (
@@ -198,7 +221,7 @@ Vazirmatn throughout. Line heights are unitless so they survive a user changing 
 
 ---
 
-## Radii
+## <Localized fa="شعاعِ گوشه‌ها" en="Radii" />
 
 <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', margin: '16px 0' }}>
   {Object.entries(radius).map(([name, value]) => (
@@ -218,6 +241,7 @@ Vazirmatn throughout. Line heights are unitless so they survive a user changing 
   ))}
 </div>
 
-Content cards use **xl**, chart panels **lg**, nested figure boxes **md**, and **full** is the pill
-radius on buttons, chips and segments. The 28px frosted card from an older revision is gone — the
-current system is flat surfaces with a hairline border, and the 28px token went with it.
+<Localized
+  fa="کارت‌های محتوا از **xl** استفاده می‌کنند، پنل‌های نمودار از **lg**، جعبه‌های تودرتوی شکل از **md**، و **full** همان شعاعِ قرصی است روی دکمه‌ها و چیپ‌ها و سگمنت‌ها. کارتِ مات و ۲۸ پیکسلیِ بازنگریِ قبلی رفته است؛ سیستمِ فعلی سطح‌های تخت با یک کادرِ مویی است، و توکنِ ۲۸ پیکسلی هم با آن رفت."
+  en="Content cards use **xl**, chart panels **lg**, nested figure boxes **md**, and **full** is the pill radius on buttons, chips and segments. The 28px frosted card from an older revision is gone, the current system is flat surfaces with a hairline border, and the 28px token went with it."
+/>

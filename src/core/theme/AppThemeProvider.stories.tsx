@@ -3,20 +3,6 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect, waitFor, within } from 'storybook/test'
 import { AppThemeProvider } from './AppThemeProvider'
 
-// `AppThemeProvider` is the only thing standing between a settings row and what
-// the user actually sees: it resolves the colour mode, picks the Emotion cache
-// that mirrors the whole layout, and hands MUI a direction. Every one of those
-// fails silently — the app still renders, just in the wrong scheme or mirrored
-// the wrong way.
-//
-// These stories render a probe INSIDE a second provider. The theme and the
-// Emotion cache come from context, so those assertions really are about the
-// provider under test. `dir`, `lang` and `color-scheme` do NOT: they are written
-// to `<html>` from an effect, effects flush children-first, and the decorator's
-// own provider therefore writes last and wins. Every story that reads the
-// document pins the matching toolbar globals so the two agree — otherwise the
-// assertion is measuring the toolbar and passes only by coincidence.
-
 const Probe = () => {
   const theme = useTheme()
 
@@ -75,18 +61,14 @@ const meta = {
   parameters: { layout: 'padded' },
   argTypes: {
     locale: {
-      description:
-        'Decides text DIRECTION, not the translation: `fa-IR` selects the RTL\nEmotion cache, so every rule the app authors for LTR is mirrored on the way\nout. The catalog is loaded elsewhere.',
       control: 'inline-radio',
       options: ['fa-IR', 'en-US'],
     },
     themePreference: {
-      description: '`system` follows the OS setting and keeps following it as it changes.',
       control: 'inline-radio',
       options: ['light', 'dark', 'system'],
     },
     children: {
-      description: 'The whole app: everything below here reads the theme and the cache.',
       control: false,
       table: { disable: true },
     },
@@ -99,13 +81,6 @@ type Story = StoryObj<typeof meta>
 
 const styleOf = (element: Element) => element.ownerDocument.defaultView!.getComputedStyle(element)
 
-/**
- * A pinned `light` preference stays light, and the document carries it.
- *
- * `dir`, `lang` and `color-scheme` live on `<html>` because screen readers,
- * native form controls and the scrollbar read them from there and from nowhere
- * else — the MUI theme is invisible to all three.
- */
 export const Light: Story = {
   globals: { locale: 'fa-IR', theme: 'light' },
   play: async ({ canvasElement }) => {
@@ -122,13 +97,6 @@ export const Light: Story = {
   },
 }
 
-/**
- * A pinned `dark` preference must swap the actual palette, not just the flag.
- *
- * Asserting on a painted colour rather than on `palette.mode` is deliberate:
- * three components once hardcoded hex and kept their light values here while
- * `mode` reported dark quite happily.
- */
 export const Dark: Story = {
   args: { themePreference: 'dark' },
   globals: { theme: 'dark' },
@@ -148,11 +116,6 @@ export const Dark: Story = {
   },
 }
 
-/**
- * `system` follows the OS. A flipped ternary here would look correct to anyone
- * whose machine matches the default, which is why the expectation is computed
- * from the media query rather than written down.
- */
 export const System: Story = {
   args: { themePreference: 'system' },
   play: async ({ canvasElement }) => {
@@ -164,13 +127,6 @@ export const System: Story = {
   },
 }
 
-/**
- * Persian mirrors the layout through Emotion, not through component code.
- *
- * If the stylis plugin is not wired — or `stylis` drifts off the 4.2.0 the
- * cache bundles — nothing throws: the CSS simply stops being flipped and every
- * inset in the app lands on the wrong side.
- */
 export const PersianMirrorsTheLayout: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
@@ -183,7 +139,6 @@ export const PersianMirrorsTheLayout: Story = {
   },
 }
 
-/** English keeps the same rule authored physically, so nothing is flipped. */
 export const EnglishKeepsTheLayout: Story = {
   args: { locale: 'en-US' },
   globals: { locale: 'en-US' },
@@ -206,14 +161,6 @@ export const EnglishKeepsTheLayout: Story = {
   },
 }
 
-/**
- * A column of money reads right-aligned in BOTH directions.
- *
- * `align="right"` emits `text-align: right`, which the RTL plugin dutifully
- * mirrors to the left — so the theme counter-flips and authors `left` under
- * RTL. Get either half wrong and the figures land on the wrong edge in exactly
- * one language.
- */
 export const FiguresStayRightAlignedInPersian: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
@@ -231,14 +178,6 @@ export const FiguresStayRightAlignedInEnglish: Story = {
   },
 }
 
-/**
- * The two blues, as painted — and in the two jobs that keep them apart.
- *
- * #3460d6 FILLS a button, because a fill carries type and has to reach 4.5:1
- * against it. #3b6ef5 EDGES a chip, because a border is non-text and only has
- * to reach 3:1. They are one step apart, so merging them onto `primary.main` is
- * invisible in review and obvious beside the design.
- */
 export const TheTwoBluesArePainted: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
@@ -248,15 +187,6 @@ export const TheTwoBluesArePainted: Story = {
   },
 }
 
-/**
- * `primary` never draws type; `brandPrimary` does.
- *
- * The rule reads cleanly and paints wrongly the moment one MUI default slips
- * through, which is exactly what happened: `variant="outlined"` resolved its
- * label to `primary.main` and put 14/600 #3b6ef5 on `surface-default` at
- * 4.39:1. Nothing about that is visible — it is one step of blue — so it is
- * asserted rather than reviewed.
- */
 export const EveryButtonInkIsTheBrandBlue: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)

@@ -3,13 +3,6 @@ import { useEffect } from 'react'
 import { expect, fn, waitFor, within } from 'storybook/test'
 import { InstallAppSection } from './InstallAppSection'
 
-/**
- * The Settings row that installs the app to the home screen.
- *
- * It renders nothing at all until the browser says installation is possible,
- * which is a state no test runner can produce on its own — so the stories build
- * the `beforeinstallprompt` event by hand and fire it from a parent effect.
- */
 const meta = {
   title: 'PWA/InstallAppSection',
   component: InstallAppSection,
@@ -51,17 +44,12 @@ const Harness = ({ outcome, onPrompt }: { outcome: 'accepted' | 'dismissed'; onP
   return <InstallAppSection />
 }
 
-/**
- * Nothing is rendered until the browser offers installation — which is the
- * state every visit starts in, and the only state Firefox and iOS ever reach.
- */
 export const NotOffered: Story = {
   play: async ({ canvasElement }) => {
     await expect(canvasElement.querySelector('button')).toBe(null)
   },
 }
 
-/** Once Chrome has fired the event, the section appears with the install button. */
 export const Offered: Story = {
   render: () => <Harness outcome="dismissed" onPrompt={fn()} />,
   play: async ({ canvasElement }) => {
@@ -74,11 +62,6 @@ export const Offered: Story = {
 
 const onPrompt = fn()
 
-/**
- * Pressing the button opens the browser's dialog, and the handle is spent
- * afterwards — so the section removes itself rather than offering a second
- * press, which would throw.
- */
 export const PromptsAndClears: Story = {
   render: () => <Harness outcome="accepted" onPrompt={onPrompt} />,
   play: async ({ canvasElement, userEvent }) => {

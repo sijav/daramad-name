@@ -71,18 +71,6 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-/**
- * The Persian certificate, and the reason this route sits OUTSIDE the app shell.
- *
- * Everything the browser paints here ends up on paper. A nav rail, a bottom bar
- * or a stray toolbar would print onto a document someone hands to an embassy,
- * so the page is asserted to carry exactly one control — the print button — and
- * that control is asserted to be marked `no-print`.
- *
- * The document title matters for the same reason: the browser names the saved
- * PDF after it, and a file called «درآمدنامه.pdf» tells the person receiving it
- * nothing. It has to be the reference printed on the page.
- */
 export const Persian: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -110,16 +98,6 @@ export const Persian: Story = {
   },
 }
 
-/**
- * `?lang=en` is the only thing that makes this the English document, and the
- * report page builds that URL by hand. If the parameter stopped being read, the
- * user would click "English", get a new tab, and hand a Persian page to an
- * embassy without noticing.
- *
- * So this asserts the VALUES, not the labels: no Persian numeral may survive
- * anywhere in the document, and the Latin spelling of the name — the one the
- * holder entered to match their passport — is the one printed.
- */
 export const English: Story = {
   parameters: { page: { data: 'full', route: `/certificate?year=${thisYear}&lang=en` } },
   play: async ({ canvasElement }) => {
@@ -142,12 +120,6 @@ export const English: Story = {
   },
 }
 
-/**
- * `?year=` selects the period. It comes from a link the user clicked on another
- * page, so nothing on this page can correct it — a certificate silently
- * covering the wrong twelve months is indistinguishable from a correct one
- * until someone checks it against a bank statement.
- */
 export const AnotherYear: Story = {
   parameters: { page: { data: 'full', route: `/certificate?year=${thisYear - 1}` } },
   beforeEach: seedPreviousYear,
@@ -165,15 +137,6 @@ export const AnotherYear: Story = {
   },
 }
 
-/**
- * A year the holder recorded nothing in.
- *
- * `?year=` is a hand-editable part of a URL that opens in a new tab, so the
- * report page's own refusal to export an empty year does not reach this route.
- * A certificate stating zero is not a neutral outcome: it is a signed-looking
- * statement that the person earned nothing, and it would be produced by the same
- * layout, serial and letterhead as a real one.
- */
 export const NoIncomeForThatYear: Story = {
   parameters: { page: { data: 'empty', route: `/certificate?year=${thisYear}` } },
   play: async ({ canvasElement }) => {

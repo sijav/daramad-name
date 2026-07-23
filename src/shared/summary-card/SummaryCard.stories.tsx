@@ -25,24 +25,21 @@ const meta = {
   title: 'Shared/SummaryCard',
   component: SummaryCard,
   argTypes: {
-    label: { control: 'text', description: 'The caption above the figure. Left blank, each story falls back to its translated sample.' },
+    label: { control: 'text' },
     value: {
       control: 'text',
-      description: 'A number renders as money through `MoneyText`; a string renders verbatim, for counts that are not amounts.',
     },
-    hint: { control: 'text', description: 'A line under the figure saying how it was derived — the averaging basis, on the report.' },
+    hint: { control: 'text' },
     emphasis: {
       control: 'boolean',
-      description: 'Paints the card in `primary.light`. At most one tile per row, or nothing is emphasised.',
     },
-    icon: { control: false, description: 'Shown in a 36px tinted chip beside the label.' },
+    icon: { control: false },
   },
   args: { label: '', value: 649980000, hint: '', emphasis: false },
 } satisfies Meta<typeof SummaryCard>
 export default meta
 type Story = StoryObj<typeof meta>
 
-/** The default tile: a money figure, its caption, and the icon chip. */
 export const Money: Story = {
   render: (args) => {
     const { t } = useLingui()
@@ -50,7 +47,6 @@ export const Money: Story = {
   },
 }
 
-/** The emphasised tile — the one figure on a row that answers the page's question. */
 export const Emphasised: Story = {
   args: { emphasis: true },
   render: (args) => {
@@ -59,11 +55,6 @@ export const Emphasised: Story = {
   },
 }
 
-/**
- * `value` as a string: a receipt COUNT is not money, so it must not be grouped
- * or given a currency — but it still has to be in the reader's digits, which is
- * why the caller formats it rather than passing a bare number.
- */
 export const CountRatherThanMoney: Story = {
   args: { value: '' },
   render: (args) => {
@@ -80,10 +71,6 @@ export const CountRatherThanMoney: Story = {
   },
 }
 
-/**
- * The hint line. On the report this is where the averaging basis is stated — a
- * figure whose derivation is not on the page is a figure nobody can check.
- */
 export const WithHint: Story = {
   args: { value: 54165000 },
   render: (args) => {
@@ -100,13 +87,6 @@ export const WithHint: Story = {
   },
 }
 
-/**
- * The dashboard's four-across row — the tiles must survive being narrow.
- *
- * A composition of four different cards, so there is no single card for the
- * Controls panel to drive. It is switched off here rather than left looking
- * live and doing nothing.
- */
 export const DashboardRow: Story = {
   parameters: { controls: { disable: true } },
   render: () => {

@@ -21,7 +21,6 @@ const meta = {
   component: SettingsSection,
   argTypes: {
     title: { description: "The group's name, rendered as an `h3` so the page is navigable by heading." },
-    children: { description: 'The rows — `SettingRow` and `SettingButton`, in the order the design lists them.' },
   },
   // `title` and `children` are both composed inside the render — the copy goes
   // through the catalog like the settings page's does, and `children` is a tree
@@ -39,7 +38,6 @@ export default meta
 // them.
 type Story = StoryObj<SectionArgs>
 
-/** The design's data section, row for row — including the destructive tone. */
 export const DataAndBackup: Story = {
   render: function Render(args) {
     const { t } = useLingui()
@@ -76,7 +74,6 @@ export const DataAndBackup: Story = {
   },
 }
 
-/** A statement-only section, like the design's privacy block. */
 export const StatementOnly: Story = {
   render: function Render() {
     const { t } = useLingui()

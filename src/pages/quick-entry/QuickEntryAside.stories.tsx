@@ -15,12 +15,6 @@ import { QuickEntryAside } from './QuickEntryAside'
 const meta = {
   title: 'Pages/QuickEntry/Aside',
   component: QuickEntryAside,
-  argTypes: {
-    onPickClient: {
-      description:
-        'Fills the form\'s client field. Without it the "recent clients" chips are\ninert — an outlined chip in a form column reads as tappable, so a user taps\none, nothing happens, and they type the name by hand. That is also how a\nsecond «Aria Trading » gets created and splits a client\'s totals.',
-    },
-  },
   parameters: { layout: 'padded', page: { route: '/quick-entry' } },
   beforeEach: async () => await seedDatabase(),
 } satisfies Meta<typeof QuickEntryAside>
@@ -32,7 +26,6 @@ export const Default: Story = {
   args: { onPickClient: fn() },
 }
 
-/** Tapping a recent client hands the name back, so the form can fill itself. */
 export const PickingAClientReportsTheName: Story = {
   args: { onPickClient: fn() },
   play: async ({ canvasElement, args }) => {
@@ -46,12 +39,6 @@ export const PickingAClientReportsTheName: Story = {
   },
 }
 
-/**
- * With no handler the chips must not pretend to be actionable.
- *
- * `onPickClient` is optional, and a chip that renders as a button while doing
- * nothing is the defect this component already had once.
- */
 export const WithoutAHandlerTheChipsAreNotButtons: Story = {
   args: {},
   play: async ({ canvasElement }) => {

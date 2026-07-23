@@ -16,10 +16,6 @@ import { MonthlyIncomeChart } from './MonthlyIncomeChart'
 const meta = {
   title: 'Pages/Charts/MonthlyIncomeChart',
   component: MonthlyIncomeChart,
-  argTypes: {
-    months: { description: 'All twelve buckets, including the empty ones — a missing month would hide the gap.' },
-    calendar: { description: 'Names the months. A Jalali year starts at Farvardin, a Gregorian one at January.' },
-  },
 } satisfies Meta<typeof MonthlyIncomeChart>
 
 export default meta
@@ -39,15 +35,6 @@ const inCard: Story['render'] = (args) => (
   </SurfaceCard>
 )
 
-/**
- * Every month is plotted, including the empty ones. Mordad here is a zero bar,
- * not a missing column — dropping empty months would compress the axis and hide
- * exactly the gap a freelancer needs to see.
- *
- * The bars are the only text alternative the chart has, so they are read here
- * rather than looked at: twelve of them, each named, and the quiet ones saying
- * they are quiet instead of announcing a bare zero.
- */
 export const WithEmptyMonths: Story = {
   args: { calendar: 'JALALI', months: PATCHY },
   render: inCard,
@@ -68,11 +55,6 @@ export const WithEmptyMonths: Story = {
   },
 }
 
-/**
- * The same year read left to right. The DOM order flips with it — which is the
- * point: the reversal is done in the markup, not with `direction: ltr`, because
- * the stylis RTL plugin would mirror that straight back.
- */
 export const LeftToRight: Story = {
   args: { calendar: 'JALALI', months: PATCHY },
   render: inCard,
@@ -86,13 +68,11 @@ export const LeftToRight: Story = {
   },
 }
 
-/** A year with income every month. */
 export const FullYear: Story = {
   args: { calendar: 'JALALI', months: months([22, 108, 125, 67, 40, 55, 33, 15, 90, 12, 52, 70].map((m) => m * 1_000_000)) },
   render: inCard,
 }
 
-/** The first-month case: a single bar must not blow out the axis. */
 export const SingleMonth: Story = {
   args: { calendar: 'JALALI', months: months([18000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]) },
   render: inCard,

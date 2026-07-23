@@ -43,22 +43,11 @@ const Controlled: Story['render'] = function Render(args) {
   )
 }
 
-/** The receipt channel picker. The selected pill takes the primary container fill. */
 export const Channels: Story = {
   args: { label: 'Payment channel', value: 'TETHER', options: CHANNELS, onValueChange: fn() },
   render: Controlled,
 }
 
-/**
- * Inside a `Field` that already prints a label, so the row draws no caption of
- * its own.
- *
- * `role="radiogroup"` is not a labelable element — the wrapping `<label>` that
- * names every other control in the form does not reach it — so the group points
- * at the label text by id instead, the way `DateField` names MUI X's picker.
- * The earlier version of this story simply omitted the label, which left the
- * group with no accessible name at all.
- */
 export const LabelledByTheFieldAround: Story = {
   args: { value: 'CARD_TO_CARD', options: CHANNELS, labelId: 'channel-label', onValueChange: fn() },
   render: function Render(args) {
@@ -82,12 +71,6 @@ export const LabelledByTheFieldAround: Story = {
   },
 }
 
-/**
- * More channels than fit on one line. The row wraps rather than scrolling or
- * squeezing the pills — `flexWrap` on the group exists for exactly this, and
- * nothing else exercised it. Arrow traversal follows the options, not the
- * visual rows, so it keeps working across the wrap.
- */
 export const WrapsOntoASecondRow: Story = {
   args: {
     label: 'Payment channel',
@@ -105,17 +88,6 @@ export const WrapsOntoASecondRow: Story = {
   render: Controlled,
 }
 
-/**
- * The group is named, the caption is not a heading, and a focused pill is
- * visible.
- *
- * All three were wrong. MUI maps the `subtitle2` variant onto `<h6>`, so
- * "Payment channel" was announced as a level-6 heading in the middle of the
- * record card. And the component paints both the selected and the unselected
- * fill itself, which beat MUI's own focus-visible background — a keyboard user
- * tabbing across the channels saw nothing move at all, so the theme now draws a
- * real ring.
- */
 export const IsNamedAndShowsFocus: Story = {
   ...Channels,
   play: async ({ canvasElement, step }) => {
@@ -144,12 +116,6 @@ export const IsNamedAndShowsFocus: Story = {
   },
 }
 
-/**
- * A `radiogroup` is one tab stop with arrows moving between its radios, and
- * saying so in the roles is a promise to a screen-reader user. The group used
- * to make every pill its own tab stop and ignore the arrow keys entirely, so
- * the announcement told people to press keys that did nothing.
- */
 export const ArrowKeysMoveTheSelection: Story = {
   args: { label: 'Payment channel', value: 'CARD_TO_CARD', options: CHANNELS, onValueChange: fn() },
   render: Controlled,

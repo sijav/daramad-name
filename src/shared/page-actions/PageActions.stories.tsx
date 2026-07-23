@@ -46,12 +46,8 @@ const meta = {
     page: { route: '/report' },
   },
   argTypes: {
-    year: { description: 'The selected report year, expressed in the calendar currently in force.' },
-    years: { description: 'Years the ledger actually has receipts in. The selection is folded in if it is missing.' },
-    onYearChange: { description: 'The page owns the selection; the pill only reports the change.' },
     formatYear: {
       control: false,
-      description: 'Renders a year for display — Persian digits under a Jalali calendar.',
     },
   },
   args: {
@@ -65,7 +61,6 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-/** The pill names the selected year, and the menu offers the populated ones. */
 export const Default: Story = {
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -88,11 +83,6 @@ export const Default: Story = {
   },
 }
 
-/**
- * The other half of the cluster. It is the only way into the entry form from a
- * page header, so a button that renders but goes nowhere costs the user the
- * primary action on every screen at once.
- */
 export const RecordingAReceipt: Story = {
   render: (args) => (
     <Routes>
@@ -108,15 +98,6 @@ export const RecordingAReceipt: Story = {
   },
 }
 
-/**
- * The selected year is not in the list — exactly what a calendar switch
- * produces, since the populated years are re-derived in the new system while
- * the selection is still expressed in the old one.
- *
- * The pill has to keep naming its year and the menu has to keep it selected.
- * Without that MUI logs an out-of-range value and paints an empty pill, and the
- * user is left reading a page of figures with no idea what period they cover.
- */
 export const AYearTheLedgerHasNoReceiptsIn: Story = {
   args: { years: [2026, 2025] },
   play: async ({ canvasElement, step }) => {
@@ -136,10 +117,6 @@ export const AYearTheLedgerHasNoReceiptsIn: Story = {
   },
 }
 
-/**
- * A brand-new user, before the years query has answered and before there is a
- * single receipt to derive a year from.
- */
 export const NothingRecordedYet: Story = {
   args: { years: [] },
   play: async ({ canvasElement }) => {

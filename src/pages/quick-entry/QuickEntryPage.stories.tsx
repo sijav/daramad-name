@@ -16,10 +16,6 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-/**
- * Scenario 1's 15-second path. Opens on today's date, toman and card-to-card,
- * with the amount autofocused — so the fast path is type, tab, save.
- */
 export const Default: Story = { parameters: { page: { data: 'full' } } }
 
 // The scenario stories below drive the REAL database: with nothing seeded into
@@ -53,15 +49,6 @@ const tomanReceipt = (id: string, clientId: string, amountToman: number, occurre
 /** The amount box is the one input in the form that takes a number. */
 const amountBox = (canvasElement: HTMLElement) => canvasElement.querySelector<HTMLInputElement>('input[inputmode="decimal"]')
 
-/**
- * Scenario 1 end to end: fill the form, save, and check what reached the disk.
- *
- * Asserting the toast would prove only that a promise resolved. What matters is
- * the ROW: `amountToman` is computed once on write and never recomputed, so if
- * the form hands the mutation the wrong amount, currency or date, the error is
- * frozen into every total, chart and certificate from then on with nothing
- * downstream able to detect it.
- */
 export const RecordsAReceipt: Story = {
   beforeEach: emptyDatabase,
   play: async ({ canvasElement, step }) => {
@@ -109,18 +96,6 @@ export const RecordsAReceipt: Story = {
   },
 }
 
-/**
- * «ذخیره و بعدی» — the reason a stack of receipts is quick to enter.
- *
- * It has to clear the amount and keep the client: keeping the amount would
- * duplicate the last figure into the next receipt, and clearing the client
- * makes the button pointless. Both failures are silent, and the first one adds
- * money that was never received.
- *
- * The second save is what actually proves it — one client row for two receipts,
- * because a second «Aria Trading» would split the client's totals in the ledger
- * and the charts.
- */
 export const SaveAndNextKeepsTheClient: Story = {
   beforeEach: emptyDatabase,
   play: async ({ canvasElement, step }) => {
@@ -156,12 +131,6 @@ export const SaveAndNextKeepsTheClient: Story = {
   },
 }
 
-/**
- * «خلاصه امروز» is the answer to "did that actually save?", which is the only
- * reason the panel exists. It has to count TODAY, not everything: a total that
- * quietly includes last month's receipts tells the user a receipt landed when
- * it did not, and they stop checking.
- */
 export const TodayPanelCountsOnlyToday: Story = {
   beforeEach: async () => {
     const clear = await emptyDatabase()

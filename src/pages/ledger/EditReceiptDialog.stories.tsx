@@ -18,10 +18,6 @@ const TOMAN = FIXTURE_RECEIPTS.find((receipt) => receipt.currency === 'TOMAN')!
 const meta = {
   title: 'Pages/Ledger/EditReceiptDialog',
   component: EditReceiptDialog,
-  argTypes: {
-    receipt: { description: 'The receipt being edited. The dialog is mounted per receipt, so this seeds the form once.' },
-    onClose: { description: 'Save, cancel, Escape and a backdrop click all arrive here.' },
-  },
   parameters: { layout: 'fullscreen', page: { route: '/ledger' } },
   beforeEach: async () => await seedDatabase(),
 } satisfies Meta<typeof EditReceiptDialog>
@@ -47,7 +43,6 @@ export const TomanReceipt: Story = {
   args: { receipt: TOMAN, onClose: fn() },
 }
 
-/** Every field arrives pre-filled — an edit dialog that opens blank loses data. */
 export const OpensPreFilled: Story = {
   args: { receipt: TETHER, onClose: fn() },
   play: async ({ canvasElement }) => {
@@ -58,7 +53,6 @@ export const OpensPreFilled: Story = {
   },
 }
 
-/** Cancelling closes without writing — the receipt on disk is untouched. */
 export const CancellingWritesNothing: Story = {
   args: { receipt: TETHER, onClose: fn() },
   play: async ({ canvasElement, args }) => {
@@ -76,12 +70,6 @@ export const CancellingWritesNothing: Story = {
   },
 }
 
-/**
- * Saving revalues at the receipt's stored rate, not at today's.
- *
- * This is the assertion that protects the freeze. If the dialog ever re-derived
- * the Toman value from a current rate, this is where it would show.
- */
 export const SavingKeepsTheStoredRate: Story = {
   args: { receipt: TETHER, onClose: fn() },
   play: async ({ canvasElement, args }) => {

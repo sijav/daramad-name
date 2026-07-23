@@ -1,0 +1,8 @@
+## stories
+
+- `Two Pages`: Twenty-eight receipts against a twenty-five row page.
+- `Total Counts Every Match Not Just The Page`: The total row sums the whole matched set; the table shows one page of it. This row once read "total of 25 receipts" above the sum of 100, the count came from the page and the figure from the query. Nobody would question it: a plausible number over a plausible label, copied onto a document handed to an embassy. So the page is deliberately smaller than the result set here and the two numbers are checked against each other.
+- `Second Page Shows The Remaining Rows`: Page two has to be a different slice, not the same one re-labelled. A pagination control that renumbers without re-slicing looks entirely normal and hides the last rows of the ledger completely.
+- `Changing Page Size Returns To The First Page`: Changing the page size must return to page 1. Without it the user keeps a page number that means something different, or stops existing entirely, the table goes blank and reads as "no receipts", which in this app looks like data loss.
+- `Clear All Resets Filter Search And Page`: "Clear all" is the escape hatch from a ledger showing the wrong rows, so it has to clear ALL THREE pieces of state. Leaving the page behind is the nastiest of the three: the filter drops away, the result set grows, and the user is still looking at page two of the old one.
+- `No Results Is Not The Same As An Empty Ledger`: A search that matches nothing is a different situation from an empty ledger, and the difference is actionable: one is "clear the filter", the other is "record a receipt". Conflating them tells a user with 28 receipts that they have none.

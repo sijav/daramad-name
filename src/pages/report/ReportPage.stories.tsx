@@ -29,10 +29,6 @@ const seeded = { page: { data: 'full' } }
 const findDocument = async (canvasElement: HTMLElement, title: string) =>
   await within(canvasElement).findByText(title, undefined, { timeout: 10_000 })
 
-/**
- * Scenario 3. The fixture has a name set, so the "your name is not set" warning
- * is absent and the PDF button is live.
- */
 export const WithData: Story = {
   parameters: seeded,
   /**
@@ -47,17 +43,8 @@ export const WithData: Story = {
   },
 }
 
-/** No receipts for the year: the document cannot be produced, and the page says why. */
 export const Empty: Story = { parameters: { page: { data: 'empty' } } }
 
-/**
- * Scenario 3. The preview IS the document, so asserting on it asserts on what
- * prints — that equivalence is the whole reason the two share one model, and
- * it is what the reported "preview does not match the file" bug came from.
- *
- * Switching to English must change the VALUES, not just the labels: an embassy
- * officer reads neither Persian numerals nor a Persian name.
- */
 export const ProducesBothLanguages: Story = {
   parameters: seeded,
   play: async ({ canvasElement, step }) => {
@@ -94,16 +81,6 @@ export const ProducesBothLanguages: Story = {
   },
 }
 
-/**
- * Changing the range from the config panel, to a year with nothing in it.
- *
- * A certificate that covers a year the holder recorded no income in is worse
- * than no certificate: it is a signed-looking statement that the person earned
- * zero. So the document is replaced by an explanation and both ways of taking
- * it away are switched off — and the year the panel says it is showing has to
- * be the year the document is built from, since nothing else on screen would
- * reveal a mismatch.
- */
 export const AYearWithNoIncomeProducesNoDocument: Story = {
   parameters: seeded,
   beforeEach: async () => {
@@ -153,18 +130,6 @@ export const AYearWithNoIncomeProducesNoDocument: Story = {
   },
 }
 
-/**
- * A certificate with no name on it.
- *
- * The document still renders — there is income to report — and that is exactly
- * the danger: it looks finished. Someone would print it, take it to a landlord
- * and be turned away, because an income statement that does not say WHOSE
- * income it is carries no weight at all. So the page has to say so before the
- * print button is used, and point at the one place that fixes it.
- *
- * Driven from the real database, since the warning comes from the stored
- * profile rather than from anything on this page.
- */
 export const WarnsWhenTheNameIsMissing: Story = {
   beforeEach: async () => {
     // No settings row at all, so `readSettings` seeds the defaults — which

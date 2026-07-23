@@ -41,7 +41,6 @@ const Frame = ({ path }: { path: string }) => (
 const permanentRail = (canvasElement: HTMLElement) =>
   canvasElement.ownerDocument.querySelector<HTMLElement>('.MuiDrawer-root:not(.MuiDrawer-modal) .MuiDrawer-paper')
 
-/** Desktop: a permanent nav rail on the right, since the layout is RTL. */
 export const Desktop: Story = {
   render: () => <Frame path="/ledger" />,
   play: async ({ canvasElement }) => {
@@ -62,16 +61,6 @@ export const Desktop: Story = {
   },
 }
 
-/**
- * The same frame in dark mode.
- *
- * `a11y: { test: 'error' }` runs on every story but had only ever seen the
- * light palette, and the chrome is where that costs most: the top bar and the
- * bottom bar are translucent `glassSurface` under a 12px blur, and the rail's
- * selected pill paints `primary.dark` on `primary.light`. Those pairs are
- * derived per MD3 guidance rather than taken from the Figma file, which defines
- * light values only — so nothing but a run in dark mode checks them.
- */
 export const DesktopDark: Story = {
   render: () => <Frame path="/ledger" />,
   globals: { theme: 'dark' },
@@ -80,15 +69,6 @@ export const DesktopDark: Story = {
   },
 }
 
-/**
- * The two controls in the top bar, which no other story touches.
- *
- * The account button is the shell's only route to Settings that is not a nav
- * item, and it is a bare icon — if its `aria-label` or its `onClick` went, the
- * loss would be invisible in every screenshot. The theme toggle is asserted by
- * name rather than clicked: pressing it writes the preference to IndexedDB,
- * which is a story's business to leave alone.
- */
 export const TopBarControls: Story = {
   render: () => <Frame path="/ledger" />,
   play: async ({ canvasElement, step }) => {
@@ -105,12 +85,6 @@ export const TopBarControls: Story = {
   },
 }
 
-/**
- * The direction test. The rail is anchored `left` in BOTH directions because the
- * stylis RTL plugin rewrites the generated CSS — swapping the anchor by hand
- * double-flips it, which is exactly what put the rail on the wrong side once.
- * So this asserts where the rail actually LANDS, not what it was passed.
- */
 export const RailSitsOnTheReadingSide: Story = {
   render: () => <Frame path="/ledger" />,
   play: async ({ canvasElement }) => {
@@ -123,7 +97,6 @@ export const RailSitsOnTheReadingSide: Story = {
   },
 }
 
-/** The same frame in English: LTR, so the rail is on the left. */
 export const EnglishRailFlips: Story = {
   render: () => <Frame path="/ledger" />,
   globals: { locale: 'en-US' },
@@ -136,12 +109,6 @@ export const EnglishRailFlips: Story = {
   },
 }
 
-/**
- * 834px is the width of every tablet frame in the design, and every one of them
- * draws the permanent rail. MUI's `md` is 900, so the breakpoint is written as
- * 768 — at `md` a tablet got the hamburger, the temporary drawer and the bottom
- * bar against a design that has none of them.
- */
 export const Tablet: Story = {
   render: () => <Frame path="/ledger" />,
   globals: { viewport: { value: 'tablet', isRotated: false } },
@@ -153,13 +120,6 @@ export const Tablet: Story = {
   },
 }
 
-/**
- * Mobile gets a thumb-reachable bottom bar rather than only a drawer — rule 1
- * says half the demo-link traffic arrives on a phone.
- *
- * The bar uses the SHORT label: «گزارش درآمد» wraps to two lines across six
- * items on a phone and the second line falls outside the bar entirely.
- */
 export const Mobile: Story = {
   render: () => <Frame path="/ledger" />,
   globals: { viewport: { value: 'mobile1', isRotated: false } },
@@ -179,11 +139,6 @@ export const Mobile: Story = {
   },
 }
 
-/**
- * The drawer is the phone's route to the full labels. It is closed on load —
- * a drawer that opened itself would cover the page on every visit — and the
- * hamburger is the only thing that opens it.
- */
 export const MobileDrawerOpens: Story = {
   render: () => <Frame path="/ledger" />,
   globals: { viewport: { value: 'mobile1', isRotated: false } },
@@ -215,11 +170,6 @@ export const MobileDrawerOpens: Story = {
   },
 }
 
-/**
- * English is longer than Persian everywhere, and the bottom bar is where that
- * bites: "Income report" across a sixth of a 320px phone. The short label has
- * to survive the locale switch too.
- */
 export const MobileEnglish: Story = {
   render: () => <Frame path="/ledger" />,
   globals: { locale: 'en-US', viewport: { value: 'mobile1', isRotated: false } },
@@ -233,11 +183,6 @@ export const MobileEnglish: Story = {
   },
 }
 
-/**
- * The bottom bar is the phone's navigation, so pressing an item has to move the
- * app and the bar has to show where it moved to. A bar that navigates without
- * updating its own selection leaves the user unable to tell where they are.
- */
 export const MobileBottomBarNavigates: Story = {
   render: () => <Frame path="/ledger" />,
   globals: { viewport: { value: 'mobile1', isRotated: false } },
@@ -255,7 +200,6 @@ export const MobileBottomBarNavigates: Story = {
   },
 }
 
-/** The rail does the same on desktop, and marks the page it is already on. */
 export const DesktopRailNavigates: Story = {
   render: () => <Frame path="/ledger" />,
   play: async ({ canvasElement }) => {

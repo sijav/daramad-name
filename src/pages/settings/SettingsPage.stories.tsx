@@ -15,24 +15,8 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-/**
- * Profile, language, appearance, calendar, backup/restore and the destructive
- * reset. The language and appearance controls here change the persisted
- * setting, which in the app is what the Storybook toolbars stand in for.
- */
 export const Default: Story = {}
 
-/**
- * Scenario 6, driven through the real controls rather than the mutations.
- *
- * This is the one path where a bug costs the user everything: the whole
- * argument for having no backend is that a JSON file moves the ledger between
- * devices. If restore silently drops a field, fourteen days of records become
- * an empty demo — and nobody finds out until the file is the only copy left.
- *
- * So it wipes the database for real and brings it back through the file input,
- * then compares every field of every record rather than counting rows.
- */
 export const BackupSurvivesAWipe: Story = {
   beforeEach: async () => await seedDatabase(),
   play: async ({ canvasElement, step }) => {
@@ -74,18 +58,6 @@ export const BackupSurvivesAWipe: Story = {
   },
 }
 
-/**
- * Language, theme and calendar are the three settings that must SURVIVE — the
- * whole point of persisting them is that the app opens the way the user left
- * it. Storybook's own toolbars drive the rendered locale and colour scheme, so
- * this asserts the two things the toolbars cannot stand in for: the choice
- * reaches IndexedDB, and the app re-reads it.
- *
- * Number rendering is the visible half of that. Persian numerals belong to the
- * Persian locale, not to the app; an English reader seeing «۱۴۰۵» is the exact
- * failure the language setting exists to prevent, so the year pill is checked
- * for Latin digits after the switch and Persian ones after switching back.
- */
 export const DisplayPreferencesPersist: Story = {
   beforeEach: async () => {
     await db.settings.clear()
@@ -145,14 +117,6 @@ export const DisplayPreferencesPersist: Story = {
   },
 }
 
-/**
- * The identity block on the certificate, saved and read back.
- *
- * `fullNameEn`, `passportNumber` and `addressEn` exist ONLY for the English
- * document, so nothing in the Persian interface would look wrong if they were
- * dropped on the way to disk. The failure surfaces at an embassy counter, on a
- * certificate printing a Persian name where a passport spelling was expected.
- */
 export const ProfileRoundTrip: Story = {
   beforeEach: async () => {
     await db.settings.clear()
@@ -188,14 +152,6 @@ export const ProfileRoundTrip: Story = {
   },
 }
 
-/**
- * The two-step confirmation, from the side that matters.
- *
- * `BackupSurvivesAWipe` proves the erase works. This proves it does NOT work
- * when the user has not typed the word — the entire reason the second step
- * exists. A confirmation that is merely decorative is worse than none, because
- * the dialog's presence is what makes the button safe to reach for.
- */
 export const EraseRefusesTheWrongWord: Story = {
   beforeEach: async () => await seedDatabase(),
   play: async ({ canvasElement, step }) => {
@@ -226,15 +182,6 @@ export const EraseRefusesTheWrongWord: Story = {
   },
 }
 
-/**
- * A backup file that is not one.
- *
- * Restore REPLACES the database, so the file has to be validated before
- * anything is deleted — a file rejected halfway through would leave the user
- * with neither their ledger nor the file's. And per rule 9 the message has to
- * name what is wrong and what to do about it: "restore failed" tells someone
- * holding the only copy of their financial history nothing they can act on.
- */
 export const RejectsABadBackupFile: Story = {
   beforeEach: async () => await seedDatabase(),
   play: async ({ canvasElement, step }) => {

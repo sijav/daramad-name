@@ -5,33 +5,6 @@ import { FIXTURE_RECEIPTS, seedDatabase } from 'src/shared/story-fixtures'
 import { expect, within } from 'storybook/test'
 import { App } from './App'
 
-// Every route but the dashboard is a `lazy()` chunk. Under the browser test
-// runner those chunks are fetched over HTTP at click time, and that fetch is
-// not reliable here — it failed with "Failed to fetch dynamically imported
-// module", which surfaces as the error boundary and, once React has torn down,
-// as a null `useContext`. Importing the same modules here puts them in the
-// story's own module graph, so `lazy()` resolves them from the registry instead
-// of going back to the network. The app still code-splits in production; only
-// the test stops depending on a live fetch.
-import 'src/pages/certificate'
-import 'src/pages/charts'
-import 'src/pages/ledger'
-import 'src/pages/quick-entry'
-import 'src/pages/report'
-import 'src/pages/settings'
-
-// The whole app, mounted at a route, over the real database.
-//
-// `App` is wiring, but the wiring decides three things that a page-level story
-// can never see: whether the locale gate opens at all (lingui throws rather
-// than falling back, so a stuck gate is a blank app), where each route lands,
-// and which routes are inside the shell. The certificate is the one that
-// matters most — it is the document a freelancer hands to an embassy or a
-// landlord, and it must print with no navigation attached to it.
-//
-// Nothing here is seeded into the query cache: `App` brings its own query
-// client, so these stories exercise the same IndexedDB path the real app does.
-
 const boot = async () => {
   queryClient.clear()
   // Cleared so `readSettings` seeds its defaults — Persian, Jalali — exactly as
@@ -81,13 +54,6 @@ const LAZY_ROUTE = { timeout: 10_000 }
 // document whenever the ledger is open. Role plus level is what separates the
 // title from the rail entry pointing at it.
 
-/**
- * `/ledger` reaches the ledger, inside the shell, with the seeded receipts and
- * a total computed from them.
- *
- * The total is asserted rather than just the rows: a route that renders but
- * totals nothing looks fine in a screenshot.
- */
 export const LedgerRoute: Story = {
   parameters: { layout: 'fullscreen', page: { route: '/ledger' } },
   play: async ({ canvasElement, step }) => {
@@ -110,13 +76,6 @@ export const LedgerRoute: Story = {
   },
 }
 
-/**
- * An unknown path lands on the dashboard rather than a blank page.
- *
- * The app is shared as a link. A stale or mistyped URL that dead-ended would
- * look like the app is broken, which for a tool someone is being asked to trust
- * with their income is worse than it sounds.
- */
 export const UnknownRouteFallsBackToTheDashboard: Story = {
   parameters: { layout: 'fullscreen', page: { route: '/receipts/1404/march' } },
   play: async ({ canvasElement }) => {
@@ -127,15 +86,6 @@ export const UnknownRouteFallsBackToTheDashboard: Story = {
   },
 }
 
-/**
- * `/certificate` renders the printable document and NOTHING else.
- *
- * This route sits outside `AppShell` deliberately: the browser's own print
- * engine turns the page into the PDF, so any nav bar, rail or footer still
- * mounted would be printed onto the document a freelancer hands over. Moving
- * the route inside the shell would break that without breaking anything a
- * screenshot of the app would show.
- */
 export const CertificateRendersWithoutTheAppChrome: Story = {
   parameters: { layout: 'fullscreen', page: { route: '/certificate' } },
   play: async ({ canvasElement }) => {
@@ -173,6 +123,9 @@ const routeStory = (route: string, title: RegExp): Story => ({
 })
 
 export const QuickEntryRoute: Story = routeStory('/quick-entry', /^ثبت سریع دریافتی$|^Record a receipt quickly$/)
+
 export const ChartsRoute: Story = routeStory('/charts', /^نمودارها$|^Charts$/)
+
 export const ReportRoute: Story = routeStory('/report', /^گزارش درآمد$|^Income report$/)
+
 export const SettingsRoute: Story = routeStory('/settings', /^تنظیمات$|^Settings$/)

@@ -41,12 +41,6 @@ const Harness = ({
 const meta = {
   title: 'Pages/Ledger/FilterPopover',
   component: LedgerFilterPopover,
-  argTypes: {
-    anchorEl: { description: 'What the popover hangs off, and whether it is open at all: `null` is closed.' },
-    filter: { description: 'The APPLIED filter. The draft is rebuilt from it each time the popover opens.' },
-    onApply: { description: 'Fires on Apply only — never per keystroke, or the ledger refetches mid-edit.' },
-    onClose: { description: 'Dismissed without applying; the draft is discarded.' },
-  },
   parameters: { layout: 'padded', page: { route: '/ledger' } },
   beforeEach: async () => await seedDatabase(),
 } satisfies Meta<typeof LedgerFilterPopover>
@@ -61,7 +55,6 @@ export const Open: Story = {
   render: (a) => <Harness onApply={a.onApply} onClose={a.onClose} />,
 }
 
-/** Reopened on an existing filter, the draft starts from what is already applied. */
 export const PreFilledFromTheActiveFilter: Story = {
   args,
   render: (a) => <Harness filter={{ channel: 'TETHER' }} onApply={a.onApply} onClose={a.onClose} />,
@@ -72,7 +65,6 @@ export const PreFilledFromTheActiveFilter: Story = {
   },
 }
 
-/** Both date fields open EMPTY — never today, which would advertise a filter that is not applied. */
 export const DatesStartEmpty: Story = {
   args,
   render: (a) => <Harness onApply={a.onApply} onClose={a.onClose} />,
@@ -95,7 +87,6 @@ export const DatesStartEmpty: Story = {
   },
 }
 
-/** Apply commits the draft in one go. */
 export const ApplyCommitsTheDraft: Story = {
   args,
   render: (a) => <Harness onApply={a.onApply} onClose={a.onClose} />,
@@ -111,7 +102,6 @@ export const ApplyCommitsTheDraft: Story = {
   },
 }
 
-/** Reset empties the draft without committing anything. */
 export const ResetClearsWithoutApplying: Story = {
   args,
   render: (a) => <Harness filter={{ channel: 'TETHER' }} onApply={a.onApply} onClose={a.onClose} />,

@@ -9,20 +9,15 @@ const meta = {
   title: 'Shared/ConfirmDialog',
   component: ConfirmDialog,
   argTypes: {
-    onClose: { description: 'Cancel, Escape and a backdrop click all arrive here.' },
-    onConfirm: { description: 'The dialog does not close itself on confirm — the caller decides what follows.' },
-    open: { description: 'Mounted always, shown by this. The dialog keeps no state of its own between openings.' },
     destructive: { control: 'boolean' },
     // Every caller passes catalog messages for the copy, so the harness does
     // too. A text box here would put an English sentence above a Persian
     // cancel button, which is the one thing this dialog must never look like.
     title: { control: false },
-    description: { description: 'Exactly what happens on confirm, including what cannot be undone.', control: false },
-    confirmLabel: { description: 'Names the ACTION rather than saying "OK", so the button reads on its own.', control: false },
+    description: { control: false },
+    confirmLabel: { control: false },
     cancelLabel: { description: "Defaults to the catalog's «انصراف».", control: false },
     confirmationWord: {
-      description:
-        'When set, the user must type this exact word to enable the confirm button.\nThis is the second step of the two-step confirmation the brief requires\nbefore wiping all data.',
       control: false,
     },
   },
@@ -113,16 +108,6 @@ export const DeleteReceipt: Story = {
   },
 }
 
-/**
- * The two-step confirmation the brief requires before wiping everything: the
- * confirm button stays disabled until the exact word is typed, and closing the
- * dialog throws the typed word away rather than leaving the next open
- * pre-armed.
- *
- * The globals are pinned because the word the user has to type is a catalog
- * message — «پاک کن», not "erase" — so the story would otherwise assert
- * whatever the toolbar happened to be set to.
- */
 export const TypeToConfirm: Story = {
   args: base,
   globals: { locale: 'fa-IR' },
@@ -152,11 +137,6 @@ export const TypeToConfirm: Story = {
   },
 }
 
-/**
- * `destructive` defaults to false, which colours the confirm button with the
- * brand rather than the error palette. Every dialog in the app today is
- * destructive, so this is the only place the default treatment is visible.
- */
 export const NotDestructive: Story = {
   args: { ...base, destructive: false },
   render: (args) => <Harness {...args} copy="seed" />,

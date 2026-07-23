@@ -1,7 +1,7 @@
 {
   "name": "daramadname",
   "description": "درآمدنامه — دفتر دریافتی‌ها و گزارش درآمد قابل ارائه برای فریلنسر ایرانی",
-  "version": "0.1.0",
+  "version": "0.1.0-alpha.1",
   "private": true,
   "type": "module",
   "scripts": {

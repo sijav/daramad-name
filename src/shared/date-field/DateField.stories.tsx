@@ -7,16 +7,10 @@ const meta = {
   title: 'Shared/DateField',
   component: DateField,
   argTypes: {
-    label: { description: 'The caption above the picker.' },
     value: {
       description:
         "ISO-8601 instant, or `null` for an empty field.\n\nEmpty is a real state, not a missing one: the ledger's filter opens with no\nrange set, and showing today's date there would advertise a filter that is\nnot applied.",
     },
-    onValueChange: { description: 'Fires only on a complete, valid date, so a half-typed year never reaches the caller.' },
-    disableFuture: { description: 'Blocks future dates — a receipt cannot arrive tomorrow.' },
-    error: { description: 'Marks the field, and turns the helper text red.' },
-    helperText: { description: 'What is wrong, or what the field expects.' },
-    fullWidth: { description: 'Stretches the picker to its container.' },
   },
 } satisfies Meta<typeof DateField>
 
@@ -42,11 +36,6 @@ const Controlled: Story['render'] = function Render(args) {
 /** The picker's own input, which is where the ASCII-versus-Persian trap lives. */
 const field = (canvasElement: HTMLElement) => canvasElement.querySelector<HTMLInputElement>('input')!
 
-/**
- * Jalali picker. The digits look Persian but the DOM value stays ASCII — MUI X
- * measures each field section against ASCII '0', so the Persian numerals come
- * from Vazirmatn's Farsi-Digits cut rather than from the adapter.
- */
 export const Jalali: Story = {
   args: { label: 'Date received', value: new Date().toISOString(), onValueChange: fn() },
   render: Controlled,
@@ -59,16 +48,6 @@ export const Jalali: Story = {
   },
 }
 
-/**
- * Everything a screen reader is given, asserted in one place.
- *
- * The picker is not a text box: it renders `role="group"` around three
- * `role="spinbutton"` sections, and a group is not a labelable element — so the
- * `<label>` `Field` wraps the control in names the picker's hidden input and
- * leaves the visible group anonymous. Both halves used to be wrong at once: the
- * group had no name, and the section names came from MUI X's untranslated
- * default, so a Persian interface announced "Year", "Month", "Day".
- */
 export const IsNamedForScreenReaders: Story = {
   args: { label: 'Date received', value: new Date().toISOString(), onValueChange: fn() },
   render: Controlled,
@@ -116,11 +95,6 @@ const openDays = async (canvasElement: HTMLElement): Promise<HTMLElement[]> => {
   return (await body.findAllByRole('gridcell')).filter((day) => day.tagName === 'BUTTON')
 }
 
-/**
- * Filters allow future dates; the receipt form does not. Both halves are
- * asserted, because a `disableFuture` that silently stopped working looks
- * exactly like one that is off on purpose.
- */
 export const AllowsFuture: Story = {
   args: { label: 'To date', value: NEXT_YEAR, disableFuture: false, onValueChange: fn() },
   render: Controlled,
@@ -132,7 +106,6 @@ export const AllowsFuture: Story = {
   },
 }
 
-/** The default, and the one the receipt form relies on: a receipt cannot arrive tomorrow. */
 export const BlocksFuture: Story = {
   args: { label: 'Date received', value: NEXT_YEAR, onValueChange: fn() },
   render: Controlled,
@@ -144,11 +117,6 @@ export const BlocksFuture: Story = {
   },
 }
 
-/**
- * Empty is a real state, not a missing one. The ledger's filter opens with no
- * range set, and defaulting to today there would advertise a filter that is not
- * actually applied.
- */
 export const Empty: Story = {
   args: { label: 'From date', value: null, disableFuture: false, onValueChange: fn() },
   render: Controlled,
@@ -173,11 +141,6 @@ export const WithError: Story = {
   },
 }
 
-/**
- * Choosing a day hands the caller an ISO INSTANT, not a Jalali string. That is
- * what makes the calendar a display setting: switching to Gregorian in Settings
- * re-reads the same stored value rather than rewriting any data.
- */
 export const PickingADayReportsAnIsoInstant: Story = {
   // A FIXED date, deliberately. Seeding from `new Date()` made this pass or
   // fail depending on the day it ran: `disableFuture` disables everything after
@@ -208,12 +171,6 @@ export const PickingADayReportsAnIsoInstant: Story = {
   },
 }
 
-/**
- * The calendar system is a separate setting from the language, so an English
- * interface still gets the Jalali calendar — with `date-fns-jalali`'s enUS
- * locale, which transliterates the month names. Printing «تیر» to a reader who
- * chose English is the whole reason that locale is passed.
- */
 export const EnglishKeepsTheJalaliCalendar: Story = {
   args: { label: 'Date received', value: new Date(2026, 6, 22, 12).toISOString(), onValueChange: fn() },
   render: Controlled,

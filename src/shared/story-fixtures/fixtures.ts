@@ -9,7 +9,7 @@ import {
   getPopulatedYearsQueryKey,
 } from 'src/shared/queries'
 import type { CalendarSystem, ClientShare, Ledger, MonthlyTotal, ReceiptWithClient } from 'src/shared/types'
-import { averagingPeriod, yearOf, yearRange } from 'src/shared/utils'
+import { averagingPeriod, monthIndexOf, yearOf, yearRange } from 'src/shared/utils'
 
 // Fixture data and cache seeding for PAGE stories.
 //
@@ -129,12 +129,22 @@ export const seedPageData = (client: QueryClient, { empty = false }: { empty?: b
   client.setQueryData(getLedgerQueryKey({}, { field: 'occurredAt', direction: 'desc' }, CALENDAR), ledger)
   client.setQueryData(getLedgerQueryKey({ range }, { field: 'occurredAt', direction: 'desc' }, CALENDAR), ledger)
 
-  // The report covers the period ELAPSED so far, exactly as the real query does
-  // (`averagingPeriod`). Seeding the raw year range instead produced a
-  // self-contradicting certificate — a period line reading «۱ فروردین تا ۲۹
-  // اسفند» beside an average divided by 7 months — which is not a document
-  // anyone could defend, and is not what the app actually prints.
+  // The report covers the period ELAPSED so far, exactly as the real query does.
+  //
+  // `getIncomeReportQuery` reads receipts BETWEEN the clamped range and buckets
+  // only those, so it can never print a month past today. Seeding the raw year
+  // instead produced a certificate that contradicted itself: twelve month rows,
+  // four of them carrying income from months that have not happened, all summed
+  // into a total — and then divided by the five months elapsed. That inflates
+  // the average and is indefensible on a page an embassy reads.
+  //
+  // So the months are cut to the period the same way, and the total is their
+  // sum. Rows, total and divisor then agree and the arithmetic can be checked
+  // by hand, which is the whole point of printing the basis.
   const { range: reported, months: monthsInRange } = averagingPeriod(range, CALENDAR)
+  const elapsed = monthIndexOf(new Date(), CALENDAR) + 1
+  const reportedMonths = months.filter((month) => month.month <= elapsed)
+  const reportedTotal = reportedMonths.reduce((sum, month) => sum + month.totalToman, 0)
 
   client.setQueryData(getIncomeReportQueryKey(range, CALENDAR), {
     profile: {
@@ -147,10 +157,10 @@ export const seedPageData = (client: QueryClient, { empty = false }: { empty?: b
       addressEn: 'Karimkhan St, Tehran',
     },
     range: reported,
-    totalToman: ledger.summary.totalToman,
-    monthlyAverageToman: empty ? 0 : Math.round(ledger.summary.totalToman / monthsInRange),
+    totalToman: reportedTotal,
+    monthlyAverageToman: empty ? 0 : Math.round(reportedTotal / monthsInRange),
     monthsInRange,
-    months,
+    months: reportedMonths,
     generatedAt: new Date().toISOString(),
   })
 }

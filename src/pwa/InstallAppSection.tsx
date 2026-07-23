@@ -5,11 +5,10 @@ import { SettingButton, SettingRow, SettingsSection } from 'src/shared/settings-
 /**
  * The install affordance, shaped as one more settings section.
  *
- * It renders NOTHING until the browser has actually offered installation, and
- * nothing at all once the app is installed. A permanently visible "Install"
- * button that does nothing on Firefox, on iOS, or on a second visit after the
- * app is already installed is worse than no button, this one only exists when
- * pressing it will really open the install dialog.
+ * It renders NOTHING until the browser has offered installation, and nothing
+ * once the app is installed. A permanently visible "Install" button that does
+ * nothing on Firefox, on iOS, or on a second visit is worse than no button, so
+ * this one exists only when pressing it will really open the install dialog.
  */
 export const InstallAppSection = () => {
   const { t } = useLingui()

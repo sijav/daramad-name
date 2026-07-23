@@ -26,9 +26,8 @@ export const FilterChip = ({ field, value, sx, ...props }: FilterChipProps) => {
       // MUI clones the delete icon with only `className` and `onClick`, so the
       // role and the name set here survive the clone. `aria-hidden` has to be
       // cancelled explicitly: `SvgIcon` writes `aria-hidden="true"` on every
-      // icon, which kept both attributes out of the accessibility tree and left
-      // the only pointer affordance for removing an active filter unnamed, a
-      // user told a filter is applied, with no named control to undo it.
+      // icon, which otherwise leaves the only control for removing an active
+      // filter unnamed to a screen reader.
       deleteIcon={<CloseRoundedIcon aria-hidden={false} role="button" aria-label={t`Remove the ${field} filter`} />}
       sx={[
         (theme) => ({

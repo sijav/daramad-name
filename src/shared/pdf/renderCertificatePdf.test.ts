@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs'
+import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import PDFDocument from 'pdfkit'
 import { loadReportI18n } from 'src/core/i18n'
@@ -51,6 +52,38 @@ const render = async (language: 'fa' | 'en') => {
   return { blob, bytes, raw: new TextDecoder('latin1').decode(bytes) }
 }
 
+/**
+ * Records every string pdfkit lays out, in order.
+ *
+ * pdfkit measures and draws ONE WORD at a time and places them left to right in
+ * the order it receives them — so this sequence IS the visual order on the page.
+ * For a right-to-left line that must be the REVERSE of the logical word order.
+ * Getting this wrong is invisible to every other assertion here: the file is
+ * still a valid, font-embedded, selectable PDF, it just reads backwards.
+ */
+const recordDrawnWords = async (language: 'fa' | 'en') => {
+  // Instrument the fontkit pdfkit itself uses. This file imports fontkit as ESM
+  // while pdfkit `require`s the CommonJS build, and in Node those are two
+  // different copies of the Font class — instrumenting ours would record
+  // nothing.
+  const cjsFontkit = createRequire(import.meta.url)('fontkit') as { create: (bytes: Uint8Array) => object }
+  let proto = Object.getPrototypeOf(cjsFontkit.create(regular))
+  while (proto && !Object.prototype.hasOwnProperty.call(proto, 'layout')) proto = Object.getPrototypeOf(proto)
+  const owner = proto as { layout: (...args: unknown[]) => unknown }
+  const patched = owner.layout
+  const words: string[] = []
+  owner.layout = function record(this: unknown, ...args: unknown[]) {
+    if (typeof args[0] === 'string' && args[0].trim()) words.push(args[0].trim())
+    return patched.apply(this, args)
+  }
+  try {
+    await render(language)
+  } finally {
+    owner.layout = patched
+  }
+  return words
+}
+
 describe('renderCertificatePdf', () => {
   it('produces a well-formed PDF blob', async () => {
     const { blob, raw } = await render('fa')
@@ -71,6 +104,30 @@ describe('renderCertificatePdf', () => {
     const { raw } = await render('fa')
 
     expect(raw).toContain('ToUnicode')
+  })
+
+  it('draws a right-to-left line with its words in visual order, not logical', async () => {
+    const words = await recordDrawnWords('fa')
+
+    // The subtitle reads «گزارش درآمد فریلنسری بر پایه‌ی ثبت‌های شخصی». Drawn left
+    // to right, «شخصی» has to come first and «گزارش» last — the reverse. It
+    // previously drew logical-first, which printed the sentence backwards.
+    const first = words.lastIndexOf('شخصی')
+    const last = words.lastIndexOf('گزارش')
+    expect(first).toBeGreaterThanOrEqual(0)
+    expect(last).toBeGreaterThanOrEqual(0)
+    expect(first).toBeLessThan(last)
+  })
+
+  it('draws a month name after its year, so the year sits to the left', async () => {
+    const words = await recordDrawnWords('fa')
+
+    // «فروردین ۱۴۰۵» must be drawn ۱۴۰۵ first (leftmost), then فروردین.
+    const year = words.lastIndexOf('۱۴۰۵')
+    const month = words.lastIndexOf('فروردین')
+    expect(year).toBeGreaterThanOrEqual(0)
+    expect(month).toBeGreaterThanOrEqual(0)
+    expect(year).toBeLessThan(month)
   })
 
   it('renders both the Persian and the English certificate without throwing', async () => {

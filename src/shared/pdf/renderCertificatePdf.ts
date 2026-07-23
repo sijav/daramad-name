@@ -1,3 +1,4 @@
+import { installBidiLayout, toVisualLine } from './bidiText'
 import type { CertificateBlock, CertificateDoc } from './buildIncomeReport'
 
 // @types/pdfkit types the module's export as an INSTANCE, but at runtime it is
@@ -11,6 +12,13 @@ export type PdfDocumentConstructor = new (options?: CertificateDocOptions) => PD
 // Draws a `CertificateDoc` onto a pdfkit page and returns the finished file as
 // a Blob. pdfkit is a Node library; the loader supplies it and the font bytes,
 // and the browser shims (Buffer/stream/zlib/fs) come from the Vite polyfill.
+//
+// EVERY line of text goes through `writeAt`, which does its own wrapping and
+// then reorders each line with `toVisualLine`. pdfkit measures and draws one
+// WORD at a time and lays them left to right in the order given, so handing it a
+// right-to-left sentence directly prints the words backwards. Wrapping has to
+// happen first and reordering second, because bidi order is defined per visual
+// line.
 //
 // The colours are the ones `IncomeCertificate` paints, kept literal on purpose:
 // a printed page has no dark mode, and a certificate that inverts because the
@@ -27,6 +35,15 @@ const BRAND = '#3460d6'
 export interface CertificateFonts {
   regular: Uint8Array
   bold: Uint8Array
+}
+
+interface TextStyle {
+  x: number
+  w: number
+  align: 'right' | 'left'
+  font: 'regular' | 'bold'
+  size: number
+  color: string
 }
 
 export const renderCertificatePdf = (
@@ -46,11 +63,8 @@ export const renderCertificatePdf = (
     // Compression is left off deliberately: pdfkit's `deflateSync` path is a
     // Node zlib call the browser shim does not implement, and pdfkit already
     // SUBSETS the embedded font, so an uncompressed certificate is still small.
-    // Turning compression on is a size optimisation, gated on a working
-    // browser `deflateSync` — see TECH-DEBT.md.
     compress: false,
     info: { Title: cert.title, Author: cert.author },
-    // The document's own language and direction, for a tagged, accessible PDF.
     lang: cert.direction === 'rtl' ? 'fa-IR' : 'en-US',
   })
 
@@ -58,6 +72,19 @@ export const renderCertificatePdf = (
   // Node test runner; either way pdfkit wants font data as a Buffer.
   doc.registerFont('regular', Buffer.from(fonts.regular))
   doc.registerFont('bold', Buffer.from(fonts.bold))
+
+  // Patch the shaper on the font pdfkit ITSELF built, not on our own `fontkit`
+  // import. The two are not always the same object: this module imports fontkit
+  // as ESM while pdfkit `require`s the CommonJS build, and a bundler that does
+  // not dedupe them (Node does not) leaves two separate copies of the Font
+  // class. Patching ours would then silently never reach the fonts that draw —
+  // which is exactly what happened, and why the Node tests were passing while
+  // exercising an unpatched path.
+  doc.font('regular')
+  const embedded = (doc as unknown as { _font?: { font?: unknown } })._font
+  if (embedded?.font) {
+    installBidiLayout(embedded.font)
+  }
 
   const x0 = doc.page.margins.left
   const W = doc.page.width - doc.page.margins.left - doc.page.margins.right
@@ -68,13 +95,48 @@ export const renderCertificatePdf = (
   // pdfkit's own `x`/`y` bookkeeping between calls.
   let y = doc.page.margins.top
 
-  const text = (
-    value: string,
-    opts: { x: number; w: number; align: 'right' | 'left'; font: 'regular' | 'bold'; size: number; color: string },
-  ): number => {
-    doc.font(opts.font).fontSize(opts.size).fillColor(opts.color)
-    doc.text(value, opts.x, y, { width: opts.w, align: opts.align })
-    return doc.y
+  const lineHeight = (size: number) => size * 1.6
+
+  /**
+   * Draws text at an explicit y and returns the y just past it.
+   *
+   * Wraps in LOGICAL order using measured widths, then reorders each resulting
+   * line for display. `lineBreak: false` stops pdfkit re-wrapping a line that is
+   * already in visual order, which would break it in the wrong place.
+   */
+  const writeAt = (value: string, atY: number, style: TextStyle): number => {
+    doc.font(style.font).fontSize(style.size).fillColor(style.color)
+
+    const words = value.split(/\s+/).filter(Boolean)
+    const lines: string[] = []
+    let current = ''
+    for (const word of words) {
+      const candidate = current ? `${current} ${word}` : word
+      if (current && doc.widthOfString(candidate) > style.w) {
+        lines.push(current)
+        current = word
+      } else {
+        current = candidate
+      }
+    }
+    if (current) lines.push(current)
+    if (lines.length === 0) return atY
+
+    const step = lineHeight(style.size)
+    lines.forEach((line, index) => {
+      doc.text(toVisualLine(line), style.x, atY + index * step, {
+        width: style.w,
+        align: style.align,
+        lineBreak: false,
+      })
+    })
+    return atY + lines.length * step
+  }
+
+  /** Same, but advances the shared cursor. */
+  const write = (value: string, style: TextStyle): number => {
+    y = writeAt(value, y, style)
+    return y
   }
 
   const rule = (color: string, width: number, gapBefore: number, gapAfter: number) => {
@@ -94,19 +156,22 @@ export const renderCertificatePdf = (
     // starts back at the same top so the two columns share a baseline.
     const serialW = 150
     const serialX = align === 'right' ? x0 : x0 + W - serialW
-    doc.font('regular').fontSize(9).fillColor(FAINT).text(block.serialLabel, serialX, start, { width: serialW, align: opposite })
-    doc
-      .font('bold')
-      .fontSize(12)
-      .fillColor(INK)
-      .text(block.serial, serialX, doc.y + 2, { width: serialW, align: opposite })
+    const afterLabel = writeAt(block.serialLabel, start, {
+      x: serialX,
+      w: serialW,
+      align: opposite,
+      font: 'regular',
+      size: 9,
+      color: FAINT,
+    })
+    writeAt(block.serial, afterLabel, { x: serialX, w: serialW, align: opposite, font: 'bold', size: 12, color: INK })
 
     const mainW = W - serialW - 16
     const mainX = align === 'right' ? x0 : x0 + serialW + 16
     y = start
-    y = text(block.issuer, { x: mainX, w: mainW, align, font: 'bold', size: 11, color: BRAND }) + 2
-    y = text(block.title, { x: mainX, w: mainW, align, font: 'bold', size: 22, color: INK }) + 2
-    y = text(block.subtitle, { x: mainX, w: mainW, align, font: 'regular', size: 11, color: MUTED })
+    write(block.issuer, { x: mainX, w: mainW, align, font: 'bold', size: 11, color: BRAND })
+    write(block.title, { x: mainX, w: mainW, align, font: 'bold', size: 22, color: INK })
+    write(block.subtitle, { x: mainX, w: mainW, align, font: 'regular', size: 11, color: MUTED })
   }
 
   const drawRows = (rows: { label: string; value: string }[]) => {
@@ -116,13 +181,19 @@ export const renderCertificatePdf = (
     const valueX = align === 'right' ? x0 : x0 + labelW + 12
     for (const row of rows) {
       const top = y
-      doc.font('regular').fontSize(10.5).fillColor(MUTED).text(row.label, labelX, top, { width: labelW, align })
-      const labelBottom = doc.y
-      doc.font('bold').fontSize(11).fillColor(INK).text(row.value, valueX, top, { width: valueW, align })
-      y = Math.max(labelBottom, doc.y) + 6
+      const labelBottom = writeAt(row.label, top, {
+        x: labelX,
+        w: labelW,
+        align,
+        font: 'regular',
+        size: 10.5,
+        color: MUTED,
+      })
+      const valueBottom = writeAt(row.value, top, { x: valueX, w: valueW, align, font: 'bold', size: 11, color: INK })
+      y = Math.max(labelBottom, valueBottom) + 4
       doc
-        .moveTo(x0, y - 3)
-        .lineTo(x0 + W, y - 3)
+        .moveTo(x0, y - 2)
+        .lineTo(x0 + W, y - 2)
         .lineWidth(0.5)
         .strokeColor(HAIRLINE)
         .stroke()
@@ -133,38 +204,44 @@ export const renderCertificatePdf = (
   const drawTotal = (block: Extract<CertificateBlock, { type: 'total' }>) => {
     const top = y
     const padding = 12
+    const innerW = W - padding * 2
     const innerTop = top + padding
-    doc
-      .font('regular')
-      .fontSize(11)
-      .fillColor(MUTED)
-      .text(block.label, x0 + padding, innerTop, { width: W - padding * 2, align })
-    const labelBottom = doc.y
-    doc
-      .font('bold')
-      .fontSize(18)
-      .fillColor(INK)
-      .text(block.figure, x0 + padding, innerTop, { width: W - padding * 2, align: opposite })
-    let bottom = Math.max(labelBottom, doc.y)
+    const labelBottom = writeAt(block.label, innerTop, {
+      x: x0 + padding,
+      w: innerW,
+      align,
+      font: 'regular',
+      size: 11,
+      color: MUTED,
+    })
+    const figureBottom = writeAt(block.figure, innerTop, {
+      x: x0 + padding,
+      w: innerW,
+      align: opposite,
+      font: 'bold',
+      size: 18,
+      color: INK,
+    })
+    let bottom = Math.max(labelBottom, figureBottom)
     if (block.words) {
-      const wy = bottom + 4
-      doc
-        .font('regular')
-        .fontSize(9)
-        .fillColor(FAINT)
-        .text(block.wordsLabel, x0 + padding, wy, { width: W - padding * 2, align })
-      doc
-        .font('regular')
-        .fontSize(10)
-        .fillColor(MUTED)
-        .text(block.words, x0 + padding, doc.y, { width: W - padding * 2, align })
-      bottom = doc.y
+      const labelEnd = writeAt(block.wordsLabel, bottom + 2, {
+        x: x0 + padding,
+        w: innerW,
+        align,
+        font: 'regular',
+        size: 9,
+        color: FAINT,
+      })
+      bottom = writeAt(block.words, labelEnd, {
+        x: x0 + padding,
+        w: innerW,
+        align,
+        font: 'regular',
+        size: 10,
+        color: MUTED,
+      })
     }
     const boxBottom = bottom + padding
-    // Draw the tint box UNDER the text: pdfkit paints in call order, so fill
-    // first would hide the text. Instead re-draw as a stroked, filled rect
-    // behind by using a second pass is overkill — a light outline is enough to
-    // frame it without covering the figures already laid down.
     doc
       .roundedRect(x0, top, W, boxBottom - top, 10)
       .lineWidth(1)
@@ -193,10 +270,10 @@ export const renderCertificatePdf = (
       const top = y
       let bottom = top
       cells.forEach((cell, index) => {
-        doc.font(font).fontSize(size).fillColor(color).text(cell, boxX(index), top, { width: cols[index].w, align: cols[index].align })
-        bottom = Math.max(bottom, doc.y)
+        const end = writeAt(cell, top, { x: boxX(index), w: cols[index].w, align: cols[index].align, font, size, color })
+        bottom = Math.max(bottom, end)
       })
-      y = bottom + 4
+      y = bottom + 2
     }
 
     drawRow(
@@ -214,11 +291,12 @@ export const renderCertificatePdf = (
         INK,
       )
       doc
-        .moveTo(x0, y - 2)
-        .lineTo(x0 + W, y - 2)
+        .moveTo(x0, y - 1)
+        .lineTo(x0 + W, y - 1)
         .lineWidth(0.5)
         .strokeColor(HAIRLINE)
         .stroke()
+      y += 2
     }
     y += 6
   }
@@ -238,13 +316,15 @@ export const renderCertificatePdf = (
         drawTotal(block)
         break
       case 'sectionTitle':
-        y = text(block.text, { x: x0, w: W, align, font: 'bold', size: 13, color: INK }) + 6
+        write(block.text, { x: x0, w: W, align, font: 'bold', size: 13, color: INK })
+        y += 4
         break
       case 'table':
         drawTable(block)
         break
       case 'note':
-        y = text(block.text, { x: x0, w: W, align, font: 'regular', size: 9, color: FAINT }) + 8
+        write(block.text, { x: x0, w: W, align, font: 'regular', size: 9, color: FAINT })
+        y += 6
         break
     }
   }

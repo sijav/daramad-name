@@ -106,6 +106,48 @@ const visualRunOrder = (runs: { level: number }[]): number[] => {
   return order
 }
 
+/**
+ * Reorders ONE line into visual order at word granularity.
+ *
+ * `installBidiLayout` fixes the characters inside whatever string the shaper is
+ * given — but pdfkit never gives it a whole line. It measures and draws one WORD
+ * at a time and lays those words out left to right in the order received, so a
+ * right-to-left sentence arrives with every word correctly shaped and the words
+ * themselves backwards: «گزارش درآمد فریلنسری» came out reading
+ * «فریلنسری درآمد گزارش», and «۴۵۸٬۳۹۰٬۰۰۰ تومان» put the unit on the wrong side.
+ *
+ * So the words are put where they belong BEFORE pdfkit sees them. Each word's
+ * characters stay in LOGICAL order, which is what the shaper needs to form the
+ * cursive joins — and what lets `installBidiLayout` still fix a mixed run inside
+ * a single word, such as a `DN-۱۴۰۵-QQPE0T` serial.
+ *
+ * Bidi ordering is defined per VISUAL line, so callers must wrap text into lines
+ * first and reorder each line, never reorder and then wrap.
+ */
+export const toVisualLine = (text: string): string => {
+  if (!hasRtl(text)) return text
+  const { levels } = bidi.getEmbeddingLevels(text, 'auto')
+
+  // Reorder at WORD granularity, then rejoin with single spaces. Reordering
+  // whole runs instead moves the space that sat at a run's edge to its other
+  // end, which glues one pair of words together («تاریخصدور») and doubles the
+  // gap at the next — the separators must be regenerated, not carried along.
+  // A word's level is its first character's; a word with mixed content, like a
+  // `DN-۱۴۰۵-QQPE0T` serial, is placed as a unit and put in order internally by
+  // `installBidiLayout`.
+  const words: { text: string; level: number }[] = []
+  const pattern = /\S+/g
+  let match = pattern.exec(text)
+  while (match) {
+    words.push({ text: match[0], level: levels[match.index] })
+    match = pattern.exec(text)
+  }
+
+  return visualRunOrder(words)
+    .map((index) => words[index].text)
+    .join(' ')
+}
+
 const PATCHED = Symbol.for('daramadname.bidi-layout')
 
 /**
@@ -129,11 +171,23 @@ export const installBidiLayout = (probe: unknown): void => {
       return original.call(this, string, features, script, language, direction)
     }
 
+    // Surrounding spaces stay put. pdfkit hands over one word AT A TIME with its
+    // trailing space attached and then places the next word after it, so if the
+    // reversal carries that space to the other side the gap opens on the wrong
+    // side of the word — «۱فروردین» glued, «فروردین  ۱۴۰۵» doubled. Only the
+    // core is reordered; the spaces are shaped separately and pinned back.
+    const leading = /^\s+/.exec(string)?.[0] ?? ''
+    const trailing = /\s+$/.exec(string)?.[0] ?? ''
+    const core = string.slice(leading.length, string.length - trailing.length)
+    if (!core) {
+      return original.call(this, string, features, script, language, 'ltr')
+    }
+
     // 'auto' resolves the base direction from the first strong character, which
     // is what a bare paragraph should do: a Persian sentence reads RTL, a line
     // that opens with a Latin serial reads LTR, digits alone stay LTR.
-    const { levels } = bidi.getEmbeddingLevels(string, 'auto')
-    const runs = splitRuns(string, levels)
+    const { levels } = bidi.getEmbeddingLevels(core, 'auto')
+    const runs = splitRuns(core, levels)
     const order = visualRunOrder(runs)
     const shaped = runs.map((run) => original.call(this, run.text, features, script, language, run.level & 1 ? 'rtl' : 'ltr'))
 
@@ -142,10 +196,14 @@ export const installBidiLayout = (probe: unknown): void => {
     // arrays we swap in), so pdfkit sees an ordinary fontkit run.
     const glyphs: unknown[] = []
     const positions: unknown[] = []
-    for (const index of order) {
-      glyphs.push(...shaped[index].glyphs)
-      positions.push(...shaped[index].positions)
+    const append = (piece: GlyphRunLike) => {
+      glyphs.push(...piece.glyphs)
+      positions.push(...piece.positions)
     }
+    if (leading) append(original.call(this, leading, features, script, language, 'ltr'))
+    for (const index of order) append(shaped[index])
+    if (trailing) append(original.call(this, trailing, features, script, language, 'ltr'))
+
     const run = shaped[order[0]]
     run.glyphs = glyphs
     run.positions = positions

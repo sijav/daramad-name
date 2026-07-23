@@ -70,4 +70,6 @@ and Vitest.
 
 ## Deployment
 
-Deploys to [GitHub Pages](https://sijav.github.io/daramad-name/).
+Deploys to [GitHub Pages](https://sijav.github.io/daramad-name/), with the
+[component library](https://sijav.github.io/daramad-name/storybook/) built to
+Storybook at `/storybook/`.

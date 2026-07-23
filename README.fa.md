@@ -67,4 +67,6 @@ Vitest.
 
 ## استقرار
 
-روی [GitHub Pages](https://sijav.github.io/daramad-name/) مستقر می‌شود.
+روی [GitHub Pages](https://sijav.github.io/daramad-name/) مستقر می‌شود، و
+[کتابخانه‌ی کامپوننت](https://sijav.github.io/daramad-name/storybook/) به‌شکلِ
+استوری‌بوک روی `/storybook/` بیلد می‌شود.

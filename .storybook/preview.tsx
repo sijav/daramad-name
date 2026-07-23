@@ -1,12 +1,11 @@
 import '@fontsource-variable/vazirmatn'
-import type { Messages } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import type { Decorator, Preview } from '@storybook/react-vite'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
 import { useEffect, useState } from 'react'
 import { MemoryRouter } from 'react-router-dom'
-import { i18n } from 'src/core/i18n'
+import { DEFAULT_LOCALE, activateLocale, i18n } from 'src/core/i18n'
 import { AppThemeProvider } from 'src/core/theme'
 import { settingsQueryKey } from 'src/shared/queries'
 import { FIXTURE_SETTINGS_PROFILE, seedPageData } from 'src/shared/story-fixtures'
@@ -14,17 +13,14 @@ import type { AppLocale, Settings, ThemePreference } from 'src/shared/types'
 import { LocalizedDocs } from './LocalizedDocs'
 import { LocalizedDocsContainer } from './LocalizedDocsContainer'
 
-// Stories render through the same providers as the app: lingui for copy,
-// TanStack Query because several components read settings via a query, and the
-// theme provider for colour scheme + direction.
-//
-// Locale and theme are Storybook globals rather than parameters, so every story
-// can be checked in all four combinations from the toolbar without editing it.
+// Stories render through the app's providers: lingui, TanStack Query because
+// settings come from a query, and the theme provider for colour scheme and
+// direction. Locale and theme are toolbar globals rather than parameters, so
+// any story can be checked in all four combinations without editing it.
 
-const catalogs: Record<AppLocale, () => Promise<{ messages: Messages }>> = {
-  'fa-IR': () => import('src/locales/fa-IR/messages'),
-  'en-US': () => import('src/locales/en-US/messages'),
-}
+// `data: null` is meaningful, not a missing key: Storybook deep-merges
+// parameters, so a story cancels its meta's seed by nulling it.
+type PageParameter = { data?: 'full' | 'empty' | null; route?: string }
 
 const useCatalog = (locale: AppLocale): boolean => {
   const [ready, setReady] = useState(false)
@@ -32,9 +28,8 @@ const useCatalog = (locale: AppLocale): boolean => {
   useEffect(() => {
     let cancelled = false
     setReady(false)
-    void catalogs[locale]().then(({ messages }) => {
+    void activateLocale(locale).then(() => {
       if (!cancelled) {
-        i18n.loadAndActivate({ locale, messages })
         setReady(true)
       }
     })
@@ -46,16 +41,12 @@ const useCatalog = (locale: AppLocale): boolean => {
   return ready
 }
 
-/**
- * Components read the locale from persisted Settings, not from lingui, that is
- * what drives number formatting, date digits and the picker's font. Seeding the
- * query cache makes the toolbar control those too; without it the labels switch
- * to English while the figures stay Persian.
- */
-const seededClient = (locale: AppLocale, themePreference: ThemePreference, pageData?: 'full' | 'empty'): QueryClient => {
-  // `staleTime: Infinity` matters: with the app's default of 0 the query
-  // refetches from IndexedDB the moment it mounts and overwrites the seed,
-  // leaving English labels beside Persian numerals.
+// Components read the locale from persisted Settings rather than from lingui,
+// and that is what drives number formatting, date digits and the picker's font.
+// Seeding the query is what puts the toolbar in charge of those too.
+const seededClient = (locale: AppLocale, themePreference: ThemePreference, pageData?: PageParameter['data']): QueryClient => {
+  // `staleTime: Infinity` against the app's default of 0, or the query refetches
+  // from IndexedDB on mount and overwrites the seed.
   const client = new QueryClient({ defaultOptions: { queries: { retry: false, staleTime: Infinity, gcTime: Infinity } } })
   const settings: Settings = {
     calendar: 'JALALI',
@@ -65,8 +56,8 @@ const seededClient = (locale: AppLocale, themePreference: ThemePreference, pageD
   }
   client.setQueryData(settingsQueryKey, settings)
 
-  // Page stories additionally seed every query their page issues, so a whole
-  // page renders from the cache with no IndexedDB involved.
+  // Page stories also seed every query their page issues, so a whole page
+  // renders from the cache with no IndexedDB involved.
   if (pageData) {
     seedPageData(client, { empty: pageData === 'empty' })
   }
@@ -74,15 +65,11 @@ const seededClient = (locale: AppLocale, themePreference: ThemePreference, pageD
   return client
 }
 
-/**
- * Holds the client in state rather than building it in the decorator's JSX.
- * Calling `seededClient(...)` inline made a new QueryClient, and so a new
- * cache, on every render of the decorator, and `useCatalog` alone renders it
- * twice. Anything a play function wrote (a saved profile, an invalidation after
- * a delete) was silently replaced by the seed on the next render, which reads
- * as a failed mutation rather than a harness bug. Remounted by `key` when the
- * seed's own inputs change, since those go INTO the seeded settings.
- */
+// One client per mount, not one per render. The decorator renders at least
+// twice, since `useCatalog` flips `ready`, and rebuilding the client each time
+// discarded whatever a play function had written: a saved profile, an
+// invalidation after a delete. The `key` below remounts it when the seed's own
+// inputs change.
 const SeededQueryProvider = ({
   locale,
   themePreference,
@@ -91,7 +78,7 @@ const SeededQueryProvider = ({
 }: {
   locale: AppLocale
   themePreference: ThemePreference
-  pageData?: 'full' | 'empty'
+  pageData?: PageParameter['data']
   children: ReactNode
 }) => {
   const [client] = useState(() => seededClient(locale, themePreference, pageData))
@@ -100,20 +87,18 @@ const SeededQueryProvider = ({
 }
 
 const withProviders: Decorator = (Story, context) => {
-  const locale = (context.globals.locale ?? 'fa-IR') as AppLocale
-  const themePreference = (context.globals.theme ?? 'light') as ThemePreference
-  const page = context.parameters.page as { data?: 'full' | 'empty'; route?: string } | undefined
+  const locale: AppLocale = context.globals.locale ?? DEFAULT_LOCALE
+  const themePreference: ThemePreference = context.globals.theme ?? 'light'
+  const page: PageParameter | undefined = context.parameters.page
   const ready = useCatalog(locale)
 
   if (!ready) {
     return <div />
   }
 
-  // The padding keeps a single component off the canvas edge, but a story that
-  // asks for `layout: 'fullscreen'` is proving its own edge-to-edge chrome
-  // the app shell's fixed top bar, the printable certificate sheet, and 24px
-  // of decorator inset is exactly what it is trying to show there is none of.
-  // `layout` only strips Storybook's own padding, so it cannot reach in here.
+  // `layout: 'fullscreen'` only strips Storybook's own padding, so the
+  // decorator's inset has to go with it. Those stories are showing edge-to-edge
+  // chrome: the shell's fixed top bar, the printable certificate sheet.
   const content =
     context.parameters.layout === 'fullscreen' ? (
       <Story />
@@ -123,9 +108,9 @@ const withProviders: Decorator = (Story, context) => {
       </div>
     )
 
-  // Pages call `useNavigate`, so they need a router. It is only added when a
-  // story asks for it, AppShell supplies its own, and nesting two routers
-  // would make the inner one unreachable.
+  // Pages call `useNavigate`, so they need a router, but only page stories get
+  // one: `AppShell.stories.tsx` brings its own `MemoryRouter`, and react-router
+  // throws on a `<Router>` rendered inside another.
   return (
     <I18nProvider i18n={i18n}>
       <SeededQueryProvider
@@ -170,32 +155,22 @@ const preview: Preview = {
       },
     },
   },
-  initialGlobals: { locale: 'fa-IR', theme: 'light' },
-  // Every component gets a generated Docs page, props table, description and
-  // rendered source, without each `meta` opting in. The prop tables are only
-  // as good as the types and doc comments behind them, which is why the props
-  // interfaces carry JSDoc: those comments become the Description column.
+  initialGlobals: { locale: DEFAULT_LOCALE, theme: 'light' },
+  // Every component gets a generated Docs page without its `meta` opting in.
   tags: ['autodocs'],
   parameters: {
     controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
     a11y: { test: 'error' },
     docs: {
-      // A component with six state variants is a page worth navigating.
       toc: true,
       // Both language-aware. See `src/shared/story-docs/README.md`.
       page: LocalizedDocs,
       container: LocalizedDocsContainer,
     },
-    // No `actions.argTypesRegex` here on purpose.
-    //
-    // It looked like free coverage, every `onSomething` logging to the Actions
-    // panel without each story wiring a handler, but it is deprecated, and the
-    // visual-test addon's build ignores it, so a snapshot that depends on an
-    // action prop breaks in a way that is very hard to trace back. Args it
-    // infers are not spies either, so a play function can never assert on them.
-    //
-    // Every story passes an explicit `fn()` from `storybook/test` instead,
-    // which both logs to the panel and is assertable.
+    // No `actions.argTypesRegex` on purpose: it is deprecated, the visual-test
+    // addon's build ignores it, so a snapshot depending on an action prop breaks
+    // with nothing pointing at the cause, and the args it infers are not spies.
+    // Every story passes an explicit `fn()` from `storybook/test` instead.
   },
   decorators: [withProviders],
 }

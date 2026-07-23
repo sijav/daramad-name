@@ -1,12 +1,9 @@
-// Design tokens from the Figma design system
-// (DaramadName, Design system, file yW364nD8qVYhXKiOxNBShA).
-//
-// The design is Material Design 3, so the names below mirror the
-// `--md-sys-color-*` custom properties in the Figma file rather than MUI's own
-// palette vocabulary. `theme.ts` maps these onto MUI; nothing else should read
-// raw hex values.
+// Design tokens from the Figma design system, file yW364nD8qVYhXKiOxNBShA.
+// The design is Material Design 3, so these names mirror the file's
+// `--md-sys-color-*` custom properties rather than MUI's palette vocabulary.
+// `theme.ts` maps them onto MUI; nothing else should read a raw hex.
 
-/** Every colour role the theme consumes. Both palettes must satisfy it. */
+/** Every colour role the theme consumes. */
 export interface ColorPalette {
   primary: string
   onPrimary: string
@@ -29,20 +26,20 @@ export interface ColorPalette {
   outline: string
   outlineVariant: string
   neutralVariant: string
-  /** `--border-default`: the 1px hairline on chart cards. */
+  /** `--border-default`: the app's 1px hairline, on every Paper, table cell and field outline. */
   borderDefault: string
   borderStrong: string
   /**
-   * The focus ring. Equal to `brandPrimary` in light, but a role of its own
-   * without it every focus state falls back to MUI's `primary.main` #3b6ef5,
-   * which is the OTHER blue.
+   * The focus ring. Holds the same value as `brandPrimary` in both palettes but
+   * is a role of its own, because without it focus states resolve to MUI's
+   * `primary.main` #3b6ef5, the other blue.
    */
   borderFocus: string
   surfaceDisabled: string
   textDisabled: string
-  /** `--surface-subtle`: the unfilled part of a progress track. */
+  /** `--surface-subtle`: table heads, field hover, progress tracks, nested figure boxes. */
   surfaceSubtle: string
-  /** Categorical series colours for the donut, in the design's order. */
+  /** Categorical series colours, in the design's order. */
   chartSeries: readonly string[]
   glassSurface: string
   success: string
@@ -55,8 +52,8 @@ export interface ColorPalette {
   onErrorContainer: string
 }
 
-/** Light palette, taken verbatim from the Figma variables. */
-export const lightColors: ColorPalette = {
+/** Light palette from the Figma variables, apart from the three contrast fixes noted below. */
+export const lightColors: Readonly<ColorPalette> = {
   primary: '#3b6ef5',
   onPrimary: '#ffffff',
   primaryContainer: '#dee7fd',
@@ -88,35 +85,22 @@ export const lightColors: ColorPalette = {
   surfaceDisabled: '#eeeff1',
   textDisabled: '#626569',
   surfaceSubtle: '#f8f9fb',
-  // blue/40, success/40, warning/40, neutral-variant/60, the design uses a
-  // categorical set here, not a single-hue ramp. These keep the Figma tones
-  // (#2e9e5b, #e2a400) that `success` and `warning` below had to leave behind:
-  // a donut slice is a filled area, not 12px type, so it is not held to 4.5:1.
+  // blue/40, success/40, warning/40, neutral-variant/60. The design specifies a
+  // categorical set here, not a single-hue ramp, and these keep the Figma tones
+  // (#2e9e5b, #e2a400) that `success` and `warning` below had to leave behind: a
+  // filled slice is not held to the 4.5:1 that 12px type is.
   chartSeries: ['#3b6ef5', '#2e9e5b', '#e2a400', '#95989c', '#6b93f7', '#7c7e83'],
 
   glassSurface: 'rgba(255, 255, 255, 0.6)',
 
-  // The Figma sheet gives success/40 #2e9e5b and warning/40 #e2a400. Both are
-  // used as TEXT on their own container, the success and warning `Tag`, and
-  // the `InsightCallout` sentence, and at that job the design tones fail WCAG
-  // AA outright: #2e9e5b on #eef7f1 measures 3.12:1 and #e2a400 on #fdf7ea an
-  // unreadable 2.06:1, against a 4.5:1 requirement for text under 18.66px bold.
-  //
-  // Both are darkened here with hue and saturation held EXACTLY at the design's
-  // values (146.4°/54.9% and 43.5°/100%), only HSL lightness drops, 40%→31.5%
-  // and 44.3%→28.2%, the least that clears the bar. That lifts them to 4.74:1
-  // and 4.72:1 on their containers, and 5.13:1 / 4.99:1 on `surface-default`.
-  //
-  // The containers themselves are untouched, so every tinted background in the
-  // app still matches Figma; only the ink on top of them moved.
-  //
-  // `error` is the same story a third time. The sheet's #dc362e is drawn as
-  // 12px ink, `Field`'s helper line under an invalid input, and as the fill
-  // behind white on the destructive `ConfirmDialog` button. On `surface-subtle`
-  // it measures 4.32:1 and white on it 4.44:1, both under 4.5:1. Hue 2.8° and
-  // saturation 71.3% are held exactly; only HSL lightness drops, 52.2%→50.0%,
-  // the least that clears the bar in every direction at once: 4.55:1 on
-  // `surface-subtle`, 4.75:1 on `surface-default`, and 4.79:1 for white on it.
+  // These three are the only roles that deviate from Figma. The sheet's
+  // success/40 #2e9e5b, warning/40 #e2a400 and error #dc362e are all drawn as
+  // TEXT on their own container, the `Tag` pair, the `InsightCallout` sentence,
+  // `Field`'s helper line under an invalid input, and none of them reaches
+  // 4.5:1 there. Each is darkened in HSL lightness ONLY, hue and saturation held
+  // exactly at the design's values, by the least that clears the bar. The
+  // containers are untouched, so every tinted background still matches Figma.
+  // Tokens.mdx measures each pair live.
   success: '#247c48',
   successContainer: '#eef7f1',
   warning: '#906800',
@@ -128,16 +112,13 @@ export const lightColors: ColorPalette = {
 }
 
 /**
- * Dark palette.
- *
- * NOT in the Figma file, the design system only defines light values, so this
- * is derived here following MD3's dark guidance: the primary is lightened so it
- * still passes contrast on a dark surface (a #3b6ef5 button on near-black is
- * uncomfortably heavy), containers become dark tones of the same hue, and the
- * surface ramp inverts. Replace these wholesale if the design later ships real
- * dark tokens.
+ * Dark palette. NOT in the Figma file, which defines light values only, so it is
+ * derived here per MD3's dark guidance: the primary lightens to keep its
+ * contrast on a dark surface, containers become dark tones of the same hue, and
+ * the surface ramp inverts. Replace wholesale if the design ships real dark
+ * tokens.
  */
-export const darkColors: ColorPalette = {
+export const darkColors: Readonly<ColorPalette> = {
   primary: '#a8c4ff',
   onPrimary: '#0a2472',
   primaryContainer: '#24427f',
@@ -171,7 +152,6 @@ export const darkColors: ColorPalette = {
   // Lightened so each series keeps its hue identity against a dark surface.
   chartSeries: ['#7ea6ff', '#5fc98a', '#f0c04a', '#a8abaf', '#9db8ff', '#8e9195'],
 
-  // The glass treatment inverts: a light film on dark, not a white one.
   glassSurface: 'rgba(38, 40, 44, 0.6)',
 
   success: '#6edb9b',
@@ -192,10 +172,10 @@ export const radius = {
   full: 999,
 } as const
 
-// The Figma file uses an 8pt grid; MUI's spacing(1) === 8px matches it exactly.
+// Figma's 8pt grid, fed to MUI's `spacing`, so `spacing(1)` is 8px.
 export const spacingUnit = 8
 
-/** Button heights from the design system; `theme.ts` is the only consumer. */
+/** Button heights from the design system. */
 export const controlHeight = {
   medium: 40,
   large: 48,
@@ -204,34 +184,34 @@ export const controlHeight = {
 export const elevation = {
   // Elevation/1 from the design system.
   level1: '0px 1px 2px 0px rgba(0,0,0,0.06), 0px 1px 3px 0px rgba(0,0,0,0.10)',
-  // Only the fixed app chrome blurs, so that scrolling content reads as
-  // passing *behind* the bar rather than colliding with it.
+  // Only the fixed app chrome (top bar, bottom nav) may blur. A global
+  // `MuiPaper` backdrop-filter once leaked this into every menu and dialog.
   glassBlur: 'blur(12px)',
 } as const
 
 export const fontFamily = "'Vazirmatn Variable', 'Vazirmatn', system-ui, sans-serif"
 
 /**
- * Vazirmatn's Farsi-Digits cut: ASCII 0-9 are drawn with Persian glyphs.
- * Used where a control must keep an ASCII DOM value but read as Persian
- * chiefly the date picker, whose internals parse ASCII digits.
+ * Vazirmatn's Farsi-Digits cut draws ASCII 0-9 with Persian glyphs, for controls
+ * that must keep an ASCII DOM value while reading as Persian. Chiefly the date
+ * picker, whose internals parse ASCII digits.
  */
 export const fontFamilyFarsiDigits = "'Vazirmatn FD', 'Vazirmatn Variable', system-ui, sans-serif"
 
-/** The design's FA type ramp, mapped to the MUI variants that use each one. */
+/** The design's FA type ramp. `theme.ts` maps these onto the MUI variants. */
 export const typeScale = {
   numberLarge: { fontSize: 32, fontWeight: 700, lineHeight: 44 / 32 },
   headingMedium: { fontSize: 28, fontWeight: 700, lineHeight: 42 / 28 },
   titleLarge: { fontSize: 22, fontWeight: 600, lineHeight: 32 / 22 },
   titleMedium: { fontSize: 18, fontWeight: 600, lineHeight: 30 / 18 },
-  /** FA/Title/Small, chart card headings; also FA/Number/Compact. */
+  /** FA/Title/Small, chart panel and settings section titles; also FA/Number/Compact. */
   titleSmall: { fontSize: 16, fontWeight: 600, lineHeight: 26 / 16 },
-  /** FA/Label/Medium, the client name beside a share bar. */
+  /** FA/Label/Medium, the client name beside a share bar in `TopCustomers`. */
   labelMedium: { fontSize: 13, fontWeight: 500, lineHeight: 20 / 13 },
-  /** FA/Body/Small, legend labels. */
+  /** FA/Body/Small. In the design's ramp, but nothing in the app reads it yet. */
   bodySmall: { fontSize: 13, fontWeight: 400, lineHeight: 22 / 13 },
   labelLarge: { fontSize: 14, fontWeight: 600, lineHeight: 22 / 14 },
-  /** FA/Number/Table, the figure a ledger row is actually about. */
+  /** FA/Number/Table, the ledger row's amount, which `LedgerTable` styles inline instead of reading this. */
   numberTable: { fontSize: 14, fontWeight: 600, lineHeight: 24 / 14 },
   bodyLarge: { fontSize: 16, fontWeight: 400, lineHeight: 26 / 16 },
   bodyMedium: { fontSize: 14, fontWeight: 400, lineHeight: 24 / 14 },

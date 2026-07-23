@@ -23,8 +23,7 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    // Build and tooling scripts run under Node, not in the browser, so they get
-    // Node's globals instead of the browser set every `src` file uses.
+    // Tooling scripts run under Node, not in the browser.
     files: ['scripts/**/*.mjs', 'src/pwa/icons/*.mjs'],
     languageOptions: { globals: { ...globals.node } },
   },
@@ -33,9 +32,8 @@ export default tseslint.config(
     languageOptions: {
       ecmaVersion: 2023,
       globals: { ...globals.browser },
-      // Type information lets `lingui/no-unlocalized-strings` skip any string
-      // assigned to a union type, MUI prop unions, sx values and our own
-      // enums, which is what keeps the rule to real copy instead of noise.
+      // Type information lets `lingui/no-unlocalized-strings` skip strings assigned to a
+      // union type: MUI prop unions, sx values, our own enums.
       parserOptions: {
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
@@ -48,8 +46,8 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      // This project has no GraphQL fragment colocation, so the rule is back on
-      // constant exports (label maps, option lists) stay allowed.
+      // Vite's fast refresh survives a module that also exports a literal constant, so
+      // the option is safe here. It covers literals only, not object or array exports.
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       // Browser globals go through `window.*`, which keeps them mockable and greppable.
       'no-restricted-globals': [
@@ -65,23 +63,21 @@ export default tseslint.config(
         'atob',
         'Blob',
       ],
-      // Every user-facing string goes through lingui. This is the real rule
-      // it catches ANY unlocalized string, not just Persian ones, so writing a
-      // bare English label fails exactly the same way.
+      // English is the lingui source locale, so a bare English label fails this exactly
+      // as a Persian one would.
       'lingui/no-unlocalized-strings': [
         'error',
         {
           useTsTypes: true,
-          // Strings with no letters at all (ids, hex, symbols, format patterns)
-          // and single lowercase tokens are never user-facing copy.
           ignore: [
             // No letters at all: ids, hex colours, symbols, format patterns.
             '^[^A-Za-z]*$',
+            // A single lowercase token.
             '^[a-z0-9_.:/#-]+$',
-            // BCP-47 locale tags, brand and format constants.
+            // BCP-47 locale tags.
             '^[a-z]{2}-[A-Z]{2}$',
-            // `DN` is the certificate's reference prefix, an identifier
-            // printed verbatim on the document, not copy to be translated.
+            // Brand and format constants. `DN` is the certificate's reference prefix,
+            // printed verbatim on the document.
             '^(Vazirmatn|Daramadname|DN|A4|TOMAN|USD|USDT|JALALI|GREGORIAN)$',
             // Asset filenames.
             '[.](ttf|woff2?|json|png|svg|pdf)$',
@@ -90,6 +86,8 @@ export default tseslint.config(
             // CSS values: '1px solid #fff', 'blur(16px)', 'rgba(0,0,0,.18)'.
             '(px|rem|em|%)\\b|^(blur|rgba?|hsla?|var|calc|url)\\(|\\b(solid|dashed|none|auto|inherit)\\b',
           ],
+          // A plain string here is compared with `===`. Anything pattern-shaped has to be
+          // spelled out as `{ regex: ... }` or it silently matches nothing.
           ignoreNames: [
             { regex: { pattern: '^(data-|aria-(?!label))', flags: 'i' } },
             'className',
@@ -107,42 +105,38 @@ export default tseslint.config(
             'format',
             'queryKey',
             'displayName',
-            'title$',
-            // pdfmake table layout preset, not copy.
-            'layout',
-            // Data keys and library config, never rendered to a user.
+            // Data keys and library config: the ledger sort `field`, MUI's `severity`,
+            // and the PDF document model built in `buildIncomeReport.ts`.
             'field',
+            'severity',
             'pageSize',
             'font',
             'author',
-            'alignment',
-            'severity',
           ],
           ignoreFunctions: [
             'console.*',
             'i18n._',
             'import',
             'require',
-            // Developer-facing throw sites: these never reach a user, they
-            // fail before React mounts or indicate a programming bug.
+            // `throw new Error('Root element not found')` in main.tsx fails before React
+            // mounts, so no user reads it.
             'Error',
+            // DOM APIs take event names and selectors.
             '*.addEventListener',
             '*.querySelector',
             '*.getElementById',
-            '*.toLocaleString',
-            // Dexie query builders take index names, not copy.
+            // Dexie query builders take index names.
             '*.stores',
             '*.where',
             '*.equals',
             '*.orderBy',
-            'version',
-            // date-fns format patterns ('yyyy/MM/dd') are syntax, not copy.
+            // date-fns format patterns ('yyyy/MM/dd') are syntax.
             'format',
             'formatJalali',
             'formatGregorian',
             // `patch(key, value)` takes a form-state key.
             'patch',
-            // CSS media query strings are syntax, not copy.
+            // CSS media query strings are syntax.
             'useMediaQuery',
           ],
           ignoreMethodsOnTypes: ['Map.get', 'Map.has', 'Set.has'],
@@ -150,10 +144,8 @@ export default tseslint.config(
       ],
       'lingui/t-call-in-function': 'error',
       'lingui/no-single-variables-to-translate': 'error',
-      // Off deliberately. It guards against message ids that shift when an
-      // expression changes, but every interpolation here is a number or an
-      // already-formatted date, and they extract as stable {0}/{1} placeholders
-      // that translators can reorder freely.
+      // Off: every interpolation here is a number or an already-formatted date, and they
+      // extract as stable {0}/{1} placeholders that translators can reorder.
       'lingui/no-expression-in-message': 'off',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }],
       'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
@@ -167,7 +159,7 @@ export default tseslint.config(
             },
             {
               group: ['../*'],
-              message: 'Relative parent imports are not allowed — use absolute `src/...` paths.',
+              message: 'Relative parent imports are not allowed, use absolute `src/...` paths.',
             },
             {
               group: [
@@ -179,13 +171,13 @@ export default tseslint.config(
                 'src/core/*/*',
               ],
               message:
-                'Cross-module imports must target the folder barrel (index.ts), e.g. `src/shared/money-text` — not a file inside it. Exceptions: types/*, layouts/*, utils/*.',
+                'Cross-module imports must target the folder barrel (index.ts), e.g. `src/shared/money-text`, not a file inside it. Exceptions: types/*, layouts/*, utils/*.',
             },
           ],
           paths: [
             {
               name: '.',
-              message: 'Do not import from "." — point at the file in the same folder, e.g. "./Component".',
+              message: 'Do not import from ".", point at the file in the same folder, e.g. "./Component".',
             },
           ],
         },
@@ -193,8 +185,9 @@ export default tseslint.config(
     },
   },
   {
-    // Storybook config sits outside the app's tsconfig project graph, so it is
-    // linted without type information and without the localisation rule.
+    // Storybook config is outside the app's tsconfig project graph, so no type
+    // information here, and it imports `story-docs` files directly since that folder
+    // has no barrel.
     files: ['.storybook/**/*.{ts,tsx}'],
     languageOptions: { ecmaVersion: 2023, globals: { ...globals.browser } },
     rules: {
@@ -202,58 +195,34 @@ export default tseslint.config(
     },
   },
   {
-    // Module augmentation must target MUI's real module path, the barrel
-    // re-exports the types but `declare module` has to name the file that
-    // declares them.
+    // `declare module` has to name the file that declares the types, not the barrel that
+    // re-exports them, so `muiPalette.d.ts` imports `@mui/material/styles`.
     files: ['**/*.d.ts'],
     rules: {
       'no-restricted-imports': 'off',
     },
   },
   {
-    // Stories are exempt from the barrel rules, and from localisation: story
-    // args are plain objects evaluated outside any React context, and a story
-    // exists to show one concrete rendering.
     files: ['**/*.stories.{ts,tsx}'],
     rules: {
       'no-restricted-imports': 'off',
-      'lingui/no-unlocalized-strings': 'off',
       'react-refresh/only-export-components': 'off',
     },
   },
   {
-    // Story fixtures are sample data for Storybook only, never bundled into
-    // the app, and not user-facing copy. Same reasoning as the stories that
-    // consume them.
-    files: ['src/shared/story-fixtures/**'],
-    rules: {
-      'lingui/no-unlocalized-strings': 'off',
-    },
-  },
-  {
-    // Storybook's own documentation plumbing: never bundled into the app, and
-    // its literals are Vite glob patterns and import queries rather than copy.
-    // The Persian prose these files render is not here at all, it lives in
-    // `story-docs/fa/*.md`, which is the point of the directory.
-    files: ['src/shared/story-docs/**'],
-    rules: {
-      'lingui/no-unlocalized-strings': 'off',
-    },
-  },
-  {
-    // Tests assert on concrete rendered output, so their literals are expected
-    // values rather than user-facing copy.
-    files: ['**/*.test.{ts,tsx}'],
-    rules: {
-      'lingui/no-unlocalized-strings': 'off',
-    },
-  },
-  {
-    // `digits.ts` holds the Persian and Arabic-Indic codepoint tables that the
-    // normalisation algorithm maps between. These are character data, not copy;
-    // routing them through a catalog would be meaningless and would break the
-    // conversion.
-    files: ['src/shared/utils/digits.ts'],
+    // Five globs turn localisation off, each for its own reason: a story shows one
+    // concrete rendering, a test asserts on concrete rendered output, story fixtures are
+    // sample data that never reaches the app bundle, `story-docs` literals are Vite glob
+    // patterns (the Persian prose it renders lives in `story-docs/fa/*.md`), and
+    // `digits.ts` holds the Persian and Arabic-Indic codepoint tables, which are
+    // character data the normalisation algorithm maps between.
+    files: [
+      '**/*.stories.{ts,tsx}',
+      '**/*.test.{ts,tsx}',
+      'src/shared/story-fixtures/**',
+      'src/shared/story-docs/**',
+      'src/shared/utils/digits.ts',
+    ],
     rules: {
       'lingui/no-unlocalized-strings': 'off',
     },

@@ -13,20 +13,13 @@ import { averagingPeriod, monthIndexOf, yearOf, yearRange } from 'src/shared/uti
 
 // Fixture data and cache seeding for PAGE stories.
 //
-// Pages read everything through TanStack Query, which reads IndexedDB. Rather
-// than mocking Dexie, stories pre-populate the query cache with the exact keys
-// the pages build. Combined with `staleTime: Infinity` on the story client, the
-// seeded values are never refetched, so a page renders deterministically with
-// no database at all.
+// Pages read through TanStack Query, so stories pre-populate the cache with the
+// exact keys the pages build. The story client sets `staleTime: Infinity`, so
+// nothing seeded here is refetched and a page renders with no database at all.
 
 const CALENDAR: CalendarSystem = 'JALALI'
 
-/**
- * The demo identity, in one place because two very different consumers need it
- * to agree: the certificate prints it, and Storybook's preview seeds it into
- * Settings. Written out twice, a rename would leave the report naming one
- * person and the top bar naming another.
- */
+/** The demo identity, in one place: the certificate prints it and `preview.tsx` seeds it into Settings. */
 export const FIXTURE_PROFILE: Profile = {
   fullName: 'رها موسوی',
   fullNameEn: 'Raha Mousavi',
@@ -37,14 +30,7 @@ export const FIXTURE_PROFILE: Profile = {
   addressEn: 'Karimkhan St, Tehran',
 }
 
-/**
- * What Settings holds by default: the name, and nothing else.
- *
- * A component story has no business carrying a national ID around, the fields
- * that identify a real person only ever appear where the certificate needs
- * them, and the Settings stories type them in themselves when that is the
- * subject.
- */
+/** The same identity minus the fields only the certificate needs. Settings stories type those in themselves. */
 export const FIXTURE_SETTINGS_PROFILE: Profile = {
   ...FIXTURE_PROFILE,
   nationalId: '',
@@ -60,6 +46,8 @@ const iso = (monthsAgo: number, day: number): string => {
   return d.toISOString()
 }
 
+// The client name doubles as the client id throughout the fixture, so a stored
+// receipt already carries the id `FIXTURE_CLIENTS` is keyed on.
 const receipt = (
   id: string,
   monthsAgo: number,
@@ -96,50 +84,51 @@ export const FIXTURE_RECEIPTS: ReceiptWithClient[] = [
   receipt('8', 6, 9, 'Homa Cafe', 'CARD_TO_CARD', 'TOMAN', 12000000, null, 'Banner and social posts'),
 ]
 
+/** The receipts above run from this month back to six months ago, so the ledger summary divides by seven. */
+const MONTHS_COVERED = 7
+
 const total = FIXTURE_RECEIPTS.reduce((sum, r) => sum + r.amountToman, 0)
 
 export const FIXTURE_LEDGER: Ledger = {
   receipts: FIXTURE_RECEIPTS,
-  summary: { totalToman: total, receiptCount: FIXTURE_RECEIPTS.length, monthlyAverageToman: Math.round(total / 7), monthsInRange: 7 },
+  summary: {
+    totalToman: total,
+    receiptCount: FIXTURE_RECEIPTS.length,
+    monthlyAverageToman: Math.round(total / MONTHS_COVERED),
+    monthsInRange: MONTHS_COVERED,
+  },
 }
 
-const byClient = (name: string): number => FIXTURE_RECEIPTS.filter((r) => r.clientName === name).reduce((sum, r) => sum + r.amountToman, 0)
+const receiptsFor = (name: string): ReceiptWithClient[] => FIXTURE_RECEIPTS.filter((r) => r.clientName === name)
 
 export const FIXTURE_SHARES: ClientShare[] = ['Aria Trading', 'Dadepardaz Co.', 'Naghsh Studio', 'Homa Cafe']
-  .map((name) => ({
-    clientId: name,
-    clientName: name,
-    totalToman: byClient(name),
-    percentage: Math.round((byClient(name) / total) * 1000) / 10,
-  }))
+  .map((name) => {
+    const totalToman = receiptsFor(name).reduce((sum, r) => sum + r.amountToman, 0)
+    return { clientId: name, clientName: name, totalToman, percentage: Math.round((totalToman / total) * 1000) / 10 }
+  })
   .sort((a, b) => b.totalToman - a.totalToman)
 
-/**
- * Twelve buckets: what was earned, and how many receipts made it up.
- *
- * The spread is the point. A ledger where every month holds exactly one receipt
- * reads as invented, and the certificate's «تعداد دریافتی» column is one of the
- * first things a reader checks against the amounts beside it. So about half the
- * months carry a single receipt, several carry two, and a couple of good months
- * carry four or five, with the amounts moving roughly WITH the count, which is
- * what makes the two columns believable together.
- *
- * How precisely a payment happens to be quoted, and how often that occurs.
- *
- * Real amounts are not uniformly random, their PRECISION follows a power law.
- * A round million is ordinary, a half million happens, a hundred thousand is
- * unusual, and landing exactly on a ten thousand is rare enough to notice.
- * Nothing finer exists: nobody is paid ۲۲٬۳۴۷٬۸۹۱.
- *
- * Each month carries its tier so the year scaling can round back onto the SAME
- * step, otherwise the earlier years lose the texture and read as a column of
- * arbitrary digits.
- */
+export const FIXTURE_CLIENTS = FIXTURE_SHARES.map((s) => ({
+  id: s.clientId,
+  name: s.clientName,
+  nameKey: s.clientName.toLowerCase(),
+  createdAt: iso(12, 1),
+  totalToman: s.totalToman,
+  receiptCount: receiptsFor(s.clientName).length,
+}))
+
+// How precisely an amount is quoted follows a power law: a round million is
+// ordinary, a half million happens, a hundred thousand is unusual, an exact ten
+// thousand is rare. Nothing finer, nobody is paid ۲۲٬۳۴۷٬۸۹۱.
 const COMMON = 1_000_000
 const UNCOMMON = 500_000
 const RARE = 100_000
-const LEGENDARY = 10_000 // :D
+const LEGENDARY = 10_000
 
+// Twelve buckets of income and receipt count, moving together so the
+// certificate's «تعداد دریافتی» column agrees with the amounts beside it. Each
+// month carries its own step so the year scaling rounds back onto that step
+// rather than onto arbitrary digits.
 const MONTH_SHAPE: readonly (readonly [toman: number, receipts: number, step: number])[] = [
   [22_000_000, 1, COMMON],
   [58_500_000, 2, UNCOMMON],
@@ -155,7 +144,7 @@ const MONTH_SHAPE: readonly (readonly [toman: number, receipts: number, step: nu
   [55_000_000, 2, COMMON],
 ]
 
-const toToman = (value: number, step: number): number => Math.round(value / step) * step
+const roundToStep = (value: number, step: number): number => Math.round(value / step) * step
 
 // Earlier years read lighter, so moving the year picker visibly changes the
 // page instead of repeating one set of twelve numbers four times over.
@@ -167,22 +156,13 @@ export const FIXTURE_MONTHS = (year: number): MonthlyTotal[] => {
   return MONTH_SHAPE.map(([toman, receipts, step], index) => ({
     month: index + 1,
     year,
-    totalToman: toToman(toman * scale, step),
+    totalToman: roundToStep(toman * scale, step),
     receiptCount: receipts,
   }))
 }
 
-/** Years the demo has history for, back to 1402, which is 2023/24. */
+/** The year given and one for each earlier `YEAR_SCALE` step, newest first. */
 export const FIXTURE_YEARS = (year: number): number[] => YEAR_SCALE.map((_, index) => year - index)
-
-export const FIXTURE_CLIENTS = FIXTURE_SHARES.map((s) => ({
-  id: s.clientId,
-  name: s.clientName,
-  nameKey: s.clientName.toLowerCase(),
-  createdAt: new Date().toISOString(),
-  totalToman: s.totalToman,
-  receiptCount: FIXTURE_RECEIPTS.filter((r) => r.clientName === s.clientName).length,
-}))
 
 /**
  * Seeds every key the pages query. `empty: true` seeds the same keys with no
@@ -192,104 +172,83 @@ export const FIXTURE_CLIENTS = FIXTURE_SHARES.map((s) => ({
 export const seedPageData = (client: QueryClient, { empty = false }: { empty?: boolean } = {}): void => {
   const year = yearOf(new Date(), CALENDAR)
   const range = yearRange(year, CALENDAR)
+  const monthsOf = (of: number): MonthlyTotal[] =>
+    FIXTURE_MONTHS(of).map((month) => (empty ? { ...month, totalToman: 0, receiptCount: 0 } : month))
 
   const ledger: Ledger = empty
     ? { receipts: [], summary: { totalToman: 0, receiptCount: 0, monthlyAverageToman: 0, monthsInRange: 1 } }
     : FIXTURE_LEDGER
   const shares = empty ? [] : FIXTURE_SHARES
-  const months = empty ? FIXTURE_MONTHS(year).map((m) => ({ ...m, totalToman: 0, receiptCount: 0 })) : FIXTURE_MONTHS(year)
 
   client.setQueryData(clientsQueryKey, empty ? [] : FIXTURE_CLIENTS)
 
-  // Four years of history, so the year picker has somewhere to go and the demo
-  // reaches back to 1402. Each year is seeded, not just the current one;
-  // selecting an earlier year otherwise landed on an empty page.
+  // Every year is seeded, not just the current one; selecting an earlier year
+  // in the picker otherwise landed on an empty page.
   const years = FIXTURE_YEARS(year)
   client.setQueryData(getPopulatedYearsQueryKey(CALENDAR), years)
   for (const populated of years) {
-    const buckets = FIXTURE_MONTHS(populated)
-    client.setQueryData(
-      getMonthlyTotalsQueryKey(populated, CALENDAR),
-      empty ? buckets.map((bucket) => ({ ...bucket, totalToman: 0, receiptCount: 0 })) : buckets,
-    )
+    client.setQueryData(getMonthlyTotalsQueryKey(populated, CALENDAR), monthsOf(populated))
   }
+
   client.setQueryData(getClientSharesQueryKey(range), {
     shares,
-    insight: empty || shares.length === 0 ? null : { clientName: shares[0].clientName, percentage: shares[0].percentage },
+    insight: shares.length === 0 ? null : { clientName: shares[0].clientName, percentage: shares[0].percentage },
   })
 
   // The ledger page and the dashboard build different keys for the same data.
   client.setQueryData(getLedgerQueryKey({}, { field: 'occurredAt', direction: 'desc' }, CALENDAR), ledger)
   client.setQueryData(getLedgerQueryKey({ range }, { field: 'occurredAt', direction: 'desc' }, CALENDAR), ledger)
 
-  // The report covers the period ELAPSED so far, exactly as the real query does.
-  //
-  // `getIncomeReportQuery` reads receipts BETWEEN the clamped range and buckets
-  // only those, so it can never print a month past today. Seeding the raw year
-  // instead produced a certificate that contradicted itself: twelve month rows,
-  // four of them carrying income from months that have not happened, all summed
-  // into a total, and then divided by the five months elapsed. That inflates
-  // the average and is indefensible on a page an embassy reads.
-  //
-  // So the months are cut to the period the same way, and the total is their
-  // sum. Rows, total and divisor then agree and the arithmetic can be checked
-  // by hand, which is the whole point of printing the basis.
+  // `getIncomeReportQuery` buckets only the months inside the clamped range, so
+  // it can never print a month past today. The seeded months are cut the same
+  // way and the total is their sum, otherwise the certificate lists months that
+  // have not happened, sums them, then divides by the months elapsed.
   const { range: reported, months: monthsInRange } = averagingPeriod(range, CALENDAR)
   const elapsed = monthIndexOf(new Date(), CALENDAR) + 1
-  const reportedMonths = months.filter((month) => month.month <= elapsed)
+  const reportedMonths = monthsOf(year).filter((month) => month.month <= elapsed)
   const reportedTotal = reportedMonths.reduce((sum, month) => sum + month.totalToman, 0)
 
   client.setQueryData(getIncomeReportQueryKey(range, CALENDAR), {
     profile: FIXTURE_PROFILE,
     range: reported,
     totalToman: reportedTotal,
-    monthlyAverageToman: empty ? 0 : Math.round(reportedTotal / monthsInRange),
+    monthlyAverageToman: Math.round(reportedTotal / monthsInRange),
     monthsInRange,
     months: reportedMonths,
     generatedAt: new Date().toISOString(),
   })
 }
 
-/**
- * Writes the fixtures into the REAL database.
- *
- * Seeding the query cache is enough for a story that only renders, but not for
- * one that filters: changing a filter changes the query key, the cache misses,
- * and the query falls through to Dexie, which is empty, so the table would go
- * blank mid-test and prove nothing. The Storybook browser project runs in real
- * Chromium with real IndexedDB, so scenario tests seed it properly and exercise
- * the actual query.
- *
- * Returns a cleanup that empties the tables again, so one scenario cannot leak
- * rows into the next.
- */
 const clear = async () => {
   await Promise.all([db.receipts.clear(), db.clients.clear()])
 }
 
 const write = async () => {
   await clear()
-  await db.clients.bulkPut(FIXTURE_CLIENTS.map(({ id, name }) => ({ id, name, nameKey: name.toLowerCase(), createdAt: iso(12, 1) })))
-  await db.receipts.bulkPut(
-    FIXTURE_RECEIPTS.map(({ clientName: _clientName, ...receipt }) => ({
-      ...receipt,
-      clientId: FIXTURE_CLIENTS.find((client) => client.name === _clientName)?.id ?? null,
-    })),
-  )
+  await db.clients.bulkPut(FIXTURE_CLIENTS.map(({ totalToman: _totalToman, receiptCount: _receiptCount, ...client }) => client))
+  await db.receipts.bulkPut(FIXTURE_RECEIPTS.map(({ clientName: _clientName, ...stored }) => stored))
 }
 
-// A Docs page renders EVERY story of its component at once, so several stories
-// seed the same IndexedDB at the same moment. Run separately their clears and
-// writes interleave, one story's rows land before another's write, and Dexie
-// rejects the whole batch: «receipts.bulkAdd(): 8 of 8 operations failed.
-// ConstraintError: Key already exists in the object store.»
-//
-// So the seed is shared: concurrent callers await one in-flight write, and the
-// tables are only emptied once the last of them has released. `bulkPut` rather
-// than `bulkAdd` on top of that, so re-seeding is idempotent instead of fatal.
+// One in-flight write, shared by every concurrent caller.
 let seeded: Promise<void> | undefined
 let holders = 0
 
+/**
+ * Writes the fixtures into the REAL database and returns a cleanup that empties
+ * the tables again.
+ *
+ * Seeding the query cache is enough for a story that only renders, but not for
+ * one that filters: a changed filter is a changed query key, the cache misses,
+ * and the query falls through to Dexie. The Storybook browser project runs real
+ * Chromium with real IndexedDB, so scenario tests seed it and exercise the
+ * actual query.
+ *
+ * A Docs page renders EVERY story of its component at once, so several call
+ * this at the same moment. Run separately their clears and writes interleave
+ * and Dexie rejects the batch: «receipts.bulkAdd(): 8 of 8 operations failed.
+ * ConstraintError». Hence one shared write, `bulkPut` so a re-seed is
+ * idempotent, and a clear only once the last holder releases.
+ */
 export const seedDatabase = async (): Promise<() => Promise<void>> => {
   holders += 1
   seeded ??= write()
@@ -297,8 +256,8 @@ export const seedDatabase = async (): Promise<() => Promise<void>> => {
 
   let released = false
   return async () => {
-    // Cleanups run per story, and a story that unmounts twice must not empty
-    // the tables out from under the ones still on screen.
+    // A story that unmounts twice must not empty the tables out from under the
+    // stories still on screen.
     if (released) return
     released = true
     holders -= 1

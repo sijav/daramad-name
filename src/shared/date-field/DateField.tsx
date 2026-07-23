@@ -22,29 +22,23 @@ export interface DateFieldProps {
 }
 
 /**
- * Jalali date picker (rule 4: the user only ever sees their own calendar).
+ * Jalali date picker. The stored value is an ISO instant whichever calendar is
+ * selected, so switching calendars never rewrites data.
  *
- * Uses MUI X's own `AdapterDateFnsJalali` rather than a bespoke calendar grid,
- * so leap years, month lengths and the Farvardin boundary come from a
- * maintained implementation instead of arithmetic written here. The adapter
- * swaps with the Settings toggle; the stored value stays an ISO instant either
- * way, so switching calendars never rewrites data.
- *
- * Persian numerals come from the Farsi-Digits font rather than from the
- * adapter. MUI X sizes each field section by probing
- * `formatByString(...).startsWith('0')` against ASCII '0', so an adapter that
- * emits real Persian digits makes the picker throw. Rendering ASCII through a
- * font whose 0-9 glyphs are Persian satisfies both sides.
+ * Persian numerals come from the Farsi-Digits font, not the adapter: MUI X sizes
+ * each field section by probing `formatByString(...).startsWith('0')` against
+ * ASCII '0', so an adapter emitting Persian digits makes the picker throw.
  */
 export const DateField = ({ label, value, onValueChange, disableFuture = true, error, helperText, fullWidth = true }: DateFieldProps) => {
   const { calendar, locale } = useSettings()
-  // Persian numerals are a property of the Persian locale, not of the picker.
+  // Digits follow the language, not the calendar: a Persian reader who switched
+  // to the Gregorian calendar still reads Persian numerals.
   const isPersian = locale === 'fa-IR'
   const digitFont = isPersian ? fontFamilyFarsiDigits : undefined
   const labelId = useId()
 
   return (
-    <Field label={label} labelId={labelId} error={error} helperText={helperText}>
+    <Field label={label} labelId={labelId} error={error} helperText={helperText} fullWidth={fullWidth}>
       <LocalizationProvider {...adapterProps(calendar, isPersian)} localeText={pickerText(isPersian)}>
         <DatePicker
           value={value ? new Date(value) : null}
@@ -55,24 +49,21 @@ export const DateField = ({ label, value, onValueChange, disableFuture = true, e
               fullWidth,
               error,
               slotProps: {
-                // The editable sections sit inside `role="group"`, and a group
-                // is NOT a labelable element, the `<label>` `Field` wraps
-                // everything in therefore names the picker's hidden input and
-                // nothing else, leaving the visible group anonymous. MUI X
-                // only wires `aria-labelledby` itself when the field is given
-                // its own floating `label`, which this design does not use, so
-                // the association is spelled out here.
-                //
-                // Without it a screen reader announced three unattached spin
-                // buttons, "year", "month", "day", with no way to tell the
-                // ledger's «from» filter from its «to».
+                // The editable sections sit inside `role="group"`, which is not
+                // a labelable element, so the `<label>` around `Field` names
+                // the hidden input and leaves the group anonymous. MUI X wires
+                // `aria-labelledby` itself only when the field carries its own
+                // floating label, which this design does not use. Without this
+                // a screen reader read the ledger's «from» and «to» filters as
+                // six unattached spin buttons.
                 input: { 'aria-labelledby': labelId },
               },
-              // v9 renders the field as a section list, not a plain <input>.
-              // The inner section spans carry their OWN font-family from the
-              // theme's typography, so inheriting from the root is not enough
-              // each span has to be named or the digits stay Latin.
               sx: [
+                // Every node the digit font has to be named on. The field is a
+                // section list, and each span carries its own `font-family`
+                // from the theme's typography, so setting it on the root leaves
+                // the digits Latin. `input` is the hidden value input the
+                // section list keeps alongside them.
                 {
                   [[
                     '& .MuiPickersSectionList-root',
@@ -80,19 +71,14 @@ export const DateField = ({ label, value, onValueChange, disableFuture = true, e
                     '& .MuiPickersSectionList-section',
                     '& .MuiPickersSectionList-sectionContent',
                     '& input',
-                  ].join(', ')]: {
-                    fontFamily: digitFont,
-                  },
+                  ].join(', ')]: { fontFamily: digitFont },
                 },
-                // An empty picker shows its «YYYY/MM/DD» template through MUI's
-                // placeholder opacity (0.42), which lands the hint at 2.7:1
-                // below the 4.5:1 WCAG asks for, on the one control the ledger
-                // filter opens with. Every other input in the app already
-                // renders its placeholder as solid `text.secondary` (see the
-                // `&::placeholder` rule in the theme); this matches them.
-                //
-                // Scoped to the empty, unfocused state so a real date keeps the
-                // full-strength `text.primary` it is entitled to.
+                // An empty picker shows its «YYYY/MM/DD» template at MUI's
+                // placeholder opacity of 0.42, which measures 2.7:1 against the
+                // 4.5:1 WCAG asks for. The theme's `&::placeholder` rule gives
+                // every other input solid `text.secondary` but does not reach a
+                // section list. Scoped to empty and unfocused so a real date
+                // keeps `text.primary`.
                 value === null && {
                   '& .MuiPickersInputBase-root:not(.Mui-focused) .MuiPickersInputBase-sectionsContainer': {
                     opacity: 1,
@@ -101,14 +87,11 @@ export const DateField = ({ label, value, onValueChange, disableFuture = true, e
                 },
               ],
             },
-            // The calendar popup's day cells need the same treatment.
-            //
-            // Both papers are also pointed at the label: MUI X's accessibility
-            // guide says to pass `aria-labelledby` to the `popper` and
-            // `mobilePaper` slots whenever the toolbar is hidden AND no field
-            // label is set, which is exactly this configuration. Without it the
-            // calendar opens as an unnamed `role="dialog"` (axe:
-            // `aria-dialog-name`).
+            // The calendar popup's day cells take the same font. MUI X's
+            // accessibility guide asks for `aria-labelledby` on the `popper` and
+            // `mobilePaper` slots when the toolbar is hidden and no field label
+            // is set, which is this configuration; without it the calendar opens
+            // as an unnamed `role="dialog"` (axe: `aria-dialog-name`).
             popper: { 'aria-labelledby': labelId },
             desktopPaper: { sx: { fontFamily: digitFont } },
             mobilePaper: { 'aria-labelledby': labelId, sx: { fontFamily: digitFont } },
@@ -120,18 +103,13 @@ export const DateField = ({ label, value, onValueChange, disableFuture = true, e
 }
 
 /**
- * Calendar system and interface language are independent settings, so BOTH
- * adapters are given a locale for BOTH languages.
+ * Calendar system and interface language are independent settings, so both
+ * adapters take a locale for both languages. `date-fns-jalali`'s enUS
+ * transliterates the month names ("28 Tir 1405") instead of printing Persian
+ * script to an English reader, and without a locale the Gregorian adapter falls
+ * back to enUS, which showed "July 2026" to a Persian one.
  *
- * The Jalali adapter still drives the calendar in English, with
- * `date-fns-jalali`'s enUS locale, which transliterates the month names
- * ("28 Tir 1405") instead of printing them in Persian script an English reader
- * cannot parse. The Gregorian adapter has the mirror problem: with no locale
- * date-fns falls back to enUS, so a Persian user who switched the calendar to
- * Gregorian read "July 2026" in a header whose numerals were still Persian.
- *
- * Neither `date-fns` locale emits Persian digits, so MUI X's section
- * measurement, which probes `formatByString(...)` against ASCII '0', still
+ * No `date-fns` locale emits Persian digits, so MUI X's ASCII section probe
  * holds either way.
  */
 const adapterProps = (calendar: CalendarSystem, isPersian: boolean) =>
@@ -140,15 +118,11 @@ const adapterProps = (calendar: CalendarSystem, isPersian: boolean) =>
     : { dateAdapter: AdapterDateFns, adapterLocale: isPersian ? faIR : enUS }
 
 /**
- * The picker's OWN copy, section names, the open button, the month arrows, the
- * view switch, comes from MUI X, not from our catalogue.
- *
- * It is announced, not drawn, so it was invisible in review while every one of
- * those strings stayed English in a Persian interface: the three editable
- * sections read "Year", "Month", "Day" and the trigger read "Choose date,
- * selected date is …". `localeText` is MUI X's supported hook for this, and the
- * library ships the Persian catalogue itself, so nothing is re-translated here
- * (which is also why no lingui id appears in this file).
+ * The picker's own copy, section names, open button, month arrows, view switch,
+ * comes from MUI X's shipped catalogues rather than ours, which is why no lingui
+ * id appears in this file. `localeText` is the supported hook for selecting one.
+ * It is announced and not drawn, so the untranslated default went unnoticed: the
+ * three sections read "Year", "Month", "Day" in a Persian interface.
  */
 const pickerText = (isPersian: boolean) =>
   (isPersian ? faIRPickers : enUSPickers).components.MuiLocalizationProvider.defaultProps.localeText

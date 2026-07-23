@@ -8,27 +8,19 @@ import { monthIndexOf, monthNames, toEnglishDigits, toPersianDigits, yearOf } fr
 import { expect, userEvent, within } from 'storybook/test'
 import { DashboardPage } from './DashboardPage'
 
-/**
- * Page stories render entirely from a seeded query cache, no IndexedDB. The
- * `page` parameter tells the global decorator to seed fixtures and supply a
- * router, so these are deterministic across runs and languages.
- *
- * `data` is declared per story rather than here, because Storybook MERGES
- * parameters: a story asking for the real database cannot switch the seeding
- * off again once the meta has turned it on.
- */
-// `role-img-alt` is switched off HERE ONLY, and it is upstream rather than ours.
+// The `page` parameter drives the decorator in `.storybook/preview.tsx`: it
+// supplies a router, and when `data` is set it seeds the query cache so the
+// page renders without touching IndexedDB.
 //
-// MUI X renders `ChartsAccessibilityProxy`: two `role="img"` divs pointing at
-// `voiceover-<chartId>-1|2` elements that the library creates EMPTY and fills
-// only while the chart has keyboard focus. It is a live-region proxy for
-// keyboard navigation, not a static image label, so at rest axe correctly sees
-// `role="img"` with an empty name, on every chart, in every story.
-//
-// The only ways to satisfy the rule are to pass `disableKeyboardNavigation`,
-// which removes a real accessibility feature to please a checker, or to write
-// into MUI X's internal divs. Both are worse than the finding. Every other axe
-// rule stays enforced. SEE TECH-DEBT.md.
+// `data` sits on each story rather than on the meta because Storybook MERGES
+// parameters: once the meta turns seeding on, a story that wants the real
+// database (`ConcentrationInsightStaysQuietWhenSpread`) cannot turn it off.
+
+// MUI X's `ChartsAccessibilityProxy` renders two `role="img"` divs pointing at
+// `voiceover-<chartId>-1|2` elements it creates EMPTY and fills only while the
+// chart has keyboard focus, so at rest axe sees an unnamed image on every
+// chart. The only fixes are `disableKeyboardNavigation` or writing into MUI X
+// internals. This rule only, in the four chart story files. See TECH-DEBT.md.
 const CHART_A11Y = { a11y: { config: { rules: [{ id: 'role-img-alt', enabled: false }] } } }
 
 const meta = {
@@ -41,16 +33,13 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 const seeded = { page: { data: 'full' } }
+const emptied = { page: { data: 'empty' } }
 
 export const WithData: Story = {
   parameters: seeded,
-  /**
-   * The dependency warning is a claim about the user's business, so it may only
-   * appear when it is true. It is rendered here and asserted absent in
-   * `ConcentrationInsightStaysQuietWhenSpread`, both branches, because a
-   * warning that never fires and one that always fires look identical on a
-   * single screen.
-   */
+  // The concentration warning is asserted present here and absent in
+  // `ConcentrationInsightStaysQuietWhenSpread`; one that never fires and one
+  // that always fires look identical on a single screen.
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const insight = await canvas.findByText(/درآمدت از یک مشتری|of your income comes from a single client/)
@@ -58,11 +47,11 @@ export const WithData: Story = {
   },
 }
 
-export const Empty: Story = { parameters: { page: { data: 'empty' } } }
+export const Empty: Story = { parameters: emptied }
 
-// The money on a card, read back out of the rendered text rather than from the
-// props that produced it. `MoneyText` is the only element on a card that
-// carries a `dir`, which is what separates the figure from its label.
+// The figure on a card, read back out of the rendered text. `MoneyText` is the
+// only element in a card that carries a `dir`, which is what separates the
+// figure from its label.
 const figureIn = (card: Element | null | undefined): number =>
   Number(toEnglishDigits(card?.querySelector('[dir]')?.textContent ?? '').replace(/\D/g, ''))
 
@@ -89,16 +78,11 @@ export const MonthlyAverageStatesItsDivisor: Story = {
     })
 
     await step('and the total covers exactly the months the divisor counts', async () => {
-      // The fixture seeds all twelve buckets of the year, but only the elapsed
-      // ones may be summed, a numerator carrying months that have not happened
-      // over a divisor that does not count them inflates the average, which is
-      // the one figure on this page nobody can sanity-check by eye.
-      //
-      // The month cut-off is taken from the divisor the page PRINTED rather
-      // than recomputed here, so this cannot pass by making the same mistake
-      // twice. Derived from the fixture rather than written out: the months
-      // carry varied receipt counts and a couple of empty ones, and the empty
-      // ones belong in the divisor while contributing nothing to the total.
+      // The fixture seeds all twelve buckets, but only the elapsed ones may be
+      // summed: months that have not happened inflate a numerator the divisor
+      // does not count. The cut-off is the divisor the page PRINTED, not one
+      // recomputed here, so the test cannot repeat the page's arithmetic and
+      // pass alongside it.
       const expected = FIXTURE_MONTHS(yearOf(new Date(), 'JALALI'))
         .filter((month) => month.month <= divisor)
         .reduce((sum, month) => sum + month.totalToman, 0)
@@ -126,10 +110,10 @@ export const APastYearNamesTheMonthOnTheCard: Story = {
 
     await step('and the card names the month it is actually showing', async () => {
       await expect(canvas.queryByText(/^درآمد این ماه$|^Income this month$/)).toBeNull()
-      // Month name AND year in ONE label. Matched on parts rather than on the
-      // whole sentence so the assertion survives translation and works in
-      // either language; `getNodeText` reads only an element's own text, so an
-      // ancestor holding both in different children cannot satisfy it.
+      // One label carrying both the month name and the year. Matched on parts
+      // so it survives translation, and `findByText` reads an element's own
+      // text only, so an ancestor holding the two in separate children cannot
+      // satisfy it.
       const relabelled = await canvas.findByText(
         (content) => content.includes(month) && toEnglishDigits(content).includes(String(previous)),
       )
@@ -171,7 +155,7 @@ export const LatestReceiptsLinkToTheLedger: Story = {
 }
 
 export const EmptyStateLeadsToQuickEntry: Story = {
-  parameters: { page: { data: 'empty' } },
+  parameters: emptied,
   render: () => (
     <Routes>
       <Route path="/" element={<DashboardPage />} />
@@ -194,40 +178,49 @@ export const EmptyStateLeadsToQuickEntry: Story = {
   },
 }
 
-const tomanReceipt = (id: string, clientId: string, amountToman: number): Receipt => ({
-  id,
-  occurredAt: new Date().toISOString(),
-  amountOriginal: amountToman,
-  currency: 'TOMAN',
-  rate: null,
-  amountToman,
-  clientId,
-  channel: 'CARD_TO_CARD',
-  note: null,
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-})
+const tomanReceipt = (id: string, clientId: string, amountToman: number): Receipt => {
+  const now = new Date().toISOString()
+
+  return {
+    id,
+    occurredAt: now,
+    amountOriginal: amountToman,
+    currency: 'TOMAN',
+    rate: null,
+    amountToman,
+    clientId,
+    channel: 'CARD_TO_CARD',
+    note: null,
+    createdAt: now,
+    updatedAt: now,
+  }
+}
+
+const clearDatabase = async (): Promise<void> => {
+  await Promise.all([db.receipts.clear(), db.clients.clear()])
+}
 
 export const ConcentrationInsightStaysQuietWhenSpread: Story = {
+  // The only story here that runs against the real database: the threshold has
+  // to be exercised, not read back out of a fixture that hard-codes the answer.
   beforeEach: async () => {
-    const clear = async () => {
-      await Promise.all([db.receipts.clear(), db.clients.clear()])
-    }
-    await clear()
+    await clearDatabase()
 
     const names = ['Aria Trading', 'Homa Cafe', 'Naghsh Studio', 'Dadepardaz Co.']
-    await db.clients.bulkAdd(
-      names.map((name, index) => ({ id: `c${index}`, name, nameKey: name.toLowerCase(), createdAt: new Date().toISOString() })),
-    )
-    await db.receipts.bulkAdd(names.map((_name, index) => tomanReceipt(`r${index}`, `c${index}`, 25_000_000)))
+    const createdAt = new Date().toISOString()
+    // `bulkPut`, not `bulkAdd`: a Docs page renders every story at once and
+    // these ids are fixed, so an overlapping re-seed would fail the whole batch
+    // with «Key already exists in the object store».
+    await db.clients.bulkPut(names.map((name, index) => ({ id: `c${index}`, name, nameKey: name.toLowerCase(), createdAt })))
+    await db.receipts.bulkPut(names.map((_name, index) => tomanReceipt(`r${index}`, `c${index}`, 25_000_000)))
 
-    return clear
+    return clearDatabase
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    // Everything on this page came from Dexie, so wait for the figures before
-    // concluding anything from an absence.
+    // This page reads from Dexie, so wait for the figures before concluding
+    // anything from an absence.
     await expect(figureIn(await cardFor(canvasElement, /^درآمد سال |^Income in /))).toBe(100_000_000)
     await expect(await canvas.findByText(/^سهم مشتری‌ها از درآمد$|^Client share of income$/)).toBeInTheDocument()
 

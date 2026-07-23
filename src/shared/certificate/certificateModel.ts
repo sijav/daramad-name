@@ -27,17 +27,9 @@ export interface CertificateMonthRow {
 }
 
 /**
- * Every word and figure the income certificate contains.
- *
- * This exists so the on-screen document and the PDF cannot say different
- * things. They previously did: the PDF printed national ID, phone and address
- * while the preview showed none of them, and the preview showed an issue date
- * the PDF lacked. Two renderers reading two hand-maintained field lists drift
- * the moment either is touched, and nobody notices until someone opens the
- * downloaded file.
- *
- * So content lives here and rendering lives elsewhere. A field added to the
- * model appears in both surfaces or in neither.
+ * Every word and figure the income certificate contains. The on-screen document
+ * and the PDF both render this and hold no field list of their own, so a field
+ * added here reaches both surfaces or neither.
  */
 export interface CertificateModel {
   direction: 'rtl' | 'ltr'
@@ -58,7 +50,7 @@ export interface CertificateModel {
   months: CertificateMonthRow[]
   averageBasis: string
   footnote: string
-  /** True when the profile has no name, the document is not presentable yet. */
+  /** True when the profile has no name, so the page is not presentable yet. */
   incomplete: boolean
 }
 
@@ -85,15 +77,12 @@ const LABELS = {
   footnote: msg`This statement was produced from receipts the holder recorded themselves in Daramadname. It is a personal record, not a bank or tax authority document, and is intended to be read alongside supporting bank statements.`,
 } satisfies Record<string, MessageDescriptor>
 
-/**
- * A short reference the holder can quote.
- *
- * Derived from the range and the total, so reprinting the same period the same
- * day yields the same reference, a serial that changed on every print would
- * undermine the very thing it exists to signal.
- */
 const REFERENCE_PREFIX = 'DN'
 
+/**
+ * A short reference the holder can quote, derived from the period, the total and
+ * the issue date, so reprinting the same report yields the same string.
+ */
 const referenceFor = (report: IncomeReport, year: number): string => {
   const seed = `${report.range.from}|${report.range.to}|${report.totalToman}|${report.generatedAt.slice(0, 10)}`
   let hash = 0
@@ -113,15 +102,12 @@ export const buildCertificateModel = (
   const t = (key: keyof typeof LABELS) => i18n._(LABELS[key])
   const persian = language === 'fa'
 
-  // The document's numbering is independent of the interface locale: an English
-  // certificate must read «147,750,000» and «21 Jul 2026» even while the app
-  // itself is in Persian.
+  // Numbering follows the DOCUMENT, not the interface: an English certificate
+  // reads «147,750,000» and «21 Jul 2026» while the app itself stays Persian.
   const locale: AppLocale = persian ? 'fa-IR' : 'en-US'
   // Profile fields are stored exactly as typed, so a national ID may already
-  // hold Persian digits. Normalise to ASCII first, then re-render in the
-  // DOCUMENT's numbering, otherwise an embassy officer receives «۰۰۱۲۳۴۵۶۷۸»
-  // on an otherwise English page, and a user who typed ASCII gets Latin digits
-  // on an otherwise Persian one.
+  // hold Persian digits. Normalise to ASCII, then re-render in the document's
+  // own numerals.
   const digits = (value: number | string) => {
     const ascii = toEnglishDigits(String(value))
     return persian ? toPersianDigits(ascii) : ascii
@@ -131,38 +117,29 @@ export const buildCertificateModel = (
 
   const months = monthNames(calendar, i18n)
 
-  // The reference carries the year the document COVERS, in the calendar the
-  // document is written in. Slicing the ISO string would print 2027 on a
-  // certificate whose every other date reads ۱۴۰۵.
+  // The reference carries the year the document COVERS, in the app's calendar,
+  // not the ISO year: a Jalali 1405 report runs to 2027-03-20, so slicing the
+  // ISO string would print 2027 beside dates that all read ۱۴۰۵.
   const year = yearOf(new Date(report.range.to), calendar)
 
-  // A row with no value is DROPPED, never printed with an empty right-hand
-  // side. A certificate listing «تلفن» against blank space reads as an
-  // unfinished form, and an unfinished form is the one thing this document
-  // cannot afford to look like.
-  const identity: CertificateRow[] = []
-  const pushIdentity = (label: string, value: string) => {
-    if (value.trim()) {
-      identity.push({ label, value: value.trim() })
-    }
-  }
-
-  // The English certificate prefers the Latin spellings the holder entered
-  // only they know which one matches their passport, and an official comparing
-  // the two cares about exactly that. Falls back to the Persian rather than
-  // printing nothing.
+  // The English certificate prefers the Latin spellings the holder entered,
+  // only they know which one matches their passport. Persian is the fallback.
   const name = (persian ? report.profile.fullName : report.profile.fullNameEn) || report.profile.fullName
   const address = (persian ? report.profile.address : report.profile.addressEn) || report.profile.address
 
-  pushIdentity(t('fullName'), name)
-  pushIdentity(t('nationalId'), digits(report.profile.nationalId))
-  // The passport number keeps ASCII digits in BOTH documents. A national ID
-  // card is printed in Persian numerals so rendering it that way matches the
-  // card, but a passport is not, its number appears in Latin, and «K۱۲۳۴۵۶۷۸»
-  // on a certificate would not match the document an official is holding.
-  pushIdentity(t('passportNumber'), toEnglishDigits(report.profile.passportNumber))
-  pushIdentity(t('phone'), digits(report.profile.phone))
-  pushIdentity(t('address'), address)
+  const identity: CertificateRow[] = [
+    { label: t('fullName'), value: name },
+    { label: t('nationalId'), value: digits(report.profile.nationalId) },
+    // The passport number keeps ASCII digits in BOTH documents: a passport
+    // prints its number in Latin, so «K۱۲۳۴۵۶۷۸» would not match the document
+    // an official is holding. A national ID card does use Persian numerals.
+    { label: t('passportNumber'), value: toEnglishDigits(report.profile.passportNumber) },
+    { label: t('phone'), value: digits(report.profile.phone) },
+    { label: t('address'), value: address },
+  ]
+    .map((row) => ({ label: row.label, value: row.value.trim() }))
+    // A row with no value is dropped, never printed against blank space.
+    .filter((row) => row.value !== '')
 
   const words = numberToWords(report.totalToman, locale)
 
@@ -192,8 +169,6 @@ export const buildCertificateModel = (
       count: digits(entry.receiptCount),
       amount: money(entry.totalToman),
     })),
-    // Gandom's note: an average with an unstated divisor is dangerous on a
-    // document meant to be believed. State it on the page.
     averageBasis: i18n._(msg`Monthly average: the total divided by ${digits(report.monthsInRange)} months of this period.`),
     footnote: t('footnote'),
     incomplete: !report.profile.fullName.trim(),

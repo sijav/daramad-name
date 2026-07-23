@@ -4,28 +4,22 @@ import { installBidiLayout, toVisualLine } from './bidiText'
 import type { CertificateBlock, CertificateDoc } from './buildIncomeReport'
 
 // @types/pdfkit types the module's export as an INSTANCE, but at runtime it is
-// the constructor. We describe the construct signature we call, so the loader
-// can hand the imported value across without an `any`. `font` is widened to
-// allow `false`, which pdfkit accepts to mean "load no default font", the type
-// only lists `string`.
+// the constructor. `font` is widened to allow `false`, which pdfkit accepts to
+// mean "load no default font"; the type only lists `string`. `_font` is pdfkit's
+// private handle on the font last selected by `doc.font()`.
 type CertificateDocOptions = Omit<PDFKit.PDFDocumentOptions, 'font'> & { font?: string | false }
-export type PdfDocumentConstructor = new (options?: CertificateDocOptions) => PDFKit.PDFDocument
+export type PdfDocumentConstructor = new (options?: CertificateDocOptions) => PDFKit.PDFDocument & { _font?: { font?: unknown } }
 
-// Draws a `CertificateDoc` onto a pdfkit page and returns the finished file as
-// a Blob. pdfkit is a Node library; the loader supplies it and the font bytes,
-// and the browser shims (Buffer/stream/zlib/fs) come from the Vite polyfill.
+// Draws a `CertificateDoc` onto pdfkit pages and returns the file as a Blob.
+// pdfkit is a Node library; the loader supplies it and the font bytes, and the
+// browser shims (Buffer/stream/zlib/fs) come from the Vite polyfill.
 //
-// EVERY line of text goes through `writeAt`, which does its own wrapping and
-// then reorders each line with `toVisualLine`. pdfkit measures and draws one
-// WORD at a time and lays them left to right in the order given, so handing it a
-// right-to-left sentence directly prints the words backwards. Wrapping has to
-// happen first and reordering second, because bidi order is defined per visual
-// line.
+// Every string goes through `writeAt`, which wraps FIRST and reorders each line
+// with `toVisualLine` second. Bidi order is defined per visual line, so
+// reordering before the break points are known puts words on the wrong lines.
 //
-// The colours are the ones `IncomeCertificate` paints, kept literal on purpose:
-// a printed page has no dark mode, and a certificate that inverts because the
-// reader had dark mode on is not a document. The two renderers share the same
-// `CertificateModel`, so a reader cannot tell which produced the page.
+// The colours are the ones `IncomeCertificate` paints, kept literal: this is the
+// printed document and print has no dark mode.
 
 const INK = '#18191b'
 const MUTED = '#494b50'
@@ -48,47 +42,46 @@ interface TextStyle {
   color: string
 }
 
+/** What wrapping and measuring need. Colour and x do not affect either. */
+type TextMetrics = Pick<TextStyle, 'w' | 'font' | 'size'>
+
 export const renderCertificatePdf = (
   PDFDocumentCtor: PdfDocumentConstructor,
   fonts: CertificateFonts,
   cert: CertificateDoc,
 ): Promise<Blob> => {
   const doc = new PDFDocumentCtor({
-    size: 'A4',
+    size: cert.pageSize,
     margins: { top: 56, bottom: 56, left: 48, right: 48 },
     // Load NO default font. pdfkit otherwise reads Helvetica's AFM metrics off
     // disk with `fs.readFileSync` in its constructor, which has no file to read
-    // in the browser and throws "readFileSync of null". We only ever use the
-    // embedded Vazirmatn, set explicitly before every draw, so the built-in
-    // fonts are never needed. See TECH-DEBT.md, pdfkit in the browser.
+    // in the browser and throws "readFileSync of null". Only the embedded
+    // Vazirmatn is ever used. See TECH-DEBT.md 7b.
     font: false,
-    // Compression is left off deliberately: pdfkit's `deflateSync` path is a
-    // Node zlib call the browser shim does not implement, and pdfkit already
-    // SUBSETS the embedded font, so an uncompressed certificate is still small.
+    // pdfkit's compression path calls Node's `deflateSync`, which the browser
+    // zlib shim does not implement. It still subsets the embedded font, so an
+    // uncompressed certificate is ~42 KB. See TECH-DEBT.md 7c.
     compress: false,
     info: { Title: cert.title, Author: cert.author },
     lang: cert.direction === 'rtl' ? 'fa-IR' : 'en-US',
   })
 
-  // Buffer is provided by the Vite polyfill in the browser and is native in the
-  // Node test runner; either way pdfkit wants font data as a Buffer.
+  // Buffer comes from the Vite polyfill in the browser and is native in the Node
+  // test runner; either way pdfkit wants font data as a Buffer.
   doc.registerFont('regular', Buffer.from(fonts.regular))
   doc.registerFont('bold', Buffer.from(fonts.bold))
 
-  // Patch the shaper on the font pdfkit ITSELF built, not on our own `fontkit`
-  // import. The two are not always the same object: this module imports fontkit
-  // as ESM while pdfkit `require`s the CommonJS build, and a bundler that does
-  // not dedupe them (Node does not) leaves two separate copies of the Font
-  // class. Patching ours would then silently never reach the fonts that draw
-  // which is exactly what happened, and why the Node tests were passing while
-  // exercising an unpatched path.
+  // Patch the shaper on the font pdfkit ITSELF built. `bidiText.ts` imports
+  // fontkit as ESM while pdfkit `require`s the CommonJS build, and Node does not
+  // dedupe those, so patching only the ESM copy leaves the fonts that actually
+  // draw unpatched. `installBidiLayout` patches the prototype and is idempotent,
+  // so calling it again here costs nothing.
   doc.font('regular')
-  const embedded = (doc as unknown as { _font?: { font?: unknown } })._font
+  const embedded = doc._font
   if (!embedded?.font) {
-    // Refuse to draw rather than draw it wrong. `_font` is private, so a pdfkit
-    // release that renames it turns the patch into a no-op, and an unpatched
-    // font prints «۱۴۰۵» as «۵۰۴۱» on a page nobody proofreads because it looks
-    // like a certificate. Failing here is the only signal that the shape moved.
+    // `_font` is private, so a pdfkit release that renames it turns the patch
+    // into a no-op. An unpatched font prints «۱۴۰۵» as «۵۰۴۱» on a page that
+    // otherwise looks correct, so throwing is the only signal available.
     throw new Error(i18n._(msg`The report could not be prepared for Persian text. Reload the page and try again.`))
   }
   installBidiLayout(embedded.font)
@@ -98,8 +91,8 @@ export const renderCertificatePdf = (
   const align = cert.align
   const opposite: 'right' | 'left' = align === 'right' ? 'left' : 'right'
 
-  // A single vertical cursor threaded through every block, so nothing depends on
-  // pdfkit's own `x`/`y` bookkeeping between calls.
+  // One vertical cursor threaded through every block, so nothing depends on
+  // pdfkit's own x/y bookkeeping between calls.
   let y = doc.page.margins.top
 
   const lineHeight = (size: number) => size * 1.6
@@ -108,15 +101,13 @@ export const renderCertificatePdf = (
    * Starts a new page when `height` would not fit above the bottom margin, and
    * says whether it did.
    *
-   * Every block draws at an explicit y taken from the one cursor above, and
-   * `lineBreak: false` keeps pdfkit's own wrapper, the thing that would
-   * otherwise add the page, out of it. So without this a certificate that
-   * outgrows one sheet keeps counting down past the paper: the text is in the
-   * file and nothing renders it. A twelve-month report with a full postal
-   * address is already that long.
+   * Every block draws at an explicit y with `lineBreak: false`, which keeps
+   * pdfkit's own wrapper, the thing that would otherwise add the page, out of
+   * it. Without this the cursor just counts down past the paper and the text
+   * lands in the file with nothing to render it.
    *
-   * A block taller than a whole page is let through rather than looped over:
-   * the guard only fires once something has been drawn on the current page.
+   * A block taller than a whole page is let through rather than looped over: the
+   * guard only fires once something has been drawn on the current page.
    */
   const ensureRoom = (height: number): boolean => {
     if (y <= doc.page.margins.top || y + height <= doc.page.height - doc.page.margins.bottom) {
@@ -127,12 +118,8 @@ export const renderCertificatePdf = (
     return true
   }
 
-  /**
-   * Wraps in LOGICAL order using measured widths, reordering happens per line,
-   * after the break points are known, because bidi order is defined per visual
-   * line.
-   */
-  const wrap = (value: string, style: TextStyle): string[] => {
+  /** Wraps in LOGICAL order using measured widths. Reordering happens per line, in `writeAt`. */
+  const wrap = (value: string, style: TextMetrics): string[] => {
     doc.font(style.font).fontSize(style.size)
 
     const words = value.split(/\s+/).filter(Boolean)
@@ -152,13 +139,12 @@ export const renderCertificatePdf = (
   }
 
   /** What `writeAt` is about to consume vertically, measured before it draws. */
-  const heightOf = (value: string, style: TextStyle): number => wrap(value, style).length * lineHeight(style.size)
+  const heightOf = (value: string, style: TextMetrics): number => wrap(value, style).length * lineHeight(style.size)
 
   /**
-   * Draws text at an explicit y and returns the y just past it.
-   *
-   * `lineBreak: false` stops pdfkit re-wrapping a line that is already in visual
-   * order, which would break it in the wrong place.
+   * Draws text at an explicit y and returns the y just past it. `lineBreak: false`
+   * stops pdfkit re-wrapping a line that is already in visual order, which would
+   * break it in the wrong place.
    */
   const writeAt = (value: string, atY: number, style: TextStyle): number => {
     const lines = wrap(value, style)
@@ -183,14 +169,19 @@ export const renderCertificatePdf = (
     return y
   }
 
-  const rule = (color: string, width: number, gapBefore: number, gapAfter: number) => {
-    y += gapBefore
+  /** A horizontal line across the text column, at an explicit y. */
+  const strokeAcross = (atY: number, color: string, width: number) => {
     doc
-      .moveTo(x0, y)
-      .lineTo(x0 + W, y)
+      .moveTo(x0, atY)
+      .lineTo(x0 + W, atY)
       .lineWidth(width)
       .strokeColor(color)
       .stroke()
+  }
+
+  const rule = (color: string, width: number, gapBefore: number, gapAfter: number) => {
+    y += gapBefore
+    strokeAcross(y, color, width)
     y += gapAfter
   }
 
@@ -226,19 +217,13 @@ export const renderCertificatePdf = (
     const labelStyle: TextStyle = { x: labelX, w: labelW, align, font: 'regular', size: 10.5, color: MUTED }
     const valueStyle: TextStyle = { x: valueX, w: valueW, align, font: 'bold', size: 11, color: INK }
     for (const row of rows) {
-      // A row is a label and its value on one baseline; break before it rather
-      // than between the two halves of the same fact.
+      // Break before a row rather than between a label and its value.
       ensureRoom(Math.max(heightOf(row.label, labelStyle), heightOf(row.value, valueStyle)) + 4)
       const top = y
       const labelBottom = writeAt(row.label, top, labelStyle)
       const valueBottom = writeAt(row.value, top, valueStyle)
       y = Math.max(labelBottom, valueBottom) + 4
-      doc
-        .moveTo(x0, y - 2)
-        .lineTo(x0 + W, y - 2)
-        .lineWidth(0.5)
-        .strokeColor(HAIRLINE)
-        .stroke()
+      strokeAcross(y - 2, HAIRLINE, 0.5)
     }
     y += 4
   }
@@ -252,9 +237,8 @@ export const renderCertificatePdf = (
     const wordsStyle: TextStyle = { x: x0 + padding, w: innerW, align, font: 'regular', size: 10, color: MUTED }
 
     // The border is stroked around the finished content, so the box has to be
-    // measured whole before anything is drawn, half a rounded rectangle
-    // continued on the next sheet reads as a printing fault on a document whose
-    // only job is to look official.
+    // measured whole before anything is drawn, otherwise it can split across
+    // sheets and print as half a rounded rectangle.
     let inner = Math.max(heightOf(block.label, labelStyle), heightOf(block.figure, figureStyle))
     if (block.words) {
       inner += 2 + heightOf(block.wordsLabel, wordsLabelStyle) + heightOf(block.words, wordsStyle)
@@ -295,17 +279,17 @@ export const renderCertificatePdf = (
       return align === 'right' ? x0 + W - offset - cols[index].w : x0 + offset
     }
 
+    const cellMetrics = (index: number, font: 'regular' | 'bold', size: number): TextMetrics => ({ w: cols[index].w, font, size })
+
     const cellStyle = (index: number, font: 'regular' | 'bold', size: number, color: string): TextStyle => ({
+      ...cellMetrics(index, font, size),
       x: boxX(index),
-      w: cols[index].w,
       align: cols[index].align,
-      font,
-      size,
       color,
     })
 
     const rowHeight = (cells: string[], font: 'regular' | 'bold', size: number): number =>
-      cells.reduce((tallest, cell, index) => Math.max(tallest, heightOf(cell, cellStyle(index, font, size, INK))), 0)
+      cells.reduce((tallest, cell, index) => Math.max(tallest, heightOf(cell, cellMetrics(index, font, size))), 0)
 
     const drawRow = (cells: string[], font: 'regular' | 'bold', size: number, color: string) => {
       const top = y
@@ -317,9 +301,8 @@ export const renderCertificatePdf = (
     }
 
     const headers = cols.map((c) => c.header)
-    // Repeated at the top of every sheet the table runs onto. A column of bare
-    // amounts with no headings above it cannot be read at all, and the month
-    // and count columns are the two a reader checks against each other.
+    // Repeated at the top of every sheet the table runs onto: a column of bare
+    // amounts with no headings above it cannot be read.
     const drawHead = () => {
       drawRow(headers, 'bold', 9.5, MUTED)
       rule(RULE, 1, 0, 4)
@@ -345,12 +328,7 @@ export const renderCertificatePdf = (
         drawHead()
       }
       drawRow(cells, 'regular', 10, INK)
-      doc
-        .moveTo(x0, y - 1)
-        .lineTo(x0 + W, y - 1)
-        .lineWidth(0.5)
-        .strokeColor(HAIRLINE)
-        .stroke()
+      strokeAcross(y - 1, HAIRLINE, 0.5)
       y += 2
     }
     y += 6
@@ -362,8 +340,8 @@ export const renderCertificatePdf = (
         drawHeader(block)
         break
       case 'rule':
-        // Carried onto the next sheet rather than stroked below the paper: the
-        // rule is what separates two sections, so losing it merges them.
+        // Carried onto the next sheet rather than stroked below the paper; the
+        // rule is what separates two sections.
         ensureRoom(8 + 12)
         rule(INK, 1.5, 8, 12)
         break
@@ -391,10 +369,12 @@ export const renderCertificatePdf = (
     }
   }
 
-  const chunks: Uint8Array[] = []
+  const chunks: BlobPart[] = []
   return new Promise<Blob>((resolve, reject) => {
-    doc.on('data', (chunk: Uint8Array) => chunks.push(chunk))
-    doc.on('end', () => resolve(new globalThis.Blob(chunks as BlobPart[], { type: 'application/pdf' })))
+    // pdfkit emits Node Buffers, which are always backed by a plain ArrayBuffer;
+    // `BlobPart` rejects the `ArrayBufferLike` that bare `Uint8Array` implies.
+    doc.on('data', (chunk: Uint8Array<ArrayBuffer>) => chunks.push(chunk))
+    doc.on('end', () => resolve(new globalThis.Blob(chunks, { type: 'application/pdf' })))
     doc.on('error', reject)
     doc.end()
   })

@@ -29,39 +29,29 @@ import { NAV_ITEMS } from 'src/shared/constants'
 import { PrivacyFooter } from 'src/shared/privacy-footer'
 import { setThemePreferenceMutation, settingsQueryKey } from 'src/shared/queries'
 
-// 264 in every desktop AND tablet frame; the app had it at 248.
+// 264 in every desktop and tablet frame of the design.
 const RAIL_WIDTH = 264
 
-/**
- * The app frame: top bar, side rail on desktop, bottom navigation on mobile.
- *
- * Rule 1 takes mobile seriously, half the demo-link traffic arrives on a
- * phone. Rather than squeezing the rail into a drawer only, small screens get a
- * thumb-reachable bottom bar, which is how people actually navigate a phone.
- */
+// Anchored `left` in BOTH directions. The stylis RTL plugin rewrites
+// `left`/`right` in the generated CSS, so anchor="left" already lands on the
+// visual right in Persian; swapping the anchor by hand double-flips it.
+const RAIL_ANCHOR = 'left'
+
+// The design's tablet frames are 834px wide and every one draws the permanent
+// rail. MUI's `md` is 900, so at `md` a tablet got the phone chrome instead.
+const DESKTOP_MIN_WIDTH = 768
+
 export const AppShell = () => {
   const { t, i18n } = useLingui()
   const theme = useTheme()
-  // The rail is anchored `left` in BOTH directions on purpose.
-  //
-  // The stylis RTL plugin rewrites `left`/`right` in the generated CSS, so a
-  // Drawer with anchor="left" already lands on the visual right in Persian.
-  // Swapping the anchor ourselves double-flips it and puts the rail on the
-  // wrong side, which is exactly what a manual swap did here before.
-  const railAnchor = 'left' as const
-  // The design's tablet frames are 834px wide and every one of them draws the
-  // permanent rail. MUI's `md` is 900, so a tablet got the phone chrome
-  // hamburger, temporary drawer and bottom bar, against a design that has
-  // none of them. 768 also covers an iPad in portrait while leaving phones on
-  // the bottom nav.
-  const isDesktop = useMediaQuery(theme.breakpoints.up(768))
+  const isDesktop = useMediaQuery(theme.breakpoints.up(DESKTOP_MIN_WIDTH))
   const [drawerOpen, setDrawerOpen] = useState(false)
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const queryClient = useQueryClient()
 
-  // The top bar's theme button flips between light and dark from whatever is
-  // currently resolved, so it also works while the preference is `system`.
+  // Toggle from the resolved mode, so the button still flips while the stored
+  // preference is `system`.
   const resolvedMode = theme.palette.mode
   const changeTheme = useMutation({
     mutationFn: setThemePreferenceMutation,
@@ -69,60 +59,47 @@ export const AppShell = () => {
   })
   const toggleTheme = () => changeTheme.mutate({ themePreference: resolvedMode === 'dark' ? 'light' : 'dark' })
 
-  // ONE selection rule, shared by the rail and the bottom bar.
-  //
-  // `path="*"` inside the shell renders the dashboard, so an unmatched URL is a
-  // real, reachable state, and the two navigations used to disagree about it:
-  // the bar fell back to index 0 while the rail compared paths and marked
-  // nothing. A desktop user on a stale link then had no idea where they were.
+  // One selection rule for the rail and the bottom bar. `path="*"` inside the
+  // shell renders the dashboard, so an unmatched URL is a reachable state and
+  // falls back to index 0 rather than marking nothing.
   const activeIndex = Math.max(
     0,
     NAV_ITEMS.findIndex((item) => item.to === pathname),
   )
 
   const railContent = (
-    // The rail is the app's navigation, so it has to BE a landmark, without
-    // one a screen-reader user has no way to jump to it or past it. `nav`
-    // wraps the list rather than replacing it, because <li> is only valid
-    // inside <ul> and the list semantics below are load-bearing too.
+    // `nav` wraps the list rather than replacing it: <li> is only valid inside
+    // <ul>, and the list semantics are load-bearing too.
     <Box component="nav" aria-label={t`Main navigation`}>
       <List sx={{ p: 1.5 }}>
-        {NAV_ITEMS.map((item, index) => {
-          const selected = index === activeIndex
-          return (
-            // `ListItemButton` renders a <div role="button">, and a <ul> may only
-            // contain <li>. Dropping it straight into `List` published a list
-            // with no list items at all (axe `list`), so a screen reader lost
-            // both the "6 items" count and item-by-item navigation. `ListItem
-            // disablePadding` is MUI's documented wrapper for exactly this: an
-            // <li> that contributes no padding of its own, so nothing moves.
-            <ListItem key={item.to} disablePadding sx={{ mb: 0.5 }}>
-              <ListItemButton
-                selected={selected}
-                onClick={() => {
-                  navigate(item.to)
-                  setDrawerOpen(false)
-                }}
-                sx={(t) => ({
-                  borderRadius: 999,
-                  '&.Mui-selected': {
-                    backgroundColor: t.palette.primary.light,
-                    color: t.palette.primary.dark,
-                    '& .MuiListItemIcon-root': { color: t.palette.primary.main },
-                  },
-                })}
-              >
-                <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
-                {/* `component: 'span'` matters: MUI maps the `subtitle2` variant to
-                    an <h6>, so all six nav labels landed in the accessibility tree
-                    as headings. A screen-reader user navigating by heading met six
-                    meaningless entries before any content on every page, and could
-                    not tell the nav entry from the page title of the same name. */}
-                <ListItemText slotProps={{ primary: { variant: 'subtitle2', component: 'span' } }}>{i18n._(item.label)}</ListItemText>
-              </ListItemButton>
-            </ListItem>
-          )
-        })}
+        {NAV_ITEMS.map((item, index) => (
+          // `ListItemButton` renders a <div role="button">, and a <ul> may only
+          // contain <li>. Without this wrapper the list publishes no list items
+          // at all (axe `list`). `disablePadding` adds none of its own.
+          <ListItem key={item.to} disablePadding sx={{ mb: 0.5 }}>
+            <ListItemButton
+              selected={index === activeIndex}
+              onClick={() => {
+                navigate(item.to)
+                setDrawerOpen(false)
+              }}
+              sx={{
+                borderRadius: 999,
+                '&.Mui-selected': {
+                  backgroundColor: theme.palette.primary.light,
+                  color: theme.palette.primary.dark,
+                  '& .MuiListItemIcon-root': { color: theme.palette.primary.main },
+                },
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
+              {/* MUI maps the `subtitle2` variant to an <h6>, so without
+                  `component: 'span'` all six nav labels enter the accessibility
+                  tree as headings, ahead of any content on every page. */}
+              <ListItemText slotProps={{ primary: { variant: 'subtitle2', component: 'span' } }}>{i18n._(item.label)}</ListItemText>
+            </ListItemButton>
+          </ListItem>
+        ))}
       </List>
     </Box>
   )
@@ -132,13 +109,13 @@ export const AppShell = () => {
       <AppBar
         position="fixed"
         elevation={0}
-        sx={(t) => ({
-          zIndex: t.zIndex.drawer + 1,
-          backgroundColor: t.palette.glassSurface,
+        sx={{
+          zIndex: theme.zIndex.drawer + 1,
+          backgroundColor: theme.palette.glassSurface,
           backdropFilter: elevation.glassBlur,
-          borderBottom: `1px solid ${t.palette.outlineVariant}`,
-          color: t.palette.text.primary,
-        })}
+          borderBottom: `1px solid ${theme.palette.outlineVariant}`,
+          color: theme.palette.text.primary,
+        }}
       >
         <Toolbar sx={{ gap: 1, justifyContent: 'space-between' }}>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
@@ -150,18 +127,18 @@ export const AppShell = () => {
 
             {/* The design's brand lockup: wordmark beside a filled 36px tile. */}
             <Box
-              sx={(t) => ({
+              sx={{
                 display: 'grid',
                 placeItems: 'center',
                 width: 36,
                 height: 36,
                 flexShrink: 0,
                 borderRadius: `${radius.sm}px`,
-                backgroundColor: t.palette.brandPrimary,
-                color: t.palette.textOnPrimary,
+                backgroundColor: theme.palette.brandPrimary,
+                color: theme.palette.textOnPrimary,
                 fontWeight: 700,
                 fontSize: 18,
-              })}
+              }}
             >
               ₮
             </Box>
@@ -173,12 +150,10 @@ export const AppShell = () => {
             </Typography>
           </Stack>
 
-          {/* Theme toggle and account. The design also draws a notification
-              bell, but there is nothing to notify about in a local-first tool
-              with no background work — it had no panel and merely navigated to
-              the ledger. A control that does something other than what its
-              icon promises is worse than an absent one, so it stays out until
-              there is a panel behind it. */}
+          {/* The design also draws a notification bell. A local-first tool with
+              no background work has nothing to notify about, and the drawn
+              control had no panel behind it, it only navigated to the ledger.
+              It stays out until there is something to show. */}
           <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
             <IconButton onClick={toggleTheme} aria-label={t`Switch theme`}>
               {resolvedMode === 'dark' ? <LightModeRoundedIcon /> : <DarkModeRoundedIcon />}
@@ -186,7 +161,7 @@ export const AppShell = () => {
             <IconButton
               aria-label={t`Your details`}
               onClick={() => navigate('/settings')}
-              sx={(t) => ({ backgroundColor: t.palette.surfaceContainerHigh })}
+              sx={{ backgroundColor: theme.palette.surfaceContainerHigh }}
             >
               <PersonRoundedIcon />
             </IconButton>
@@ -197,7 +172,7 @@ export const AppShell = () => {
       {isDesktop ? (
         <Drawer
           variant="permanent"
-          anchor={railAnchor}
+          anchor={RAIL_ANCHOR}
           sx={{
             width: RAIL_WIDTH,
             flexShrink: 0,
@@ -216,13 +191,12 @@ export const AppShell = () => {
         </Drawer>
       ) : (
         <Drawer
-          anchor={railAnchor}
+          anchor={RAIL_ANCHOR}
           open={drawerOpen}
           onClose={() => setDrawerOpen(false)}
-          // A temporary Drawer's paper IS the `role="dialog"`, and it opened
-          // unnamed (axe `aria-dialog-name`): a screen reader announced only
-          // "dialog" for what is the phone's entire navigation. The name has to
-          // go on the paper slot, because that is the element carrying the role.
+          // The paper is the element carrying `role="dialog"`, so the name has
+          // to go on the paper slot. Without it the phone's entire navigation
+          // opens as an unnamed dialog (axe `aria-dialog-name`).
           slotProps={{ paper: { 'aria-label': t`Main menu` } }}
         >
           <Box sx={{ width: RAIL_WIDTH }}>
@@ -239,8 +213,8 @@ export const AppShell = () => {
           minWidth: 0,
           px: { xs: 2, sm: 3, md: 4 },
           pt: { xs: 10, md: 12 },
-          // Room for the bottom navigation on small screens.
-          pb: { xs: 12, md: 4 },
+          // Room for the bottom navigation, on the same condition that renders it.
+          pb: isDesktop ? 4 : 12,
         }}
       >
         <Outlet />
@@ -249,25 +223,24 @@ export const AppShell = () => {
 
       {!isDesktop ? (
         <BottomNavigation
-          // The phone's navigation, so it is a landmark too, and named apart
-          // from the drawer's, which holds the same six links under their full
-          // labels. A user who meets both otherwise hears "navigation" twice
-          // with no way to tell which one they landed in.
+          // Named apart from the drawer's nav, which holds the same six links
+          // under their full labels, so a screen-reader user meeting both can
+          // tell which one they landed in.
           component="nav"
           aria-label={t`Bottom navigation`}
           value={activeIndex}
           onChange={(_event, index: number) => navigate(NAV_ITEMS[index].to)}
           showLabels
-          sx={(t) => ({
+          sx={{
             position: 'fixed',
             bottom: 0,
             left: 0,
             right: 0,
-            zIndex: t.zIndex.appBar,
-            borderTop: `1px solid ${t.palette.outlineVariant}`,
-            backgroundColor: t.palette.glassSurface,
+            zIndex: theme.zIndex.appBar,
+            borderTop: `1px solid ${theme.palette.outlineVariant}`,
+            backgroundColor: theme.palette.glassSurface,
             backdropFilter: elevation.glassBlur,
-          })}
+          }}
         >
           {NAV_ITEMS.map((item) => (
             <BottomNavigationAction

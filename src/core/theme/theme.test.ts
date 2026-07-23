@@ -1,13 +1,14 @@
+import type { TypographyProps } from '@mui/material'
 import { describe, expect, it } from 'vitest'
 import { getTheme } from './theme'
 import { darkColors, lightColors } from './tokens'
 
-// The theme is the only place a colour is allowed to exist, so a role that is
-// missing, wrong or shared between the two blues does not fail loudly, it
-// paints. Three components once hardcoded hex and were unreadable in dark mode;
-// these assertions are what stops the palette drifting back into that state.
+// A colour role that is missing, wrong or shared between the two blues does not
+// throw, it paints. These assertions are what catches it.
 
-/** The MD3 roles `muiPalette.d.ts` adds, every one is read by some component. */
+const MODES = ['light', 'dark'] as const
+
+/** The string roles `muiPalette.d.ts` adds. `chartSeries` is an array and is checked on its own. */
 const EXTRA_ROLES = [
   'surfaceContainerHigh',
   'surfaceContainerHighest',
@@ -25,11 +26,10 @@ const EXTRA_ROLES = [
 ] as const
 
 describe('getTheme — palette', () => {
-  // A component reading `theme.palette.borderDefault` on a theme that never
-  // wired the role gets `undefined`, which CSS drops silently: the hairline
-  // just disappears. Nothing throws and nothing logs.
+  // An unwired role reaches CSS as `undefined`, which drops the declaration: no
+  // error anywhere, the hairline is just gone.
   it('wires every extra MD3 role in both modes', () => {
-    for (const mode of ['light', 'dark'] as const) {
+    for (const mode of MODES) {
       const { palette } = getTheme(mode, 'rtl')
       for (const role of EXTRA_ROLES) {
         expect(palette[role], `${mode}.${role}`).toMatch(/^(#|rgba?\()/)
@@ -39,8 +39,8 @@ describe('getTheme — palette', () => {
   })
 
   // The dark palette is derived by hand in `tokens.ts`, so the failure mode is
-  // adding a role to the light set and forgetting the dark one. A role with the
-  // same value in both modes is a light colour showing on a near-black surface.
+  // adding a light role and forgetting the dark one. Equal values put a light
+  // colour on a near-black surface.
   it('gives every role a genuinely different value in dark mode', () => {
     const light = getTheme('light', 'rtl').palette
     const dark = getTheme('dark', 'rtl').palette
@@ -56,28 +56,25 @@ describe('getTheme — palette', () => {
     expect(dark.chartSeries).not.toEqual(light.chartSeries)
   })
 
-  // `mode` is what MUI's own components branch on, a Menu, a disabled input,
-  // an Alert all pick their own greys from it. Building a dark palette while
-  // leaving `mode: 'light'` produces dark surfaces with MUI's light defaults on
-  // top of them.
+  // MUI's own components take their greys from `palette.mode`, not from our
+  // roles: a Menu, a disabled input and an Alert all branch on it.
   it('reports its own mode', () => {
     expect(getTheme('light', 'rtl').palette.mode).toBe('light')
     expect(getTheme('dark', 'rtl').palette.mode).toBe('dark')
   })
 
-  // The donut colours a client per series. Two identical entries make two
-  // clients indistinguishable in the chart while the legend claims otherwise.
+  // The donut colours one client per entry, so two equal entries make two
+  // clients look like one while the legend says otherwise.
   it('keeps every chart series colour distinct within a mode', () => {
-    for (const mode of ['light', 'dark'] as const) {
+    for (const mode of MODES) {
       const series = getTheme(mode, 'rtl').palette.chartSeries
       expect(new Set(series).size, mode).toBe(series.length)
     }
   })
 })
 
-// AGENTS.md documents this as a trap: #3460d6 is for filled buttons, bars and
-// links; #3b6ef5 is for chips, segments and the nav rail. Collapsing them onto
-// `primary.main` made every CTA visibly too light, and nothing failed.
+// AGENTS.md "Two blues": #3460d6 is for filled buttons, bars and links, #3b6ef5
+// for chips, segments and the nav rail.
 describe('getTheme — the two blues stay separate', () => {
   it('keeps brandPrimary and primary.main distinct in light', () => {
     const { palette } = getTheme('light', 'rtl')
@@ -93,27 +90,19 @@ describe('getTheme — the two blues stay separate', () => {
     expect(palette.brandPrimary).not.toBe(palette.primary.main)
   })
 
-  // `secondary` carries the brand blue so a tonal button can reach it; if it
-  // silently became `primary` the two would merge again by another route.
+  // `secondary` carries the brand blue so a tonal button can reach it.
   it('maps secondary.main onto the brand blue, not the chip blue', () => {
     expect(getTheme('light', 'rtl').palette.secondary.main).toBe(lightColors.brandPrimary)
     expect(getTheme('dark', 'rtl').palette.secondary.main).toBe(darkColors.brandPrimary)
   })
 
-  // The rule that separates them, stated once: `primary` is a CONTAINER role.
-  // It fills a background under `primary.dark` and draws non-text marks, a
-  // border, a dot, an icon on `primary.light`, all held to 3:1. It never draws
-  // type: #3b6ef5 is 4.39:1 on `surface-default` and 4.21:1 on `surface-subtle`,
-  // under the 4.5:1 bar wherever it lands. `brandPrimary` #3460d6 is the ink,
-  // at 5.49:1 and 5.26:1 on the same two.
-  //
-  // The theme is where that breaks silently, because MUI resolves
+  // `primary` is a CONTAINER role: it fills backgrounds and draws non-text
+  // marks, held to 3:1. Type is always `brandPrimary`. MUI resolves
   // `color="primary"` to `primary.main` for a LABEL unless a `variants` entry
-  // says otherwise, which is how `variant="outlined"` shipped 14/600 #3b6ef5
-  // on every page. One step of blue: invisible in review, and axe found it
-  // seven times.
+  // says otherwise, which is how `variant="outlined"` shipped #3b6ef5 type at
+  // 4.39:1. Ratios and the per-variant reasoning are in `theme.ts`.
   it('never paints primary.main as type in any component override', () => {
-    for (const mode of ['light', 'dark'] as const) {
+    for (const mode of MODES) {
       const { components, palette } = getTheme(mode, 'rtl')
 
       expect(JSON.stringify(components ?? {}), mode).not.toContain(`"color":"${palette.primary.main}"`)
@@ -122,10 +111,9 @@ describe('getTheme — the two blues stay separate', () => {
 })
 
 describe('getTheme — direction', () => {
-  // Emotion's RTL plugin reads nothing from the theme, but MUI's own components
-  // do: Drawer anchors, Tabs indicators, Slider and the date pickers all branch
-  // on `theme.direction`. A theme built LTR inside an RTL app mirrors half the
-  // app and not the other half.
+  // Emotion's RTL plugin reads nothing from the theme, but MUI's components do:
+  // Drawer anchors, Tabs indicators, Slider and the date pickers branch on
+  // `theme.direction`.
   it('carries the direction it was asked for', () => {
     expect(getTheme('light', 'rtl').direction).toBe('rtl')
     expect(getTheme('light', 'ltr').direction).toBe('ltr')
@@ -138,16 +126,15 @@ describe('getTheme — direction', () => {
 })
 
 describe('getTheme — caching', () => {
-  // Every settings read re-renders the provider. Rebuilding the theme each time
-  // returns a new object identity, which invalidates Emotion's style cache and
-  // makes MUI re-serialise every styled component on the page.
+  // The provider re-renders on every settings read. A rebuilt theme is a new
+  // object identity, which drops Emotion's cache and re-serialises every styled
+  // component on the page.
   it('returns the same instance for the same arguments', () => {
     expect(getTheme('light', 'rtl')).toBe(getTheme('light', 'rtl'))
     expect(getTheme('dark', 'ltr')).toBe(getTheme('dark', 'ltr'))
   })
 
-  // A cache keyed on mode alone would hand an RTL app the LTR theme, the bug
-  // the composite key exists to prevent.
+  // Keyed on mode alone, an RTL app would be handed the LTR theme.
   it('keys on both mode and direction', () => {
     const themes = [getTheme('light', 'rtl'), getTheme('light', 'ltr'), getTheme('dark', 'rtl'), getTheme('dark', 'ltr')]
 
@@ -156,17 +143,16 @@ describe('getTheme — caching', () => {
 })
 
 describe('getTheme — component overrides', () => {
-  // A global `MuiPaper` backdrop-filter once leaked the app-chrome glass into
-  // every menu, dialog and select popover. Only the fixed chrome may blur, and
-  // it applies its own, nothing in the theme should.
+  // A global `MuiPaper` backdrop-filter once put the app-chrome glass behind
+  // every menu, dialog and select popover. Only the fixed chrome blurs, and it
+  // applies its own.
   it('puts no backdrop blur on any component', () => {
-    for (const mode of ['light', 'dark'] as const) {
+    for (const mode of MODES) {
       expect(JSON.stringify(getTheme(mode, 'rtl').components ?? {}), mode).not.toContain('backdropFilter')
     }
   })
 
-  // The design's surface is opaque. A translucent `paper` lets a dialog's own
-  // content show the page through it.
+  // A translucent `paper` lets the page show through a dialog's own content.
   it('makes paper the opaque surface, not the glass fill', () => {
     const { palette } = getTheme('light', 'rtl')
 
@@ -175,47 +161,40 @@ describe('getTheme — component overrides', () => {
   })
 })
 
-// The typography variants are the design's type ramp, sizes, not outline
-// levels. MUI's default mapping renders `h5` as a real `<h5>`, so a card title
-// that only wanted 16/600 skipped two heading levels under the page's `<h2>`;
-// axe's `heading-order` reported it 82 times across the suite. Nothing about
-// that failure is visible, which is exactly why it is asserted here.
+// The variants are the design's type ramp, sizes, not outline levels. MUI's
+// default mapping renders `h5` as a real `<h5>`, so a card title that only
+// wanted 16/600 skipped two levels under the page's `<h2>`: 82 of the suite's
+// axe `heading-order` findings, none of them visible on screen.
 describe('getTheme — typography maps size onto the right element', () => {
-  const mapping = (): Record<string, string> => {
-    const props = getTheme('light', 'rtl').components?.MuiTypography?.defaultProps
-    return (props?.variantMapping ?? {}) as Record<string, string>
-  }
+  // Read once, the theme is cached and never mutated.
+  const variantMapping: NonNullable<TypographyProps['variantMapping']> =
+    getTheme('light', 'rtl').components?.MuiTypography?.defaultProps?.variantMapping ?? {}
 
   // Three levels deep and no deeper: the wordmark, the page title, a section.
   it('sends every title size to the one section level the app has', () => {
-    const map = mapping()
-
-    expect(map.h3).toBe('h3')
-    expect(map.h4).toBe('h3')
-    expect(map.h5).toBe('h3')
-    expect(map.h6).toBe('h3')
+    expect(variantMapping.h3).toBe('h3')
+    expect(variantMapping.h4).toBe('h3')
+    expect(variantMapping.h5).toBe('h3')
+    expect(variantMapping.h6).toBe('h3')
   })
 
   it('keeps the page-title size on h2', () => {
-    expect(mapping().h2).toBe('h2')
+    expect(variantMapping.h2).toBe('h2')
   })
 
-  // `numberLarge` is the 32px figure and the `subtitle` pair are field labels
-  // and row values. MUI would make all three headings, `subtitle1`/`subtitle2`
-  // default to `<h6>`, which is where the ledger totals and settings row labels
-  // were entering the outline.
+  // `h1` is the 32px figure, the `subtitle` pair are field labels and row
+  // values. MUI would make all three headings: `subtitle1`/`subtitle2` default
+  // to `<h6>`.
   it('keeps figures and labels out of the outline entirely', () => {
-    const map = mapping()
-
-    for (const variant of ['h1', 'subtitle1', 'subtitle2']) {
-      expect(map[variant], variant).not.toMatch(/^h[1-6]$/)
+    for (const variant of ['h1', 'subtitle1', 'subtitle2'] as const) {
+      expect(variantMapping[variant], variant).not.toMatch(/^h[1-6]$/)
     }
   })
 
-  // The one heading the app declares by hand. `component` beats the mapping, so
-  // AppShell's `variant="h3" component="h1"` wordmark has to survive it, with
-  // no `<h1>` there is no document outline to be ordered in the first place.
+  // `component` beats the mapping, so AppShell's `variant="h3" component="h1"`
+  // wordmark stays the app's only `<h1>`, and without one there is no outline
+  // to be ordered.
   it('leaves h1 to be claimed explicitly, never by a variant', () => {
-    expect(Object.values(mapping())).not.toContain('h1')
+    expect(Object.values(variantMapping)).not.toContain('h1')
   })
 })

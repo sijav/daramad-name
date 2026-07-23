@@ -2,7 +2,7 @@ import type { AppLocale } from 'src/shared/types'
 
 // Amounts written out in words.
 //
-// Iranian financial documents state a figure twice, once in digits and once
+// Formal financial documents state a figure twice, once in digits and once
 // «به حروف», because words cannot be altered by adding a zero. The certificate
 // follows the convention in whichever language it is issued.
 //

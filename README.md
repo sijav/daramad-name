@@ -6,8 +6,8 @@ A local-first income ledger and printable income certificate, for freelancers.
 [Component library](https://sijav.github.io/daramad-name/storybook/)
 
 An embassy, a landlord, an accountant: each wants a document a freelancer does
-not have. No payslip, no certificate of income, **بی‌سند** (bi-sanad), without
-papers. DaramadName builds that document from the receipts you record yourself.
+not have. No payslip, no certificate of income, **بی‌سند** (bi-sanad). DaramadName
+builds that document from the receipts you record yourself.
 
 **Your data never leaves your browser.** No account. No server. No backend.
 

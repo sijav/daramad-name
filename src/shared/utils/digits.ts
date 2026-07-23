@@ -41,7 +41,7 @@ export const toEnglishDigits = (input: string): string => {
 }
 
 /**
- * Folds the Arabic letterforms that pasted text and non-Iranian keyboards bring
+ * Folds the Arabic letterforms that pasted text and non-Persian keyboards bring
  * in: ي to ی, ك to ک, ة to ه. The pairs look identical on screen and sort
  * differently, so anything used as a key goes through here first.
  */

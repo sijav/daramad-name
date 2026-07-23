@@ -73,8 +73,8 @@ describe('activateLocale', () => {
     expect(i18n._(msg`Total income`)).toBe('جمع کل درآمد')
   })
 
-  // The product is for Iranian freelancers; English is opt-in. A flipped default
-  // would greet every first-time visitor in the wrong language.
+  // The app defaults to Persian; English is opt-in. A flipped default would
+  // greet every first-time visitor in the wrong language.
   it('defaults to Persian', () => {
     expect(DEFAULT_LOCALE).toBe('fa-IR')
   })

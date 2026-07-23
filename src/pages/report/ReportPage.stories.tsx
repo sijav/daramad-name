@@ -47,7 +47,7 @@ export const ProducesBothLanguages: Story = {
 
     await step('the Persian certificate', async () => {
       await expect(await findDocument(canvasElement, 'گواهی درآمد')).toBeInTheDocument()
-      // Persian numerals, and the figure written out «به حروف» as an Iranian
+      // Persian numerals, and the figure written out «به حروف», the way a
       // financial document states it.
       await expect(await canvas.findByText(/به حروف/)).toBeInTheDocument()
       await expect(await canvas.findAllByText(/[۰-۹]{1,3}٬[۰-۹]{3}٬[۰-۹]{3}/)).not.toHaveLength(0)

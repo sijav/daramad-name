@@ -33,8 +33,8 @@ export const db = new DaramadnameDb()
 
 export const defaultSettings: Settings = {
   calendar: 'JALALI',
-  // Persian by default, the product is for Iranian freelancers. English is
-  // opt-in from Settings and persists across reloads.
+  // Persian by default, the interface's primary language. English is opt-in
+  // from Settings and persists across reloads.
   locale: 'fa-IR',
   // Following the OS is the least surprising default; the user can pin it.
   themePreference: 'system',
@@ -72,7 +72,7 @@ export const writeSettings = async (settings: Settings): Promise<Settings> => {
  *
  * The key is trimmed, lowercased and folded to Persian letterforms, so three
  * ways of typing the same name reach the same row: trailing space, casing, and
- * the Arabic ك/ي an Arabic keyboard produces where an Iranian one produces
+ * the Arabic ك/ي an Arabic keyboard produces where a Persian one produces
  * ک/ی. Two rows for one client would split their income across the ledger and
  * halve their share in the concentration insight.
  */

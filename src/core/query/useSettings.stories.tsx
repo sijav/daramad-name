@@ -67,8 +67,8 @@ export const FirstEverVisit: Story = {
     const canvas = within(canvasElement)
 
     await expect(await canvas.findByTestId('first-paint')).toHaveTextContent(DEFAULTS)
-    // Jalali and Persian specifically: this app is for Iranian freelancers, and
-    // a Gregorian first frame would be the wrong calendar for its whole audience.
+    // Jalali and Persian specifically: this app defaults to Persian, and a
+    // Gregorian first frame would be the wrong calendar for its whole audience.
     await expect(await canvas.findByTestId('settled')).toHaveTextContent('JALALI/fa-IR/system')
   },
 }

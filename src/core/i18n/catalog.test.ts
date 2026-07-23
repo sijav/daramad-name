@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 // The app defaults to Persian, so an untranslated entry puts an English string
-// on an Iranian user's screen with nothing in the build failing: English is the
+// on a Persian-reading user's screen with nothing in the build failing: English is the
 // source locale, so the ids lingui falls back to ARE English. Read from the
 // `.po` because `lingui compile` inlines the en-US fallback and hides the gap.
 

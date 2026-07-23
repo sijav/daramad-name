@@ -7,7 +7,7 @@ import { db, defaultSettings, readSettings, upsertClientByName, writeSettings } 
 //
 // `readSettings` merges over the defaults: a row written before a field existed
 // used to come back without it, and `Intl.NumberFormat(undefined)` fell through
-// to the system locale, an Iranian user saw «649,980,000» where «۶۴۹٬۹۸۰٬۰۰۰»
+// to the system locale, a Persian-reading user saw «649,980,000» where «۶۴۹٬۹۸۰٬۰۰۰»
 // belonged, with nothing on screen to explain it.
 //
 // `upsertClientByName` folds free-text names together: «آریا» and «آریا » as two

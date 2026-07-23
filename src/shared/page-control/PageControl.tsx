@@ -66,7 +66,7 @@ export const PageControl = ({ page, pageCount, pageSize, totalCount, onPageChang
         siblingCount={0}
         boundaryCount={1}
         // MUI renders `item.page` raw and labels it in English. Everything else
-        // on this control goes through `digits()`, so an Iranian user saw
+        // on this control goes through `digits()`, so a Persian-reading user saw
         // «۱ ۲ ۳ … ۶» spelled in LATIN numerals sitting beside Persian ones,
         // and a Persian screen reader read out "Go to page 2".
         renderItem={(item) => <PaginationItem {...item} page={item.page === null ? null : digits(item.page)} />}

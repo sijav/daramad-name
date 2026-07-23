@@ -7,10 +7,10 @@ on:
 
 # Two independent targets, deliberately.
 #
-# Iranian users face two separate failure modes: foreign hosts that block Iran
-# for sanctions reasons (Vercel/Netlify sit on AWS, which blocks sanctioned
-# countries), and Iranian filtering of foreign hosts. An Iranian host dodges
-# both, so Liara is the demo link; GitHub Pages is the always-available mirror.
+# Two failure modes some users hit: hosts that block sanctioned regions
+# (Vercel/Netlify sit on AWS, which does), and local networks that filter
+# foreign hosts. A regional host dodges both, so Liara is the demo link;
+# GitHub Pages is the always-available mirror.
 #
 # The Liara job is skipped automatically until LIARA_API_TOKEN is set, so this
 # workflow is green from the first push.

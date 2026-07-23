@@ -88,8 +88,8 @@ export const IncomeCertificate = ({ model, variant = 'page' }: IncomeCertificate
 
       <RowBlock rows={model.summary} />
 
-      {/* The total, twice: in figures and «به حروف», as Iranian financial
-          documents state it. Words cannot be altered by adding a zero. */}
+      {/* The total, twice: in figures and «به حروف», the way a formal financial
+          document states it. Words cannot be altered by adding a zero. */}
       <Box sx={{ backgroundColor: TINT, border: `1px solid ${HAIRLINE}`, borderRadius: '10px', p: 2, mt: 2.5 }}>
         <Stack direction="row" sx={{ alignItems: 'baseline', justifyContent: 'space-between', gap: 2 }}>
           <Typography sx={{ color: MUTED, fontSize: 11 }}>{model.totalLabel}</Typography>

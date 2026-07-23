@@ -42,7 +42,7 @@ npm run i18n:compile
 ```
 
 The fa-IR catalog must be **100% translated**, the app defaults to Persian, so
-a missing translation shows an English string to an Iranian user.
+a missing translation shows an English string to a Persian-reading user.
 
 ### Documentation lives in markdown, never in the code
 
@@ -357,7 +357,7 @@ buttons are themed through a `variants` entry rather than the palette.
 
 ## 3. What this app is
 
-Local-first income ledger for Iranian freelancers. Seven pages: dashboard (the
+Local-first income ledger for freelancers. Seven pages: dashboard (the
 landing route), quick entry, ledger, charts, report, settings, and certificate, which is
 the printable document the report links out to. Six scenarios in `PHASE-NEXT.md`
 and `README.md` (Persian: `README.fa.md`).

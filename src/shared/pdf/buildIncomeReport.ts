@@ -3,16 +3,13 @@ import type { CertificateModel, CertificateMonthRow, CertificateRow } from 'src/
 /**
  * The income certificate as a small, renderer-agnostic layout definition.
  *
- * Every string here comes from `CertificateModel`, the same structure the
- * on-screen document renders. That is deliberate: the two used to keep their
- * own field lists and drifted, the PDF printed national ID, phone and address
- * that the preview never showed, and nobody noticed until someone opened the
- * downloaded file. Content has one home; only layout lives in the renderers.
+ * Every string comes from `CertificateModel`, the structure the on-screen
+ * document also renders, so content has one home and only layout lives in the
+ * renderers. See `certificateModel.ts` for what that drift cost.
  *
- * This returns a plain block list rather than driving pdfkit directly, so the
- * layout can be asserted in a Node test with no browser and no PDF engine, a
- * field that stops reaching the page fails a `toContain` before it ever ships.
- * `renderCertificatePdf` turns these blocks into the actual file.
+ * A plain block list rather than pdfkit calls, so the layout can be asserted in
+ * a Node test with no browser and no PDF engine. `renderCertificatePdf` turns
+ * these blocks into the file.
  */
 export type CertificateBlock =
   | { type: 'header'; issuer: string; title: string; subtitle: string; serialLabel: string; serial: string }
@@ -30,8 +27,6 @@ export interface CertificateDoc {
   direction: 'rtl' | 'ltr'
   /** Logical alignment for every block, derived once from `direction`. */
   align: 'right' | 'left'
-  /** The embedded Persian font; the default PDF fonts have no Arabic glyphs. */
-  font: 'Vazirmatn'
   /** Goes into the PDF's `/Author` metadata. */
   author: string
   /** Goes into the PDF's `/Title` metadata. */
@@ -81,7 +76,6 @@ export const buildIncomeReport = (model: CertificateModel): CertificateDoc => {
     pageSize: 'A4',
     direction: model.direction,
     align: model.direction === 'rtl' ? 'right' : 'left',
-    font: 'Vazirmatn',
     author: model.identity[0]?.value || 'Daramadname',
     title: model.title,
     blocks,

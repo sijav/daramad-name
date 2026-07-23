@@ -54,11 +54,13 @@ const textOf = (node: unknown): string[] => {
 const rowsBlocks = (doc: ReturnType<typeof buildIncomeReport>) => doc.blocks.filter((block) => block.type === 'rows')
 
 describe('buildIncomeReport', () => {
-  it('is A4 and names the embedded Persian font, not a default with no Arabic glyphs', async () => {
+  // The Persian font is NOT asserted here. This layout carries no font, the
+  // renderer registers the bytes it is handed; `renderCertificatePdf.test.ts`
+  // checks the produced file for the embedded face.
+  it('is A4 whatever paper the reader has', async () => {
     const { doc } = await build('fa')
 
     expect(doc.pageSize).toBe('A4')
-    expect(doc.font).toBe('Vazirmatn')
   })
 
   it('carries every figure the model holds', async () => {

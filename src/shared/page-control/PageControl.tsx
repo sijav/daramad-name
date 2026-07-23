@@ -33,20 +33,20 @@ export const PageControl = ({ page, pageCount, pageSize, totalCount, onPageChang
   // MUI's defaults are English sentences. Built here so the page number inside
   // them is spoken in the user's own numerals too.
   const ariaLabel = (type: string, itemPage: number | null, selected: boolean): string => {
-    const spoken = itemPage === null ? '' : digits(itemPage)
-    if (type === 'first') {
-      return t`Go to the first page`
+    switch (type) {
+      case 'first':
+        return t`Go to the first page`
+      case 'last':
+        return t`Go to the last page`
+      case 'next':
+        return t`Go to the next page`
+      case 'previous':
+        return t`Go to the previous page`
+      default: {
+        const spoken = itemPage === null ? '' : digits(itemPage)
+        return selected ? t`Page ${spoken}, current page` : t`Go to page ${spoken}`
+      }
     }
-    if (type === 'last') {
-      return t`Go to the last page`
-    }
-    if (type === 'next') {
-      return t`Go to the next page`
-    }
-    if (type === 'previous') {
-      return t`Go to the previous page`
-    }
-    return selected ? t`Page ${spoken}, current page` : t`Go to page ${spoken}`
   }
 
   return (
@@ -70,7 +70,7 @@ export const PageControl = ({ page, pageCount, pageSize, totalCount, onPageChang
         // «۱ ۲ ۳ … ۶» spelled in LATIN numerals sitting beside Persian ones,
         // and a Persian screen reader read out "Go to page 2".
         renderItem={(item) => <PaginationItem {...item} page={item.page === null ? null : digits(item.page)} />}
-        getItemAriaLabel={(type, itemPage, selected) => ariaLabel(type, itemPage, selected)}
+        getItemAriaLabel={ariaLabel}
         sx={(theme) => ({
           flex: 1,
           display: 'flex',
@@ -97,15 +97,12 @@ export const PageControl = ({ page, pageCount, pageSize, totalCount, onPageChang
           select
           value={pageSize}
           onChange={(event) => onPageSizeChange(Number(event.target.value))}
-          // The design gives this select no visible label, so MUI's `Select`
-          // rendered a `role="combobox"` with no accessible name at all (axe
-          // `aria-input-field-name`), a screen reader announced «۲۵ ردیف در
-          // صفحه» with nothing saying what it controls.
-          //
-          // MUI's documented answer when there is no `InputLabel` to point
-          // `labelId` at is an `aria-label` on the input props; on `TextField`
-          // that slot is `htmlInput`, which `Select` spreads onto the display
-          // element it gives the combobox role to.
+          // The design gives this select no visible label, so it announced
+          // «۲۵ ردیف در صفحه» with nothing saying what it controls (axe
+          // `aria-input-field-name`). With no `InputLabel` to point `labelId`
+          // at, MUI's documented answer is an `aria-label` on the input props;
+          // on `TextField` that slot is `htmlInput`, which `Select` spreads
+          // onto the element carrying the combobox role.
           slotProps={{ htmlInput: { 'aria-label': t`Rows per page` } }}
           sx={(theme) => ({
             width: 190,

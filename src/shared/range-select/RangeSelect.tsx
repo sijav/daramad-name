@@ -31,13 +31,12 @@ export interface RangeSelectProps extends Omit<SelectProps<string>, 'onChange' |
  */
 export const RangeSelect = ({ value, options, onSelect, prefix, sx, ...props }: RangeSelectProps) => (
   <Select
-    // The pill draws no label of its own, and `role="combobox"` does not take
-    // its name from its contents, so the control announced nothing at all
-    // (axe: `aria-input-field-name`, serious). `prefix` is already the label
-    // the design prints inside the pill, so naming the control with it also
-    // keeps the visible text and the accessible name in agreement.
+    // The pill draws no label, and `role="combobox"` does not take its name
+    // from its contents, so the control announced nothing (axe
+    // `aria-input-field-name`). `prefix` is the label the design already prints
+    // inside the pill, so the visible text and the accessible name agree.
     //
-    // Ahead of the spread, so a caller with a better name can still override.
+    // Ahead of the spread, so a caller with a better name can override.
     aria-label={prefix}
     {...props}
     value={String(value)}

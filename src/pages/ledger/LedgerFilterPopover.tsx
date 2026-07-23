@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { CHANNEL_LABELS } from 'src/shared/constants'
 import { DateField } from 'src/shared/date-field'
 import { clientsQueryKey, getClientsQuery } from 'src/shared/queries'
-import { CHANNELS, type Channel, type LedgerFilter } from 'src/shared/types'
+import { CHANNELS, type LedgerFilter } from 'src/shared/types'
 
 export interface LedgerFilterPopoverProps {
   anchorEl: HTMLElement | null
@@ -29,9 +29,9 @@ export const LedgerFilterPopover = ({ anchorEl, filter, onApply, onClose }: Ledg
   const [wasOpen, setWasOpen] = useState(open)
 
   // The page keeps this mounted and only moves the anchor, so the draft outlives
-  // every close. Reseeding it on the way open is what stops a filter the user
-  // removed from the chips, or cleared entirely, from being silently put back
-  // by the next Apply, which reads a draft that never heard about the removal.
+  // every close. Reseeding on the way open is what stops a filter the user
+  // removed from the chips being put back by the next Apply, which would
+  // otherwise read a draft that never heard about the removal.
   if (open !== wasOpen) {
     setWasOpen(open)
     if (open) {
@@ -42,14 +42,12 @@ export const LedgerFilterPopover = ({ anchorEl, filter, onApply, onClose }: Ledg
   /**
    * Sets one end of the range and makes the other end VISIBLE.
    *
-   * The fields start empty, because a popover that opens showing today in both
-   * boxes advertises a range that is not applied, pressing Apply on it filtered
-   * nothing. And the previous fallback silently invented the missing end, so
-   * picking only a "to" date built `{from: today, to: <past date>}`, an inverted
-   * range Dexie matches nothing for, with no explanation on screen.
-   *
-   * So whatever the counterpart becomes, it is written into the draft and shown
-   * in its own field. What the user reads is what gets applied.
+   * The fields start empty, since a popover opening with today in both boxes
+   * advertises a range that is not applied. Inventing the missing end instead
+   * built `{ from: today, to: <past date> }` from a lone "to" date, which is
+   * inverted and matches nothing in Dexie, with nothing on screen saying so.
+   * Whatever the counterpart becomes is written to the draft AND shown in its
+   * field, so what the user reads is what gets applied.
    */
   const patchRange = (key: 'from' | 'to', iso: string) => {
     const today = new Date().toISOString()
@@ -109,7 +107,9 @@ export const LedgerFilterPopover = ({ anchorEl, filter, onApply, onClose }: Ledg
           fullWidth
           label={t`Channel`}
           value={draft.channel ?? ''}
-          onChange={(event) => setDraft({ ...draft, channel: (event.target.value as Channel) || undefined })}
+          // Matched against the runtime list rather than cast: the empty option
+          // is "all channels", which is `undefined` on the filter.
+          onChange={(event) => setDraft({ ...draft, channel: CHANNELS.find((channel) => channel === event.target.value) })}
         >
           <MenuItem value="">{t`All channels`}</MenuItem>
           {CHANNELS.map((channel) => (

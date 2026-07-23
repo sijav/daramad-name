@@ -1,66 +1,164 @@
 import { Meta } from '@storybook/addon-docs/blocks'
+import { Localized } from 'src/shared/story-docs/Localized'
 
 <Meta title="Introduction" />
 
+{/* This page is bilingual: every line is wrapped in <Localized>, which reads the
+    "Language" toolbar and re-renders when it changes. Switch the toolbar and the
+    whole page follows — фарси and English from one source. */}
+
 # درآمدنامه — Daramadname
 
-A receipts ledger and a presentable income report, for Iranian freelancers.
+<Localized
+  fa="یک دفتر دریافتی‌ها و یک گزارش درآمدِ قابل‌ارائه، برای فریلنسرهای ایرانی."
+  en="A receipts ledger and a presentable income report, for Iranian freelancers."
+/>
 
-The problem it solves is not bookkeeping. It is that a freelancer here is **بی‌سند** — without
-documents. No payslip, no certificate of income, nothing to hand an embassy applying for a visa, a
-landlord asking for proof, or an accountant filing a return. Employees have always had that piece of
-paper. This produces it.
-
----
-
-## Reading this Storybook
-
-Two toolbar controls sit above every story, and both matter more than they look:
-
-| Control | Why it is there |
-| --- | --- |
-| **Language** — فارسی (RTL) / English (LTR) | Not a translation toggle. It flips text direction, numerals and date formatting together. Persian is the default because that is who the product is for. |
-| **Theme** — Light / Dark / System | Dark mode is real, and three components have already shipped broken in it by hardcoding a hex instead of using a palette role. |
-
-**Check a change in all four combinations before calling it done.** English strings are longer than
-Persian, so a layout that fits one can clip in the other — that has happened here, to the ledger's
-total tile.
-
----
-
-## What the parts are for
-
-- **Pages** — one per route. They hold no styling of their own; they compose shared components and
-  own the queries.
-- **Shared** — the component library. Each folder is one component with a barrel, a story, and its
-  own props interface. The JSDoc on those interfaces is what fills the Description column of the
-  generated **Docs** tab.
-- **Core** — the database, the theme, the i18n instance and the query client. No UI.
+<Localized
+  fa={
+    <>
+      مشکلی که حل می‌کند دفترداری نیست. این است که فریلنسر اینجا <strong>بی‌سند</strong> است. نه فیش حقوقی، نه گواهی
+      درآمد، نه هیچ کاغذی که بشود جلوی سفارتِ درخواست ویزا، صاحب‌خانه‌ای که دنبال مدرک است، یا حسابداری که اظهارنامه
+      می‌بندد گذاشت. کارمندها همیشه آن تکه کاغذ را داشته‌اند. این، همان را می‌سازد.
+    </>
+  }
+  en={
+    <>
+      The problem it solves is not bookkeeping. It is that a freelancer here is <strong>بی‌سند</strong> — without
+      documents. No payslip, no certificate of income, nothing to hand an embassy applying for a visa, a landlord
+      asking for proof, or an accountant filing a return. Employees have always had that piece of paper. This produces
+      it.
+    </>
+  }
+/>
 
 ---
 
-## Three rules that explain most of the code
+## <Localized fa="خواندنِ این استوری‌بوک" en="Reading this Storybook" />
 
-**The Toman value is frozen.** A receipt in Tether or dollars stores the rate you typed and the
-Toman figure computed from it, once, at the moment you record it. Nothing recomputes it on read. A
-rate change next month must not restate what you earned last month — that is the whole reason the
-number can be trusted on a document.
+<Localized
+  fa="دو کنترل روی نوار ابزار بالای هر استوری هست، و هر دو از آنچه به نظر می‌رسند مهم‌ترند:"
+  en="Two toolbar controls sit above every story, and both matter more than they look:"
+/>
 
-**There is no backend, deliberately.** Every receipt lives in the browser's IndexedDB and nothing is
-ever sent anywhere. The footer says so, and it has to stay true. A JSON backup file is what moves a
-ledger between devices, which is why the restore path is one of the most heavily tested things here.
+{/* An HTML table rather than a markdown one: a markdown table treats `|` cells
+    as plain text and will not parse a `<Localized>` component inside them. */}
 
-**Every user-facing string goes through Lingui.** Message ids are written in English; Persian lives
-in the catalog. A bare string — in either language — fails lint.
+<table>
+  <thead>
+    <tr>
+      <th><Localized fa="کنترل" en="Control" /></th>
+      <th><Localized fa="چرا اینجاست" en="Why it is there" /></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <strong><Localized fa="زبان" en="Language" /></strong> — فارسی (RTL) / English (LTR)
+      </td>
+      <td>
+        <Localized
+          fa="یک کلید ترجمه نیست. جهت متن، ارقام و قالب تاریخ را با هم عوض می‌کند. فارسی پیش‌فرض است، چون محصول برای اوست."
+          en="Not a translation toggle. It flips text direction, numerals and date formatting together. Persian is the default because that is who the product is for."
+        />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <strong><Localized fa="پوسته" en="Theme" /></strong> — Light / Dark / System
+      </td>
+      <td>
+        <Localized
+          fa="حالت تیره واقعی است، و سه کامپوننت تا حالا با هاردکد کردنِ یک هگز به‌جای نقشِ پالت، در آن خراب منتشر شده‌اند."
+          en="Dark mode is real, and three components have already shipped broken in it by hardcoding a hex instead of using a palette role."
+        />
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<Localized
+  fa={
+    <>
+      <strong>هر تغییری را در هر چهار حالت ببین و بعد تمام‌شده بدان.</strong> رشته‌های انگلیسی بلندتر از فارسی‌اند، پس
+      چیدمانی که یکی را جا می‌دهد می‌تواند در دیگری بریده شود — همین‌جا هم افتاده، برای کاشیِ جمعِ دفتر.
+    </>
+  }
+  en={
+    <>
+      <strong>Check a change in all four combinations before calling it done.</strong> English strings are longer than
+      Persian, so a layout that fits one can clip in the other — that has happened here, to the ledger's total tile.
+    </>
+  }
+/>
 
 ---
 
-## Where the interesting behaviour lives
+## <Localized fa="هر بخش برای چیست" en="What the parts are for" />
 
-- **`Pages/QuickEntry`** — the fifteen-second entry path, and what happens when you backdate a
-  receipt.
-- **`Pages/Ledger`** — filtering, the running total, and how the table sheds columns on a phone
-  rather than hiding the income.
-- **`Shared/Certificate`** — the document itself. The on-screen preview and the printed page render
-  from one model, so they cannot say different things.
-- **`Design/Tokens`** — the palette and type ramp, including the two blues that are easy to confuse.
+- **Pages** — <Localized fa="یکی برای هر مسیر. خودشان هیچ استایلی ندارند؛ کامپوننت‌های مشترک را می‌چینند و صاحبِ کوئری‌ها هستند." en="one per route. They hold no styling of their own; they compose shared components and own the queries." />
+- **Shared** — <Localized fa="کتابخانه‌ی کامپوننت‌ها. هر پوشه یک کامپوننت است با یک بارل، یک استوری و اینترفیسِ props خودش. همان JSDoc روی این اینترفیس‌ها ستونِ Description تبِ Docs را پر می‌کند." en="the component library. Each folder is one component with a barrel, a story, and its own props interface. The JSDoc on those interfaces is what fills the Description column of the generated Docs tab." />
+- **Core** — <Localized fa="پایگاه‌داده، پوسته، نمونه‌ی i18n و کلاینتِ کوئری. بدون UI." en="the database, the theme, the i18n instance and the query client. No UI." />
+
+---
+
+## <Localized fa="سه قاعده که بیشترِ کد را توضیح می‌دهند" en="Three rules that explain most of the code" />
+
+<Localized
+  fa={
+    <>
+      <strong>مقدارِ تومان منجمد است.</strong> دریافتی به تتر یا دلار، نرخی را که تایپ کردی و رقمِ تومانِ محاسبه‌شده از
+      آن را یک‌بار، در همان لحظه‌ی ثبت، ذخیره می‌کند. هیچ‌چیز هنگام خواندن دوباره حسابش نمی‌کند. تغییرِ نرخ در ماهِ بعد
+      نباید آنچه ماهِ پیش درآوردی را بازنویسی کند — همین دلیلِ کل ماجراست که بشود روی سند به آن عدد اعتماد کرد.
+    </>
+  }
+  en={
+    <>
+      <strong>The Toman value is frozen.</strong> A receipt in Tether or dollars stores the rate you typed and the
+      Toman figure computed from it, once, at the moment you record it. Nothing recomputes it on read. A rate change
+      next month must not restate what you earned last month — that is the whole reason the number can be trusted on a
+      document.
+    </>
+  }
+/>
+
+<Localized
+  fa={
+    <>
+      <strong>عمداً هیچ بک‌اندی نیست.</strong> هر دریافتی در IndexedDB مرورگر می‌ماند و هیچ‌چیز جایی فرستاده نمی‌شود.
+      فوتر همین را می‌گوید و باید درست بماند. یک فایلِ پشتیبانِ JSON است که یک دفتر را بین دستگاه‌ها جابه‌جا می‌کند، و
+      برای همین مسیرِ بازیابی یکی از پرآزمون‌ترین چیزهای اینجاست.
+    </>
+  }
+  en={
+    <>
+      <strong>There is no backend, deliberately.</strong> Every receipt lives in the browser's IndexedDB and nothing is
+      ever sent anywhere. The footer says so, and it has to stay true. A JSON backup file is what moves a ledger
+      between devices, which is why the restore path is one of the most heavily tested things here.
+    </>
+  }
+/>
+
+<Localized
+  fa={
+    <>
+      <strong>هر رشته‌ای که کاربر می‌بیند از Lingui رد می‌شود.</strong> شناسه‌ی پیام‌ها به انگلیسی نوشته می‌شود؛ فارسی
+      در کاتالوگ است. یک رشته‌ی لخت — به هر زبانی — لینت را رد می‌کند.
+    </>
+  }
+  en={
+    <>
+      <strong>Every user-facing string goes through Lingui.</strong> Message ids are written in English; Persian lives
+      in the catalog. A bare string — in either language — fails lint.
+    </>
+  }
+/>
+
+---
+
+## <Localized fa="رفتارِ جالب کجا زندگی می‌کند" en="Where the interesting behaviour lives" />
+
+- **`Pages/QuickEntry`** — <Localized fa="مسیرِ ثبتِ پانزده‌ثانیه‌ای، و آنچه وقتی دریافتی را عقب‌تاریخ می‌زنی می‌افتد." en="the fifteen-second entry path, and what happens when you backdate a receipt." />
+- **`Pages/Ledger`** — <Localized fa="فیلتر کردن، جمعِ جاری، و اینکه جدول روی موبایل به‌جای پنهان‌کردنِ درآمد، ستون می‌اندازد." en="filtering, the running total, and how the table sheds columns on a phone rather than hiding the income." />
+- **`Shared/Certificate`** — <Localized fa="خودِ سند. پیش‌نمایشِ روی صفحه و صفحه‌ی چاپی از یک مدل می‌سازند، پس نمی‌توانند دو چیزِ متفاوت بگویند." en="the document itself. The on-screen preview and the printed page render from one model, so they cannot say different things." />
+- **`Design/Tokens`** — <Localized fa="پالت و نردبانِ تایپ، از جمله دو آبی‌ای که به‌راحتی اشتباه گرفته می‌شوند." en="the palette and type ramp, including the two blues that are easy to confuse." />

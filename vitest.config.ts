@@ -32,6 +32,8 @@ export default defineConfig({
         'src/**/*.test.ts',
         'src/locales/**',
         'src/shared/story-fixtures/**',
+        // Docs-only helpers (used from `.mdx`, which coverage does not see).
+        'src/shared/story-docs/**',
         'src/**/*.d.ts',
         'src/main.tsx',
       ],

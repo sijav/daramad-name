@@ -758,8 +758,8 @@ msgstr "میانگین ماهانه"
 
 #. placeholder {0}: digits(report.monthsInRange)
 #: src/shared/certificate/certificateModel.ts
-msgid "Monthly average: the total divided by the {0} months in this period, including months with no income."
-msgstr "میانگین ماهانه: جمع کل تقسیم بر {0} ماه این بازه به علاوه ماه‌های بدون درآمد."
+msgid "Monthly average: the total divided by {0} months of this period."
+msgstr "میانگین ماهانه: جمع کل تقسیم بر {0} ماه این بازه."
 
 #: src/shared/constants/labels.ts
 msgid "Mordad"

@@ -196,9 +196,7 @@ export const buildCertificateModel = (
     })),
     // Gandom's note: an average with an unstated divisor is dangerous on a
     // document meant to be believed. State it on the page.
-    averageBasis: i18n._(
-      msg`Monthly average: the total divided by the ${digits(report.monthsInRange)} months in this period, including months with no income.`,
-    ),
+    averageBasis: i18n._(msg`Monthly average: the total divided by ${digits(report.monthsInRange)} months of this period.`),
     footnote: t('footnote'),
     incomplete: !report.profile.fullName.trim(),
   }

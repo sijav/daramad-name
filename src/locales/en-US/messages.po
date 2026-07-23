@@ -758,8 +758,8 @@ msgstr "Monthly average"
 
 #. placeholder {0}: digits(report.monthsInRange)
 #: src/shared/certificate/certificateModel.ts
-msgid "Monthly average: the total divided by the {0} months in this period, including months with no income."
-msgstr "Monthly average: the total divided by the {0} months in this period, including months with no income."
+msgid "Monthly average: the total divided by {0} months of this period."
+msgstr "Monthly average: the total divided by {0} months of this period."
 
 #: src/shared/constants/labels.ts
 msgid "Mordad"

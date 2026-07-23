@@ -49,7 +49,7 @@ export const EditReceiptDialog = ({ receipt, onClose }: EditReceiptDialogProps) 
   return (
     <Dialog open onClose={onClose} maxWidth="sm" fullWidth>
       {/* A visible way out. The dialog previously closed only on Escape or a
-          backdrop click — neither of which exists on a phone, where this opens
+          backdrop click, neither of which exists on a phone, where this opens
           nearly full-screen and the only apparent options are save or nothing. */}
       <DialogTitle>
         <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>

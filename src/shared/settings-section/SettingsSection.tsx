@@ -18,7 +18,7 @@ export const SettingsSection = ({ title, children }: SettingsSectionProps) => (
   <SurfaceCard radius="lg" flat disablePadding sx={{ p: 1 }}>
     <Box sx={{ px: 2, pt: 2, pb: 1 }}>
       {/* 16/600 is the size the design draws this at; `h3` is the level it
-          occupies — a section of the settings page, under that page's `h2`. */}
+          occupies, a section of the settings page, under that page's `h2`. */}
       <Typography variant="h5" component="h3">
         {title}
       </Typography>

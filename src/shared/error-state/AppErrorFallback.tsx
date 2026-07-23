@@ -119,7 +119,7 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
             >
               <Stack spacing={1.5} sx={{ minWidth: 210 }}>
                 {/* Step B erases everything, so a failure in step A has to be
-                    impossible to miss — silence here reads as success. */}
+                    impossible to miss, silence here reads as success. */}
                 {failure ? (
                   <Alert severity="error" sx={{ textAlign: 'start' }}>
                     {failure}

@@ -12,7 +12,7 @@ const Probe = () => {
       <span data-testid="direction">{theme.direction}</span>
 
       {/* Authored as a physical left margin. In RTL the stylis plugin must
-          rewrite it to the right — that rewrite is what lets every component
+          rewrite it to the right, that rewrite is what lets every component
           in the app be written once for LTR. */}
       <Box data-testid="logical-inset" sx={{ marginLeft: '40px', width: 24, height: 24, border: '1px solid' }} />
 
@@ -27,8 +27,8 @@ const Probe = () => {
           Text
         </Button>
         {/* `color="primary"` is deliberately NOT used here. MUI's filled
-            primary chip paints `contrastText` on `primary.main` — white on
-            #3b6ef5, 4.44:1 — and the app paints no such chip anywhere: this
+            primary chip paints `contrastText` on `primary.main`, white on
+            #3b6ef5, 4.44:1, and the app paints no such chip anywhere: this
             probe was the only one in the repo, and it was asserting a
             combination the product does not ship. `ChipSelect` and the nav rail
             use `primary` as the CONTAINER pair (`primary.light` behind

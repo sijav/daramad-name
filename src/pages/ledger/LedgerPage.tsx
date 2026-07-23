@@ -100,7 +100,7 @@ export const LedgerPage = () => {
       />
 
       {/* The design puts the toolbar above the summary cards and outside any
-          card — search leads, then filters, then the clear-all escape hatch. */}
+          card, search leads, then filters, then the clear-all escape hatch. */}
       <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.5} sx={{ mb: 2, alignItems: { md: 'center' } }}>
         <SearchField value={view.search} onValueChange={view.setSearch} fullWidth />
         <FilterButton

@@ -25,7 +25,7 @@ const EXTRA_ROLES = [
   'surfaceSubtle',
 ] as const
 
-describe('getTheme — palette', () => {
+describe('getTheme: palette', () => {
   // An unwired role reaches CSS as `undefined`, which drops the declaration: no
   // error anywhere, the hairline is just gone.
   it('wires every extra MD3 role in both modes', () => {
@@ -75,7 +75,7 @@ describe('getTheme — palette', () => {
 
 // AGENTS.md "Two blues": #3460d6 is for filled buttons, bars and links, #3b6ef5
 // for chips, segments and the nav rail.
-describe('getTheme — the two blues stay separate', () => {
+describe('getTheme: the two blues stay separate', () => {
   it('keeps brandPrimary and primary.main distinct in light', () => {
     const { palette } = getTheme('light', 'rtl')
 
@@ -110,7 +110,7 @@ describe('getTheme — the two blues stay separate', () => {
   })
 })
 
-describe('getTheme — direction', () => {
+describe('getTheme: direction', () => {
   // Emotion's RTL plugin reads nothing from the theme, but MUI's components do:
   // Drawer anchors, Tabs indicators, Slider and the date pickers branch on
   // `theme.direction`.
@@ -125,7 +125,7 @@ describe('getTheme — direction', () => {
   })
 })
 
-describe('getTheme — caching', () => {
+describe('getTheme: caching', () => {
   // The provider re-renders on every settings read. A rebuilt theme is a new
   // object identity, which drops Emotion's cache and re-serialises every styled
   // component on the page.
@@ -142,7 +142,7 @@ describe('getTheme — caching', () => {
   })
 })
 
-describe('getTheme — component overrides', () => {
+describe('getTheme: component overrides', () => {
   // A global `MuiPaper` backdrop-filter once put the app-chrome glass behind
   // every menu, dialog and select popover. Only the fixed chrome blurs, and it
   // applies its own.
@@ -165,7 +165,7 @@ describe('getTheme — component overrides', () => {
 // default mapping renders `h5` as a real `<h5>`, so a card title that only
 // wanted 16/600 skipped two levels under the page's `<h2>`: 82 of the suite's
 // axe `heading-order` findings, none of them visible on screen.
-describe('getTheme — typography maps size onto the right element', () => {
+describe('getTheme: typography maps size onto the right element', () => {
   // Read once, the theme is cached and never mutated.
   const variantMapping: NonNullable<TypographyProps['variantMapping']> =
     getTheme('light', 'rtl').components?.MuiTypography?.defaultProps?.variantMapping ?? {}

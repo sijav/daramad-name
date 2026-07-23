@@ -21,7 +21,7 @@ import {
 // least likely to be noticed, a year that starts in January instead of
 // Farvardin produces totals that look plausible but are not the user's year.
 
-describe('yearRange — Jalali years start at Farvardin, not January', () => {
+describe('yearRange: Jalali years start at Farvardin, not January', () => {
   it('starts 1404 in March 2025, not January', () => {
     const { from } = yearRange(1404, 'JALALI')
     const start = new Date(from)
@@ -73,7 +73,7 @@ describe('monthBucketsOfYear', () => {
   })
 })
 
-describe('monthsSpanned — the denominator of the monthly average', () => {
+describe('monthsSpanned: the denominator of the monthly average', () => {
   it('counts a full year as twelve months', () => {
     expect(monthsSpanned(yearRange(1404, 'JALALI'), 'JALALI')).toBe(12)
   })
@@ -96,7 +96,7 @@ describe('monthsSpanned — the denominator of the monthly average', () => {
 // between the first and last receipt (inflating a clustered year fourfold) and
 // the report divided a year still in progress by twelve (understating four
 // real months threefold on the document that goes to an embassy).
-describe('averagingPeriod — one rule for every monthly average', () => {
+describe('averagingPeriod: one rule for every monthly average', () => {
   const AT_TIR_31 = new Date('2026-07-22T09:00:00.000Z')
 
   beforeEach(() => {
@@ -166,7 +166,7 @@ beforeAll(async () => {
   en = await loadReportI18n('en-US')
 })
 
-describe('formatDate — the ledger column', () => {
+describe('formatDate: the ledger column', () => {
   it('prints the Jalali date in Persian numerals', () => {
     expect(formatDate(AUG_1, 'JALALI')).toBe('۱۴۰۵/۰۵/۱۰')
   })
@@ -208,7 +208,7 @@ describe('formatDateEnglish', () => {
 // The collapsing rule from AGENTS.md. What it guards against is not ugliness:
 // «۱۴۰۵ تا ۱۴۰۵» makes a reader stop and check whether the two ends are
 // actually different years, on a line whose whole job is to be unambiguous.
-describe('formatDateRangeLong — shared parts written once', () => {
+describe('formatDateRangeLong: shared parts written once', () => {
   it('drops the month AND the year from the opening date inside one month', () => {
     expect(formatDateRangeLong(AUG_1, AUG_15, 'JALALI', fa, 'تا')).toBe('۱۰ تا ۲۴ مرداد ۱۴۰۵')
   })
@@ -232,7 +232,7 @@ describe('formatDateRangeLong — shared parts written once', () => {
   })
 })
 
-describe('isToday — the switch behind the backdating warning', () => {
+describe('isToday: the switch behind the backdating warning', () => {
   const today = (hours: number, minutes = 0, seconds = 0, ms = 0) => {
     const date = new Date()
     date.setHours(hours, minutes, seconds, ms)

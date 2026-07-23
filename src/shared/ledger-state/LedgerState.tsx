@@ -29,7 +29,7 @@ export const LedgerState = ({ kind, onAction, errorMessage }: LedgerStateProps) 
       <Stack spacing={1} sx={{ py: 2 }} aria-busy="true" aria-live="polite">
         <Box sx={{ display: 'grid', placeItems: 'center', pb: 2 }}>
           {/* `CircularProgress` renders `role="progressbar"` with nothing inside
-              it, so it needs a name of its own (axe `aria-progressbar-name`) —
+              it, so it needs a name of its own (axe `aria-progressbar-name`), 
               the `aria-busy` region around it is not one. */}
           <CircularProgress size={28} aria-label={t`Loading the ledger`} />
         </Box>

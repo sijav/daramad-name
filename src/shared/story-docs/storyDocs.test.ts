@@ -122,11 +122,11 @@ describe('the Storybook documentation', () => {
       const en = EN_DOCS[page.slug]
       const fa = FA_DOCS[page.slug]
       for (const prop of Object.keys(en?.props ?? {})) {
-        if (!fa?.props[prop]) wrong.push(`${page.slug}.${prop} — prop untranslated`)
+        if (!fa?.props[prop]) wrong.push(`${page.slug}.${prop}: prop untranslated`)
       }
       for (const story of page.stories) {
-        if (!fa?.stories[story]) wrong.push(`${page.slug}.${story} — story untranslated`)
-        if (!fa?.names[story]) wrong.push(`${page.slug}.${story} — name untranslated`)
+        if (!fa?.stories[story]) wrong.push(`${page.slug}.${story}: story untranslated`)
+        if (!fa?.names[story]) wrong.push(`${page.slug}.${story}: name untranslated`)
       }
     }
     expect(wrong).toEqual([])

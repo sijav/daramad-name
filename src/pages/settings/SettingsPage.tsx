@@ -176,7 +176,7 @@ export const SettingsPage = () => {
             The row label sits beside the control rather than being a `<label>`
             bound to it, so each input carries the same text as an `aria-label`.
             Without it a screen reader announces seven unnamed text boxes in a
-            row — and these are the fields that end up printed on the
+            row, and these are the fields that end up printed on the
             certificate, so getting the wrong one is not recoverable. */}
         <SettingsSection title={t`Personal details`}>
           <SettingRow label={t`Full name in Farsi`} description={t`Printed at the top of the income report`}>
@@ -332,7 +332,7 @@ export const SettingsPage = () => {
         </SettingsSection>
 
         {/* Renders itself only when the browser has actually offered to install
-            the app, and disappears once it is installed — so it sits here
+            the app, and disappears once it is installed, so it sits here
             rather than in the design's numbered sections. */}
         <InstallAppSection />
 

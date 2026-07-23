@@ -119,7 +119,7 @@ export const ReportPage = () => {
                     rather than as a `<label>`, so the select opened as an
                     unnamed combobox (axe `aria-input-field-name`). `labelId` is
                     MUI's documented way to point a Select at an element that
-                    already says what it is — better than a duplicated
+                    already says what it is, better than a duplicated
                     `aria-label`, which would drift from the visible word. */}
                 <Typography id={rangeLabelId} sx={{ color: 'text.secondary' }} variant="caption">
                   <Trans>Range</Trans>
@@ -141,7 +141,7 @@ export const ReportPage = () => {
                   })}
                 >
                   {/* The selected year is always among the options, even before
-                      the query answers and even for a year with no receipts —
+                      the query answers and even for a year with no receipts, 
                       a select whose value is missing renders blank, and the
                       range is the one thing this document must state. */}
                   {selectableYears(years, year).map((option) => (

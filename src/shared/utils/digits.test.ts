@@ -9,7 +9,7 @@ import { groupThousands, parseUserNumber, toEnglishDigits, toPersianDigits, toPe
 // the wrong number becomes a receipt nobody will ever re-read, and from there
 // it is in the total, the chart and the certificate.
 
-describe('parseUserNumber — refuses to guess', () => {
+describe('parseUserNumber: refuses to guess', () => {
   it('rejects a half-typed decimal rather than rounding it away', () => {
     // «۱۲٫» is mid-keystroke, not twelve. Returning 12 here would commit a
     // value the user was still in the middle of typing.
@@ -43,7 +43,7 @@ describe('parseUserNumber — refuses to guess', () => {
   })
 })
 
-describe('parseUserNumber — zero and negatives are values, not absences', () => {
+describe('parseUserNumber: zero and negatives are values, not absences', () => {
   it('parses zero as 0, which is not the same answer as null', () => {
     // The form distinguishes "nothing entered" from "zero entered" to decide
     // which error to show; collapsing them makes the message wrong.

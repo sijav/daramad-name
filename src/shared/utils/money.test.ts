@@ -5,7 +5,7 @@ import { computeToman, formatNumber } from './money'
 // These cover the rules that would be silently, permanently wrong if broken
 // a wrong total in a financial tool is worse than a crash, because nobody notices.
 
-describe('computeToman — the freeze rule', () => {
+describe('computeToman: the freeze rule', () => {
   it('multiplies by the rate captured at record time', () => {
     // Scenario 1: 500 USDT at 98,500 toman.
     expect(computeToman(500, 'USDT', 98500)).toBe(49_250_000)
@@ -32,7 +32,7 @@ describe('computeToman — the freeze rule', () => {
   })
 })
 
-describe('formatNumber — locale-driven numbering', () => {
+describe('formatNumber: locale-driven numbering', () => {
   it('uses Persian digits and the Arabic thousands separator for fa-IR', () => {
     // U+066C, not a Latin comma: «۱۲٬۵۰۰٬۰۰۰» is what a Persian reader writes.
     expect(formatNumber(12_500_000, 'fa-IR')).toBe('۱۲٬۵۰۰٬۰۰۰')
@@ -80,7 +80,7 @@ describe('digit normalisation', () => {
   })
 })
 
-describe('Intl output parses back — the real editing round-trip', () => {
+describe('Intl output parses back: the real editing round-trip', () => {
   // The field shows an Intl-formatted string; the user edits it in place and we
   // parse it again. If parsing cannot read our own output, editing a saved
   // receipt silently zeroes it.

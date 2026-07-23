@@ -22,7 +22,7 @@ const seededReport = (): IncomeReport => {
   return client.getQueryData(getIncomeReportQueryKey(yearRange(year, CALENDAR), CALENDAR)) as IncomeReport
 }
 
-describe('seedPageData — the report it seeds', () => {
+describe('seedPageData: the report it seeds', () => {
   it('totals exactly the months it lists', () => {
     const report = seededReport()
     const summed = report.months.reduce((sum, month) => sum + month.totalToman, 0)

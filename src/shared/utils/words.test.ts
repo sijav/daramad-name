@@ -5,7 +5,7 @@ import { numberToWords } from './words'
 // hand to an embassy. If the two disagree the whole page is worthless, so the
 // interesting cases here are the ones that silently produce a wrong reading:
 // internal zero groups, the teens, and round hundreds.
-describe('numberToWords — Persian', () => {
+describe('numberToWords: Persian', () => {
   const fa = (value: number) => numberToWords(value, 'fa-IR')
 
   it('writes zero', () => {
@@ -52,7 +52,7 @@ describe('numberToWords — Persian', () => {
   })
 })
 
-describe('numberToWords — English', () => {
+describe('numberToWords: English', () => {
   const en = (value: number) => numberToWords(value, 'en-US')
 
   it('writes zero', () => {

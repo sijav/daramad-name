@@ -22,7 +22,7 @@ const formatter = (locale: AppLocale, decimals: number): Intl.NumberFormat => {
 
 /**
  * The single place toman is computed. Rounded to a whole number because toman
- * has no sub-unit, and called exactly once per receipt — at write time — so the
+ * has no sub-unit, and called exactly once per receipt, at write time, so the
  * stored value is frozen against later rate changes.
  */
 export const computeToman = (amountOriginal: number, currency: Currency, rate: number | null): number => {

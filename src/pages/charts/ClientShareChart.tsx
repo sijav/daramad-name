@@ -18,7 +18,7 @@ const DONUT_SIZE = 160
  *
  * Colours are categorical (blue / green / amber / grey) from the design's
  * `chartSeries`. An earlier single-hue ramp read well in isolation, but the
- * design specifies distinct hues — which also holds up when the legend is read
+ * design specifies distinct hues, which also holds up when the legend is read
  * apart from the arc.
  */
 export const ClientShareChart = ({ shares, limit = 4, othersLabel }: ClientShareChartProps) => {
@@ -56,7 +56,7 @@ export const ClientShareChart = ({ shares, limit = 4, othersLabel }: ClientShare
               // a screen reader except through here: it feeds the hover tooltip
               // AND the keyboard-navigation announcement, which `pieDescription`
               // builds as «label; formattedValue». A bare «۲۳۵٬۸۳۰٬۰۰۰» leaves a
-              // figure with no unit and no proportion — and the proportion is
+              // figure with no unit and no proportion, and the proportion is
               // the only thing a slice is drawn to say.
               valueFormatter: (item) => {
                 const amount = number(item.value)

@@ -37,7 +37,7 @@ export const db = new DaramadnameDb()
 
 export const defaultSettings: Settings = {
   calendar: 'JALALI',
-  // Persian by default — the product is for Iranian freelancers. English is
+  // Persian by default, the product is for Iranian freelancers. English is
   // opt-in from Settings and persists across reloads.
   locale: 'fa-IR',
   // Following the OS is the least surprising default; the user can pin it.
@@ -52,7 +52,7 @@ export const defaultSettings: Settings = {
  * The stored row is merged OVER the defaults rather than returned as-is. A row
  * written by an earlier version has no `locale` field, and returning it raw
  * hands `undefined` to `Intl.NumberFormat`, which silently falls back to the
- * system locale — an Iranian user would see Latin digits with no way to tell
+ * system locale, an Iranian user would see Latin digits with no way to tell
  * why. Merging makes every added setting self-migrating.
  */
 export const readSettings = async (): Promise<Settings> => {
@@ -72,7 +72,7 @@ export const writeSettings = async (settings: Settings): Promise<Settings> => {
 
 /**
  * Finds a client by name (case-insensitive) or creates one. Free-text entry in
- * the quick-record form must not produce «آریا» and «آریا » as two clients —
+ * the quick-record form must not produce «آریا» and «آریا » as two clients
  * that would silently split a client's totals across the ledger and charts.
  */
 export const upsertClientByName = async (name: string): Promise<Client | null> => {
@@ -81,8 +81,8 @@ export const upsertClientByName = async (name: string): Promise<Client | null> =
     return null
   }
   // Fold Arabic letterforms before keying. An Iranian keyboard and an Arabic
-  // one produce different codepoints for the same letters — «كيان» and «کیان»
-  // look identical and are the same client — and without folding they become
+  // one produce different codepoints for the same letters, «كيان» and «کیان»
+  // look identical and are the same client, and without folding they become
   // two rows, splitting that client's income across the ledger and halving
   // their share in the concentration insight.
   const nameKey = toPersianLetters(trimmed).toLowerCase()

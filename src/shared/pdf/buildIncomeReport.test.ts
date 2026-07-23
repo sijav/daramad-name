@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest'
 import { buildIncomeReport } from './buildIncomeReport'
 
 // The PDF is the one-click path, and its output is only ever inspected after it
-// has been downloaded — which is exactly how it shipped printing English
+// has been downloaded, which is exactly how it shipped printing English
 // headings for a Persian document without anyone noticing. These assertions run
 // against the layout definition rather than a rendered file, so a field that
 // stops reaching the page fails here first.
@@ -78,7 +78,7 @@ describe('buildIncomeReport', () => {
     const { doc } = await build('fa')
     const text = textOf(doc.blocks)
 
-    // Ordibehesht earned nothing and must still appear — dropping empty months
+    // Ordibehesht earned nothing and must still appear, dropping empty months
     // makes a patchy year look continuous.
     expect(text.some((value) => value.includes('اردیبهشت'))).toBe(true)
   })

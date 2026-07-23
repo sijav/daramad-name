@@ -2,11 +2,11 @@ import { QueryClient } from '@tanstack/react-query'
 
 // Every "request" is an IndexedDB read on the same machine, so the usual
 // network-oriented defaults are wrong here:
-//   · retry is off — a failing IndexedDB read will fail again identically, and
+//   · retry is off, a failing IndexedDB read will fail again identically, and
 //     retrying just delays showing the user a real error.
-//   · staleTime is 0 — reads are microseconds, and stale financial totals are
+//   · staleTime is 0, reads are microseconds, and stale financial totals are
 //     worse than a refetch.
-//   · refetchOnWindowFocus is off — nothing can change the data from another
+//   · refetchOnWindowFocus is off, nothing can change the data from another
 //     tab mid-session except this app, which invalidates explicitly.
 export const queryClient = new QueryClient({
   defaultOptions: {

@@ -16,13 +16,13 @@ const PLOT_HEIGHT = 220
  * The 12-month bar chart (`153:604`).
  *
  * Deliberately not a charting library: the design has no axis, no gridlines and
- * no legend — twelve bars with their month beneath. MUI X drew all three and a
+ * no legend, twelve bars with their month beneath. MUI X drew all three and a
  * numeric scale nobody asked for, which is a different chart from the one in
  * the file. Plain boxes also mean the bars can carry the design's top-only 8px
  * corners, which the library does not expose.
  *
  * Every month is plotted, including the empty ones. A month with no income gets
- * the design's 4px grey stub rather than disappearing — dropping it would
+ * the design's 4px grey stub rather than disappearing, dropping it would
  * compress the axis and quietly hide the gap, which is exactly the thing a
  * freelancer needs to see (scenario 4's Mordad).
  */
@@ -34,21 +34,21 @@ export const MonthlyIncomeChart = ({ months, calendar }: MonthlyIncomeChartProps
   const labels = monthNames(calendar, i18n)
   const peak = Math.max(1, ...months.map((month) => month.totalToman))
 
-  // A time axis runs left-to-right in BOTH scripts — Farvardin on the left,
+  // A time axis runs left-to-right in BOTH scripts, Farvardin on the left,
   // Esfand on the right. In RTL the first child lands rightmost, so the order
   // is reversed here rather than with `direction: ltr`, which the stylis RTL
   // plugin mirrors straight back.
   const plotted = direction === 'rtl' ? [...months].reverse() : months
 
-  // «مرداد: ۵۸۹٫۲۵ م» — the design abbreviates to millions rather than printing
+  // «مرداد: ۵۸۹٫۲۵ م», the design abbreviates to millions rather than printing
   // nine digits over a bar. The full figure lives in the ledger.
   const inMillions = (value: number) => t`${number(value / 1_000_000, 2)} M`
 
   // A bar's alternative text is NOT its tooltip. The tooltip is width-bound and
   // may abbreviate; a screen reader is not, so the label spells the month, the
   // year it belongs to, and the exact figure with its unit. Read from the
-  // dashboard panel — whose title is «درآمد ماه‌به‌ماه», carrying neither year
-  // nor unit — «۵۸۹٫۲۵ M» on its own says nothing at all. Every number goes
+  // dashboard panel, whose title is «درآمد ماه‌به‌ماه», carrying neither year
+  // nor unit, «۵۸۹٫۲۵ M» on its own says nothing at all. Every number goes
   // through `useFormat` so a Persian reader hears Persian numerals.
   const barLabel = (label: string, calendarYear: number, totalToman: number) => {
     const year = digits(calendarYear)
@@ -91,7 +91,7 @@ export const MonthlyIncomeChart = ({ months, calendar }: MonthlyIncomeChartProps
                 })}
                 // `role="img"` is what makes the label legal, not decoration:
                 // `aria-label` is prohibited on a plain <div> (axe
-                // `aria-prohibited-attr`, 120 findings — twelve bars across ten
+                // `aria-prohibited-attr`, 120 findings, twelve bars across ten
                 // stories), because a generic element has no role for a name to
                 // attach to. A bar IS a graphic conveying one value, so the
                 // month and its figure become that graphic's alternative text

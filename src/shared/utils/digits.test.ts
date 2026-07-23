@@ -59,7 +59,7 @@ describe('parseUserNumber — zero and negatives are values, not absences', () =
 })
 
 // Persian is not the only keyboard that produces non-ASCII digits. Arabic-Indic
-// numerals (U+0660–0669) look all but identical on screen and arrive from
+// numerals (U+0660, 0669) look all but identical on screen and arrive from
 // Arabic layouts and from text pasted out of a Gulf bank's message. If only the
 // Persian range were folded, «٢٥٠٠» would parse to null and the user would see
 // an amount field that refuses everything they type.

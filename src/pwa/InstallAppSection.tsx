@@ -8,7 +8,7 @@ import { SettingButton, SettingRow, SettingsSection } from 'src/shared/settings-
  * It renders NOTHING until the browser has actually offered installation, and
  * nothing at all once the app is installed. A permanently visible "Install"
  * button that does nothing on Firefox, on iOS, or on a second visit after the
- * app is already installed is worse than no button — this one only exists when
+ * app is already installed is worse than no button, this one only exists when
  * pressing it will really open the install dialog.
  */
 export const InstallAppSection = () => {

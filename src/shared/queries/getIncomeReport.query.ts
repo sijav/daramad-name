@@ -17,7 +17,7 @@ export const getIncomeReportQuery = async ({
   queryKey: [, requestedRange, calendar],
 }: QueryFunctionContext<ReturnType<typeof getIncomeReportQueryKey>>): Promise<IncomeReport> => {
   // The period never runs past today. A certificate for the current year would
-  // otherwise claim to cover months that have not happened — printing eight
+  // otherwise claim to cover months that have not happened, printing eight
   // zero rows for the future and dividing four months of real income by 12,
   // which understates the holder threefold on the page an embassy reads.
   const { range, months: monthsInRange } = averagingPeriod(requestedRange, calendar)

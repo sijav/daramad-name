@@ -9,7 +9,7 @@ import { buildCertificateModel, type CertificateModel, type ReportLanguage } fro
  * interface's.
  *
  * The document gets its own i18n instance so an English certificate can be
- * produced while the app stays Persian — switching the global locale to render
+ * produced while the app stays Persian, switching the global locale to render
  * a document would flip the whole UI underneath the user mid-task.
  *
  * Both the preview on the report page and the printable route call this, which
@@ -17,7 +17,7 @@ import { buildCertificateModel, type CertificateModel, type ReportLanguage } fro
  *
  * @param onLoadError Called when the document's catalog cannot be loaded. The
  *   catalog arrives through two dynamic imports, which reject on a stale chunk
- *   URL after a redeploy or on a cold offline load — and without this the hook
+ *   URL after a redeploy or on a cold offline load, and without this the hook
  *   just keeps returning `null`, which a caller cannot tell apart from "still
  *   loading". On the printable route that is an indefinite spinner on the one
  *   page whose entire purpose is to be printed.

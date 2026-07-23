@@ -1,0 +1,72 @@
+name: Release
+
+# Tagging is the trigger, so cutting a release is `git tag -a vX.Y.Z && git push
+# origin vX.Y.Z` and nothing else. The notes come from CHANGELOG.md rather than
+# being written twice.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Publish the GitHub release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      # The app is static and local-first, so the built bundle is a genuinely
+      # useful artifact: unzip it behind any static server and it runs.
+      - name: Build
+        run: npm run build
+
+      - name: Package the build
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          cd dist && zip -qr "../daramadname-${VERSION}.zip" . && cd ..
+          ls -lh "daramadname-${VERSION}.zip"
+
+      # The section for this tag: from its `## [x.y.z]` heading to the next
+      # heading, or to the link-reference block at the end of the file, since
+      # the newest release is the last section. Falls back to a pointer if the
+      # version has no section.
+      - name: Extract the changelog section
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          # `index(...) == 1` is a literal starts-with. A dynamic regex would
+          # need the brackets escaped, and awk quietly reads `\[` as the start
+          # of a character class, which matched `## [Unreleased]` instead.
+          awk -v v="$VERSION" '
+            index($0, "## [" v "]") == 1 { found = 1; next }
+            found && index($0, "## [") == 1 { exit }
+            found && index($0, "[") == 1 { exit }
+            found { print }
+          ' CHANGELOG.md > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "See CHANGELOG.md for the full list of changes." > release-notes.md
+          fi
+          cat release-notes.md
+
+      # A tag with a pre-release suffix (-alpha, -beta, -rc) is marked as one on
+      # GitHub, so it does not show up as the latest stable release.
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          PRERELEASE=""
+          case "$VERSION" in *-*) PRERELEASE="--prerelease" ;; esac
+          gh release create "$GITHUB_REF_NAME" \
+            --title "DaramadName $GITHUB_REF_NAME" \
+            --notes-file release-notes.md \
+            $PRERELEASE \
+            "daramadname-${VERSION}.zip"

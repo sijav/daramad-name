@@ -8,7 +8,7 @@ import { EmptyState } from './EmptyState'
 
 // Each story spreads its args and then falls back per field. The copy is read
 // from the catalog rather than written into `args`, so it follows the Language
-// toolbar the way the app's does — but anything typed into Controls wins, which
+// toolbar the way the app's does, but anything typed into Controls wins, which
 // is what makes the panel real rather than decorative.
 //
 // The card around it is not the component's doing. An empty state always sits
@@ -54,7 +54,7 @@ export const FirstRun: Story = {
     const canvas = within(canvasElement)
 
     // It stands in for the panel's content, so it carries the heading a section
-    // title would — a screen reader jumping by heading must not skip past it.
+    // title would, a screen reader jumping by heading must not skip past it.
     await expect(await canvas.findByRole('heading', { level: 3 })).toBeInTheDocument()
 
     await userEvent.click(await canvas.findByRole('button', { name: /^ثبت اولین دریافتی$|^Record your first receipt$/ }))

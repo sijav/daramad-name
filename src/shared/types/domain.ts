@@ -43,7 +43,7 @@ export interface Receipt {
   currency: Currency
   /**
    * Toman per one unit of `currency`, captured at record time. Null for TOMAN.
-   * Frozen forever — a later rate change must never restate history.
+   * Frozen forever, a later rate change must never restate history.
    */
   rate: number | null
   /**
@@ -162,7 +162,7 @@ export interface IncomeReport {
   totalToman: number
   monthlyAverageToman: number
   /**
-   * The divisor behind `monthlyAverageToman` — months ELAPSED in the range, not
+   * The divisor behind `monthlyAverageToman`, months ELAPSED in the range, not
    * months that had income. The certificate prints it, because an average whose
    * basis is unstated is the kind of number a clerk discards the whole document
    * over.

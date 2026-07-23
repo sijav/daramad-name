@@ -88,7 +88,7 @@ export const SingleRow: Story = {
 }
 
 // There is no Gregorian variant here on purpose. Dates come from `useFormat`,
-// which reads the calendar out of Settings — the table takes no calendar of its
+// which reads the calendar out of Settings, the table takes no calendar of its
 // own, so a story could only have pinned a prop nothing reads and shown Jalali
 // dates under a Gregorian label. The two calendars are covered where the choice
 // actually lands: `formatDateLong` in dates.test.ts, and the Settings toggle in
@@ -115,7 +115,7 @@ export const TotalDescribesTheSummaryNotTheVisibleRows: Story = {
     const canvas = within(canvasElement)
 
     await expect(await canvas.findByText(/۲۵ دریافتی فیلتر|25 filtered receipts/)).toBeInTheDocument()
-    // The sum of the two visible rows is 67,250,000 — the row must not print it.
+    // The sum of the two visible rows is 67,250,000, the row must not print it.
     await expect(await canvas.findByText(`${fa.format(640_000_000)} تومان`)).toBeInTheDocument()
     await expect(canvas.queryByText(`${fa.format(67_250_000)} تومان`)).toBeNull()
     await expect(dataRows(canvasElement)).toHaveLength(2)

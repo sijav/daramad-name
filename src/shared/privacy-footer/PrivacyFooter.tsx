@@ -8,7 +8,7 @@ import { Stack, Typography } from '@mui/material'
  * is the backup file the user downloads themselves.
  *
  * It carried `opacity: 0.75`, which is not a colour and therefore not covered by
- * the palette's contrast work at all — it composited `text.secondary` #626569
+ * the palette's contrast work at all, it composited `text.secondary` #626569
  * down to #888a8e over the page's `surface-subtle` #f8f9fb, 3.28:1 at 12px
  * against a 4.5:1 bar. `text.secondary` on its own is 5.56:1 there. The one
  * promise this app makes about the user's data is not the line to whisper, and

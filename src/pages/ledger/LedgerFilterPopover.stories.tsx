@@ -12,7 +12,7 @@ import { LedgerFilterPopover } from './LedgerFilterPopover'
 // ledger constantly, and the intermediate "from is set, to is not" state would
 // briefly match nothing. And the date fields start EMPTY: they used to default
 // to today, which advertised a range that was never applied, while touching one
-// end silently invented the other — producing an inverted range Dexie matches
+// end silently invented the other, producing an inverted range Dexie matches
 // nothing for, with no explanation on screen.
 
 /** The popover needs a real anchor element, so the story supplies one. */
@@ -111,11 +111,11 @@ export const ResetClearsWithoutApplying: Story = {
     await expect(await body.findByText(/^تتر$|^Tether$/)).toBeInTheDocument()
     await userEvent.click(await body.findByRole('button', { name: /^بازنشانی$|^Reset$/ }))
 
-    // The draft actually emptied — the Channel select falls back to its
+    // The draft actually emptied, the Channel select falls back to its
     // all-channels option. Asserting only that nothing was committed passes
     // just as well when Reset does nothing at all.
     await waitFor(() => expect(body.queryByText(/^تتر$|^Tether$/)).toBeNull())
-    // And nothing is committed until Apply — Reset only touches the draft.
+    // And nothing is committed until Apply, Reset only touches the draft.
     await expect(a.onApply).not.toHaveBeenCalled()
   },
 }

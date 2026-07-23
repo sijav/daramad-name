@@ -1,17 +1,15 @@
-A gate on the FIRST paint, and that narrow scope is the point.
+A gate on the first paint, and nothing more than that.
 
-Lingui does not fall back when a catalog is missing, it THROWS. So if `App`
-rendered a page before the persisted locale had been activated, the whole
-tree would blow up rather than briefly showing English. `ready` prevents
-that, and it fails in opposite ways at each end: seeded from `i18n.locale ===
-locale` so a normal reload paints immediately instead of flashing a loader on
-every navigation, and false on a mount whose persisted locale is not the
-active one, held shut by the effect until that catalog lands.
+Lingui throws when a catalog is missing rather than falling back, so rendering
+a page before the persisted locale is active takes the whole tree down instead
+of briefly showing English. `ready` guards that. It starts true when
+`i18n.locale` already matches, so an ordinary reload paints at once instead of
+flashing a loader, and false when it does not, held shut by the effect until the
+catalog lands.
 
-Once open it stays open. A language switch mid-session is a soft swap: some
-catalog is already loaded, so `i18n._` cannot throw, and blanking the app
-behind a spinner to change a setting would be worse than a moment of the
-previous language.
+Once open it stays open. Switching language mid-session is a soft swap: a
+catalog is already loaded, so `i18n._` cannot throw, and a full-page spinner to
+change a setting costs more than a moment of the previous language.
 
 ## props
 
@@ -19,5 +17,5 @@ previous language.
 
 ## stories
 
-- `Already Active Locale Paints Immediately`: The ordinary case: the persisted locale is already the active one. The gate must be open on the FIRST paint. If `ready` started false here, every reload and every route change would flash a full-page spinner before the dashboard appeared.
-- `A Waiting Locale Holds The Gate Shut`: The user has switched to English in Settings and reloaded. The persisted locale no longer matches the active catalog, so the gate must hold, and then open onto the English catalog, not onto the message ids that happen to look like English.
+- `Already Active Locale Paints Immediately`: The ordinary case: the persisted locale is already active, so the gate opens on the first paint. Starting false here would flash a full-page spinner on every reload and every route change.
+- `A Waiting Locale Holds The Gate Shut`: The user switched to English in Settings and reloaded. The persisted locale no longer matches the active catalog, so the gate holds, then opens onto the English catalog rather than the message ids that happen to look like English.

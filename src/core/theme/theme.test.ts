@@ -3,11 +3,11 @@ import { getTheme } from './theme'
 import { darkColors, lightColors } from './tokens'
 
 // The theme is the only place a colour is allowed to exist, so a role that is
-// missing, wrong or shared between the two blues does not fail loudly — it
+// missing, wrong or shared between the two blues does not fail loudly, it
 // paints. Three components once hardcoded hex and were unreadable in dark mode;
 // these assertions are what stops the palette drifting back into that state.
 
-/** The MD3 roles `muiPalette.d.ts` adds — every one is read by some component. */
+/** The MD3 roles `muiPalette.d.ts` adds, every one is read by some component. */
 const EXTRA_ROLES = [
   'surfaceContainerHigh',
   'surfaceContainerHighest',
@@ -56,7 +56,7 @@ describe('getTheme — palette', () => {
     expect(dark.chartSeries).not.toEqual(light.chartSeries)
   })
 
-  // `mode` is what MUI's own components branch on — a Menu, a disabled input,
+  // `mode` is what MUI's own components branch on, a Menu, a disabled input,
   // an Alert all pick their own greys from it. Building a dark palette while
   // leaving `mode: 'light'` produces dark surfaces with MUI's light defaults on
   // top of them.
@@ -101,7 +101,7 @@ describe('getTheme — the two blues stay separate', () => {
   })
 
   // The rule that separates them, stated once: `primary` is a CONTAINER role.
-  // It fills a background under `primary.dark` and draws non-text marks — a
+  // It fills a background under `primary.dark` and draws non-text marks, a
   // border, a dot, an icon on `primary.light`, all held to 3:1. It never draws
   // type: #3b6ef5 is 4.39:1 on `surface-default` and 4.21:1 on `surface-subtle`,
   // under the 4.5:1 bar wherever it lands. `brandPrimary` #3460d6 is the ink,
@@ -109,7 +109,7 @@ describe('getTheme — the two blues stay separate', () => {
   //
   // The theme is where that breaks silently, because MUI resolves
   // `color="primary"` to `primary.main` for a LABEL unless a `variants` entry
-  // says otherwise — which is how `variant="outlined"` shipped 14/600 #3b6ef5
+  // says otherwise, which is how `variant="outlined"` shipped 14/600 #3b6ef5
   // on every page. One step of blue: invisible in review, and axe found it
   // seven times.
   it('never paints primary.main as type in any component override', () => {
@@ -146,7 +146,7 @@ describe('getTheme — caching', () => {
     expect(getTheme('dark', 'ltr')).toBe(getTheme('dark', 'ltr'))
   })
 
-  // A cache keyed on mode alone would hand an RTL app the LTR theme — the bug
+  // A cache keyed on mode alone would hand an RTL app the LTR theme, the bug
   // the composite key exists to prevent.
   it('keys on both mode and direction', () => {
     const themes = [getTheme('light', 'rtl'), getTheme('light', 'ltr'), getTheme('dark', 'rtl'), getTheme('dark', 'ltr')]
@@ -158,7 +158,7 @@ describe('getTheme — caching', () => {
 describe('getTheme — component overrides', () => {
   // A global `MuiPaper` backdrop-filter once leaked the app-chrome glass into
   // every menu, dialog and select popover. Only the fixed chrome may blur, and
-  // it applies its own — nothing in the theme should.
+  // it applies its own, nothing in the theme should.
   it('puts no backdrop blur on any component', () => {
     for (const mode of ['light', 'dark'] as const) {
       expect(JSON.stringify(getTheme(mode, 'rtl').components ?? {}), mode).not.toContain('backdropFilter')
@@ -175,7 +175,7 @@ describe('getTheme — component overrides', () => {
   })
 })
 
-// The typography variants are the design's type ramp — sizes, not outline
+// The typography variants are the design's type ramp, sizes, not outline
 // levels. MUI's default mapping renders `h5` as a real `<h5>`, so a card title
 // that only wanted 16/600 skipped two heading levels under the page's `<h2>`;
 // axe's `heading-order` reported it 82 times across the suite. Nothing about
@@ -201,7 +201,7 @@ describe('getTheme — typography maps size onto the right element', () => {
   })
 
   // `numberLarge` is the 32px figure and the `subtitle` pair are field labels
-  // and row values. MUI would make all three headings — `subtitle1`/`subtitle2`
+  // and row values. MUI would make all three headings, `subtitle1`/`subtitle2`
   // default to `<h6>`, which is where the ledger totals and settings row labels
   // were entering the outline.
   it('keeps figures and labels out of the outline entirely', () => {
@@ -213,7 +213,7 @@ describe('getTheme — typography maps size onto the right element', () => {
   })
 
   // The one heading the app declares by hand. `component` beats the mapping, so
-  // AppShell's `variant="h3" component="h1"` wordmark has to survive it — with
+  // AppShell's `variant="h3" component="h1"` wordmark has to survive it, with
   // no `<h1>` there is no document outline to be ordered in the first place.
   it('leaves h1 to be claimed explicitly, never by a variant', () => {
     expect(Object.values(mapping())).not.toContain('h1')

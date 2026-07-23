@@ -119,7 +119,7 @@ describe('updateProfileMutation', () => {
 })
 
 // The "erase everything" button. What matters is that it leaves nothing behind
-// — a stale profile surviving a wipe would print the previous owner's name and
+//, a stale profile surviving a wipe would print the previous owner's name and
 // national ID on the next certificate this browser produces.
 describe('clearAllDataMutation', () => {
   it('removes every receipt and client and resets the settings', async () => {

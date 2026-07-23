@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 // The app DEFAULTS to Persian, so a gap in the fa-IR catalog is not a missing
-// translation — it is an English string on an Iranian user's screen, shipped.
+// translation, it is an English string on an Iranian user's screen, shipped.
 // Nothing in the build fails when that happens: lingui falls back to the
 // message id, and because English is the source locale those ids ARE English.
 //
@@ -27,7 +27,7 @@ interface Entry {
  * obsolete entries dropped.
  *
  * The plural forms are read even though the catalog holds none today. Matching
- * only `msgstr ` — with the trailing space — silently DISCARDED any entry
+ * only `msgstr `, with the trailing space, silently DISCARDED any entry
  * written as `msgstr[0]`, so the first `plural` macro anyone adds would have
  * reopened the exact hole these tests exist to close: an untranslated string
  * shipping to a Persian screen with nothing failing.
@@ -103,7 +103,7 @@ const parseCatalog = (source: string): Entry[] => {
 
 const entries = parseCatalog(readFileSync(CATALOG, 'utf8'))
 
-/** `{0}`, `{name}` — the values the sentence is actually about. */
+/** `{0}`, `{name}`, the values the sentence is actually about. */
 const placeholders = (message: string): string[] => [...message.matchAll(/\{([a-zA-Z0-9_]+)\}/g)].map((match) => match[1]).sort()
 
 /** What every form of a translation has to carry: the singular's names, plus the plural's. */

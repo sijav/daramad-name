@@ -27,7 +27,7 @@ import { MonthlyIncomeChart } from './MonthlyIncomeChart'
 
 /**
  * Scenario 4, laid out to the design's `Charts/Desktop/RTL`: a full-width bar
- * chart, then two equal columns — the donut with its insight callout beneath,
+ * chart, then two equal columns, the donut with its insight callout beneath,
  * beside the ranked client list.
  */
 export const ChartsPage = () => {
@@ -60,8 +60,8 @@ export const ChartsPage = () => {
 
   // A read that failed is not a year with nothing in it. Falling through to the
   // empty state would tell a user with three years of receipts to record their
-  // first one, and a Dexie failure — a blocked upgrade, a full quota, private
-  // browsing — is exactly the case where that is most alarming.
+  // first one, and a Dexie failure, a blocked upgrade, a full quota, private
+  // browsing, is exactly the case where that is most alarming.
   //
   // Either query failing takes the whole page, because both halves describe the
   // same year: a page that drew the bars but silently lost the concentration

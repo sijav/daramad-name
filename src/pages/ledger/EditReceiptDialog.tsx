@@ -13,7 +13,7 @@ export interface EditReceiptDialogProps {
 }
 
 /**
- * Edit dialog. Mounted only while a receipt is selected — `useReceiptForm`
+ * Edit dialog. Mounted only while a receipt is selected, `useReceiptForm`
  * seeds its state once on mount, so a fresh mount per receipt is what keeps the
  * form in sync without an effect watching the prop.
  */

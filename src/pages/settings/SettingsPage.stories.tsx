@@ -25,7 +25,7 @@ export const BackupSurvivesAWipe: Story = {
 
     // Wait for a rendered Persian label before touching any mutation. The
     // backup path validates through `i18n._()`, and Lingui THROWS rather than
-    // falling back when no locale is active yet — in the app that cannot happen
+    // falling back when no locale is active yet, in the app that cannot happen
     // because routes are gated behind `localeReady`, but a story mounts the
     // page directly and the play function can outrun activation.
     const eraseButton = await canvas.findByRole('button', { name: /^پاک کردن همه$|^Erase all$/ })
@@ -51,7 +51,7 @@ export const BackupSurvivesAWipe: Story = {
 
     await step('every field came back, not just the row count', async () => {
       const after = (await db.receipts.toArray()).sort((left, right) => left.id.localeCompare(right.id))
-      // Frozen rates and stored Toman equivalents especially — those are the
+      // Frozen rates and stored Toman equivalents especially, those are the
       // fields nothing downstream can reconstruct if they are lost.
       await expect(after).toEqual(before)
     })
@@ -99,7 +99,7 @@ export const DisplayPreferencesPersist: Story = {
     /**
      * The pill on this very page is the one control the calendar switch can
      * break. Its year is a number IN a calendar, while its options are
-     * re-derived from the receipts in the NEW one — so a stale «۱۴۰۵» is simply
+     * re-derived from the receipts in the NEW one, so a stale «۱۴۰۵» is simply
      * absent from a Gregorian list, MUI drops the value, and the pill renders
      * empty on the screen that just changed it.
      */

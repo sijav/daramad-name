@@ -49,7 +49,7 @@ export const monthIndexOf = (date: Date, calendar: CalendarSystem): number =>
 
 /**
  * The full year as an inclusive instant range. Jalali years start at Farvardin
- * 1, not January — the edge case the brief calls out explicitly.
+ * 1, not January, the edge case the brief calls out explicitly.
  */
 export const yearRange = (year: number, calendar: CalendarSystem): DateRange => {
   if (calendar === 'JALALI') {
@@ -92,7 +92,7 @@ export const monthBucketsOfYear = (year: number, calendar: CalendarSystem): Date
 /**
  * How many calendar months a range spans, minimum 1.
  *
- * Prefer `averagingPeriod` for anything the user sees — this is the raw span
+ * Prefer `averagingPeriod` for anything the user sees, this is the raw span
  * and does not clamp a range that runs into the future.
  */
 export const monthsSpanned = (range: DateRange, calendar: CalendarSystem): number => {
@@ -109,7 +109,7 @@ export const monthsSpanned = (range: DateRange, calendar: CalendarSystem): numbe
  * One definition, used by the report, the ledger and the dashboard alike:
  * total ÷ the calendar months of the period on screen, where that period never
  * runs past today, minimum one month. Each surface prints the divisor beside
- * the figure — an average whose basis is unstated is exactly the number a
+ * the figure, an average whose basis is unstated is exactly the number a
  * clerk throws the whole document out over.
  *
  * Two live bugs came from not having this in one place. The ledger divided by
@@ -131,14 +131,14 @@ export const averagingPeriod = (range: DateRange, calendar: CalendarSystem): { r
   return { range: clamped, months: monthsSpanned(clamped, calendar) }
 }
 
-/** «۱۴۰۴/۰۵/۲۳» — the ledger's date column. */
+/** «۱۴۰۴/۰۵/۲۳», the ledger's date column. */
 export const formatDate = (iso: string, calendar: CalendarSystem, persianDigits = true): string => {
   const date = new Date(iso)
   const formatted = calendar === 'JALALI' ? formatJalali(date, 'yyyy/MM/dd') : formatGregorian(date, 'yyyy/MM/dd')
   return persianDigits ? toPersianDigits(formatted) : formatted
 }
 
-/** «۲۳ مرداد ۱۴۰۴» — for report headers and the receipt detail. */
+/** «۲۳ مرداد ۱۴۰۴», for report headers and the receipt detail. */
 export const formatDateLong = (iso: string, calendar: CalendarSystem, i18n: I18n, persianDigits = true): string => {
   const date = new Date(iso)
   const day = calendar === 'JALALI' ? formatJalali(date, 'd') : formatGregorian(date, 'd')
@@ -148,7 +148,7 @@ export const formatDateLong = (iso: string, calendar: CalendarSystem, i18n: I18n
   return `${digits(day)} ${month} ${digits(year)}`
 }
 
-/** Gregorian, Latin digits — the English report must not use Persian digits. */
+/** Gregorian, Latin digits, the English report must not use Persian digits. */
 export const formatDateEnglish = (iso: string): string => formatGregorian(new Date(iso), 'dd MMM yyyy')
 
 /** True when the instant falls on today's date, used to decide the rate-field wording. */
@@ -158,14 +158,14 @@ export const isToday = (iso: string): boolean => {
   return date >= startOfDay(now) && date <= endOfDay(now)
 }
 
-/** The calendar day `at` falls in, as a range — "what came in today". */
+/** The calendar day `at` falls in, as a range, "what came in today". */
 export const dayRange = (at: Date): DateRange => ({
   from: startOfDay(at).toISOString(),
   to: endOfDay(at).toISOString(),
 })
 
 /**
- * «۱ فروردین تا ۲۹ اسفند ۱۴۰۵» — a range with the repeated parts dropped.
+ * «۱ فروردین تا ۲۹ اسفند ۱۴۰۵», a range with the repeated parts dropped.
  *
  * The design prints the year once when both ends share it, and drops the month
  * from the opening date when they share that too. Writing «۱۴۰۵» twice in one

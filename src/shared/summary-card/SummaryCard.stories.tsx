@@ -12,12 +12,12 @@ import { SummaryCard } from './SummaryCard'
 // t`Total income``.
 //
 // The sample copy is read from the catalog rather than written into `args`, so
-// the Language toolbar still switches it — but a reader who types into Controls
+// the Language toolbar still switches it, but a reader who types into Controls
 // has to win, or the panel is decoration. Falling back only on a blank does both.
 
 // Every label here is a message the APP also renders, so it exists in both
 // catalogs. `lingui.config.ts` excludes stories from extraction, so a `t` on a
-// string only this file uses resolves to its English id — and the fa-IR toolbar
+// string only this file uses resolves to its English id, and the fa-IR toolbar
 // setting, which is the default, would show half a row in each language.
 const YEAR = 1404
 

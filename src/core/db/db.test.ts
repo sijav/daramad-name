@@ -7,7 +7,7 @@ import { db, defaultSettings, readSettings, upsertClientByName, writeSettings } 
 //
 // `readSettings` merges over the defaults: a row written before a field existed
 // used to come back without it, and `Intl.NumberFormat(undefined)` fell through
-// to the system locale — an Iranian user saw «649,980,000» where «۶۴۹٬۹۸۰٬۰۰۰»
+// to the system locale, an Iranian user saw «649,980,000» where «۶۴۹٬۹۸۰٬۰۰۰»
 // belonged, with nothing on screen to explain it.
 //
 // `upsertClientByName` folds free-text names together: «آریا» and «آریا » as two
@@ -60,7 +60,7 @@ describe('readSettings', () => {
   })
 
   // The profile gained fullNameEn, passportNumber and addressEn after the first
-  // rows were written. They must arrive as empty strings — the Settings form
+  // rows were written. They must arrive as empty strings, the Settings form
   // binds them to controlled inputs, and undefined makes React swap the field
   // to uncontrolled mid-session.
   it('fills the profile fields a row from an older version does not have, keeping the ones it does', async () => {

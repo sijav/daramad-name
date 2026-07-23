@@ -14,10 +14,10 @@ export type SearchFieldProps = Omit<TextFieldProps, 'value' | 'onChange'> & {
  * `surface-default` with a 1px `border-default` hairline, magnifier on the
  * leading edge.
  *
- * NOT a pill — an earlier pass recorded it as fully rounded, which was wrong;
+ * NOT a pill, an earlier pass recorded it as fully rounded, which was wrong;
  * it shares the 10px radius with the filter button standing next to it.
  *
- * The clear button only appears once there is something to clear — a permanent
+ * The clear button only appears once there is something to clear, a permanent
  * one reads as "this filter is active" even when it is not.
  */
 export const SearchField = ({ value, onValueChange, placeholder, sx, ...props }: SearchFieldProps) => {
@@ -31,7 +31,7 @@ export const SearchField = ({ value, onValueChange, placeholder, sx, ...props }:
       placeholder={placeholder ?? t`Search by client, note or amount`}
       slotProps={{
         // The design draws no label above this field, so a screen reader had
-        // nothing to announce but "edit text" — a placeholder is not an
+        // nothing to announce but "edit text", a placeholder is not an
         // accessible name, and it disappears the moment anything is typed.
         htmlInput: { 'aria-label': t`Search receipts` },
         input: {

@@ -5,8 +5,8 @@ import { getClientsQuery } from './getClients.query'
 
 // Feeds both the ledger's client filter and the top-clients panel. The totals
 // here are the ones a freelancer reads to decide who to chase for work, so
-// attributing income to the wrong client — or losing a client from the list
-// entirely — changes a decision rather than just a display.
+// attributing income to the wrong client, or losing a client from the list
+// entirely, changes a decision rather than just a display.
 
 const client = (id: string, name: string): Client => ({ id, name, nameKey: name.toLowerCase(), createdAt: '2026-01-01T00:00:00.000Z' })
 

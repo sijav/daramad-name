@@ -30,7 +30,7 @@ export const Default: Story = {
     onSelect: fn(),
   },
   // Seeded from `args.value` so the control is live, and the spy is called
-  // alongside the setter — replacing it with `setYear` would leave the Actions
+  // alongside the setter, replacing it with `setYear` would leave the Actions
   // panel silent and the plays with nothing to assert on.
   render: function Render(args) {
     const [year, setYear] = useState(String(args.value))
@@ -70,7 +70,7 @@ export const ShowsTheComposedLabelAndReportsTheChoice: Story = {
       await userEvent.click(trigger)
       await userEvent.click(await body.findByRole('option', { name: '۱۴۰۲' }))
 
-      // A string, because that is what `event.target.value` carries — every
+      // A string, because that is what `event.target.value` carries, every
       // caller converts it back itself.
       await expect(args.onSelect).toHaveBeenLastCalledWith('1402')
       await waitFor(() => expect(trigger).toHaveTextContent('بازه گزارش: ۱۴۰۲'))

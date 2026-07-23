@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { selectableYears } from './selectableYears'
 
 // A year picker is a MUI Select, and a Select whose value is not among its
-// options renders BLANK — no label, no fallback, just an empty pill beside the
+// options renders BLANK, no label, no fallback, just an empty pill beside the
 // figures it is supposed to be describing. `getPopulatedYears` builds its list
 // from the receipts that exist in the current calendar, so three ordinary
 // situations produce exactly that: an empty ledger, a query still in flight,

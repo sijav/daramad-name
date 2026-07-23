@@ -15,7 +15,7 @@ export interface TopCustomersProps {
  *
  * Amounts are shown in millions («۹۹۶ م تومان») because the full figure would
  * wrap at this width. The bar is measured against the LEADER rather than the
- * total — that is what the design's bar widths imply, and it keeps the gaps
+ * total, that is what the design's bar widths imply, and it keeps the gaps
  * between clients readable instead of squashing everything under a dominant
  * first row.
  */
@@ -39,7 +39,7 @@ export const TopCustomers = ({ shares, limit = 5, othersLabel }: TopCustomersPro
             <Typography variant="subtitle1" sx={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {row.clientName}
             </Typography>
-            {/* A row of a ranked list, not an outline entry — the client name
+            {/* A row of a ranked list, not an outline entry, the client name
                 and its amount are data. `h5` is only the size the design draws
                 the amount at, so the element is pinned to `p`. */}
             <Typography variant="h5" component="p" sx={{ color: 'text.secondary', flexShrink: 0, whiteSpace: 'nowrap' }}>

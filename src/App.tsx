@@ -30,7 +30,7 @@ const PageLoader = () => (
 
 /**
  * Everything below the query client, because the active locale and text
- * direction are read from persisted Settings — which is itself a query.
+ * direction are read from persisted Settings, which is itself a query.
  */
 const LocalisedApp = () => {
   const { locale, themePreference } = useSettings()

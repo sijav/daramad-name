@@ -47,7 +47,7 @@ const useCatalog = (locale: AppLocale): boolean => {
 }
 
 /**
- * Components read the locale from persisted Settings, not from lingui — that is
+ * Components read the locale from persisted Settings, not from lingui, that is
  * what drives number formatting, date digits and the picker's font. Seeding the
  * query cache makes the toolbar control those too; without it the labels switch
  * to English while the figures stay Persian.
@@ -76,8 +76,8 @@ const seededClient = (locale: AppLocale, themePreference: ThemePreference, pageD
 
 /**
  * Holds the client in state rather than building it in the decorator's JSX.
- * Calling `seededClient(...)` inline made a new QueryClient — and so a new
- * cache — on every render of the decorator, and `useCatalog` alone renders it
+ * Calling `seededClient(...)` inline made a new QueryClient, and so a new
+ * cache, on every render of the decorator, and `useCatalog` alone renders it
  * twice. Anything a play function wrote (a saved profile, an invalidation after
  * a delete) was silently replaced by the seed on the next render, which reads
  * as a failed mutation rather than a harness bug. Remounted by `key` when the
@@ -110,8 +110,8 @@ const withProviders: Decorator = (Story, context) => {
   }
 
   // The padding keeps a single component off the canvas edge, but a story that
-  // asks for `layout: 'fullscreen'` is proving its own edge-to-edge chrome —
-  // the app shell's fixed top bar, the printable certificate sheet — and 24px
+  // asks for `layout: 'fullscreen'` is proving its own edge-to-edge chrome
+  // the app shell's fixed top bar, the printable certificate sheet, and 24px
   // of decorator inset is exactly what it is trying to show there is none of.
   // `layout` only strips Storybook's own padding, so it cannot reach in here.
   const content =
@@ -124,7 +124,7 @@ const withProviders: Decorator = (Story, context) => {
     )
 
   // Pages call `useNavigate`, so they need a router. It is only added when a
-  // story asks for it — AppShell supplies its own, and nesting two routers
+  // story asks for it, AppShell supplies its own, and nesting two routers
   // would make the inner one unreachable.
   return (
     <I18nProvider i18n={i18n}>
@@ -171,8 +171,8 @@ const preview: Preview = {
     },
   },
   initialGlobals: { locale: 'fa-IR', theme: 'light' },
-  // Every component gets a generated Docs page — props table, description and
-  // rendered source — without each `meta` opting in. The prop tables are only
+  // Every component gets a generated Docs page, props table, description and
+  // rendered source, without each `meta` opting in. The prop tables are only
   // as good as the types and doc comments behind them, which is why the props
   // interfaces carry JSDoc: those comments become the Description column.
   tags: ['autodocs'],
@@ -188,8 +188,8 @@ const preview: Preview = {
     },
     // No `actions.argTypesRegex` here on purpose.
     //
-    // It looked like free coverage — every `onSomething` logging to the Actions
-    // panel without each story wiring a handler — but it is deprecated, and the
+    // It looked like free coverage, every `onSomething` logging to the Actions
+    // panel without each story wiring a handler, but it is deprecated, and the
     // visual-test addon's build ignores it, so a snapshot that depends on an
     // action prop breaks in a way that is very hard to trace back. Args it
     // infers are not spies either, so a play function can never assert on them.

@@ -20,7 +20,7 @@ export interface ConfirmDialogProps {
  *
  * The body is a separate component so MUI unmounts it on close (Dialog does not
  * keep children mounted by default). That resets the typed confirmation word
- * for free — no effect watching `open`, and no way for a previous confirmation
+ * for free, no effect watching `open`, and no way for a previous confirmation
  * to carry over and pre-arm the button.
  */
 export const ConfirmDialog = ({

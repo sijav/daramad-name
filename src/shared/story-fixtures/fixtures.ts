@@ -40,7 +40,7 @@ export const FIXTURE_PROFILE: Profile = {
 /**
  * What Settings holds by default: the name, and nothing else.
  *
- * A component story has no business carrying a national ID around — the fields
+ * A component story has no business carrying a national ID around, the fields
  * that identify a real person only ever appear where the certificate needs
  * them, and the Settings stories type them in themselves when that is the
  * subject.
@@ -121,18 +121,18 @@ export const FIXTURE_SHARES: ClientShare[] = ['Aria Trading', 'Dadepardaz Co.', 
  * reads as invented, and the certificate's «تعداد دریافتی» column is one of the
  * first things a reader checks against the amounts beside it. So about half the
  * months carry a single receipt, several carry two, and a couple of good months
- * carry four or five — with the amounts moving roughly WITH the count, which is
+ * carry four or five, with the amounts moving roughly WITH the count, which is
  * what makes the two columns believable together.
  *
  * How precisely a payment happens to be quoted, and how often that occurs.
  *
- * Real amounts are not uniformly random — their PRECISION follows a power law.
+ * Real amounts are not uniformly random, their PRECISION follows a power law.
  * A round million is ordinary, a half million happens, a hundred thousand is
  * unusual, and landing exactly on a ten thousand is rare enough to notice.
  * Nothing finer exists: nobody is paid ۲۲٬۳۴۷٬۸۹۱.
  *
  * Each month carries its tier so the year scaling can round back onto the SAME
- * step — otherwise the earlier years lose the texture and read as a column of
+ * step, otherwise the earlier years lose the texture and read as a column of
  * arbitrary digits.
  */
 const COMMON = 1_000_000
@@ -172,7 +172,7 @@ export const FIXTURE_MONTHS = (year: number): MonthlyTotal[] => {
   }))
 }
 
-/** Years the demo has history for — back to 1402, which is 2023/24. */
+/** Years the demo has history for, back to 1402, which is 2023/24. */
 export const FIXTURE_YEARS = (year: number): number[] => YEAR_SCALE.map((_, index) => year - index)
 
 export const FIXTURE_CLIENTS = FIXTURE_SHARES.map((s) => ({
@@ -228,7 +228,7 @@ export const seedPageData = (client: QueryClient, { empty = false }: { empty?: b
   // only those, so it can never print a month past today. Seeding the raw year
   // instead produced a certificate that contradicted itself: twelve month rows,
   // four of them carrying income from months that have not happened, all summed
-  // into a total — and then divided by the five months elapsed. That inflates
+  // into a total, and then divided by the five months elapsed. That inflates
   // the average and is indefensible on a page an embassy reads.
   //
   // So the months are cut to the period the same way, and the total is their
@@ -255,7 +255,7 @@ export const seedPageData = (client: QueryClient, { empty = false }: { empty?: b
  *
  * Seeding the query cache is enough for a story that only renders, but not for
  * one that filters: changing a filter changes the query key, the cache misses,
- * and the query falls through to Dexie — which is empty, so the table would go
+ * and the query falls through to Dexie, which is empty, so the table would go
  * blank mid-test and prove nothing. The Storybook browser project runs in real
  * Chromium with real IndexedDB, so scenario tests seed it properly and exercise
  * the actual query.
@@ -280,7 +280,7 @@ const write = async () => {
 
 // A Docs page renders EVERY story of its component at once, so several stories
 // seed the same IndexedDB at the same moment. Run separately their clears and
-// writes interleave — one story's rows land before another's write — and Dexie
+// writes interleave, one story's rows land before another's write, and Dexie
 // rejects the whole batch: «receipts.bulkAdd(): 8 of 8 operations failed.
 // ConstraintError: Key already exists in the object store.»
 //

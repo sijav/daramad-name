@@ -39,7 +39,7 @@ export const InsightCallout = ({ message, tone = 'warning' }: InsightCalloutProp
         backgroundColor: toneColour(tone, theme),
       })}
     />
-    {/* `153:677`: the sentence carries the tone's own colour at 14/600 —
+    {/* `153:677`: the sentence carries the tone's own colour at 14/600
         it is the point of the callout, not body copy inside it. */}
     <Typography variant="subtitle2" sx={(theme) => ({ color: toneColour(tone, theme) })}>
       {message}
@@ -52,13 +52,13 @@ const toneSurface = (tone: InsightTone, theme: Theme): string =>
   tone === 'info' ? theme.palette.brandPrimarySubtle : theme.palette.warning.light
 
 /**
- * One colour for the dot and the sentence — the design draws them as a pair, so
+ * One colour for the dot and the sentence, the design draws them as a pair, so
  * there is nothing for a second accessor to say.
  *
  * On `info` it is `brandPrimary`, not `primary.main`. The sentence is 14/600
  * type on `brand-primary-subtle`: #3b6ef5 measures 3.99:1 there, under the
  * 4.5:1 bar, while #3460d6 reaches 4.99:1. `primary` is the container role in
- * this palette — it never draws type — so the blue an insight speaks in is the
+ * this palette, it never draws type, so the blue an insight speaks in is the
  * brand one.
  */
 const toneColour = (tone: InsightTone, theme: Theme): string => (tone === 'info' ? theme.palette.brandPrimary : theme.palette.warning.main)

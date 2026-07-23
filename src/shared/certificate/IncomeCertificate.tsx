@@ -3,7 +3,7 @@ import type { CertificateModel } from './certificateModel'
 
 // The income certificate, as a page.
 //
-// This one component is both the on-screen preview and the printed sheet —
+// This one component is both the on-screen preview and the printed sheet
 // there is no second renderer to drift from. `@page` gives it real A4
 // geometry, so what the browser prints is what the user sees.
 //
@@ -20,12 +20,12 @@ import type { CertificateModel } from './certificateModel'
 const INK = '#18191b'
 const MUTED = '#494b50'
 // FAINT was #7c7e83, which measured 4.06:1 on the white sheet and 3.75:1 on the
-// TINT box — under the 4.5:1 body-text bar on both, at the SMALLEST type on the
+// TINT box, under the 4.5:1 body-text bar on both, at the SMALLEST type on the
 // page. It carries the footnote, the average basis, the serial label and the
 // «به حروف» label, so the least readable text was also the faintest. Darkened in
 // HSL lightness only (222.9°, 2.7% saturation held, 50% -> 44.5%) by the least
 // that clears 4.5:1 against BOTH backgrounds: now 4.96:1 on #ffffff and 4.58:1
-// on TINT. #707176 also clears, at 4.5006:1 on TINT — a margin thinner than one
+// on TINT. #707176 also clears, at 4.5006:1 on TINT, a margin thinner than one
 // rounding step, which is not a margin.
 const FAINT = '#6e7075'
 const RULE = '#c8cbcf'
@@ -34,7 +34,7 @@ const TINT = '#f4f6fa'
 const BRAND = '#3460d6'
 
 // Nothing on this sheet is set smaller than this. The table header was already
-// 9.5px; the footnote sat at 8.5px, which is 6.4pt on the printed A4 — smaller
+// 9.5px; the footnote sat at 8.5px, which is 6.4pt on the printed A4, smaller
 // than any print style guide allows for a footnote, and this is a document an
 // embassy clerk or a landlord reads on paper. Contrast alone does not rescue
 // type that small, so the three sub-floor sizes come up to meet it.
@@ -115,7 +115,7 @@ export const IncomeCertificate = ({ model, variant = 'page' }: IncomeCertificate
         {model.breakdownTitle}
       </Typography>
 
-      {/* A plain table rather than MUI's — a printed document wants hairlines
+      {/* A plain table rather than MUI's, a printed document wants hairlines
           and a header that repeats across a page break, not hover states. */}
       <Box
         component="table"

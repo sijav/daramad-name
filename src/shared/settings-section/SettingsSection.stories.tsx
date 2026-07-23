@@ -22,7 +22,7 @@ const meta = {
   argTypes: {
     title: { description: "The group's name, rendered as an `h3` so the page is navigable by heading." },
   },
-  // `title` and `children` are both composed inside the render — the copy goes
+  // `title` and `children` are both composed inside the render, the copy goes
   // through the catalog like the settings page's does, and `children` is a tree
   // no control can produce. An empty panel is honest; a panel describing args
   // that are not on screen is not.
@@ -62,7 +62,7 @@ export const DataAndBackup: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement)
 
-    // A section of the settings page, under that page's `h2` — the 16/600 the
+    // A section of the settings page, under that page's `h2`, the 16/600 the
     // design draws is a size, not a level.
     await expect(await canvas.findByRole('heading', { level: 3, name: /^داده‌ها و پشتیبان‌گیری$|^Data and backup$/ })).toBeInTheDocument()
 

@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 export interface SettingRowProps {
   /** What the setting is, in the user's terms. */
   label: string
-  /** What changing it does, or what it costs — a row whose effect is not obvious needs one. */
+  /** What changing it does, or what it costs, a row whose effect is not obvious needs one. */
   description?: string
   /** The control, shown opposite the label. Omitted for statement-only rows. */
   children?: ReactNode
@@ -12,7 +12,7 @@ export interface SettingRowProps {
 
 /**
  * One row of a settings section: label and description on the reading side,
- * the control opposite. Matches the design's `360:829` — 16px inline padding,
+ * the control opposite. Matches the design's `360:829`, 16px inline padding,
  * 14px block, label 14/600, description 12/400.
  */
 export const SettingRow = ({ label, description, children }: SettingRowProps) => (

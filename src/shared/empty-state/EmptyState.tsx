@@ -11,7 +11,7 @@ export interface EmptyStateProps {
 
 /**
  * Rule 6: every page has a designed empty state. Opening the tool for the first
- * time must not be a dead blank screen — it needs a sentence explaining why the
+ * time must not be a dead blank screen, it needs a sentence explaining why the
  * page matters and a button for the first action.
  */
 export const EmptyState = ({ icon, title, description, actionLabel, onAction }: EmptyStateProps) => (

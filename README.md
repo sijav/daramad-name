@@ -47,10 +47,6 @@ What follows from it, and is worth knowing before you rely on it:
 - **Private or incognito windows forget everything** when the window closes,
   including your ledger.
 
-The one capability this costs is a certificate an embassy could verify against
-an issuer, which would need a server to sign it. That trade is recorded in
-[PHASE-NEXT.md](./PHASE-NEXT.md).
-
 ## Running it
 
 ```bash

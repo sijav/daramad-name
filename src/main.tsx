@@ -14,7 +14,7 @@ if (!container) {
 }
 
 // Activate the default catalog before the first paint. `useLocaleSync` then
-// switches to the persisted choice once Settings loads from IndexedDB — this
+// switches to the persisted choice once Settings loads from IndexedDB, this
 // only avoids a flash of English message ids on a cold start.
 await activateLocale(DEFAULT_LOCALE)
 

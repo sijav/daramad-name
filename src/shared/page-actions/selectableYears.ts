@@ -5,7 +5,7 @@
  * CURRENT calendar, so it can legitimately not contain the year on screen: a
  * ledger with nothing in it yet, a query still in flight, or a range chosen
  * before the calendar setting was switched. A MUI Select whose value is absent
- * from its options renders BLANK and warns — and a blank range pill tells the
+ * from its options renders BLANK and warns, and a blank range pill tells the
  * reader nothing about which year the figures beside it belong to.
  *
  * Newest first, matching `getPopulatedYears`, so the list stays in one order

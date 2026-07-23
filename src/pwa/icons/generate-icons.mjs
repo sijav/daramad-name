@@ -9,7 +9,7 @@ import sharp from 'sharp'
 //
 // Deliberately not `@vite-pwa/assets-generator`: it derives every size from one
 // square source, which cannot express the three different framings these icons
-// need — rounded for `any`, edge-to-edge with a shrunken glyph for `maskable`,
+// need, rounded for `any`, edge-to-edge with a shrunken glyph for `maskable`,
 // edge-to-edge at full size for iOS.
 //
 // No `process` and no bare `console` in this file: eslint lints `.mjs` under

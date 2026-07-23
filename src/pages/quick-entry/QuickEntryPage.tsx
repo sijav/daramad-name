@@ -12,8 +12,8 @@ import { QuickEntryAside } from './QuickEntryAside'
 /**
  * Scenario 1: record a receipt in under 15 seconds.
  *
- * Smart defaults do the work — today's date, the last channel, an autofocused
- * amount field — so the fast path is type amount, tab, save.
+ * Smart defaults do the work, today's date, the last channel, an autofocused
+ * amount field, so the fast path is type amount, tab, save.
  */
 export const QuickEntryPage = () => {
   const { t } = useLingui()

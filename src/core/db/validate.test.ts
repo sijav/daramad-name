@@ -6,7 +6,7 @@ import { assertReferencesResolve, assertValidClient, assertValidReceipt, coerceS
 
 // These guards stand between a corrupt backup file and a silently wrong total.
 // A backup is only ever opened when it is the last copy left, so a receipt that
-// restores without its stored Toman value does not fail loudly — it quietly
+// restores without its stored Toman value does not fail loudly, it quietly
 // changes what the user believes they earned, and the certificate built from it
 // carries that number to an embassy.
 //
@@ -74,7 +74,7 @@ describe('assertValidReceipt', () => {
   })
 
   // The freeze is the product's central promise. A foreign-currency receipt
-  // with no rate cannot be re-derived later — the rate that applied on the day
+  // with no rate cannot be re-derived later, the rate that applied on the day
   // is gone.
   it('rejects a foreign-currency receipt with no stored rate', () => {
     expect(() => assertValidReceipt(receipt({ rate: null }), WHERE)).toThrow()
@@ -121,7 +121,7 @@ describe('assertReferencesResolve', () => {
     expect(() => assertReferencesResolve([receipt({ clientId: null })], [], WHERE)).not.toThrow()
   })
 
-  // A dangling reference restores rows that render as «—» and vanish from every
+  // A dangling reference restores rows that render as «, » and vanish from every
   // per-client total, which is scenario 2's entire question.
   it('rejects a receipt pointing at a client the file does not contain', () => {
     expect(() => assertReferencesResolve([receipt({ clientId: 'ghost' })], [client()], WHERE)).toThrow()

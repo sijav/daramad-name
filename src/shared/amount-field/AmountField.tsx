@@ -20,7 +20,7 @@ export interface AmountFieldProps {
  * The design's `Amount Field`: a 72px box holding the amount set large and
  * bold, with the currency name after it on the trailing edge.
  *
- * It is deliberately the biggest control on the record card — the amount is the
+ * It is deliberately the biggest control on the record card, the amount is the
  * one value the user always types, and the 15-second path depends on hitting it
  * without aiming.
  */
@@ -47,8 +47,8 @@ export const AmountField = ({ label, value, currency, onValueChange, error, help
           onValueChange={onValueChange}
           decimals={currencyDecimals[currency]}
           // Forwarded so MUI sets `aria-invalid`. The error state reached the
-          // label and the box border but never the input, so the amount — the
-          // field most likely to be blocking the save — signalled its problem
+          // label and the box border but never the input, so the amount, the
+          // field most likely to be blocking the save, signalled its problem
           // by a red hairline and nothing else.
           error={error}
           autoFocus={autoFocus}

@@ -36,13 +36,13 @@ type ColumnKey = 'date' | 'client' | 'channel' | 'original' | 'toman' | 'actions
  * Scenario 2's ledger.
  *
  * The totals row is inside the same `<Table>` rather than a separate card so it
- * cannot scroll out of sync with the rows it sums — the brief requires the
+ * cannot scroll out of sync with the rows it sums, the brief requires the
  * total to stay visible and to track the active filter.
  *
  * Columns are dropped on narrow screens, which is what the design does: the
  * phone and tablet frames use this same table component and simply hide cells.
  * It rendered all six at a fixed 900px inside a horizontal scroller instead, so
- * on a 390px phone both money columns sat outside the frame — an income ledger
+ * on a 390px phone both money columns sat outside the frame, an income ledger
  * showing everything except the income.
  */
 export const LedgerTable = ({ receipts, summary, sort, filtered = false, onSortChange, onView, onEdit, onDelete }: LedgerTableProps) => {
@@ -52,7 +52,7 @@ export const LedgerTable = ({ receipts, summary, sort, filtered = false, onSortC
 
   // Phone frame is 390 and tablet is 834, so the cuts land at MUI's sm and md.
   // Tablet keeps Actions and drops Channel and Original amount; the phone drops
-  // Actions too, leaving exactly the three the design shows — date, who paid,
+  // Actions too, leaving exactly the three the design shows, date, who paid,
   // and how much in Toman.
   const showActions = useMediaQuery(theme.breakpoints.up('sm'))
   const showSecondary = useMediaQuery(theme.breakpoints.up('md'))
@@ -198,7 +198,7 @@ export const LedgerTable = ({ receipts, summary, sort, filtered = false, onSortC
                   sx={{
                     whiteSpace: column.key === 'client' ? undefined : 'nowrap',
                     // The design greys the original amount and keeps the Toman
-                    // equivalent in the primary tone — the Toman figure is the
+                    // equivalent in the primary tone, the Toman figure is the
                     // one the row is about.
                     color: column.key === 'original' ? 'text.secondary' : undefined,
                   }}

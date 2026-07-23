@@ -44,7 +44,7 @@ const fromReceipt = (receipt: ReceiptWithClient): ReceiptFormState => ({
  *
  * Also the home of the backdating rule. Scenario 1 asks for "today's rate";
  * scenario 5 records a receipt from two months ago. Combined naively those
- * produce a receipt valued at today's Tether price but dated to Mordad — and
+ * produce a receipt valued at today's Tether price but dated to Mordad, and
  * because the toman value is frozen on save, that error becomes permanent and
  * silently wrong in every total, chart and PDF thereafter.
  *
@@ -84,7 +84,7 @@ export const useReceiptForm = (initial?: ReceiptWithClient) => {
     showErrors: submitted,
     isValid: Object.keys(errors).length === 0,
     needsRate,
-    /** True when the chosen date is not today — the rate field must relabel and warn. */
+    /** True when the chosen date is not today, the rate field must relabel and warn. */
     isBackdated,
     tomanPreview,
     markSubmitted: () => setSubmitted(true),
@@ -92,7 +92,7 @@ export const useReceiptForm = (initial?: ReceiptWithClient) => {
      * Resets for the next entry, keeping the client so a batch is fast to log.
      *
      * The DATE is kept too. Resetting it to today silently undid backdating on
-     * every receipt after the first — which is precisely what this button is
+     * every receipt after the first, which is precisely what this button is
      * for when someone works through a stack of old invoices. The warning
      * disappeared with the date, so the receipts landed in the wrong month and
      * the totals, the charts and the certificate's breakdown were all quietly
@@ -107,7 +107,7 @@ export const useReceiptForm = (initial?: ReceiptWithClient) => {
       }))
       // The submit flag has to go with the values. Without this the emptied
       // amount field is invalid again the instant it clears, so a saved receipt
-      // is answered with a red "enter an amount" on the next one — on the very
+      // is answered with a red "enter an amount" on the next one, on the very
       // button whose job is to make a batch feel uninterrupted.
       setSubmitted(false)
     },

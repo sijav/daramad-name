@@ -1,5 +1,5 @@
 // `beforeinstallprompt` is a Chromium-only extension to the install spec, so it
-// is absent from TypeScript's DOM library — as is `appinstalled`, which every
+// is absent from TypeScript's DOM library, as is `appinstalled`, which every
 // engine that supports installation fires. Both are declared here rather than
 // reached through a cast, which the working agreement forbids.
 //

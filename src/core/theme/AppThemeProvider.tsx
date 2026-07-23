@@ -14,7 +14,7 @@ import { getTheme, type ThemeMode } from './theme'
 //
 // Two caches are built up front and selected by direction; rebuilding a cache
 // on every switch would orphan the styles already injected under the old one.
-// `stylis` is pinned to 4.2.0 in package.json — the copy `@emotion/cache`
+// `stylis` is pinned to 4.2.0 in package.json, the copy `@emotion/cache`
 // bundles. Emotion walks the element tree with its own stylis, so feeding it a
 // `prefixer` from a different major-minor produced elements it could not lift,
 // crashing on every `::placeholder` rule in the app. Keep them in lockstep.

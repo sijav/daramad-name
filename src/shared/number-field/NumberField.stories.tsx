@@ -12,7 +12,7 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 /**
- * Controlled like the form controls it, but the spy from `args` is called too —
+ * Controlled like the form controls it, but the spy from `args` is called too
  * what the field DISPLAYS and what it reports upward are two different things,
  * and only the second one reaches the database.
  */
@@ -83,7 +83,7 @@ export const EditingItsOwnFormattingKeepsTheNumber: Story = {
     await userEvent.click(input)
     await userEvent.keyboard('{End}0')
 
-    // A tenfold error, not a rounding one — this is the failure mode.
+    // A tenfold error, not a rounding one, this is the failure mode.
     await expect(args.onValueChange).toHaveBeenLastCalledWith(125000000)
     await expect(input).toHaveValue('۱۲۵٬۰۰۰٬۰۰۰')
   },

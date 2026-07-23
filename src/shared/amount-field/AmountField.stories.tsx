@@ -26,7 +26,7 @@ type Story = StoryObj<typeof meta>
 
 /**
  * Controlled the way the receipt form controls it, and the spy from `args` is
- * called beside the local setter — what the box DISPLAYS and what it reports
+ * called beside the local setter, what the box DISPLAYS and what it reports
  * upward are two different things, and only the second one reaches the
  * database.
  */

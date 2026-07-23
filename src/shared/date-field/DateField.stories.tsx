@@ -60,7 +60,7 @@ export const IsNamedForScreenReaders: Story = {
     })
 
     await step('and each section is named in the interface language', async () => {
-      // From MUI X's own faIR catalogue, via `localeText` — not from ours.
+      // From MUI X's own faIR catalogue, via `localeText`, not from ours.
       await expect(await canvas.findByRole('spinbutton', { name: 'سال' })).toBeInTheDocument()
       await expect(await canvas.findByRole('spinbutton', { name: 'ماه' })).toBeInTheDocument()
       await expect(await canvas.findByRole('spinbutton', { name: 'روز' })).toBeInTheDocument()
@@ -76,7 +76,7 @@ export const IsNamedForScreenReaders: Story = {
 
 // A whole month that is unambiguously in the future, whenever the story runs.
 // Seeding from today and hunting for a later day in the same grid breaks on the
-// last day of a Jalali month — the flake the fixed date below already documents.
+// last day of a Jalali month, the flake the fixed date below already documents.
 const NEXT_YEAR = (() => {
   const date = new Date()
   date.setFullYear(date.getFullYear() + 1)
@@ -144,7 +144,7 @@ export const WithError: Story = {
 export const PickingADayReportsAnIsoInstant: Story = {
   // A FIXED date, deliberately. Seeding from `new Date()` made this pass or
   // fail depending on the day it ran: `disableFuture` disables everything after
-  // today, so on the 1st of a Jalali month the only enabled day IS the 1st —
+  // today, so on the 1st of a Jalali month the only enabled day IS the 1st
   // already selected, and clicking it fires no change. It broke exactly once a
   // month and looked like flake.
   args: { label: 'Date received', value: '2026-05-15T00:00:00.000Z', onValueChange: fn() },
@@ -183,7 +183,7 @@ export const EnglishKeepsTheJalaliCalendar: Story = {
     // Jalali components, in the enUS field order the adapter's locale sets.
     await expect(field(canvasElement).value).toBe('04/31/1405')
 
-    // The picker's announced copy follows the LANGUAGE, not the calendar — the
+    // The picker's announced copy follows the LANGUAGE, not the calendar, the
     // Jalali adapter is still in charge, but nothing is spoken in Persian.
     await expect(await canvas.findByRole('spinbutton', { name: 'Year' })).toBeInTheDocument()
 

@@ -7,7 +7,7 @@ import { dirname, resolve } from 'node:path'
 //
 // `storybook dev` reads `--port` and `SBCONFIG_PORT` but NOT `PORT`, so a
 // harness that assigns a free port through `PORT` is ignored and Storybook
-// takes 6006 regardless — which fails outright when something already holds it.
+// takes 6006 regardless, which fails outright when something already holds it.
 // (Upstream: storybookjs/storybook#35257.)
 //
 // A wrapper rather than an inline `SBCONFIG_PORT=$PORT` prefix, because npm
@@ -21,7 +21,7 @@ const require = createRequire(import.meta.url)
 // instead of escaped; going straight to the entry removes the shell entirely.
 //
 // The path comes from the package's own `bin` field. Resolving the file
-// directly is not possible — Storybook's `exports` map does not expose it, and
+// directly is not possible, Storybook's `exports` map does not expose it, and
 // `require.resolve` refuses any subpath the map omits.
 const manifestPath = require.resolve('storybook/package.json')
 const { bin } = JSON.parse(readFileSync(manifestPath, 'utf8'))
@@ -30,7 +30,7 @@ const entry = resolve(dirname(manifestPath), typeof bin === 'string' ? bin : bin
 // The Vitest addon runs the whole browser suite INSIDE this process, so the
 // Storybook dev server needs the same headroom the CLI wrapper gives Vitest.
 // Without it a full run from the Testing panel climbs from ~400 MB to Node's
-// ~4.2 GB default ceiling and takes the dev server down with it — observed at
+// ~4.2 GB default ceiling and takes the dev server down with it, observed at
 // around 66 of 252 tests, reported to the user as "connection lost".
 //
 // SEE TECH-DEBT.md. A mitigation, not a fix: the growth is real, this only

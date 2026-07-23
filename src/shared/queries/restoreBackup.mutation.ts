@@ -16,7 +16,7 @@ import type { BackupFile, Client, Receipt } from 'src/shared/types'
  *
  * Replace, not merge: merging would need identity rules for "the same receipt"
  * that do not exist, and would silently double someone's income if they
- * restored the same file twice — the worst possible failure for a tool whose
+ * restored the same file twice, the worst possible failure for a tool whose
  * entire value is an accurate total.
  *
  * The file is validated before anything is deleted, so a malformed file leaves

@@ -32,7 +32,7 @@ import { averagingPeriod, monthIndexOf, monthNames, yearOf, yearRange } from 'sr
 import { RecentReceipts } from './RecentReceipts'
 
 /**
- * «نمای کلی» — the landing page added in the redesign.
+ * «نمای کلی», the landing page added in the redesign.
  *
  * It answers the three questions a freelancer opens the tool with (how much
  * this year, where did it come from, what came in recently) and then points at
@@ -65,7 +65,7 @@ export const DashboardPage = () => {
   // Sum the SAME months the average divides by.
   //
   // Summing all twelve buckets while dividing by the clamped count inflates the
-  // average by however much sits in months that have not happened — the exact
+  // average by however much sits in months that have not happened, the exact
   // defect `getLedger.query.ts` records having fixed twice. Future-dated
   // receipts are reachable (the form allows any date), so this is not
   // hypothetical.
@@ -79,7 +79,7 @@ export const DashboardPage = () => {
   // The design's fourth card is the CURRENT month, not a count of active ones.
   //
   // The bucket comes out of whichever year is picked, so on a past year it is
-  // that year's Mordad rather than this one. The label says so instead — a
+  // that year's Mordad rather than this one. The label says so instead, a
   // figure headed "this month" that is not this month is exactly the number
   // someone copies onto a form. The neighbouring cards already name their year.
   const currentMonth = monthIndexOf(new Date(), calendar) + 1

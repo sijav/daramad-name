@@ -5,7 +5,7 @@ import { radius } from 'src/core/theme'
 export interface RangeSelectOption {
   /** Matched against `RangeSelectProps.value`, so both sides must be the same type. */
   value: number | string
-  /** Already formatted for display — the caller owns the digits and the calendar. */
+  /** Already formatted for display, the caller owns the digits and the calendar. */
   label: string
 }
 
@@ -23,7 +23,7 @@ export interface RangeSelectProps extends Omit<SelectProps<string>, 'onChange' |
  *
  * Everything positional here is written as a PHYSICAL property on purpose. The
  * stylis RTL plugin mirrors `right`/`paddingRight` in the generated CSS, so
- * authoring LTR values lands the chevron on the left in Persian — which is
+ * authoring LTR values lands the chevron on the left in Persian, which is
  * where the design puts it. Two earlier attempts got this wrong: a logical
  * `insetInlineStart` fought MUI's own `right` and hid the glyph, and moving the
  * icon into `renderValue` put it on the right, because the first child of a
@@ -32,7 +32,7 @@ export interface RangeSelectProps extends Omit<SelectProps<string>, 'onChange' |
 export const RangeSelect = ({ value, options, onSelect, prefix, sx, ...props }: RangeSelectProps) => (
   <Select
     // The pill draws no label of its own, and `role="combobox"` does not take
-    // its name from its contents — so the control announced nothing at all
+    // its name from its contents, so the control announced nothing at all
     // (axe: `aria-input-field-name`, serious). `prefix` is already the label
     // the design prints inside the pill, so naming the control with it also
     // keeps the visible text and the accessible name in agreement.

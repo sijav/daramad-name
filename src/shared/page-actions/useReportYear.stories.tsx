@@ -9,7 +9,7 @@ import { useReportYear } from './useReportYear'
 // Switching the calendar in Settings is the case that used to break: the year
 // state was seeded once at mount, so it kept saying «۱۴۰۵» while the populated
 // years had been re-derived as `2026`. MUI logged an out-of-range value and the
-// range pill rendered EMPTY — on a screen whose whole job is to say which year
+// range pill rendered EMPTY, on a screen whose whole job is to say which year
 // the figures belong to.
 //
 // Two things are asserted here, and the second is the one that matters: the

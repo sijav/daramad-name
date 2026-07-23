@@ -87,7 +87,7 @@ export const RecordsAReceipt: Story = {
       await expect(saved.rate).toBeNull()
       await expect(saved.amountToman).toBe(5_000_000)
       await expect(saved.channel).toBe('REMITTANCE')
-      // Defaulted, not typed — the 15-second path depends on it being today.
+      // Defaulted, not typed, the 15-second path depends on it being today.
       await expect(saved.occurredAt.slice(0, 10)).toBe(new Date().toISOString().slice(0, 10))
 
       const client = await db.clients.get(saved.clientId ?? '')
@@ -124,7 +124,7 @@ export const SaveAndNextKeepsTheClient: Story = {
 
       const receipts = await db.receipts.toArray()
       await expect(receipts.map((receipt) => receipt.amountToman).sort((left, right) => left - right)).toEqual([800_000, 1_200_000])
-      // One client, not two — a duplicate would split Aria Trading's totals.
+      // One client, not two, a duplicate would split Aria Trading's totals.
       await expect(await db.clients.count()).toBe(1)
       await expect(new Set(receipts.map((receipt) => receipt.clientId)).size).toBe(1)
     })
@@ -156,7 +156,7 @@ export const TodayPanelCountsOnlyToday: Story = {
       await expect(await canvas.findByText(/^۵٬۰۰۰٬۰۰۰ تومان$|^5,000,000 Toman$/)).toBeInTheDocument()
       await expect(await canvas.findByText(/^۲ دریافتی$|^2 receipts$/)).toBeInTheDocument()
       // The 40-day-old receipt is outside today and must not appear anywhere in
-      // the panel — not in the total, and not as the "last receipt".
+      // the panel, not in the total, and not as the "last receipt".
       await expect(canvas.queryByText(/۹۹٬۰۰۰٬۰۰۰|99,000,000/)).toBeNull()
     })
 

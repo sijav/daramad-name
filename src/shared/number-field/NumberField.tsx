@@ -7,7 +7,7 @@ import { formatNumber, parseUserNumber, toEnglishDigits } from 'src/shared/utils
 export type NumberFieldProps = Omit<TextFieldProps, 'value' | 'onChange' | 'type'> & {
   value: number | null
   onValueChange: (value: number | null) => void
-  /** Decimal places allowed. 0 forces integers — toman has no sub-unit. */
+  /** Decimal places allowed. 0 forces integers, toman has no sub-unit. */
   decimals?: number
   /** Shows thousands separators while typing. */
   grouped?: boolean
@@ -15,7 +15,7 @@ export type NumberFieldProps = Omit<TextFieldProps, 'value' | 'onChange' | 'type
 
 /**
  * Numeric input that accepts Persian *and* English keyboards and normalises on
- * change — rule 3 of the brief.
+ * change, rule 3 of the brief.
  *
  * Deliberately NOT `<input type="number">`: that control rejects Persian digits
  * outright, so a user typing «۲۵۰۰» on a Persian keyboard would see nothing
@@ -48,8 +48,8 @@ export const NumberField = ({ value, onValueChange, decimals = 0, grouped = true
     // Report the value the field is SHOWING, not the raw parse.
     //
     // Rounding the display while reporting the unrounded number meant a field
-    // reading «۱٫۵۶» stored 1.555, and every surface afterwards — the ledger,
-    // the drawer, the certificate — printed 1.56 beside a Toman figure derived
+    // reading «۱٫۵۶» stored 1.555, and every surface afterwards, the ledger,
+    // the drawer, the certificate, printed 1.56 beside a Toman figure derived
     // from 1.555. Nothing downstream could detect the mismatch, because the
     // stored value looked plausible.
     const shown = parsed === null ? null : Number(parsed.toFixed(countDecimals(normalised, decimals)))
@@ -78,7 +78,7 @@ export const NumberField = ({ value, onValueChange, decimals = 0, grouped = true
           ...props.slotProps?.htmlInput,
           inputMode: 'decimal',
           dir: 'ltr',
-          // Merged, not replaced — callers (AmountField) set their own type
+          // Merged, not replaced, callers (AmountField) set their own type
           // scale here and would otherwise lose it.
           style: {
             textAlign: 'right',

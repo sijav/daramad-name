@@ -56,7 +56,7 @@ export const DateField = ({ label, value, onValueChange, disableFuture = true, e
               error,
               slotProps: {
                 // The editable sections sit inside `role="group"`, and a group
-                // is NOT a labelable element — the `<label>` `Field` wraps
+                // is NOT a labelable element, the `<label>` `Field` wraps
                 // everything in therefore names the picker's hidden input and
                 // nothing else, leaving the visible group anonymous. MUI X
                 // only wires `aria-labelledby` itself when the field is given
@@ -64,13 +64,13 @@ export const DateField = ({ label, value, onValueChange, disableFuture = true, e
                 // the association is spelled out here.
                 //
                 // Without it a screen reader announced three unattached spin
-                // buttons — "year", "month", "day" — with no way to tell the
+                // buttons, "year", "month", "day", with no way to tell the
                 // ledger's «from» filter from its «to».
                 input: { 'aria-labelledby': labelId },
               },
               // v9 renders the field as a section list, not a plain <input>.
               // The inner section spans carry their OWN font-family from the
-              // theme's typography, so inheriting from the root is not enough —
+              // theme's typography, so inheriting from the root is not enough
               // each span has to be named or the digits stay Latin.
               sx: [
                 {
@@ -85,7 +85,7 @@ export const DateField = ({ label, value, onValueChange, disableFuture = true, e
                   },
                 },
                 // An empty picker shows its «YYYY/MM/DD» template through MUI's
-                // placeholder opacity (0.42), which lands the hint at 2.7:1 —
+                // placeholder opacity (0.42), which lands the hint at 2.7:1
                 // below the 4.5:1 WCAG asks for, on the one control the ledger
                 // filter opens with. Every other input in the app already
                 // renders its placeholder as solid `text.secondary` (see the
@@ -123,7 +123,7 @@ export const DateField = ({ label, value, onValueChange, disableFuture = true, e
  * Calendar system and interface language are independent settings, so BOTH
  * adapters are given a locale for BOTH languages.
  *
- * The Jalali adapter still drives the calendar in English — with
+ * The Jalali adapter still drives the calendar in English, with
  * `date-fns-jalali`'s enUS locale, which transliterates the month names
  * ("28 Tir 1405") instead of printing them in Persian script an English reader
  * cannot parse. The Gregorian adapter has the mirror problem: with no locale
@@ -131,7 +131,7 @@ export const DateField = ({ label, value, onValueChange, disableFuture = true, e
  * Gregorian read "July 2026" in a header whose numerals were still Persian.
  *
  * Neither `date-fns` locale emits Persian digits, so MUI X's section
- * measurement — which probes `formatByString(...)` against ASCII '0' — still
+ * measurement, which probes `formatByString(...)` against ASCII '0', still
  * holds either way.
  */
 const adapterProps = (calendar: CalendarSystem, isPersian: boolean) =>
@@ -140,8 +140,8 @@ const adapterProps = (calendar: CalendarSystem, isPersian: boolean) =>
     : { dateAdapter: AdapterDateFns, adapterLocale: isPersian ? faIR : enUS }
 
 /**
- * The picker's OWN copy — section names, the open button, the month arrows, the
- * view switch — comes from MUI X, not from our catalogue.
+ * The picker's OWN copy, section names, the open button, the month arrows, the
+ * view switch, comes from MUI X, not from our catalogue.
  *
  * It is announced, not drawn, so it was invisible in review while every one of
  * those strings stayed English in a Persian interface: the three editable

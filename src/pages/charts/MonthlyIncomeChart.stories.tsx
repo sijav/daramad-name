@@ -7,7 +7,7 @@ import { MonthlyIncomeChart } from './MonthlyIncomeChart'
 // NO `role-img-alt` suppression here, unlike the other four chart story files.
 //
 // Theirs is about MUI X's `ChartsAccessibilityProxy`, whose `role="img"` divs
-// are empty at rest. This chart contains no MUI X at all — it is plain boxes,
+// are empty at rest. This chart contains no MUI X at all, it is plain boxes,
 // and the only `role="img"` on the page is the one this component puts on each
 // bar, deliberately paired with the `aria-label` that makes the label legal.
 // Copying the suppression here would switch off the one automated check that

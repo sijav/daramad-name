@@ -99,7 +99,7 @@ export const PageControl = ({ page, pageCount, pageSize, totalCount, onPageChang
           onChange={(event) => onPageSizeChange(Number(event.target.value))}
           // The design gives this select no visible label, so MUI's `Select`
           // rendered a `role="combobox"` with no accessible name at all (axe
-          // `aria-input-field-name`) — a screen reader announced «۲۵ ردیف در
+          // `aria-input-field-name`), a screen reader announced «۲۵ ردیف در
           // صفحه» with nothing saying what it controls.
           //
           // MUI's documented answer when there is no `InputLabel` to point

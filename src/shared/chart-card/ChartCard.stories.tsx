@@ -20,7 +20,7 @@ const meta = {
     children: { control: false },
   },
   // `children` is required by the props but supplied by `View`, whose JSX
-  // children win over anything spread in — so this only satisfies the type.
+  // children win over anything spread in, so this only satisfies the type.
   args: { title: '', subtitle: '', variant: 'chart', children: null },
 } satisfies Meta<typeof ChartCard>
 export default meta
@@ -29,7 +29,7 @@ type Story = StoryObj<typeof meta>
 /**
  * The panel the design puts a chart on: solid `surface-default` with a 1px
  * `border-default` hairline, in one of two treatments. `chart` is the Charts
- * page's componentised panel — 16px, no shadow. `content` is the dashboard's —
+ * page's componentised panel, 16px, no shadow. `content` is the dashboard's
  * 20px with Elevation/1. The Figma file draws the same panel both ways
  * depending on the screen, so the variant follows the call site.
  *
@@ -42,7 +42,7 @@ type Story = StoryObj<typeof meta>
  * Sample copy comes from the catalog so the Language toolbar switches it, and a
  * per-field fallback lets anything typed into Controls override it.
  *
- * `withSubtitle` picks whether the story has a second line AT ALL — an empty
+ * `withSubtitle` picks whether the story has a second line AT ALL, an empty
  * subtitle arg cannot express that, since blank is what "fall back to the
  * sample" means.
  */
@@ -64,7 +64,7 @@ const View = ({ withSubtitle, ...args }: { withSubtitle?: boolean } & ChartCardP
 }
 
 /**
- * The heading is pinned to `h3` in BOTH variants — the variant only picks the
+ * The heading is pinned to `h3` in BOTH variants, the variant only picks the
  * SIZE the design draws it at. Asserted because the `chart` variant's `h5`
  * typography once emitted an actual `<h5>` under the page's `<h2>`, skipping
  * two levels, and the a11y addon's heading-order rule cannot see it in a canvas

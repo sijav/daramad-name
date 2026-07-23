@@ -7,9 +7,9 @@ import { getLedgerQuery, getLedgerQueryKey } from './getLedger.query'
 
 // The ledger answers two questions at once, and only one of them is visible.
 // The table is easy to check by eye; the summary strip above it is not. Its
-// total and its monthly average must describe the rows CURRENTLY filtered —
+// total and its monthly average must describe the rows CURRENTLY filtered
 // scenario 2 is literally "what did this one client pay me over these six
-// months" — and a summary quietly computed over the whole database would answer
+// months", and a summary quietly computed over the whole database would answer
 // something else while looking entirely plausible.
 
 const NOW = new Date('2026-07-22T09:00:00.000Z')
@@ -33,7 +33,7 @@ const receipt = (overrides: Partial<Receipt> & Pick<Receipt, 'id' | 'occurredAt'
 
 const client = (id: string, name: string): Client => ({ id, name, nameKey: name.toLowerCase(), createdAt: '2026-01-01T00:00:00.000Z' })
 
-/** Four receipts across Farvardin–Tir 1405, two clients, three channels. */
+/** Four receipts across Farvardin, Tir 1405, two clients, three channels. */
 const seedLedger = async () => {
   await db.clients.bulkAdd([client('aria', 'Aria'), client('zarin', 'Zarin')])
   await db.receipts.bulkAdd([
@@ -120,7 +120,7 @@ describe('filtering', () => {
     expect(rows.find((row) => row.id === 'tir')?.clientName).toBeNull()
   })
 
-  // A client row deleted while its receipts survive must not blank the table —
+  // A client row deleted while its receipts survive must not blank the table
   // the amount is still real income.
   it('keeps a receipt whose client row has gone missing', async () => {
     await db.receipts.add(receipt({ id: 'orphan', occurredAt: '2026-07-01T12:00:00.000Z', amountToman: 5_000_000, clientId: 'gone' }))
@@ -201,7 +201,7 @@ describe('sorting', () => {
 describe('the monthly average', () => {
   it('counts the quiet months since the last receipt, not just the months that earned', async () => {
     // One receipt, in Farvardin. Read in Tir, that is four months elapsed. The
-    // bug divided by the span between the first and last receipt — one month —
+    // bug divided by the span between the first and last receipt, one month
     // and printed an average four times the report's under the same label.
     await db.receipts.add(receipt({ id: 'farvardin', occurredAt: '2026-03-25T12:00:00.000Z', amountToman: 40_000_000 }))
 
@@ -269,8 +269,8 @@ describe('the monthly average', () => {
   })
 
   // The rows were once read with the RAW filter range while the divisor came
-  // from the CLAMPED one. Pick a range that ends in the future — "this year"
-  // does, for most of the year — and any receipt dated ahead of today counted
+  // from the CLAMPED one. Pick a range that ends in the future, "this year"
+  // does, for most of the year, and any receipt dated ahead of today counted
   // toward the total while contributing no months to the divisor. The ledger
   // reported an average of ۱۱۰٬۰۰۰٬۰۰۰ where the report, for the same period,
   // reported ۱۰٬۰۰۰٬۰۰۰: eleven times apart, under the same label, with

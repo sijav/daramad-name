@@ -6,7 +6,7 @@ import { QuickEntryAside } from './QuickEntryAside'
 // The panel beside the entry form: today's total, today's count, the last
 // receipt, and the recent-client chips.
 //
-// The chips are the part worth testing. They shipped with no `onClick` at all —
+// The chips are the part worth testing. They shipped with no `onClick` at all
 // an outlined chip in a form column reads as tappable, so a user taps one,
 // nothing happens, and they type the name by hand instead. That is also how a
 // duplicate client gets created, which splits that client's totals across the
@@ -34,7 +34,7 @@ export const PickingAClientReportsTheName: Story = {
 
     await userEvent.click(await canvas.findByRole('button', { name: client }))
 
-    // The exact name, not a truncated label — the form matches clients by it.
+    // The exact name, not a truncated label, the form matches clients by it.
     await expect(args.onPickClient).toHaveBeenCalledWith(client)
   },
 }

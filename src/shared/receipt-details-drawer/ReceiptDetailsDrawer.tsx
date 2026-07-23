@@ -38,7 +38,7 @@ export const ReceiptDetailsDrawer = ({ receipt, onClose, onEdit, onDelete }: Rec
       open={receipt !== null}
       onClose={onClose}
       // The drawer's paper IS the `role="dialog"`, and MUI cannot guess its
-      // name — it opened as an unnamed dialog (axe: `aria-dialog-name`,
+      // name, it opened as an unnamed dialog (axe: `aria-dialog-name`,
       // serious), so a screen reader announced "dialog" and left the user to
       // work out what had appeared. Pointing at the heading rather than
       // repeating it in an `aria-label` keeps the two from drifting apart.
@@ -119,7 +119,7 @@ export const ReceiptDetailsDrawer = ({ receipt, onClose, onEdit, onDelete }: Rec
 
 // `component="span"` is load-bearing, not tidiness: MUI maps the `subtitle2`
 // variant onto `<h6>` by default, so every one of these captions was published
-// as a level-6 heading directly under the drawer's `<h3>` — eight fake headings
+// as a level-6 heading directly under the drawer's `<h3>`, eight fake headings
 // in the document outline, and a level jump axe reports as `heading-order`. A
 // caption is not a heading; the block layout is kept with `display: block`.
 const Detail = ({ label, children }: { label: string; children: React.ReactNode }) => (

@@ -7,7 +7,7 @@ import { fontkit, installBidiLayout, toVisualLine } from './bidiText'
 // «۱ فروردین ۵۰۴۱» because the shaper reversed the digit run along with the RTL
 // letters. These assertions read the glyphs the font would DRAW, left to right,
 // and check the digits survive in order. They run in Node against the real
-// Vazirmatn file — the same font the browser embeds.
+// Vazirmatn file, the same font the browser embeds.
 
 const fontPath = fileURLToPath(new URL('../../../node_modules/vazirmatn/fonts/ttf/Vazirmatn-Regular.ttf', import.meta.url))
 const font = fontkit.create(readFileSync(fontPath)) as { layout: (text: string) => { glyphs: { codePoints: number[] }[] } }
@@ -57,8 +57,8 @@ describe('installBidiLayout', () => {
 
   // pdfkit hands over one word WITH its trailing space and places the next word
   // straight after it. If the reversal carries that space to the front, the gap
-  // lands on the wrong side of the word — «۱فروردین» glued, «فروردین  ۱۴۰۵»
-  // doubled — which is exactly what the printed certificate showed.
+  // lands on the wrong side of the word, «۱فروردین» glued, «فروردین  ۱۴۰۵»
+  // doubled, which is exactly what the printed certificate showed.
   it('keeps a trailing space at the end of the glyph run, not the start', () => {
     const out = drawn('فروردین ')
 
@@ -74,7 +74,7 @@ describe('installBidiLayout', () => {
   })
 })
 
-// pdfkit draws one WORD at a time, left to right, in the order it is given — so
+// pdfkit draws one WORD at a time, left to right, in the order it is given, so
 // a right-to-left sentence printed as-is comes out with every word shaped
 // correctly and the words themselves backwards. `toVisualLine` puts them where
 // they belong first. These are the exact lines that were reported wrong.

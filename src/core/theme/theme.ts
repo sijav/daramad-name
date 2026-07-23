@@ -83,14 +83,14 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
     components: {
       // The typography ramp above names SIZES, not outline levels: `h5` is the
       // design's `titleSmall` (16/600), and a component reaches for it because
-      // it wants 16px semibold — not because it is the fifth level of the
+      // it wants 16px semibold, not because it is the fifth level of the
       // document. MUI's default mapping renders each variant as the matching
       // tag, so those two ideas were welded together and the outline lost: a
       // settings section title picked `h5` and emitted a real `<h5>` directly
       // under the page's `<h2>`, which is axe's `heading-order` (82 findings
       // across the suite, nearly all of them this).
       //
-      // `variantMapping` is MUI's documented answer for exactly this — see
+      // `variantMapping` is MUI's documented answer for exactly this, see
       // mui.com/material-ui/react-typography/#changing-the-semantic-element.
       // It moves the decision to one place instead of asking every call site to
       // remember `component`, and `component` still wins wherever a component
@@ -102,8 +102,8 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
       //   h2  the page title (PageHeader)
       //   h3  a section or card title inside the page
       // so the four title sizes all land on `h3`, and the two ramp entries that
-      // are figures rather than titles — `h1`/`numberLarge`, and the `subtitle`
-      // pair, which this app uses for field labels and row values — land on
+      // are figures rather than titles, `h1`/`numberLarge`, and the `subtitle`
+      // pair, which this app uses for field labels and row values, land on
       // `p`. MUI merges a partial map over its own defaults, so `body*`,
       // `caption` and `overline` keep their normal elements.
       //
@@ -112,10 +112,10 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
       MuiTypography: {
         defaultProps: {
           variantMapping: {
-            // `numberLarge` — the 32px figure on the charts page and the daily
+            // `numberLarge`, the 32px figure on the charts page and the daily
             // total in Quick Entry. A number is not a heading.
             h1: 'p',
-            // `headingMedium` — the page title, the one place the level and the
+            // `headingMedium`, the page title, the one place the level and the
             // size agree.
             h2: 'h2',
             h3: 'h3',
@@ -138,14 +138,14 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
             height: controlHeight.large,
             paddingInline: '24px',
             // Written out rather than using `disableElevation`, which emits its
-            // own `box-shadow: none` that no override could beat — it swallowed
+            // own `box-shadow: none` that no override could beat, it swallowed
             // the focus ring's separation shadow at any specificity. Same flat
             // result, but now the rule below can win.
             boxShadow: 'none',
             '&:hover, &:active': { boxShadow: 'none' },
             // The sheet draws focus as two rings: a 2px `surface-default`
             // separation hugging the pill, then a 2px `border-focus` outside
-            // it. `outline-offset` produces the same result with one ring —
+            // it. `outline-offset` produces the same result with one ring
             // the 2px gap shows the page, which IS `surface-default`
             // everywhere a button sits. A box-shadow separation ring was tried
             // first and could not be made to stick: something in MUI's own
@@ -181,7 +181,7 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
             },
           },
           {
-            // The tonal button beside it — "گزارش درآمد" on the ledger header.
+            // The tonal button beside it, "گزارش درآمد" on the ledger header.
             props: { variant: 'contained' as const, color: 'secondary' as const },
             style: {
               backgroundColor: c.brandPrimarySubtle,
@@ -191,7 +191,7 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
           },
           {
             // Tertiary. The sheet puts the text button on `--brand-primary`
-            // too — MUI would otherwise resolve it to `primary.main` #3b6ef5,
+            // too, MUI would otherwise resolve it to `primary.main` #3b6ef5,
             // the other blue, which is exactly the trap this palette documents.
             props: { variant: 'text' as const, color: 'primary' as const },
             style: {
@@ -201,7 +201,7 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
             },
           },
           {
-            // The secondary button — the year picker in `PageHeader`, "clear
+            // The secondary button, the year picker in `PageHeader`, "clear
             // filters", "cancel", "download PDF". It was the last route by
             // which `primary.main` reached the screen AS TYPE, and #3b6ef5 is
             // not a colour type can be: 4.39:1 on `surface-default` and 4.21:1
@@ -210,14 +210,14 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
             //
             // The rule the whole palette now follows: **`primary` is a
             // container role.** It fills a background under `primary.dark`, and
-            // it draws non-text marks — a border, a dot, an icon on
-            // `primary.light` — where the bar is 3:1. Anything that is TYPE, or
+            // it draws non-text marks, a border, a dot, an icon on
+            // `primary.light`, where the bar is 3:1. Anything that is TYPE, or
             // a fill with type on top of it, is `brandPrimary`. That is why
             // every `variants` entry above lands on the same blue: filled,
             // tonal, text and now outlined are one ink, and no call site has to
             // remember which.
             //
-            // The border stays `outline` (the `outlined` slot above) — the
+            // The border stays `outline` (the `outlined` slot above), the
             // design edges this button in neutral grey, not in blue.
             props: { variant: 'outlined' as const, color: 'primary' as const },
             style: {
@@ -256,12 +256,12 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
       // MUI X renders its own outlined input, so NOTHING in `MuiOutlinedInput`
       // below reaches the date picker. The visible consequence was the focus
       // ring: the picker resolved it to `primary.main` #3b6ef5 while every
-      // other field in the app focuses in `border-focus` #3460d6 — the two
+      // other field in the app focuses in `border-focus` #3460d6, the two
       // blues, one field apart.
       MuiPickersOutlinedInput: {
         styleOverrides: {
           root: {
-            // The `:not(.Mui-error)` is not decoration — MUI X paints the focus
+            // The `:not(.Mui-error)` is not decoration, MUI X paints the focus
             // colour from a `variants` entry whose selector carries exactly
             // that clause, and a shorter selector here loses on specificity
             // while looking perfectly correct in the source. It also leaves an
@@ -293,7 +293,7 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
             fontWeight: 500,
             // Same story as the segments: `ChipSelect` paints the selected and
             // unselected fills itself, which beats MUI's focus-visible
-            // background — the channel pills took keyboard focus and showed
+            // background, the channel pills took keyboard focus and showed
             // nothing at all.
             //
             // The offset is NEGATIVE so the ring hugs the inside of the pill.
@@ -311,7 +311,7 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
       MuiPaper: {
         styleOverrides: {
           // The design's surface: a flat `surface-default` fill with a 1px
-          // `border-default` hairline. NOT frosted — the earlier glass
+          // `border-default` hairline. NOT frosted, the earlier glass
           // treatment (translucent + 16px backdrop blur) came from a single
           // record card in an older revision, and applying it here put a blur
           // behind every menu, dialog and select popover in the app.
@@ -355,7 +355,7 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
           //
           // This MUST live on MuiOutlinedInput, not MuiInputBase. Emotion emits
           // the inner component's styles first, so an InputBase override lands
-          // BEFORE the `height: 52` above in the same generated class — equal
+          // BEFORE the `height: 52` above in the same generated class, equal
           // specificity, and source order decides. The opt-out silently lost,
           // and the address field's text overflowed its own border by 20px in
           // either direction once it grew past two lines.
@@ -401,7 +401,7 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
       MuiTooltip: {
         styleOverrides: {
           // `225:263`: a dark `text-primary` chip with `surface-default` text,
-          // 8px corners and Elevation/1 — not MUI's translucent grey.
+          // 8px corners and Elevation/1, not MUI's translucent grey.
           tooltip: {
             backgroundColor: c.onSurface,
             color: c.surfaceDefault,
@@ -417,7 +417,7 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
       MuiSelect: {
         styleOverrides: {
           // MUI sizes this slot to one line and centres it, leaving the rest of
-          // the field dead to clicks — and this slot is what opens the menu. It
+          // the field dead to clicks, and this slot is what opens the menu. It
           // fills the field instead, so the whole control is the target.
           select: {
             minHeight: 0,
@@ -464,7 +464,7 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
             '&:last-of-type': { paddingInlineEnd: '20px' },
           },
           // `align="right"` emits `text-align: right`, which the stylis RTL
-          // plugin mirrors — putting figures on the LEFT in Persian. A column
+          // plugin mirrors, putting figures on the LEFT in Persian. A column
           // of numbers reads right-aligned in either direction, so this
           // counter-flips: authoring `left` in RTL makes the plugin emit
           // `right`.

@@ -104,7 +104,7 @@ export const Dark: Story = {
     const canvas = within(canvasElement)
 
     await expect(await canvas.findByTestId('mode')).toHaveTextContent('dark')
-    // The dark brand blue #8fb0ff — lightened so a filled button is legible on
+    // The dark brand blue #8fb0ff, lightened so a filled button is legible on
     // a near-black surface.
     await expect(styleOf(await canvas.findByTestId('filled')).backgroundColor).toBe('rgb(143, 176, 255)')
 
@@ -151,7 +151,7 @@ export const EnglishKeepsTheLayout: Story = {
     await expect(inset.marginLeft).toBe('40px')
     await expect(inset.marginRight).toBe('0px')
 
-    // `<html>` in the other direction too — the document contract `Light`
+    // `<html>` in the other direction too, the document contract `Light`
     // asserts for Persian, so neither half can be lost on its own.
     const root = window.document.documentElement
     await waitFor(async () => {

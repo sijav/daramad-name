@@ -6,8 +6,8 @@ import { expect, fn, userEvent, within } from 'storybook/test'
 import { PageActions, type PageActionsProps } from './PageActions'
 
 // The cluster every page header carries. The pill is a MUI Select, which means
-// it renders NOTHING when its value is absent from its options — no label, no
-// fallback — so the cases where the two can disagree are what this file is
+// it renders NOTHING when its value is absent from its options, no label, no
+// fallback, so the cases where the two can disagree are what this file is
 // about, not the happy path.
 
 const THIS_YEAR = 1405
@@ -76,7 +76,7 @@ export const Default: Story = {
     await step('and picking one moves the pill', async () => {
       await userEvent.click(await body.findByRole('option', { name: 'سال ۱۴۰۴' }))
       await expect(await canvas.findByText('بازه گزارش: سال ۱۴۰۴')).toBeInTheDocument()
-      // The page is told too — a pill that moves without reporting the change
+      // The page is told too, a pill that moves without reporting the change
       // would leave the figures on the year the user just left.
       await expect(args.onYearChange).toHaveBeenCalledWith(THIS_YEAR - 1)
     })

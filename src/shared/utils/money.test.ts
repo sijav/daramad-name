@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { parseUserNumber, toEnglishDigits, toPersianDigits } from './digits'
 import { computeToman, formatNumber } from './money'
 
-// These cover the rules that would be silently, permanently wrong if broken —
+// These cover the rules that would be silently, permanently wrong if broken
 // a wrong total in a financial tool is worse than a crash, because nobody notices.
 
 describe('computeToman — the freeze rule', () => {

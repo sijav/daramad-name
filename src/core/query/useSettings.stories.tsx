@@ -7,7 +7,7 @@ import { useSettings } from './useSettings'
 
 // `useSettings` is read by almost everything: the calendar drives every date on
 // screen, the locale drives every number, the theme drives every colour. It
-// never suspends and never returns undefined — it falls back to the defaults —
+// never suspends and never returns undefined, it falls back to the defaults
 // which is exactly why a mistake here is silent.
 //
 // Two things are worth pinning down: what the very first paint shows a

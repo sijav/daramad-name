@@ -13,8 +13,8 @@ export interface InstallPromptState {
 /**
  * Owns the `beforeinstallprompt` handshake.
  *
- * Chrome fires that event when its installability criteria are met, and — if
- * the event is cancelled — hands the page a one-shot handle to the install
+ * Chrome fires that event when its installability criteria are met, and, if
+ * the event is cancelled, hands the page a one-shot handle to the install
  * dialog. Cancelling it is what suppresses Chrome's own mini-infobar, so the
  * button in Settings becomes the single, predictable way in rather than a
  * second prompt competing with the browser's.
@@ -38,7 +38,7 @@ export const useInstallPrompt = (): InstallPromptState => {
       setDeferredEvent(event)
     }
 
-    // Fired when the install completes — including an install started from
+    // Fired when the install completes, including an install started from
     // Chrome's own omnibox icon, which never goes through `promptInstall`.
     const onAppInstalled = () => {
       setDeferredEvent(null)

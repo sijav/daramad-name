@@ -20,7 +20,7 @@ type Story = StoryObj<typeof meta>
 // Written out is not the same as invented: the figures have to be a document the
 // app could actually emit. The month rows sum to the total, the total over the
 // four months of the period gives the average, and every month of the period has
-// a row — `getIncomeReportQuery` buckets EVERY month in range, including empty
+// a row, `getIncomeReportQuery` buckets EVERY month in range, including empty
 // ones, so a gap here would be a shape production cannot produce. The wording of
 // the two long lines is the catalogue's, verbatim.
 const persian: CertificateModel = {
@@ -92,7 +92,7 @@ const english: CertificateModel = {
     'This statement was produced from receipts the holder recorded themselves in Daramadname. It is a personal record, not a bank or tax authority document, and is intended to be read alongside supporting bank statements.',
 }
 
-/** The document itself — the sheet carries `lang`, which is what identifies it. */
+/** The document itself, the sheet carries `lang`, which is what identifies it. */
 const sheet = (canvasElement: HTMLElement) => canvasElement.querySelector<HTMLElement>('[lang]')
 
 export const Page: Story = {
@@ -109,12 +109,12 @@ export const Page: Story = {
     await expect(await canvas.findByText('۰۰۱۲۳۴۵۶۷۸')).toBeInTheDocument()
     await expect(await canvas.findByText('۱۶۱٬۰۶۵٬۰۰۰ تومان')).toBeInTheDocument()
 
-    // The total, twice — figures and «به حروف». Words cannot be altered by
+    // The total, twice, figures and «به حروف». Words cannot be altered by
     // adding a zero, which is why the second form is on the page at all.
     await expect(await canvas.findByText('۶۴۴٬۲۶۰٬۰۰۰ تومان')).toBeInTheDocument()
     await expect(await canvas.findByText(/ششصد و چهل و چهار میلیون/)).toBeInTheDocument()
 
-    // Every month of the period gets a row — the header plus one per month.
+    // Every month of the period gets a row, the header plus one per month.
     await expect(await canvas.findAllByRole('row')).toHaveLength(persian.months.length + 1)
     await expect(await canvas.findByText('اردیبهشت ۱۴۰۵')).toBeInTheDocument()
     await expect(await canvas.findByText('۱۹۸٬۵۰۰٬۰۰۰ تومان')).toBeInTheDocument()
@@ -124,7 +124,7 @@ export const Page: Story = {
     await expect(await canvas.findByText(/تقسیم بر ۴ ماه این بازه/)).toBeInTheDocument()
     await expect(await canvas.findByText(/نه سند بانکی یا مالیاتی/)).toBeInTheDocument()
 
-    // A4 at 96dpi is 210mm x 297mm — narrower than the container it sits in.
+    // A4 at 96dpi is 210mm x 297mm, narrower than the container it sits in.
     const rect = sheet(canvasElement)!.getBoundingClientRect()
     await expect(Math.round(rect.width)).toBeGreaterThan(780)
     await expect(Math.round(rect.width)).toBeLessThan(800)

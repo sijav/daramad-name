@@ -54,7 +54,7 @@ export const LedgerPage = () => {
   const { data: clients = [] } = useQuery({ queryKey: clientsQueryKey, queryFn: getClientsQuery })
 
   // Search is applied here rather than in the query, so the summary has to come
-  // back through the same call — otherwise the cards and the total band keep
+  // back through the same call, otherwise the cards and the total band keep
   // counting rows the search has already taken off the screen.
   const paged = view.paginate(data?.receipts ?? [], data?.summary ?? EMPTY_SUMMARY)
 

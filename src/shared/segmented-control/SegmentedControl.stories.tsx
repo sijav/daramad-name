@@ -25,7 +25,7 @@ export const Currency: Story = {
     ],
     onValueChange: fn(),
   },
-  // Controlled so the pill moves, but the spy from `args` is called too — a
+  // Controlled so the pill moves, but the spy from `args` is called too, a
   // bare `setValue` here would replace it and every story sharing this render
   // would report nothing to the Actions panel.
   render: function Render(args) {
@@ -83,7 +83,7 @@ export const Disabled: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    // Every segment, not just the unselected ones — a half-disabled group would
+    // Every segment, not just the unselected ones, a half-disabled group would
     // still let the user change the currency.
     for (const name of ['Tether', 'USD', 'Toman']) {
       await expect(await canvas.findByRole('button', { name })).toBeDisabled()
@@ -105,7 +105,7 @@ export const AFocusedSegmentIsRinged: Story = {
     const ring = canvasElement.ownerDocument.defaultView!.getComputedStyle(segment)
     await expect(ring.outlineStyle).toBe('solid')
     await expect(ring.outlineWidth).toBe('2px')
-    // `border-focus` #3460d6 — not `primary.main` #3b6ef5, the other blue.
+    // `border-focus` #3460d6, not `primary.main` #3b6ef5, the other blue.
     await expect(ring.outlineColor).toBe('rgb(52, 96, 214)')
   },
 }

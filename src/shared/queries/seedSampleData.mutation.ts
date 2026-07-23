@@ -8,9 +8,9 @@ import { computeToman } from 'src/shared/utils'
 // Rule 7: one click fills the app with believable Persian data for testing and
 // screenshots. Demo day itself must use the team's own real records.
 //
-// The shape of this data is deliberate — it exercises every scenario:
+// The shape of this data is deliberate, it exercises every scenario:
 //   · mixed currencies with different frozen rates (scenario 1)
-//   · Aria Trading at ~81% of the 649,980,000 total — well past the 50% the
+//   · Aria Trading at ~81% of the 649,980,000 total, well past the 50% the
 //     concentration insight fires on (scenario 4). The amounts and rates are
 //     pinned by seedSampleData.mutation.test.ts, so change them together.
 //   · the month four back left empty, to prove empty months render as zero
@@ -99,7 +99,7 @@ const SAMPLE_RECEIPTS: SampleReceipt[] = [
     channel: 'TETHER',
     note: msg`Final revisions`,
   },
-  // monthsAgo 4 intentionally omitted — the empty-month edge case.
+  // monthsAgo 4 intentionally omitted, the empty-month edge case.
   {
     monthsAgo: 5,
     dayOfMonth: 15,

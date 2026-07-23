@@ -6,7 +6,7 @@ import { expect, userEvent, waitFor, within } from 'storybook/test'
 import { LedgerPage } from './LedgerPage'
 
 // Pagination needs more receipts than a page holds, and the smallest page size
-// is 10 — more than the eight shared fixtures. So these stories add their own
+// is 10, more than the eight shared fixtures. So these stories add their own
 // bulk rows on top of the fixtures and read the table straight out of Dexie.
 //
 // `page` carries only a route here, deliberately: `data: 'full'` would seed the
@@ -112,7 +112,7 @@ export const ChangingPageSizeReturnsToTheFirstPage: Story = {
 
     await step('shrinking the page starts again from the first row', async () => {
       await rowsPerPage(canvasElement, /^۱۰ ردیف در صفحه$|^10 rows per page$/)
-      // Ten per page still HAS a page two (rows 11–20), so staying put would be
+      // Ten per page still HAS a page two (rows 11, 20), so staying put would be
       // silent: the sentence is what distinguishes reset from carried-over.
       await canvas.findByText(/^نمایش ۱ تا ۱۰ از ۲۸ دریافتی$|^Showing 1 to 10 of 28 receipts$/)
       await expect(dataRows(canvasElement)).toHaveLength(10)
@@ -152,7 +152,7 @@ export const ClearAllResetsFilterSearchAndPage: Story = {
       await canvas.findByText(/^نمایش ۱ تا ۱۰ از ۲۸ دریافتی$|^Showing 1 to 10 of 28 receipts$/)
       await expect(canvas.queryByText(/^کانال: دیگر$|^Channel: Other$/)).toBeNull()
       await expect(await canvas.findByRole('textbox', { name: /^جست‌وجو در دریافتی‌ها$|^Search receipts$/ })).toHaveValue('')
-      // The rows-per-page choice is the user's, not part of the filter — it stays.
+      // The rows-per-page choice is the user's, not part of the filter, it stays.
       await waitFor(() => expect(dataRows(canvasElement)).toHaveLength(10))
     })
   },

@@ -1,5 +1,5 @@
 // Design tokens from the Figma design system
-// (DaramadName — Design system, file yW364nD8qVYhXKiOxNBShA).
+// (DaramadName, Design system, file yW364nD8qVYhXKiOxNBShA).
 //
 // The design is Material Design 3, so the names below mirror the
 // `--md-sys-color-*` custom properties in the Figma file rather than MUI's own
@@ -33,7 +33,7 @@ export interface ColorPalette {
   borderDefault: string
   borderStrong: string
   /**
-   * The focus ring. Equal to `brandPrimary` in light, but a role of its own —
+   * The focus ring. Equal to `brandPrimary` in light, but a role of its own
    * without it every focus state falls back to MUI's `primary.main` #3b6ef5,
    * which is the OTHER blue.
    */
@@ -88,7 +88,7 @@ export const lightColors: ColorPalette = {
   surfaceDisabled: '#eeeff1',
   textDisabled: '#626569',
   surfaceSubtle: '#f8f9fb',
-  // blue/40, success/40, warning/40, neutral-variant/60 — the design uses a
+  // blue/40, success/40, warning/40, neutral-variant/60, the design uses a
   // categorical set here, not a single-hue ramp. These keep the Figma tones
   // (#2e9e5b, #e2a400) that `success` and `warning` below had to leave behind:
   // a donut slice is a filled area, not 12px type, so it is not held to 4.5:1.
@@ -97,13 +97,13 @@ export const lightColors: ColorPalette = {
   glassSurface: 'rgba(255, 255, 255, 0.6)',
 
   // The Figma sheet gives success/40 #2e9e5b and warning/40 #e2a400. Both are
-  // used as TEXT on their own container — the success and warning `Tag`, and
-  // the `InsightCallout` sentence — and at that job the design tones fail WCAG
+  // used as TEXT on their own container, the success and warning `Tag`, and
+  // the `InsightCallout` sentence, and at that job the design tones fail WCAG
   // AA outright: #2e9e5b on #eef7f1 measures 3.12:1 and #e2a400 on #fdf7ea an
   // unreadable 2.06:1, against a 4.5:1 requirement for text under 18.66px bold.
   //
   // Both are darkened here with hue and saturation held EXACTLY at the design's
-  // values (146.4°/54.9% and 43.5°/100%) — only HSL lightness drops, 40%→31.5%
+  // values (146.4°/54.9% and 43.5°/100%), only HSL lightness drops, 40%→31.5%
   // and 44.3%→28.2%, the least that clears the bar. That lifts them to 4.74:1
   // and 4.72:1 on their containers, and 5.13:1 / 4.99:1 on `surface-default`.
   //
@@ -111,7 +111,7 @@ export const lightColors: ColorPalette = {
   // app still matches Figma; only the ink on top of them moved.
   //
   // `error` is the same story a third time. The sheet's #dc362e is drawn as
-  // 12px ink — `Field`'s helper line under an invalid input — and as the fill
+  // 12px ink, `Field`'s helper line under an invalid input, and as the fill
   // behind white on the destructive `ConfirmDialog` button. On `surface-subtle`
   // it measures 4.32:1 and white on it 4.44:1, both under 4.5:1. Hue 2.8° and
   // saturation 71.3% are held exactly; only HSL lightness drops, 52.2%→50.0%,
@@ -130,7 +130,7 @@ export const lightColors: ColorPalette = {
 /**
  * Dark palette.
  *
- * NOT in the Figma file — the design system only defines light values, so this
+ * NOT in the Figma file, the design system only defines light values, so this
  * is derived here following MD3's dark guidance: the primary is lightened so it
  * still passes contrast on a dark surface (a #3b6ef5 button on near-black is
  * uncomfortably heavy), containers become dark tones of the same hue, and the
@@ -213,7 +213,7 @@ export const fontFamily = "'Vazirmatn Variable', 'Vazirmatn', system-ui, sans-se
 
 /**
  * Vazirmatn's Farsi-Digits cut: ASCII 0-9 are drawn with Persian glyphs.
- * Used where a control must keep an ASCII DOM value but read as Persian —
+ * Used where a control must keep an ASCII DOM value but read as Persian
  * chiefly the date picker, whose internals parse ASCII digits.
  */
 export const fontFamilyFarsiDigits = "'Vazirmatn FD', 'Vazirmatn Variable', system-ui, sans-serif"
@@ -224,14 +224,14 @@ export const typeScale = {
   headingMedium: { fontSize: 28, fontWeight: 700, lineHeight: 42 / 28 },
   titleLarge: { fontSize: 22, fontWeight: 600, lineHeight: 32 / 22 },
   titleMedium: { fontSize: 18, fontWeight: 600, lineHeight: 30 / 18 },
-  /** FA/Title/Small — chart card headings; also FA/Number/Compact. */
+  /** FA/Title/Small, chart card headings; also FA/Number/Compact. */
   titleSmall: { fontSize: 16, fontWeight: 600, lineHeight: 26 / 16 },
-  /** FA/Label/Medium — the client name beside a share bar. */
+  /** FA/Label/Medium, the client name beside a share bar. */
   labelMedium: { fontSize: 13, fontWeight: 500, lineHeight: 20 / 13 },
-  /** FA/Body/Small — legend labels. */
+  /** FA/Body/Small, legend labels. */
   bodySmall: { fontSize: 13, fontWeight: 400, lineHeight: 22 / 13 },
   labelLarge: { fontSize: 14, fontWeight: 600, lineHeight: 22 / 14 },
-  /** FA/Number/Table — the figure a ledger row is actually about. */
+  /** FA/Number/Table, the figure a ledger row is actually about. */
   numberTable: { fontSize: 14, fontWeight: 600, lineHeight: 24 / 14 },
   bodyLarge: { fontSize: 16, fontWeight: 400, lineHeight: 26 / 16 },
   bodyMedium: { fontSize: 14, fontWeight: 400, lineHeight: 24 / 14 },

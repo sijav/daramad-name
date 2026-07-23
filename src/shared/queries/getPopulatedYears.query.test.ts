@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { getPopulatedYearsQuery, getPopulatedYearsQueryKey } from './getPopulatedYears.query'
 
 // The year picker on the charts and report screens. A year missing from this
-// list is a year of income the user cannot select and therefore cannot report —
+// list is a year of income the user cannot select and therefore cannot report
 // silently, because the dropdown looks complete.
 
 const NOW = new Date('2026-07-22T09:00:00.000Z')
@@ -41,7 +41,7 @@ describe('getPopulatedYearsQuery', () => {
   })
 
   // Receipts six days either side of Nowruz belong to different Jalali years,
-  // and the picker has to offer both — the older one is where the income for
+  // and the picker has to offer both, the older one is where the income for
   // last year's certificate lives.
   it('finds both years across a Farvardin boundary', async () => {
     await db.receipts.bulkAdd([receipt('esfand', '2026-03-15T12:00:00.000Z'), receipt('farvardin', '2026-03-25T12:00:00.000Z')])

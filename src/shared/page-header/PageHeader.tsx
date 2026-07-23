@@ -10,8 +10,8 @@ export interface PageHeaderProps {
 
 /**
  * The page title block. Every screen in the design pairs it with the same
- * leading cluster — a report-range pill and the primary "record a receipt"
- * button — which pages pass in as `action`.
+ * leading cluster, a report-range pill and the primary "record a receipt"
+ * button, which pages pass in as `action`.
  */
 export const PageHeader = ({ title, subtitle, meta, action }: PageHeaderProps) => (
   <Stack

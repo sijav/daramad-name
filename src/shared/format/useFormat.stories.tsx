@@ -11,7 +11,7 @@ const TO = new Date(2026, 7, 15, 12).toISOString()
 /**
  * Every number and date the app prints goes through `useFormat`. This exercises
  * all of it at once, because the failure it guards against is one surface
- * drifting from the others — not the hook being broken outright.
+ * drifting from the others, not the hook being broken outright.
  */
 const FormatSample = () => {
   const { persian, digits, number, amount, date, dateLong, dateRange } = useFormat()

@@ -34,8 +34,8 @@ export default tseslint.config(
       ecmaVersion: 2023,
       globals: { ...globals.browser },
       // Type information lets `lingui/no-unlocalized-strings` skip any string
-      // assigned to a union type — MUI prop unions, sx values and our own
-      // enums — which is what keeps the rule to real copy instead of noise.
+      // assigned to a union type, MUI prop unions, sx values and our own
+      // enums, which is what keeps the rule to real copy instead of noise.
       parserOptions: {
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
@@ -48,7 +48,7 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      // This project has no GraphQL fragment colocation, so the rule is back on —
+      // This project has no GraphQL fragment colocation, so the rule is back on
       // constant exports (label maps, option lists) stay allowed.
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       // Browser globals go through `window.*`, which keeps them mockable and greppable.
@@ -65,7 +65,7 @@ export default tseslint.config(
         'atob',
         'Blob',
       ],
-      // Every user-facing string goes through lingui. This is the real rule —
+      // Every user-facing string goes through lingui. This is the real rule
       // it catches ANY unlocalized string, not just Persian ones, so writing a
       // bare English label fails exactly the same way.
       'lingui/no-unlocalized-strings': [
@@ -80,7 +80,7 @@ export default tseslint.config(
             '^[a-z0-9_.:/#-]+$',
             // BCP-47 locale tags, brand and format constants.
             '^[a-z]{2}-[A-Z]{2}$',
-            // `DN` is the certificate's reference prefix — an identifier
+            // `DN` is the certificate's reference prefix, an identifier
             // printed verbatim on the document, not copy to be translated.
             '^(Vazirmatn|Daramadname|DN|A4|TOMAN|USD|USDT|JALALI|GREGORIAN)$',
             // Asset filenames.
@@ -202,7 +202,7 @@ export default tseslint.config(
     },
   },
   {
-    // Module augmentation must target MUI's real module path — the barrel
+    // Module augmentation must target MUI's real module path, the barrel
     // re-exports the types but `declare module` has to name the file that
     // declares them.
     files: ['**/*.d.ts'],
@@ -222,7 +222,7 @@ export default tseslint.config(
     },
   },
   {
-    // Story fixtures are sample data for Storybook only — never bundled into
+    // Story fixtures are sample data for Storybook only, never bundled into
     // the app, and not user-facing copy. Same reasoning as the stories that
     // consume them.
     files: ['src/shared/story-fixtures/**'],
@@ -233,7 +233,7 @@ export default tseslint.config(
   {
     // Storybook's own documentation plumbing: never bundled into the app, and
     // its literals are Vite glob patterns and import queries rather than copy.
-    // The Persian prose these files render is not here at all — it lives in
+    // The Persian prose these files render is not here at all, it lives in
     // `story-docs/fa/*.md`, which is the point of the directory.
     files: ['src/shared/story-docs/**'],
     rules: {

@@ -30,7 +30,7 @@ import type { AppLocale, CalendarSystem, Profile, ThemePreference } from 'src/sh
  * Personal details, backup and restore, display preferences, privacy.
  *
  * Every destructive control on this page is behind a typed confirmation, and
- * both of them — erase, and restore-over — offer a backup first. There is no
+ * both of them, erase, and restore-over, offer a backup first. There is no
  * server copy to fall back on, so a mis-click here is the end of the data.
  */
 export const SettingsPage = () => {
@@ -41,7 +41,7 @@ export const SettingsPage = () => {
   const { digits } = useFormat()
 
   // The design carries the same range pill and record button on every screen.
-  // The year follows the calendar setting this page itself can change — a
+  // The year follows the calendar setting this page itself can change, a
   // Jalali year left selected against a Gregorian option list renders the pill
   // blank.
   const [year, setYear] = useReportYear(settings.calendar)
@@ -59,7 +59,7 @@ export const SettingsPage = () => {
   // `readSettings`: a profile written or seeded before `fullNameEn`,
   // `passportNumber` and `addressEn` existed has no such keys. Feeding
   // `undefined` to a TextField makes it uncontrolled for one paint and
-  // controlled on the next — React warns, and anything typed in between is
+  // controlled on the next, React warns, and anything typed in between is
   // dropped on the floor. Every field is a string from the first frame.
   const [draftProfile, setDraftProfile] = useState<Profile | null>(null)
   const profile: Profile = draftProfile ?? { ...defaultSettings.profile, ...settings.profile }
@@ -139,7 +139,7 @@ export const SettingsPage = () => {
     onSuccess: async () => {
       await refreshAll()
       // Without this the name, national ID and passport number the user just
-      // erased stay on screen — and "Save details" puts them back.
+      // erased stay on screen, and "Save details" puts them back.
       setDraftProfile(null)
       setConfirmClear(false)
       setToast(t`All data was erased.`)
@@ -170,7 +170,7 @@ export const SettingsPage = () => {
       />
 
       <Stack spacing={3}>
-        {/* 1 — Personal details. Not in the design's settings frame, but the
+        {/* 1, Personal details. Not in the design's settings frame, but the
             report is unusable without it, so it follows the same row pattern.
 
             The row label sits beside the control rather than being a `<label>`
@@ -259,7 +259,7 @@ export const SettingsPage = () => {
           </SettingRow>
         </SettingsSection>
 
-        {/* 2 — the design's `داده‌ها و پشتیبان‌گیری`, row for row. */}
+        {/* 2, the design's `داده‌ها و پشتیبان‌گیری`, row for row. */}
         <SettingsSection title={t`Data and backup`}>
           <SettingRow label={t`Back up data`} description={t`Download a JSON file of every receipt`}>
             <SettingButton tone="primary" onClick={() => backup.mutate()} disabled={backup.isPending}>
@@ -292,7 +292,7 @@ export const SettingsPage = () => {
           </SettingRow>
         </SettingsSection>
 
-        {/* 3 — the design's `نمایش`. Theme is the row it shows; language and
+        {/* 3, the design's `نمایش`. Theme is the row it shows; language and
             calendar belong to the same group and keep the same pattern. */}
         <SettingsSection title={t`Display`}>
           <SettingRow label={t`App theme`} description={t`Light, dark, or follow your device`}>
@@ -336,7 +336,7 @@ export const SettingsPage = () => {
             rather than in the design's numbered sections. */}
         <InstallAppSection />
 
-        {/* 4 — the design's `حریم خصوصی`: a statement, no control. */}
+        {/* 4, the design's `حریم خصوصی`: a statement, no control. */}
         <SettingsSection title={t`Privacy`}>
           <SettingRow label={t`All your data stays in your own browser and is never sent anywhere.`} />
         </SettingsSection>

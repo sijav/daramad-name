@@ -3,7 +3,7 @@ import type { Receipt } from 'src/shared/types'
 import { describe, expect, it } from 'vitest'
 import { deleteReceiptMutation } from './deleteReceipt.mutation'
 
-// Deleting is irreversible and there is no server copy — the only other record
+// Deleting is irreversible and there is no server copy, the only other record
 // of a receipt is a backup file the user may never have made. A delete that
 // caught a neighbouring row would be discovered as a total that no longer
 // matches the bank, months later.

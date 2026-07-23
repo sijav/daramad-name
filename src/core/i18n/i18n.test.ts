@@ -4,13 +4,13 @@ import { activateLocale, DEFAULT_LOCALE, i18n, loadReportI18n } from './i18n'
 
 // The report renders through its OWN i18n instance so an English certificate
 // can be produced while the interface stays Persian. That instance is built
-// with `setupI18n`, whose `messages` option is `AllMessages` — a map keyed BY
-// LOCALE — not the flat catalog `loadAndActivate` takes.
+// with `setupI18n`, whose `messages` option is `AllMessages`, a map keyed BY
+// LOCALE, not the flat catalog `loadAndActivate` takes.
 //
 // Handing it the flat catalog loads nothing, and every label silently falls
 // back to its message id. Because English is the source locale those ids ARE
 // English, so a Persian certificate printed "Total income" where it should
-// have read «جمع کل درآمد» — with no error anywhere. The dynamic catalog
+// have read «جمع کل درآمد», with no error anywhere. The dynamic catalog
 // import types as `any`, so TypeScript could not catch the shape mismatch.
 //
 // These assertions are the only thing standing between that bug and the demo.
@@ -41,7 +41,7 @@ describe('loadReportI18n', () => {
 // `useLocaleSync` gates the entire first render on this function: nothing paints
 // until it resolves, and its `ready` seed is the identity check
 // `i18n.locale === locale`. So the two things that matter are that the catalog
-// really lands and that the locale tag comes back EXACTLY as asked — a
+// really lands and that the locale tag comes back EXACTLY as asked, a
 // normalised «fa» or «fa_IR» would leave the gate shut and the app would sit on
 // a spinner forever, with no error to explain it.
 describe('activateLocale', () => {
@@ -67,7 +67,7 @@ describe('activateLocale', () => {
     expect(i18n._(msg`Total income`)).toBe('جمع کل درآمد')
   })
 
-  // Re-activating the current locale is the common case — the effect re-runs on
+  // Re-activating the current locale is the common case, the effect re-runs on
   // every mount. It must leave the loaded catalog exactly where it was rather
   // than blanking it mid-session.
   it('is a no-op when the locale is already active', async () => {

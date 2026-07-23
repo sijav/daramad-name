@@ -15,7 +15,7 @@ const PdfCtor = PDFDocument as unknown as PdfDocumentConstructor
 
 // The full one-click pipeline, end to end, in Node: model -> layout -> pdfkit.
 // It cannot render a page in a terminal, but it CAN prove the file is a real,
-// font-embedded, selectable PDF that the browser path also produces — the parts
+// font-embedded, selectable PDF that the browser path also produces, the parts
 // that would silently ship a broken download if they regressed.
 
 const fontUrl = (name: string) => fileURLToPath(new URL(`../../../node_modules/vazirmatn/fonts/ttf/${name}`, import.meta.url))
@@ -45,8 +45,8 @@ const report: IncomeReport = {
 }
 
 /**
- * A certificate that does not fit on one sheet: twelve month rows — the most
- * `getIncomeReportQuery` can bucket — under the kind of Persian postal address
+ * A certificate that does not fit on one sheet: twelve month rows, the most
+ * `getIncomeReportQuery` can bucket, under the kind of Persian postal address
  * people actually type, with the district, the landmark and the PO box in it.
  *
  * This is the shape that used to run off the bottom of page one and keep
@@ -86,7 +86,7 @@ const render = async (language: 'fa' | 'en', source: IncomeReport = report) => {
  * Records every string pdfkit lays out, in order.
  *
  * pdfkit measures and draws ONE WORD at a time and places them left to right in
- * the order it receives them — so this sequence IS the visual order on the page.
+ * the order it receives them, so this sequence IS the visual order on the page.
  * For a right-to-left line that must be the REVERSE of the logical word order.
  * Getting this wrong is invisible to every other assertion here: the file is
  * still a valid, font-embedded, selectable PDF, it just reads backwards.
@@ -94,7 +94,7 @@ const render = async (language: 'fa' | 'en', source: IncomeReport = report) => {
 const recordDrawnWords = async (language: 'fa' | 'en', source: IncomeReport = report) => {
   // Instrument the fontkit pdfkit itself uses. This file imports fontkit as ESM
   // while pdfkit `require`s the CommonJS build, and in Node those are two
-  // different copies of the Font class — instrumenting ours would record
+  // different copies of the Font class, instrumenting ours would record
   // nothing.
   const cjsFontkit = createRequire(import.meta.url)('fontkit') as { create: (bytes: Uint8Array) => object }
   let proto = Object.getPrototypeOf(cjsFontkit.create(regular))
@@ -140,7 +140,7 @@ describe('renderCertificatePdf', () => {
     const words = await recordDrawnWords('fa')
 
     // The subtitle reads «گزارش درآمد فریلنسری بر پایه‌ی ثبت‌های شخصی». Drawn left
-    // to right, «شخصی» has to come first and «گزارش» last — the reverse. It
+    // to right, «شخصی» has to come first and «گزارش» last, the reverse. It
     // previously drew logical-first, which printed the sentence backwards.
     const first = words.lastIndexOf('شخصی')
     const last = words.lastIndexOf('گزارش')

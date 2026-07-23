@@ -15,7 +15,7 @@ export interface SummaryCardProps {
  * The design's dashboard `Card`: a tinted icon chip and a small label on one
  * row, the figure beneath.
  *
- * Flat, not frosted — `surface-default` with a 1px `border-default` hairline,
+ * Flat, not frosted, `surface-default` with a 1px `border-default` hairline,
  * 20px radius and the Elevation/1 shadow. The 28px glass treatment belongs to
  * the older record card; the current design system uses bordered surfaces
  * everywhere, and a blurred panel behind a headline number costs legibility.

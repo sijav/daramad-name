@@ -30,7 +30,7 @@ type Copy = 'delete' | 'wipe' | 'seed'
 
 /**
  * `open` is local because the dialog closes itself, but the spies from `args`
- * are called beside the setter — closing on screen and reporting upward are two
+ * are called beside the setter, closing on screen and reporting upward are two
  * different things and only the second one deletes anything.
  */
 const Harness = ({ copy, ...args }: ConfirmDialogProps & { copy: Copy }) => {
@@ -119,7 +119,7 @@ export const TypeToConfirm: Story = {
     const confirm = await body.findByRole('button', { name: 'همه را پاک کن' })
     await expect(confirm).toBeDisabled()
 
-    // A near miss is still a miss — the gate is the exact word, not a prefix.
+    // A near miss is still a miss, the gate is the exact word, not a prefix.
     await userEvent.type(await body.findByRole('textbox'), 'پاک')
     await expect(confirm).toBeDisabled()
 
@@ -130,7 +130,7 @@ export const TypeToConfirm: Story = {
     await expect(args.onClose).toHaveBeenCalledTimes(1)
     await waitFor(() => expect(body.queryByRole('textbox')).toBeNull())
 
-    // The only button in the canvas — the dialog is portalled to <body>.
+    // The only button in the canvas, the dialog is portalled to <body>.
     await userEvent.click(await canvas.findByRole('button'))
     await expect(await body.findByRole('textbox')).toHaveValue('')
     await expect(await body.findByRole('button', { name: 'همه را پاک کن' })).toBeDisabled()

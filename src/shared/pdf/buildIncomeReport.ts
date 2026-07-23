@@ -5,12 +5,12 @@ import type { CertificateModel, CertificateMonthRow, CertificateRow } from 'src/
  *
  * Every string here comes from `CertificateModel`, the same structure the
  * on-screen document renders. That is deliberate: the two used to keep their
- * own field lists and drifted — the PDF printed national ID, phone and address
+ * own field lists and drifted, the PDF printed national ID, phone and address
  * that the preview never showed, and nobody noticed until someone opened the
  * downloaded file. Content has one home; only layout lives in the renderers.
  *
  * This returns a plain block list rather than driving pdfkit directly, so the
- * layout can be asserted in a Node test with no browser and no PDF engine — a
+ * layout can be asserted in a Node test with no browser and no PDF engine, a
  * field that stops reaching the page fails a `toContain` before it ever ships.
  * `renderCertificatePdf` turns these blocks into the actual file.
  */
@@ -52,7 +52,7 @@ export const buildIncomeReport = (model: CertificateModel): CertificateDoc => {
     { type: 'rule' },
   ]
 
-  // An identity table with no rows is not printed at all — an empty framed
+  // An identity table with no rows is not printed at all, an empty framed
   // section reads as an unfinished form, the one thing this document cannot
   // afford to look like.
   if (model.identity.length > 0) {

@@ -6,7 +6,7 @@ import { getIncomeReportQuery, getIncomeReportQueryKey } from './getIncomeReport
 
 // This is the document that leaves the app. Every number here is read by
 // someone with the power to refuse the applicant, and none of them can be
-// checked against anything — there is no bank statement beside it. A wrong
+// checked against anything, there is no bank statement beside it. A wrong
 // divisor does not look wrong; it looks like a smaller income.
 
 const NOW = new Date('2026-07-22T09:00:00.000Z')
@@ -99,7 +99,7 @@ describe('the month rows', () => {
   })
 
   // A certificate issued in Tir must not carry eight empty rows for months that
-  // have not happened — it reads as eight months of no income.
+  // have not happened, it reads as eight months of no income.
   it('stops at the current month rather than printing the rest of the year as zeroes', async () => {
     const report = await call(yearRange(1405, 'JALALI'))
 
@@ -150,7 +150,7 @@ describe('the month rows', () => {
 })
 
 describe('what the report is built from', () => {
-  // A receipt dated next month — a typo, or an invoice recorded early — must not
+  // A receipt dated next month, a typo, or an invoice recorded early, must not
   // reach a certificate that claims to cover up to today.
   it('excludes income dated after today, because the period is clamped to today', async () => {
     await db.receipts.bulkAdd([

@@ -8,7 +8,7 @@ export interface ClientWithTotals extends Client {
   receiptCount: number
 }
 
-/** Clients with their lifetime totals, ordered by earnings — the filter dropdown and the client list both want this order. */
+/** Clients with their lifetime totals, ordered by earnings, the filter dropdown and the client list both want this order. */
 export const getClientsQuery = async (): Promise<ClientWithTotals[]> => {
   const [clients, receipts] = await Promise.all([db.clients.toArray(), db.receipts.toArray()])
 

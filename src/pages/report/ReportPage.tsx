@@ -54,7 +54,7 @@ export const ReportPage = () => {
       const renderer = await loadPdf()
       const blob = await renderer.createCertificate(model)
       // A one-click download from a Blob: the report never leaves the browser,
-      // so there is no URL to navigate to — the object URL is created, clicked
+      // so there is no URL to navigate to, the object URL is created, clicked
       // and revoked in place.
       const url = window.URL.createObjectURL(blob)
       const anchor = window.document.createElement('a')

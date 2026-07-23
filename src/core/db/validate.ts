@@ -21,7 +21,7 @@ import {
  * receipt missing `amountToman` type-checks fine and then contributes zero to
  * every total silently, which is the failure mode this exists to prevent.
  *
- * Errors are phrased for a person, per rule 9 — they say which record and what
+ * Errors are phrased for a person, per rule 9, they say which record and what
  * is wrong with it, because the user is the only one who can decide whether to
  * fix the file or abandon it.
  */
@@ -88,7 +88,7 @@ export const assertReferencesResolve = (receipts: Receipt[], clients: Client[], 
 
 // The three settings enums are bare union types with no runtime array beside
 // them the way `CURRENCIES` and `CHANNELS` have, so the accepted values are
-// listed here — this is the only place that has to check a stored preference
+// listed here, this is the only place that has to check a stored preference
 // against them.
 const CALENDAR_SYSTEMS: readonly CalendarSystem[] = ['JALALI', 'GREGORIAN']
 const APP_LOCALES: readonly AppLocale[] = ['fa-IR', 'en-US']
@@ -97,7 +97,7 @@ const THEME_PREFERENCES: readonly ThemePreference[] = ['light', 'dark', 'system'
 const oneOf = <T>(value: unknown, allowed: readonly T[], fallback: T): T => (allowed.includes(value as T) ? (value as T) : fallback)
 
 /**
- * Settings are repaired rather than rejected — a bad preference is not worth
+ * Settings are repaired rather than rejected, a bad preference is not worth
  * losing data over.
  *
  * Repair means each value is checked, not just each key: a spread alone lets a

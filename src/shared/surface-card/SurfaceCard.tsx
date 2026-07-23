@@ -12,7 +12,7 @@ export interface SurfaceCardProps extends Omit<PaperProps, 'variant'> {
  * The panel every page sits on: a 1px `border-default` hairline over
  * `surface-default`, with the radius and shadow the screen calls for.
  *
- * This was `GlassCard` — translucent with a 16px backdrop blur and 28px
+ * This was `GlassCard`, translucent with a 16px backdrop blur and 28px
  * corners. That treatment came from one record card in an older revision of
  * the design; the current system uses flat bordered surfaces everywhere, and
  * the blur was being inherited by every menu and dialog in the app.

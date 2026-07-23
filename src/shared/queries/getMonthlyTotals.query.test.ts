@@ -4,8 +4,8 @@ import { describe, expect, it } from 'vitest'
 import { getMonthlyTotalsQuery, getMonthlyTotalsQueryKey } from './getMonthlyTotals.query'
 
 // The bar chart. Two things can go wrong here and neither announces itself: a
-// month with no income can be dropped instead of drawn as zero — which redraws
-// the axis and makes a bad month look like it never happened — and a Jalali
+// month with no income can be dropped instead of drawn as zero, which redraws
+// the axis and makes a bad month look like it never happened, and a Jalali
 // year can quietly start in January, which moves everything by three months and
 // mixes two years' income into one chart.
 

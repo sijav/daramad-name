@@ -91,7 +91,7 @@ const rowContaining = (canvasElement: HTMLElement, text: string): HTMLTableRowEl
 
 /**
  * `Field` wraps its control in the `<label>`, so an input's accessible name is
- * its field label — this walks the same association a screen reader would.
+ * its field label, this walks the same association a screen reader would.
  */
 const fieldInput = (root: ParentNode, label: RegExp): HTMLInputElement => {
   const node = [...root.querySelectorAll('label')].find((candidate) => label.test(candidate.querySelector('span')?.textContent ?? ''))
@@ -131,7 +131,7 @@ export const SearchNarrowsTheTotalsNotJustTheTable: Story = {
 export const LoadFailureOffersARetryThatRecovers: Story = {
   // `data: null`, not an omitted key: Storybook deep-merges parameters, so
   // leaving it out keeps the meta's `data: 'full'` and the page renders straight
-  // from the seeded cache — never issuing the query that has to fail.
+  // from the seeded cache, never issuing the query that has to fail.
   parameters: { page: { data: null, route: '/ledger' } },
   beforeEach: async () => {
     const clear = await seedDatabase()
@@ -282,7 +282,7 @@ export const ClosingTheFilterWithoutApplyingChangesNothing: Story = {
     await step('the ledger is untouched', async () => {
       await expect(await canvas.findByText(/^جمع کل ۸ دریافتی$|^Total of 8 receipts$/)).toBeInTheDocument()
       await expect(canvas.queryByText(/^کانال: تتر$|^Channel: Tether$/)).toBeNull()
-      // No badge on the trigger either — the count is the other half of the
+      // No badge on the trigger either, the count is the other half of the
       // evidence that a filter is live.
       await expect(await canvas.findByRole('button', { name: /^فیلترها|^Filters/ })).toHaveTextContent(/^فیلترها$|^Filters$/)
     })
@@ -324,7 +324,7 @@ export const FilterChipRemovesTheFilterAndRestoresTheRows: Story = {
     })
 
     // The popover stays mounted for the life of the page, so its draft survives
-    // the close — and once held the channel this chip just deleted. Reopening
+    // the close, and once held the channel this chip just deleted. Reopening
     // and pressing Apply put the removed filter straight back, undoing the
     // user's own action with no visible cause.
     await step('and the popover has forgotten it too, so Apply cannot put it back', async () => {

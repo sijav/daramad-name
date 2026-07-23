@@ -15,14 +15,14 @@ import { yearOf, yearRange } from 'src/shared/utils'
 /**
  * The certificate as a printable page.
  *
- * This route renders the document and nothing else — no nav, no chrome — so
+ * This route renders the document and nothing else, no nav, no chrome, so
  * the file comes out of the browser's own typesetting engine, and the preview
  * IS the output: there is no second renderer for the two to disagree about.
  *
  * It is also the cheap route. The downloadable PDF pulls in the ~700 KB
  * pdfkit/fontkit chunk and the embedded Vazirmatn cuts; this needs none of
- * that. The PDF still earns its place — it is a file you can attach to an
- * email — but for reading and printing this page is the whole feature.
+ * that. The PDF still earns its place, it is a file you can attach to an
+ * email, but for reading and printing this page is the whole feature.
  */
 export const CertificatePage = () => {
   const { t } = useLingui()
@@ -94,8 +94,8 @@ export const CertificatePage = () => {
             title={t`The certificate could not be produced`}
             description={t`Your data is safe and has not been erased. Try again.`}
             actionLabel={t`Try again`}
-            // A reload rather than a refetch: the failure this most often is —
-            // a catalog chunk that no longer exists after a redeploy — is fixed
+            // A reload rather than a refetch: the failure this most often is
+            // a catalog chunk that no longer exists after a redeploy, is fixed
             // by asking the server again, and a reload also re-runs the query.
             onAction={() => window.location.reload()}
           />
@@ -129,7 +129,7 @@ export const CertificatePage = () => {
  * A sheet of paper for the messages that stand in for the document.
  *
  * Sized and centred like the certificate itself so the page does not lurch when
- * one replaces the other — and marked `no-print`, because a message explaining
+ * one replaces the other, and marked `no-print`, because a message explaining
  * why there is no document must never be the thing that prints.
  */
 const Notice = ({ children }: { children: ReactNode }) => (

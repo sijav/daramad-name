@@ -18,7 +18,7 @@ export interface LedgerFilterPopoverProps {
  * The design's filter popover.
  *
  * Edits a draft and only commits on Apply. Live-applying each keystroke would
- * refetch the ledger on every change and make the date range unusable — the
+ * refetch the ledger on every change and make the date range unusable, the
  * intermediate "from > to" state would briefly match nothing.
  */
 export const LedgerFilterPopover = ({ anchorEl, filter, onApply, onClose }: LedgerFilterPopoverProps) => {
@@ -30,7 +30,7 @@ export const LedgerFilterPopover = ({ anchorEl, filter, onApply, onClose }: Ledg
 
   // The page keeps this mounted and only moves the anchor, so the draft outlives
   // every close. Reseeding it on the way open is what stops a filter the user
-  // removed from the chips — or cleared entirely — from being silently put back
+  // removed from the chips, or cleared entirely, from being silently put back
   // by the next Apply, which reads a draft that never heard about the removal.
   if (open !== wasOpen) {
     setWasOpen(open)
@@ -43,7 +43,7 @@ export const LedgerFilterPopover = ({ anchorEl, filter, onApply, onClose }: Ledg
    * Sets one end of the range and makes the other end VISIBLE.
    *
    * The fields start empty, because a popover that opens showing today in both
-   * boxes advertises a range that is not applied — pressing Apply on it filtered
+   * boxes advertises a range that is not applied, pressing Apply on it filtered
    * nothing. And the previous fallback silently invented the missing end, so
    * picking only a "to" date built `{from: today, to: <past date>}`, an inverted
    * range Dexie matches nothing for, with no explanation on screen.

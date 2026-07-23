@@ -10,7 +10,7 @@ import { ChartsPage } from './ChartsPage'
 // MUI X renders `ChartsAccessibilityProxy`: two `role="img"` divs pointing at
 // `voiceover-<chartId>-1|2` elements that the library creates EMPTY and fills
 // only while the chart has keyboard focus. It is a live-region proxy for
-// keyboard navigation, not a static image label — so at rest axe correctly sees
+// keyboard navigation, not a static image label, so at rest axe correctly sees
 // `role="img"` with an empty name, on every chart, in every story.
 //
 // The only ways to satisfy the rule are to pass `disableKeyboardNavigation`,
@@ -47,12 +47,12 @@ export const Empty: Story = {
     const canvas = within(canvasElement)
 
     await expect(await canvas.findByText(/^برای این سال هنوز داده‌ای نیست$|^No data for this year yet$/)).toBeInTheDocument()
-    // No axis, no donut, no ranked list — nothing that would imply a chart is
+    // No axis, no donut, no ranked list, nothing that would imply a chart is
     // being shown and simply happens to be flat.
     await expect(canvas.queryByText(/فروردین|Farvardin/)).toBeNull()
     await expect(canvas.queryByText(/^سهم مشتری‌ها از درآمد$|^Client share of income$/)).toBeNull()
 
-    // Two buttons carry this label — the header's permanent action and the
+    // Two buttons carry this label, the header's permanent action and the
     // empty state's own call to action. The empty state's is the later one.
     const actions = await canvas.findAllByRole('button', { name: /^ثبت دریافتی$|^Record a receipt$/ })
     await userEvent.click(actions[actions.length - 1])
@@ -113,8 +113,8 @@ export const ConcentrationStaysQuietWhenSpread: Story = {
     // Everything here came from Dexie, so wait for the charts before concluding
     // anything from an absence.
     await expect(await canvas.findByText(/^سهم مشتری‌ها از درآمد$|^Client share of income$/)).toBeInTheDocument()
-    // The leader is named on three surfaces here — the donut's centre overlay,
-    // its legend, and the ranked list — and which paints first is a race.
+    // The leader is named on three surfaces here, the donut's centre overlay,
+    // its legend, and the ranked list, and which paints first is a race.
     // `findAllByText` resolves as soon as ONE matches, so pinning an exact
     // count only recorded whichever moment the assertion happened to catch.
     // More than one is what actually proves the client surfaces have loaded,

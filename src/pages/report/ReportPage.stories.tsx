@@ -19,7 +19,7 @@ type Story = StoryObj<typeof meta>
 const seeded = { page: { data: 'full' } }
 
 /**
- * The document cannot appear until `useCertificateModel` has finished — and it
+ * The document cannot appear until `useCertificateModel` has finished, and it
  * starts by DYNAMICALLY IMPORTING a second lingui instance plus a whole message
  * catalog, so the certificate can be written in a language the interface is not
  * in. On a cold module graph that import outruns testing-library's one-second
@@ -34,7 +34,7 @@ export const WithData: Story = {
   /**
    * The other half of `WarnsWhenTheNameIsMissing`. A warning that is always on
    * screen is noise the user learns to read past, and then it is not there when
-   * it matters — so the quiet case is asserted as deliberately as the loud one.
+   * it matters, so the quiet case is asserted as deliberately as the loud one.
    */
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
@@ -121,7 +121,7 @@ export const AYearWithNoIncomeProducesNoDocument: Story = {
 
     await step('the printable link carries the year that was picked', async () => {
       // The link is disabled here, but the URL is still built by hand from the
-      // selected year — a range picker the document does not follow is the one
+      // selected year, a range picker the document does not follow is the one
       // mismatch nothing else on this page would show.
       const link = await canvas.findByRole('link', { name: /قابل چاپ|printable document/i })
       await expect(previousYear).not.toBe('')
@@ -132,7 +132,7 @@ export const AYearWithNoIncomeProducesNoDocument: Story = {
 
 export const WarnsWhenTheNameIsMissing: Story = {
   beforeEach: async () => {
-    // No settings row at all, so `readSettings` seeds the defaults — which
+    // No settings row at all, so `readSettings` seeds the defaults, which
     // include an empty profile, exactly like a first run.
     await db.settings.clear()
     const clear = await seedDatabase()

@@ -27,12 +27,12 @@ export const FilterChip = ({ field, value, sx, ...props }: FilterChipProps) => {
       // role and the name set here survive the clone. `aria-hidden` has to be
       // cancelled explicitly: `SvgIcon` writes `aria-hidden="true"` on every
       // icon, which kept both attributes out of the accessibility tree and left
-      // the only pointer affordance for removing an active filter unnamed — a
+      // the only pointer affordance for removing an active filter unnamed, a
       // user told a filter is applied, with no named control to undo it.
       deleteIcon={<CloseRoundedIcon aria-hidden={false} role="button" aria-label={t`Remove the ${field} filter`} />}
       sx={[
         (theme) => ({
-          // `277:45`: a tinted 32px chip at radius 16 with a hairline — not the
+          // `277:45`: a tinted 32px chip at radius 16 with a hairline, not the
           // fully-rounded primary-container pill MUI defaults to.
           height: 32,
           borderRadius: `${radius.lg}px`,

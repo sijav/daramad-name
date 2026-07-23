@@ -35,7 +35,7 @@ const RAIL_WIDTH = 264
 /**
  * The app frame: top bar, side rail on desktop, bottom navigation on mobile.
  *
- * Rule 1 takes mobile seriously — half the demo-link traffic arrives on a
+ * Rule 1 takes mobile seriously, half the demo-link traffic arrives on a
  * phone. Rather than squeezing the rail into a drawer only, small screens get a
  * thumb-reachable bottom bar, which is how people actually navigate a phone.
  */
@@ -47,11 +47,11 @@ export const AppShell = () => {
   // The stylis RTL plugin rewrites `left`/`right` in the generated CSS, so a
   // Drawer with anchor="left" already lands on the visual right in Persian.
   // Swapping the anchor ourselves double-flips it and puts the rail on the
-  // wrong side — which is exactly what a manual swap did here before.
+  // wrong side, which is exactly what a manual swap did here before.
   const railAnchor = 'left' as const
   // The design's tablet frames are 834px wide and every one of them draws the
-  // permanent rail. MUI's `md` is 900, so a tablet got the phone chrome —
-  // hamburger, temporary drawer and bottom bar — against a design that has
+  // permanent rail. MUI's `md` is 900, so a tablet got the phone chrome
+  // hamburger, temporary drawer and bottom bar, against a design that has
   // none of them. 768 also covers an iPad in portrait while leaving phones on
   // the bottom nav.
   const isDesktop = useMediaQuery(theme.breakpoints.up(768))
@@ -72,7 +72,7 @@ export const AppShell = () => {
   // ONE selection rule, shared by the rail and the bottom bar.
   //
   // `path="*"` inside the shell renders the dashboard, so an unmatched URL is a
-  // real, reachable state — and the two navigations used to disagree about it:
+  // real, reachable state, and the two navigations used to disagree about it:
   // the bar fell back to index 0 while the rail compared paths and marked
   // nothing. A desktop user on a stale link then had no idea where they were.
   const activeIndex = Math.max(
@@ -81,7 +81,7 @@ export const AppShell = () => {
   )
 
   const railContent = (
-    // The rail is the app's navigation, so it has to BE a landmark — without
+    // The rail is the app's navigation, so it has to BE a landmark, without
     // one a screen-reader user has no way to jump to it or past it. `nav`
     // wraps the list rather than replacing it, because <li> is only valid
     // inside <ul> and the list semantics below are load-bearing too.
@@ -249,7 +249,7 @@ export const AppShell = () => {
 
       {!isDesktop ? (
         <BottomNavigation
-          // The phone's navigation, so it is a landmark too — and named apart
+          // The phone's navigation, so it is a landmark too, and named apart
           // from the drawer's, which holds the same six links under their full
           // labels. A user who meets both otherwise hears "navigation" twice
           // with no way to tell which one they landed in.

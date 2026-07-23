@@ -32,7 +32,7 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
   // tripped by the provider tree itself, so no hook context above can be relied on.
   //
   // The failure path is the whole point of this screen. Step A is "take a
-  // backup" and step B is "erase everything" — so a backup that fails silently,
+  // backup" and step B is "erase everything", so a backup that fails silently,
   // leaving the button reading «دانلود» as though nothing happened, walks the
   // user into erasing data they never saved. The export genuinely rejects on
   // corrupt rows, which is exactly the state a crash screen is reached in.
@@ -56,7 +56,7 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
       return
     }
     // Lands on Settings rather than reloading in place, because the very next
-    // thing to do is import the backup taken in step A — and a hard navigation
+    // thing to do is import the backup taken in step A, and a hard navigation
     // is what discards whatever state broke the render. `BASE_URL` keeps this
     // correct on GitHub Pages, which serves the app from a sub-path.
     window.location.assign(`${import.meta.env.BASE_URL}settings`)
@@ -96,7 +96,7 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
         <SurfaceCard radius="lg" flat disablePadding sx={{ width: '100%' }}>
           <Stack
             sx={(theme) => ({
-              // Callback at the TOP of `sx` — a function nested as a value is
+              // Callback at the TOP of `sx`, a function nested as a value is
               // never resolved.
               '& > :not(:last-of-type)': { borderBottom: `1px solid ${theme.palette.borderDefault}` },
             })}

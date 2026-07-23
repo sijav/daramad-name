@@ -8,7 +8,7 @@ const DEFAULT_PAGE_SIZE = 25
 export interface LedgerPage {
   /** Rows for the current page. */
   rows: ReceiptWithClient[]
-  /** Rows after search, before pagination — this is what the result count means. */
+  /** Rows after search, before pagination, this is what the result count means. */
   matchedCount: number
   /** The query's summary re-stated over the searched rows, so it counts the same set. */
   summary: LedgerSummary
@@ -21,13 +21,13 @@ export interface LedgerPage {
  * pagination.
  *
  * The hook owns the state but does NOT take the ledger, because the query key
- * is built from `filter` and `sort` — passing the data in would require the
+ * is built from `filter` and `sort`, passing the data in would require the
  * query to exist before the state that drives it. Instead the page calls
  * `paginate(rows, summary)` once the query resolves.
  *
  * Search runs client-side over the already-filtered rows: the data is local and
  * small, so a text index in IndexedDB would add machinery for no gain. The
- * summary goes through the same call because of that — the query computed it
+ * summary goes through the same call because of that, the query computed it
  * before the search existed, so `paginate` is the only place that can bring the
  * two back into agreement.
  */
@@ -48,7 +48,7 @@ export const useLedgerView = () => {
         const searched = term ? rows.filter((receipt) => matches(receipt, term)) : rows
 
         const pageCount = Math.max(1, Math.ceil(searched.length / pageSize))
-        // Clamped rather than stored — deleting the last row on page 4 must not
+        // Clamped rather than stored, deleting the last row on page 4 must not
         // strand the user on an empty page.
         const safePage = Math.min(page, pageCount)
 
@@ -99,7 +99,7 @@ export const useLedgerView = () => {
  * Re-states the summary over the searched rows.
  *
  * The query never sees the search term, so its total and count still describe
- * the rows the search has removed — leaving the ledger printing one receipt
+ * the rows the search has removed, leaving the ledger printing one receipt
  * count in the heading and another in the total band and the cards below it,
  * with the larger figure labelled as filtered. These numbers get copied onto a
  * document handed to an embassy, so they have to describe the same set.

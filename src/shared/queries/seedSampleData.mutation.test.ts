@@ -9,7 +9,7 @@ import { seedSampleDataMutation } from './seedSampleData.mutation'
 // shape is a promise rather than an accident: mixed currencies at different
 // frozen rates, one client over half the income to trip the concentration
 // warning, and one month deliberately left empty to prove a zero bar draws.
-// If any of that quietly stopped being true, the screens would still render —
+// If any of that quietly stopped being true, the screens would still render
 // they would just stop demonstrating the thing they were built to show.
 
 const ALL_OF_TIME = { from: '2000-01-01T00:00:00.000Z', to: '2100-01-01T00:00:00.000Z' }
@@ -33,7 +33,7 @@ describe('seedSampleDataMutation', () => {
   })
 
   // Sample data that could not have been entered through the form is not sample
-  // data — it would let a bug through every screen that reads it.
+  // data, it would let a bug through every screen that reads it.
   it('produces receipts that pass the same validation a typed one does', async () => {
     await seedSampleDataMutation()
 

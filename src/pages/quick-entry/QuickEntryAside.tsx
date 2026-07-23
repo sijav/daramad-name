@@ -16,7 +16,7 @@ import { dayRange, formatDate } from 'src/shared/utils'
  * The design's Quick Entry support column: today at a glance, the receipt just
  * recorded, and the clients most likely to be picked next.
  *
- * It exists to answer "did that save?" without leaving the form — which is the
+ * It exists to answer "did that save?" without leaving the form, which is the
  * whole point of a 15-second entry flow. Every panel reads from queries the
  * ledger already populates, so recording a receipt refreshes all three.
  */

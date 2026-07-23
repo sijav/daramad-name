@@ -19,7 +19,7 @@ export const WithReceipts: Story = {
 
     await expect(await canvas.findByText(/^۵۰۰[٫.]۰۰ تتر$|^500\.00 Tether$/)).toBeInTheDocument()
     await expect(await canvas.findByText(/^۴۹٬۲۵۰٬۰۰۰$|^49,250,000$/)).toBeInTheDocument()
-    // A Toman receipt has no conversion, so both columns read the same figure —
+    // A Toman receipt has no conversion, so both columns read the same figure
     // 18,000,000 appears twice rather than being blanked out on one side.
     await expect(await canvas.findAllByText(/^۱۸٬۰۰۰٬۰۰۰( تومان)?$|^18,000,000( Toman)?$/)).toHaveLength(2)
   },

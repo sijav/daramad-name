@@ -11,13 +11,13 @@ import { useLocaleSync } from './useLocaleSync'
 
 // `useLocaleSync` is a gate on the FIRST paint, and that scope is the point.
 //
-// Lingui does not fall back when a catalog is missing — it THROWS. So if `App`
+// Lingui does not fall back when a catalog is missing, it THROWS. So if `App`
 // rendered a page before the persisted locale had been activated, the whole
 // tree would blow up rather than briefly showing English. `ready` is what
 // prevents that, and it has two halves that fail in opposite ways:
 //
-//   · seeded from `i18n.locale === locale`, so a normal reload — where the
-//     catalog is already active — paints immediately instead of flashing a
+//   · seeded from `i18n.locale === locale`, so a normal reload, where the
+//     catalog is already active, paints immediately instead of flashing a
 //     loader on every navigation;
 //   · false on a mount whose persisted locale is NOT the active one, held shut
 //     by the effect until that catalog lands.
@@ -43,7 +43,7 @@ const Gate = () => {
     <div>
       <span data-testid="first-paint">{String(firstPaint)}</span>
       <span data-testid="ready">{String(ready)}</span>
-      {/* Resolved only behind the gate — calling this before a catalog is
+      {/* Resolved only behind the gate, calling this before a catalog is
           active is the exact crash the hook exists to prevent. */}
       {ready ? <span data-testid="label">{i18n._(msg`Total income`)}</span> : <span data-testid="waiting">…</span>}
     </div>

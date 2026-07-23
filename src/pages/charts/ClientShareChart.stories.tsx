@@ -12,7 +12,7 @@ import { ClientShareChart, type ClientShareChartProps } from './ClientShareChart
 // MUI X renders `ChartsAccessibilityProxy`: two `role="img"` divs pointing at
 // `voiceover-<chartId>-1|2` elements that the library creates EMPTY and fills
 // only while the chart has keyboard focus. It is a live-region proxy for
-// keyboard navigation, not a static image label — so at rest axe correctly sees
+// keyboard navigation, not a static image label, so at rest axe correctly sees
 // `role="img"` with an empty name, on every chart, in every story.
 //
 // The only ways to satisfy the rule are to pass `disableKeyboardNavigation`,
@@ -114,7 +114,7 @@ export const NoClients: Story = {
     const canvas = within(canvasElement)
 
     await expect(await canvas.findByText(/^سهم مشتری‌ها از درآمد$|^Client share of income$/)).toBeInTheDocument()
-    // No leader, so no percentage in the hole — and nothing reading «NaN٪».
+    // No leader, so no percentage in the hole, and nothing reading «NaN٪».
     await expect(canvas.queryByText(/٪|%/)).toBeNull()
   },
 }

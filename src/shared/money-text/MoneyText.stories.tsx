@@ -10,7 +10,7 @@ const meta = {
   },
   // `MoneyText` forwards the rest of `TypographyProps`, so docgen offers all of
   // MUI's typography surface. These four are the ones that change what the
-  // figure SAYS. Only the control shape is set — the descriptions come from the
+  // figure SAYS. Only the control shape is set, the descriptions come from the
   // JSDoc on `MoneyTextProps`, so the table cannot drift from the source.
   argTypes: {
     value: { control: { type: 'number', step: 1000 } },

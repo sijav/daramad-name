@@ -9,14 +9,14 @@ import { type PdfDocumentConstructor, renderCertificatePdf } from './renderCerti
 // The report certificate, drawn with pdfkit and a real embedded Persian font.
 //
 // pdfkit is loaded with a dynamic `import()` so it and its Node shims stay out
-// of the initial bundle — only the report page pays for them. Vazirmatn is
+// of the initial bundle, only the report page pays for them. Vazirmatn is
 // fetched from the app's own origin (a static asset request, not a network call
-// carrying user data — the receipts never leave the browser) because the
+// carrying user data, the receipts never leave the browser) because the
 // default PDF fonts carry no Arabic-script glyphs and Persian would render as
 // empty boxes.
 //
 // Before anything is drawn, `installBidiLayout` patches fontkit's `layout` so
-// mixed Persian text — an RTL word beside Persian digits — is reordered by the
+// mixed Persian text, an RTL word beside Persian digits, is reordered by the
 // real Unicode bidi algorithm instead of blindly reversed. Without it ۱۴۰۵ would
 // print as ۵۰۴۱. See `bidiText.ts`.
 

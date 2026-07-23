@@ -9,7 +9,7 @@ import { expect, userEvent, within } from 'storybook/test'
 import { DashboardPage } from './DashboardPage'
 
 /**
- * Page stories render entirely from a seeded query cache — no IndexedDB. The
+ * Page stories render entirely from a seeded query cache, no IndexedDB. The
  * `page` parameter tells the global decorator to seed fixtures and supply a
  * router, so these are deterministic across runs and languages.
  *
@@ -22,7 +22,7 @@ import { DashboardPage } from './DashboardPage'
 // MUI X renders `ChartsAccessibilityProxy`: two `role="img"` divs pointing at
 // `voiceover-<chartId>-1|2` elements that the library creates EMPTY and fills
 // only while the chart has keyboard focus. It is a live-region proxy for
-// keyboard navigation, not a static image label — so at rest axe correctly sees
+// keyboard navigation, not a static image label, so at rest axe correctly sees
 // `role="img"` with an empty name, on every chart, in every story.
 //
 // The only ways to satisfy the rule are to pass `disableKeyboardNavigation`,
@@ -47,7 +47,7 @@ export const WithData: Story = {
   /**
    * The dependency warning is a claim about the user's business, so it may only
    * appear when it is true. It is rendered here and asserted absent in
-   * `ConcentrationInsightStaysQuietWhenSpread` — both branches, because a
+   * `ConcentrationInsightStaysQuietWhenSpread`, both branches, because a
    * warning that never fires and one that always fires look identical on a
    * single screen.
    */
@@ -90,7 +90,7 @@ export const MonthlyAverageStatesItsDivisor: Story = {
 
     await step('and the total covers exactly the months the divisor counts', async () => {
       // The fixture seeds all twelve buckets of the year, but only the elapsed
-      // ones may be summed — a numerator carrying months that have not happened
+      // ones may be summed, a numerator carrying months that have not happened
       // over a divisor that does not count them inflates the average, which is
       // the one figure on this page nobody can sanity-check by eye.
       //
@@ -186,7 +186,7 @@ export const EmptyStateLeadsToQuickEntry: Story = {
     await expect(canvas.queryByText(/^میانگین ماهانه$|^Monthly average$/)).toBeNull()
     await expect(canvas.queryByText(/^سهم مشتری‌ها از درآمد$|^Client share of income$/)).toBeNull()
 
-    // Two buttons carry this label — the header's permanent action and the
+    // Two buttons carry this label, the header's permanent action and the
     // empty state's own call to action. The empty state's is the later one.
     const actions = await canvas.findAllByRole('button', { name: /^ثبت دریافتی$|^Record a receipt$/ })
     await userEvent.click(actions[actions.length - 1])

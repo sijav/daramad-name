@@ -6,7 +6,7 @@ import { EditReceiptDialog } from './EditReceiptDialog'
 
 // Editing is the one place a stored value can be silently rewritten.
 //
-// `amountToman` is frozen at record time and never recomputed on read — that is
+// `amountToman` is frozen at record time and never recomputed on read, that is
 // the product's central promise. So an edit must revalue at the receipt's OWN
 // stored rate, not at whatever the rate is today. Getting that wrong would not
 // fail loudly; it would quietly restate history, and the certificate built from

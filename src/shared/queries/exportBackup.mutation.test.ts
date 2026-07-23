@@ -6,7 +6,7 @@ import { exportBackupMutation } from './exportBackup.mutation'
 import { restoreBackupMutation } from './restoreBackup.mutation'
 
 // The backup file is the only copy of this data that is not in one browser
-// profile, and scenario 6 — "move to another device" — is nothing but this file
+// profile, and scenario 6, "move to another device", is nothing but this file
 // carried by hand. Two things therefore matter more than the download working:
 // the file must refuse to be written from data that is already broken, because
 // a corrupt backup gets trusted and is only opened when it is the last copy

@@ -17,7 +17,7 @@ const UNASSIGNED_ID = '__unassigned__'
 /**
  * Client-share breakdown plus the dependency warning.
  *
- * The insight fires above 50% — the brief's rule. Scenario 4's «۷۰٪» is one
+ * The insight fires above 50%, the brief's rule. Scenario 4's «۷۰٪» is one
  * example of that rule firing, not a second threshold.
  */
 export const getClientSharesQuery = async ({
@@ -56,7 +56,7 @@ export const getClientSharesQuery = async ({
   // The test uses the RAW share, not the rounded one the callout prints.
   // Comparing the rounded value moved the real boundary to 50.5%: a client at a
   // true 50.4% rounded to 50, `50 > 50` was false, and a freelancer taking over
-  // half their income from one place got no warning — beside a donut reading
+  // half their income from one place got no warning, beside a donut reading
   // «۵۰٪». Rounding stays for display only, so the callout still agrees with the
   // legend.
   const topShare = top ? (top.totalToman / grandTotal) * 100 : 0

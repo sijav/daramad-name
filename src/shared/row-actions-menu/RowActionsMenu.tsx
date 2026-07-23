@@ -17,7 +17,7 @@ export interface RowActionsMenuProps {
  * edit / delete.
  *
  * Replaces the two always-visible icon buttons. With a `Tag` and an actions
- * column already competing for space, three inline buttons crowded the row —
+ * column already competing for space, three inline buttons crowded the row
  * and a menu gives each action a readable label instead of an icon the user has
  * to decode.
  */

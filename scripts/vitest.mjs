@@ -7,18 +7,18 @@ import { dirname, resolve } from 'node:path'
 //
 // Node's default is ~4.2 GB, and the coverage run has crashed at ~4.09 GB with
 // `FATAL ERROR: Reached heap limit`. The stack pointed at
-// `v8::ValueDeserializer::ReadValue` — the host deserialising coverage payloads
+// `v8::ValueDeserializer::ReadValue`, the host deserialising coverage payloads
 // sent back from the workers, which Vitest holds in the main process for the
 // whole run (vitest-dev/vitest#4476).
 //
-// SEE TECH-DEBT.md — this is a mitigation, not a fix. The upstream issue is
+// SEE TECH-DEBT.md, this is a mitigation, not a fix. The upstream issue is
 // that coverage is accumulated in memory rather than streamed to disk. Raising
 // the ceiling buys room; it does not stop the growth.
 
 const require = createRequire(import.meta.url)
 
 // Vitest's `exports` map does not expose its bin, so the path comes from the
-// package's own `bin` field — the same reason `scripts/storybook-dev.mjs` reads
+// package's own `bin` field, the same reason `scripts/storybook-dev.mjs` reads
 // the manifest instead of resolving the file.
 const manifestPath = require.resolve('vitest/package.json')
 const { bin } = JSON.parse(readFileSync(manifestPath, 'utf8'))

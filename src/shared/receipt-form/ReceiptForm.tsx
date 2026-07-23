@@ -27,7 +27,7 @@ export interface ReceiptFormProps {
  * `useReceiptForm`, so the same component serves both the quick-entry page and
  * the edit dialog.
  *
- * Labels sit above their controls via `Field`, matching the design — MUI's
+ * Labels sit above their controls via `Field`, matching the design, MUI's
  * floating labels would collapse into the outline and cost scannability on the
  * one screen that has to be fast.
  */
@@ -87,7 +87,7 @@ export const ReceiptForm = ({ form, submitLabel, pending = false, onSubmit, onSu
               />
             </Field>
 
-            {/* `175:802`: a tinted readout, not a field — the figure on the
+            {/* `175:802`: a tinted readout, not a field, the figure on the
                 reading edge and "frozen" opposite it, both in brand blue, so it
                 reads as a result rather than something else to fill in. */}
             <Field label={t`Toman equivalent (stored at the moment of entry)`}>

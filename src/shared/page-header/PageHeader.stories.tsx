@@ -8,7 +8,7 @@ import { PageHeader } from './PageHeader'
 // t`Settings``.
 //
 // The sample copy is read from the catalog rather than written into `args`,
-// which is what lets the Language toolbar switch it — but a reader who types
+// which is what lets the Language toolbar switch it, but a reader who types
 // into Controls has to win, or the panel is decoration. Falling back only on a
 // blank gives both.
 

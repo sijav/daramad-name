@@ -5,17 +5,17 @@ import { i18n } from 'src/core/i18n'
 
 // The bidi layer the PDF stack was missing.
 //
-// pdfkit hands a whole line of text to fontkit's `layout`, and fontkit — when
-// it sees an RTL script — reverses the ENTIRE run as one blob. That is fine for
+// pdfkit hands a whole line of text to fontkit's `layout`, and fontkit, when
+// it sees an RTL script, reverses the ENTIRE run as one blob. That is fine for
 // a line that is purely Persian letters, but a certificate line is never that:
 // «۱ فروردین ۱۴۰۵» mixes an RTL word with Persian DIGITS, and reversing the whole
-// thing turns ۱۴۰۵ into ۵۰۴۱. Persian digits (U+06F0–06F9) are Unicode bidi class
-// EN — a number run that must stay left-to-right INSIDE right-to-left text. A
+// thing turns ۱۴۰۵ into ۵۰۴۱. Persian digits (U+06F0, 06F9) are Unicode bidi class
+// EN, a number run that must stay left-to-right INSIDE right-to-left text. A
 // blind reverse is not the bidi algorithm; it is the bug we shipped.
 //
 // The fix is to run real UAX#9 bidi (bidi-js) FIRST, which splits the line into
 // maximal same-direction runs and tells us their visual order. Each run is then
-// pure-direction, so fontkit's own reversal is exactly right for it — an RTL run
+// pure-direction, so fontkit's own reversal is exactly right for it, an RTL run
 // reverses, a digit run does not. We shape each run in LOGICAL order (Arabic
 // joining needs logical adjacency; pre-reversing the characters breaks the
 // cursive forms) and concatenate the shaped glyphs in visual run order.
@@ -112,7 +112,7 @@ const visualRunOrder = (runs: { level: number }[]): number[] => {
  * Reorders ONE line into visual order at word granularity.
  *
  * `installBidiLayout` fixes the characters inside whatever string the shaper is
- * given — but pdfkit never gives it a whole line. It measures and draws one WORD
+ * given, but pdfkit never gives it a whole line. It measures and draws one WORD
  * at a time and lays those words out left to right in the order received, so a
  * right-to-left sentence arrives with every word correctly shaped and the words
  * themselves backwards: «گزارش درآمد فریلنسری» came out reading
@@ -120,7 +120,7 @@ const visualRunOrder = (runs: { level: number }[]): number[] => {
  *
  * So the words are put where they belong BEFORE pdfkit sees them. Each word's
  * characters stay in LOGICAL order, which is what the shaper needs to form the
- * cursive joins — and what lets `installBidiLayout` still fix a mixed run inside
+ * cursive joins, and what lets `installBidiLayout` still fix a mixed run inside
  * a single word, such as a `DN-۱۴۰۵-QQPE0T` serial.
  *
  * Bidi ordering is defined per VISUAL line, so callers must wrap text into lines
@@ -133,7 +133,7 @@ export const toVisualLine = (text: string): string => {
   // Reorder at WORD granularity, then rejoin with single spaces. Reordering
   // whole runs instead moves the space that sat at a run's edge to its other
   // end, which glues one pair of words together («تاریخصدور») and doubles the
-  // gap at the next — the separators must be regenerated, not carried along.
+  // gap at the next, the separators must be regenerated, not carried along.
   // A word's level is its first character's; a word with mixed content, like a
   // `DN-۱۴۰۵-QQPE0T` serial, is placed as a unit and put in order internally by
   // `installBidiLayout`.
@@ -154,13 +154,13 @@ const PATCHED = Symbol.for('daramadname.bidi-layout')
 
 /**
  * Installs the bidi-aware `layout` on fontkit's font prototype. Idempotent and
- * cheap to call repeatedly — it patches the shared prototype the first time and
+ * cheap to call repeatedly, it patches the shared prototype the first time and
  * no-ops after. Pass any opened font (fontkit exposes no class to reach the
  * prototype otherwise); the loader hands it the Vazirmatn probe it already has.
  *
  * Throws when the probe has no `layout` anywhere on its prototype chain. That
  * only happens if fontkit changes shape, and returning quietly instead would
- * ship a certificate with every year reversed — the one failure mode that looks
+ * ship a certificate with every year reversed, the one failure mode that looks
  * completely normal to whoever generates the document.
  */
 export const installBidiLayout = (probe: unknown): void => {
@@ -176,7 +176,7 @@ export const installBidiLayout = (probe: unknown): void => {
   const original = (proto as { layout: LayoutFn }).layout
   ;(proto as { layout: LayoutFn }).layout = function patchedLayout(string, features, script, language, direction) {
     // An explicit direction, a non-string, or a line with no RTL character all
-    // want the stock behaviour — the reversal problem cannot arise there.
+    // want the stock behaviour, the reversal problem cannot arise there.
     if (direction || typeof string !== 'string' || !hasRtl(string)) {
       return original.call(this, string, features, script, language, direction)
     }
@@ -184,7 +184,7 @@ export const installBidiLayout = (probe: unknown): void => {
     // Surrounding spaces stay put. pdfkit hands over one word AT A TIME with its
     // trailing space attached and then places the next word after it, so if the
     // reversal carries that space to the other side the gap opens on the wrong
-    // side of the word — «۱فروردین» glued, «فروردین  ۱۴۰۵» doubled. Only the
+    // side of the word, «۱فروردین» glued, «فروردین  ۱۴۰۵» doubled. Only the
     // core is reordered; the spaces are shaped separately and pinned back.
     const leading = /^\s+/.exec(string)?.[0] ?? ''
     const trailing = /\s+$/.exec(string)?.[0] ?? ''

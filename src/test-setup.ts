@@ -5,7 +5,7 @@ import { beforeEach } from 'vitest'
 // The data layer is the half of this app that can be wrong without anyone
 // noticing, so it is tested against a real IndexedDB implementation rather than
 // a mocked Dexie. `fake-indexeddb/auto` installs one over the global before any
-// module imports Dexie — which is why this runs as a setup file and not as an
+// module imports Dexie, which is why this runs as a setup file and not as an
 // import inside a test.
 //
 // Every test starts from an empty database. Dexie caches the connection, so

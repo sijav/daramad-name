@@ -8,7 +8,7 @@ import { useReceiptForm } from './useReceiptForm'
 
 interface HarnessProps extends ReceiptFormProps {
   initial?: ReceiptWithClient
-  /** Fires only once the form passed validation — `onSubmit` fires on the press. */
+  /** Fires only once the form passed validation, `onSubmit` fires on the press. */
   onSaved: () => void
   /** Editing an existing receipt drops «ذخیره و بعدی». */
   withNext?: boolean
@@ -20,7 +20,7 @@ interface HarnessProps extends ReceiptFormProps {
  * Persian form.
  *
  * The submit gate is QuickEntryPage's, line for line: mark the form submitted,
- * refuse to go on if it is invalid, then reset — fully for a finished entry,
+ * refuse to go on if it is invalid, then reset, fully for a finished entry,
  * keeping the client for the next one in a batch. Reproducing it here is what
  * lets a story assert that an invalid form does not save.
  */
@@ -74,7 +74,7 @@ const meta = {
     layout: 'padded',
   },
   render: (args) => <Harness {...args} />,
-  // `form` is a live hook return and `submitLabel` is the harness's own — no
+  // `form` is a live hook return and `submitLabel` is the harness's own, no
   // control can produce either, so they are stubbed once here and kept out of
   // the props table instead of being repeated in every story.
   argTypes: {
@@ -118,7 +118,7 @@ const receipt = (overrides: Partial<ReceiptWithClient>): ReceiptWithClient => ({
 })
 
 // `Field` renders its label as a detached `<label>`, so the amount and rate
-// boxes have no accessible name to query by — they are taken in DOM order, the
+// boxes have no accessible name to query by, they are taken in DOM order, the
 // rate appearing between the amount and the note only while a foreign currency
 // is selected.
 const boxes = (canvasElement: HTMLElement) => within(canvasElement).findAllByRole<HTMLInputElement>('textbox')
@@ -224,12 +224,12 @@ export const BlocksSavingWithoutAnAmount: Story = {
     await userEvent.click(await canvas.findByRole('button', { name: SUBMIT }))
 
     await expect(await canvas.findByText(AMOUNT_ERROR)).toBeInTheDocument()
-    // The press landed — what stopped is the save, which is the distinction
+    // The press landed, what stopped is the save, which is the distinction
     // that matters: a button that ignored the click would look broken instead.
     await expect(args.onSubmit).toHaveBeenCalledTimes(1)
     await expect(args.onSaved).not.toHaveBeenCalled()
 
-    // And it saves once the amount is there — the block is the amount, not the
+    // And it saves once the amount is there, the block is the amount, not the
     // click.
     await userEvent.type(await amountBox(canvasElement), '2500000')
     await userEvent.click(await canvas.findByRole('button', { name: SUBMIT }))

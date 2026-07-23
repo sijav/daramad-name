@@ -6,7 +6,7 @@ import type { CertificateBlock, CertificateDoc } from './buildIncomeReport'
 // @types/pdfkit types the module's export as an INSTANCE, but at runtime it is
 // the constructor. We describe the construct signature we call, so the loader
 // can hand the imported value across without an `any`. `font` is widened to
-// allow `false`, which pdfkit accepts to mean "load no default font" — the type
+// allow `false`, which pdfkit accepts to mean "load no default font", the type
 // only lists `string`.
 type CertificateDocOptions = Omit<PDFKit.PDFDocumentOptions, 'font'> & { font?: string | false }
 export type PdfDocumentConstructor = new (options?: CertificateDocOptions) => PDFKit.PDFDocument
@@ -57,10 +57,10 @@ export const renderCertificatePdf = (
     size: 'A4',
     margins: { top: 56, bottom: 56, left: 48, right: 48 },
     // Load NO default font. pdfkit otherwise reads Helvetica's AFM metrics off
-    // disk with `fs.readFileSync` in its constructor — which has no file to read
+    // disk with `fs.readFileSync` in its constructor, which has no file to read
     // in the browser and throws "readFileSync of null". We only ever use the
     // embedded Vazirmatn, set explicitly before every draw, so the built-in
-    // fonts are never needed. See TECH-DEBT.md — pdfkit in the browser.
+    // fonts are never needed. See TECH-DEBT.md, pdfkit in the browser.
     font: false,
     // Compression is left off deliberately: pdfkit's `deflateSync` path is a
     // Node zlib call the browser shim does not implement, and pdfkit already
@@ -79,14 +79,14 @@ export const renderCertificatePdf = (
   // import. The two are not always the same object: this module imports fontkit
   // as ESM while pdfkit `require`s the CommonJS build, and a bundler that does
   // not dedupe them (Node does not) leaves two separate copies of the Font
-  // class. Patching ours would then silently never reach the fonts that draw —
+  // class. Patching ours would then silently never reach the fonts that draw
   // which is exactly what happened, and why the Node tests were passing while
   // exercising an unpatched path.
   doc.font('regular')
   const embedded = (doc as unknown as { _font?: { font?: unknown } })._font
   if (!embedded?.font) {
     // Refuse to draw rather than draw it wrong. `_font` is private, so a pdfkit
-    // release that renames it turns the patch into a no-op — and an unpatched
+    // release that renames it turns the patch into a no-op, and an unpatched
     // font prints «۱۴۰۵» as «۵۰۴۱» on a page nobody proofreads because it looks
     // like a certificate. Failing here is the only signal that the shape moved.
     throw new Error(i18n._(msg`The report could not be prepared for Persian text. Reload the page and try again.`))
@@ -109,8 +109,8 @@ export const renderCertificatePdf = (
    * says whether it did.
    *
    * Every block draws at an explicit y taken from the one cursor above, and
-   * `lineBreak: false` keeps pdfkit's own wrapper — the thing that would
-   * otherwise add the page — out of it. So without this a certificate that
+   * `lineBreak: false` keeps pdfkit's own wrapper, the thing that would
+   * otherwise add the page, out of it. So without this a certificate that
    * outgrows one sheet keeps counting down past the paper: the text is in the
    * file and nothing renders it. A twelve-month report with a full postal
    * address is already that long.
@@ -128,7 +128,7 @@ export const renderCertificatePdf = (
   }
 
   /**
-   * Wraps in LOGICAL order using measured widths — reordering happens per line,
+   * Wraps in LOGICAL order using measured widths, reordering happens per line,
    * after the break points are known, because bidi order is defined per visual
    * line.
    */
@@ -252,7 +252,7 @@ export const renderCertificatePdf = (
     const wordsStyle: TextStyle = { x: x0 + padding, w: innerW, align, font: 'regular', size: 10, color: MUTED }
 
     // The border is stroked around the finished content, so the box has to be
-    // measured whole before anything is drawn — half a rounded rectangle
+    // measured whole before anything is drawn, half a rounded rectangle
     // continued on the next sheet reads as a printing fault on a document whose
     // only job is to look official.
     let inner = Math.max(heightOf(block.label, labelStyle), heightOf(block.figure, figureStyle))

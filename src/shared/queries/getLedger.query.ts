@@ -9,7 +9,7 @@ export const getLedgerQueryKey = (filter: LedgerFilter, sort: LedgerSort, calend
 /**
  * The ledger table, its filters and its running total.
  *
- * The summary is computed over the FILTERED rows, not the whole database —
+ * The summary is computed over the FILTERED rows, not the whole database
  * scenario 2 is exactly "what did this one client pay me over these six
  * months", and a total that ignored the filter would answer a different
  * question while looking correct.
@@ -19,8 +19,8 @@ export const getLedgerQuery = async ({
 }: QueryFunctionContext<ReturnType<typeof getLedgerQueryKey>>): Promise<Ledger> => {
   // Read the rows over the SAME period the average divides by. Reading the raw
   // range while dividing by the clamped one counted future-dated receipts in
-  // the total but gave them no months, so a range ending in the future — which
-  // is what "this year" means for eleven months of every year — inflated the
+  // the total but gave them no months, so a range ending in the future, which
+  // is what "this year" means for eleven months of every year, inflated the
   // ledger's average against the report's. The report has always clamped both.
   const period = averagingPeriod(filter.range ?? (await unfilteredPeriod()), calendar)
 
@@ -69,7 +69,7 @@ const sortRows = (rows: ReceiptWithClient[], sort: LedgerSort): void => {
       case 'amountToman':
         return (left.amountToman - right.amountToman) * direction
       // Sorting the ORIGINAL amount compares across currencies, so group by
-      // currency first — otherwise 100 USD interleaves with 100 Toman and the
+      // currency first, otherwise 100 USD interleaves with 100 Toman and the
       // column reads as unsorted.
       case 'amountOriginal':
         return (left.currency.localeCompare(right.currency) || left.amountOriginal - right.amountOriginal) * direction
@@ -96,7 +96,7 @@ const sortRows = (rows: ReceiptWithClient[], sort: LedgerSort): void => {
 const unfilteredPeriod = async (): Promise<DateRange> => {
   const now = new Date().toISOString()
   // Read the earliest date from the index rather than from the rows, because
-  // the rows are now read against this period — deriving it from them would be
+  // the rows are now read against this period, deriving it from them would be
   // circular.
   const first = await db.receipts.orderBy('occurredAt').first()
   return { from: first?.occurredAt ?? now, to: now }

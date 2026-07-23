@@ -8,7 +8,7 @@ export const getMonthlyTotalsQueryKey = (year: number, calendar: CalendarSystem)
 /**
  * Twelve buckets for the bar chart, always all twelve.
  *
- * A month with no income is returned with `totalToman: 0` rather than omitted —
+ * A month with no income is returned with `totalToman: 0` rather than omitted
  * the brief's edge case. Dropping empty months would silently redraw the axis
  * and make a bad month look like it never happened.
  */

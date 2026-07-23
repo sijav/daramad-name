@@ -50,7 +50,7 @@ export const Desktop: Story = {
     await expect(await canvas.findByText(/^گزارش درآمد$|^Income report$/)).toBeInTheDocument()
 
     // And it is a landmark. A screen-reader user has no other way to jump to
-    // the navigation, or past it to the page — the six links otherwise sit in
+    // the navigation, or past it to the page, the six links otherwise sit in
     // the tree as a bare list with nothing saying what they are.
     await expect(await canvas.findByRole('navigation')).toBeInTheDocument()
 
@@ -130,10 +130,10 @@ export const Mobile: Story = {
     await expect(await canvas.findByText(/^گزارش$|^Report$/)).toBeInTheDocument()
     // …and the full one is nowhere on screen, because the rail is not rendered.
     await expect(canvas.queryByText(/^گزارش درآمد$|^Income report$/)).not.toBeInTheDocument()
-    // No permanent rail either — its paper is what reserves the 264px gutter.
+    // No permanent rail either, its paper is what reserves the 264px gutter.
     await expect(permanentRail(canvasElement)).toBeNull()
 
-    // The bar IS the navigation on a phone, so it is the landmark here — the
+    // The bar IS the navigation on a phone, so it is the landmark here, the
     // rail's is not in the document at this width.
     await expect(await canvas.findByRole('navigation')).toBeInTheDocument()
   },
@@ -148,7 +148,7 @@ export const MobileDrawerOpens: Story = {
     await userEvent.click(await canvas.findByRole('button', { name: /^باز کردن منو$|^Open menu$/ }))
 
     // The temporary drawer is portalled out of the story canvas, and the bottom
-    // bar repeats four of the same labels — so the assertions are scoped to the
+    // bar repeats four of the same labels, so the assertions are scoped to the
     // drawer rather than to the document.
     const drawer = await waitFor(() => {
       const element = canvasElement.ownerDocument.querySelector<HTMLElement>('.MuiDrawer-modal')
@@ -164,7 +164,7 @@ export const MobileDrawerOpens: Story = {
 
     // The drawer carries the landmark with it. While it is open MUI's Modal
     // aria-hides the rest of the document, including the bottom bar, so this
-    // nav is the only navigation exposed — and it has to exist, or the phone's
+    // nav is the only navigation exposed, and it has to exist, or the phone's
     // full-label navigation is unreachable by landmark.
     await expect(await inDrawer.findByRole('navigation')).toBeInTheDocument()
   },

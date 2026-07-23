@@ -58,7 +58,7 @@ export interface CertificateModel {
   months: CertificateMonthRow[]
   averageBasis: string
   footnote: string
-  /** True when the profile has no name — the document is not presentable yet. */
+  /** True when the profile has no name, the document is not presentable yet. */
   incomplete: boolean
 }
 
@@ -89,7 +89,7 @@ const LABELS = {
  * A short reference the holder can quote.
  *
  * Derived from the range and the total, so reprinting the same period the same
- * day yields the same reference — a serial that changed on every print would
+ * day yields the same reference, a serial that changed on every print would
  * undermine the very thing it exists to signal.
  */
 const REFERENCE_PREFIX = 'DN'
@@ -119,7 +119,7 @@ export const buildCertificateModel = (
   const locale: AppLocale = persian ? 'fa-IR' : 'en-US'
   // Profile fields are stored exactly as typed, so a national ID may already
   // hold Persian digits. Normalise to ASCII first, then re-render in the
-  // DOCUMENT's numbering — otherwise an embassy officer receives «۰۰۱۲۳۴۵۶۷۸»
+  // DOCUMENT's numbering, otherwise an embassy officer receives «۰۰۱۲۳۴۵۶۷۸»
   // on an otherwise English page, and a user who typed ASCII gets Latin digits
   // on an otherwise Persian one.
   const digits = (value: number | string) => {
@@ -147,7 +147,7 @@ export const buildCertificateModel = (
     }
   }
 
-  // The English certificate prefers the Latin spellings the holder entered —
+  // The English certificate prefers the Latin spellings the holder entered
   // only they know which one matches their passport, and an official comparing
   // the two cares about exactly that. Falls back to the Persian rather than
   // printing nothing.
@@ -158,7 +158,7 @@ export const buildCertificateModel = (
   pushIdentity(t('nationalId'), digits(report.profile.nationalId))
   // The passport number keeps ASCII digits in BOTH documents. A national ID
   // card is printed in Persian numerals so rendering it that way matches the
-  // card, but a passport is not — its number appears in Latin, and «K۱۲۳۴۵۶۷۸»
+  // card, but a passport is not, its number appears in Latin, and «K۱۲۳۴۵۶۷۸»
   // on a certificate would not match the document an official is holding.
   pushIdentity(t('passportNumber'), toEnglishDigits(report.profile.passportNumber))
   pushIdentity(t('phone'), digits(report.profile.phone))

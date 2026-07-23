@@ -12,7 +12,7 @@ const read = (files: Record<string, string>, prefix: string): Readonly<Record<st
   Object.fromEntries(Object.entries(files).map(([path, text]) => [path.replace(prefix, '').replace(/\.md$/, ''), parse(text)]))
 
 // Eager because a Docs page renders synchronously; there is nowhere to await.
-// The options must be written out at each call — Vite parses `import.meta.glob`
+// The options must be written out at each call, Vite parses `import.meta.glob`
 // statically and rejects anything but an object literal.
 export const EN_DOCS = read(
   import.meta.glob('./en/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>,

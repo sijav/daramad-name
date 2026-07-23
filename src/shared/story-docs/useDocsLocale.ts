@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { GLOBALS_UPDATED, SET_GLOBALS } from 'storybook/internal/core-events'
 import { getChannel } from 'storybook/preview-api'
 
-// Reads the Storybook "Language" toolbar from documentation, and — crucially —
+// Reads the Storybook "Language" toolbar from documentation, and, crucially
 // follows it when it changes.
 //
 // The obvious `useGlobals()` throws here: preview hooks only run inside
@@ -22,7 +22,7 @@ const currentLocale = (): string => {
   return preview?.storyStore?.userGlobals?.get?.()?.locale ?? 'fa-IR'
 }
 
-/** The toolbar's language, as a value — for prose, use `Localized` instead. */
+/** The toolbar's language, as a value, for prose, use `Localized` instead. */
 export const useDocsLocale = (): string => {
   const [locale, setLocale] = useState(currentLocale)
 
@@ -45,5 +45,5 @@ export const useDocsLocale = (): string => {
   return locale
 }
 
-/** Persian unless the toolbar says otherwise — the app's own default. */
+/** Persian unless the toolbar says otherwise, the app's own default. */
 export const isPersian = (locale: string): boolean => locale !== 'en-US'

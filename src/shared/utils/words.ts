@@ -2,13 +2,13 @@ import type { AppLocale } from 'src/shared/types'
 
 // Amounts written out in words.
 //
-// Every Iranian financial document that matters — a cheque, a contract, a
-// receipt — states its figure twice: once in digits and once «به حروف». It is
+// Every Iranian financial document that matters, a cheque, a contract, a
+// receipt, states its figure twice: once in digits and once «به حروف». It is
 // the convention that makes a page read as a financial instrument rather than
 // a printout, and it exists because words cannot be altered by adding a zero.
 // The income certificate does the same, in whichever language it is issued.
 //
-// The word tables below are a numeral system, not user-facing copy — the same
+// The word tables below are a numeral system, not user-facing copy, the same
 // category as the codepoint tables in `digits.ts`, and exempt from the lingui
 // rule for the same reason. Translating «هزار» through a message catalog would
 // be translating an algorithm's alphabet.
@@ -91,7 +91,7 @@ const englishTriplet = (value: number): string => {
  * Writes a whole, non-negative amount in words.
  *
  * Toman has no decimal part, so fractions are rounded away rather than
- * spelled — a certificate never needs to say «و پنجاه صدم».
+ * spelled, a certificate never needs to say «و پنجاه صدم».
  */
 export const numberToWords = (value: number, locale: AppLocale): string => {
   const whole = Math.max(0, Math.round(value))

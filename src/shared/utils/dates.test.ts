@@ -18,7 +18,7 @@ import {
 } from './dates'
 
 // The Jalali boundary logic is the part most likely to be subtly wrong and
-// least likely to be noticed — a year that starts in January instead of
+// least likely to be noticed, a year that starts in January instead of
 // Farvardin produces totals that look plausible but are not the user's year.
 
 describe('yearRange — Jalali years start at Farvardin, not January', () => {
@@ -115,7 +115,7 @@ describe('averagingPeriod — one rule for every monthly average', () => {
     // 1405 began at Farvardin; the fake clock sits in Tir, the fourth month.
     const { months, range } = averagingPeriod(yearRange(1405, 'JALALI'), 'JALALI')
     expect(months).toBe(4)
-    // The period is reported as ending today, not at Esfand — a certificate
+    // The period is reported as ending today, not at Esfand, a certificate
     // must not claim to cover months that have not happened.
     expect(new Date(range.to).getTime()).toBe(AT_TIR_31.getTime())
   })
@@ -143,7 +143,7 @@ describe('averagingPeriod — one rule for every monthly average', () => {
   })
 })
 
-// Everything below is display. None of it can throw — a mistake here prints a
+// Everything below is display. None of it can throw, a mistake here prints a
 // date that is off by a month, or Persian numerals on an English certificate,
 // and the page still looks finished on its way to an embassy.
 

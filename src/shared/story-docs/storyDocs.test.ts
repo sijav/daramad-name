@@ -8,7 +8,7 @@ import { docSlug, EN_DOCS, FA_DOCS } from './storyDocs'
 // Documentation lives in markdown keyed by story title and prop name, with
 // nothing in the type system holding it to the code it describes. A story
 // renamed on one side still builds, still renders, and still passes every other
-// test — it just quietly loses its description. So the pairing is asserted here.
+// test, it just quietly loses its description. So the pairing is asserted here.
 //
 // Display names come from Storybook's own `storyNameFromExport` rather than a
 // second implementation of it: the headings are derived with that function, so
@@ -107,7 +107,7 @@ describe('the Storybook documentation', () => {
         expect(text, `fa/${slug}.${key}`).toMatch(persian)
       }
     }
-    // English may quote a Persian label — «ذخیره و بعدی» is the button's name —
+    // English may quote a Persian label, «ذخیره و بعدی» is the button's name
     // so the check is that the sentence around it is English, not that no
     // Persian appears in it at all.
     for (const [slug, doc] of Object.entries(EN_DOCS)) {

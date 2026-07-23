@@ -24,7 +24,7 @@ export const ManyFilters: Story = { args: { activeCount: 12 } }
 export const Disabled: Story = { args: { activeCount: 0, disabled: true } }
 
 // The accessible name is computed from the button's content, so it picks the
-// badge digit up too — anchor the start only.
+// badge digit up too, anchor the start only.
 const FILTERS = /^فیلترها|^Filters/
 
 export const BadgeTracksTheCount: Story = {

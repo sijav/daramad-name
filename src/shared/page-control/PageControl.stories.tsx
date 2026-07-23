@@ -25,7 +25,7 @@ const Controlled: Story['render'] = function Render(args) {
   const [pageSize, setPageSize] = useState(args.pageSize)
   // `Math.max(1, …)` is what the ledger does (useLedgerView). Without it an
   // empty filter gives a page count of 0, and the harness then hands the
-  // control `page={0}` — a state production cannot reach, where the single
+  // control `page={0}`, a state production cannot reach, where the single
   // page button renders unselected.
   const pageCount = Math.max(1, Math.ceil(args.totalCount / pageSize))
   return (
@@ -99,7 +99,7 @@ export const ChangingRowsPerPageReslices: Story = {
       expect(await canvas.findByText(/^نمایش ۱ تا ۱۰ از ۱۲۶ دریافتی$|^Showing 1 to 10 of 126 receipts$/)).toBeInTheDocument(),
     )
 
-    // `10`, not `"10"` — the strict matcher is the assertion. What the footer
+    // `10`, not `"10"`, the strict matcher is the assertion. What the footer
     // displays and what it reports upward are two different values, and only
     // the second one reaches the ledger's slice.
     await expect(args.onPageSizeChange).toHaveBeenLastCalledWith(10)
@@ -117,7 +117,7 @@ export const EmptyRangeReadsZero: Story = {
 
     // Zero results is still page one of one. Dropping the `Math.max(1, …)` the
     // ledger applies gives a page count of 0, and the footer then renders its
-    // single page button with nothing selected — a state the app cannot reach.
+    // single page button with nothing selected, a state the app cannot reach.
     await step('and page one is still the current page', async () => {
       const current = new RegExp('^صفحه' + '‌' + 'ی ۱، صفحه' + '‌' + 'ی فعلی$|^Page 1, current page$')
       await expect(await canvas.findByRole('button', { name: current })).toBeInTheDocument()

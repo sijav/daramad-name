@@ -64,9 +64,6 @@ The MVP. Every scenario in the brief works end to end.
 
 ### Known limits
 
-- No backend, so the certificate cannot be verified against an issuer. This is
-  the one capability the architecture gives up, and it is recorded in
-  `PHASE-NEXT.md`.
 - Story files run one at a time; parallel is faster but still races on the
   shared IndexedDB. See `TECH-DEBT.md` entry 2.
 - One axe rule, `role-img-alt`, is off on the chart stories, because MUI X

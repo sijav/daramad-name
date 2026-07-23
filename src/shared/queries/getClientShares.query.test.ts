@@ -6,8 +6,8 @@ import { getClientSharesQuery, getClientSharesQueryKey } from './getClientShares
 
 // Scenario 4: the donut and the dependency warning beside it.
 //
-// The warning is advice about someone's livelihood — "over half of what you
-// earn comes from one place" — so it has to fire on the real ratio rather than
+// The warning is advice about someone's livelihood, "over half of what you
+// earn comes from one place", so it has to fire on the real ratio rather than
 // on the rounded number the legend prints. Comparing the rounded value moved
 // the real boundary to 50.5%: a client at a true 50.4% rounded to 50, `50 > 50`
 // was false, and the freelancer who most needed the warning did not get one.
@@ -114,7 +114,7 @@ describe('the concentration warning', () => {
   })
 
   // The regression. A true 50.4% prints as «۵۰٪» in the legend, and the warning
-  // still has to fire — the freelancer really is taking over half their income
+  // still has to fire, the freelancer really is taking over half their income
   // from one client.
   it('fires just above half, even though the printed percentage still reads fifty', async () => {
     await seedSplit(504_000_000, 496_000_000)

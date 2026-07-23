@@ -15,7 +15,7 @@ export interface ChartCardProps extends Omit<PaperProps, 'title' | 'variant'> {
  * and a 1px `border-default` hairline.
  *
  * Deliberately NOT `SurfaceCard`. The redesign moved chart panels off the heavy
- * 28px frosted treatment — a blurred translucent backdrop behind a data
+ * 28px frosted treatment, a blurred translucent backdrop behind a data
  * visualisation costs contrast exactly where it matters most, and the flat
  * bordered card reads cleaner behind bars and arcs.
  */

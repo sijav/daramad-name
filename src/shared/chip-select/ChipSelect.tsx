@@ -10,7 +10,7 @@ export interface ChipSelectProps<T extends string> {
   /** Names the group. Required unless `labelId` names it instead. */
   label?: string
   /**
-   * Id of a label drawn elsewhere — `Field`'s `labelId`, for a ChipSelect
+   * Id of a label drawn elsewhere, `Field`'s `labelId`, for a ChipSelect
    * sitting inside a field that already prints one. A `role="radiogroup"` is
    * not a labelable element, so a wrapping `<label>` never reaches it and the
    * association has to be spelled out. Without either prop the group has no
@@ -31,9 +31,9 @@ export interface ChipSelectProps<T extends string> {
  *
  * The `radiogroup` roles are backed by the behaviour they promise: one tab
  * stop, arrows moving the selection, wrapping at the ends. Nothing in MUI
- * supplies that for a row of chips — `ToggleButtonGroup`, which
+ * supplies that for a row of chips, `ToggleButtonGroup`, which
  * `SegmentedControl` builds on, is a group of pressable buttons rather than
- * radios — so it is written out here. The roles without the traversal were
+ * radios, so it is written out here. The roles without the traversal were
  * worse than plain buttons, because they tell a screen-reader user to reach
  * for arrow keys that did nothing.
  */
@@ -79,7 +79,7 @@ export const ChipSelect = <T extends string>({ label, labelId, value, options, o
     <Box>
       {label ? (
         // `component="span"`, because MUI maps `subtitle2` onto `<h6>` and this
-        // caption is not a heading — it announced "Payment channel, heading level
+        // caption is not a heading, it announced "Payment channel, heading level
         // 6" in the middle of the record card. `Field` carries the same note.
         <Typography variant="subtitle2" component="span" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
           {label}

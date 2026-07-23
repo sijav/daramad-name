@@ -5,7 +5,7 @@ import { createReceiptMutation, type CreateReceiptRequest } from './createReceip
 import { updateReceiptMutation, type UpdateReceiptRequest } from './updateReceipt.mutation'
 
 // Editing is the one time a stored toman value is allowed to change. The freeze
-// protects a receipt from TIME — a later rate move must not restate history —
+// protects a receipt from TIME, a later rate move must not restate history
 // not from the user correcting a typo. So an edit re-derives the total from the
 // rate on the form, and must do it for the edited receipt only.
 

@@ -7,8 +7,8 @@ import { FIXTURE_MONTHS, FIXTURE_YEARS, seedPageData } from './fixtures'
 
 // The stories are where the certificate is read and where its PDF is taken
 // from, so a fixture that does not add up ships a document that does not add
-// up. It did: twelve month rows — four of them in months that had not happened
-// — summed into a total and then divided by the five months elapsed.
+// up. It did: twelve month rows, four of them in months that had not happened
+//, summed into a total and then divided by the five months elapsed.
 //
 // A reader must be able to check the arithmetic on the page. These assertions
 // are that check.

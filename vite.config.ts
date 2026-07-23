@@ -29,12 +29,12 @@ export default defineConfig({
     // The report certificate is drawn with pdfkit, which is a Node library:
     // it reaches for `Buffer`, `stream`, `zlib` and `fs`. In the browser those
     // do not exist, so this shims them. It is deliberately NOT gated behind
-    // `isStorybook` — the browser test project renders the report story too and
+    // `isStorybook`, the browser test project renders the report story too and
     // needs the same shims. The Node unit project uses its own `vitest.config`
     // and never loads this file, so its tests keep the real Node modules.
     // Only the four subsystems pdfkit touches are polyfilled, and the report
     // chunk is dynamically imported, so this stays out of the initial bundle.
-    // See TECH-DEBT.md — pdfkit in the browser.
+    // See TECH-DEBT.md, pdfkit in the browser.
     nodePolyfills({
       include: ['buffer', 'stream', 'zlib', 'util', 'events', 'string_decoder', 'fs'],
       // `process` is needed too: pdfkit's stream shim (readable-stream) calls
@@ -58,12 +58,12 @@ export default defineConfig({
             // module graph where nothing can see or test it.
             injectRegister: null,
             // The manifest is emitted next to `index.html` and linked from it,
-            // so it inherits `base` — which is what keeps `start_url` and
+            // so it inherits `base`, which is what keeps `start_url` and
             // `scope` correct on GitHub Pages' `/daramad-name/` subpath.
             // The static half lives in `pwa-manifest.json`, which is the only
             // Persian the build owns: a manifest is read by the operating
             // system before any locale is chosen, so its description cannot be
-            // a lingui message — but it is still copy, and copy does not belong
+            // a lingui message, but it is still copy, and copy does not belong
             // in a config file. The NAME there is deliberately Latin: it is
             // what the OS prints under the installed icon, in the launcher and
             // in the app switcher, none of which are guaranteed to shape
@@ -73,14 +73,14 @@ export default defineConfig({
             // The three URL fields are derived rather than written down, so
             // they follow `base` onto GitHub Pages' `/daramad-name/` subpath.
             // `id` is explicit so the identity survives a change of `start_url`
-            // — without it the browser derives the id FROM `start_url`, and a
+            //, without it the browser derives the id FROM `start_url`, and a
             // reinstall would look like a different app.
             manifest: { ...manifest, id: base, start_url: base, scope: base },
             workbox: {
               // Everything the app can ever need, because there is no backend:
               // once the shell and the fonts are cached the whole product works
               // with the network off, which is its honest default rather than a
-              // bonus. `ttf` is not in workbox's default list and matters most —
+              // bonus. `ttf` is not in workbox's default list and matters most
               // those two files are the Vazirmatn cuts pdfkit embeds, and
               // without them the PDF certificate renders Persian as empty boxes.
               globPatterns: ['**/*.{js,css,html,svg,png,ico,webmanifest,woff2,ttf}'],
@@ -93,7 +93,7 @@ export default defineConfig({
               cleanupOutdatedCaches: true,
               clientsClaim: true,
               // Deep links (`/ledger`, `/report`) have no file behind them, so
-              // navigations resolve to the SPA shell — the service-worker
+              // navigations resolve to the SPA shell, the service-worker
               // equivalent of the `404.html` copy the Pages deploy makes.
               navigateFallback: `${base}index.html`,
               navigateFallbackDenylist: [

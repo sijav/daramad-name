@@ -7,7 +7,7 @@ import { App } from './App'
 
 const boot = async () => {
   queryClient.clear()
-  // Cleared so `readSettings` seeds its defaults — Persian, Jalali — exactly as
+  // Cleared so `readSettings` seeds its defaults, Persian, Jalali, exactly as
   // it would for a first-ever visitor.
   await db.settings.clear()
   const clearFixtures = await seedDatabase()
@@ -24,7 +24,7 @@ const boot = async () => {
 // MUI X renders `ChartsAccessibilityProxy`: two `role="img"` divs pointing at
 // `voiceover-<chartId>-1|2` elements that the library creates EMPTY and fills
 // only while the chart has keyboard focus. It is a live-region proxy for
-// keyboard navigation, not a static image label — so at rest axe correctly sees
+// keyboard navigation, not a static image label, so at rest axe correctly sees
 // `role="img"` with an empty name, on every chart, in every story.
 //
 // The only ways to satisfy the rule are to pass `disableKeyboardNavigation`,
@@ -95,7 +95,7 @@ export const CertificateRendersWithoutTheAppChrome: Story = {
 
     // Every landmark AppShell publishes, absent: `main` is the wrapper the
     // pages render into, `navigation` the rail and the bottom bar, `banner` the
-    // top bar. `main` matters most — it is the one the shell cannot render
+    // top bar. `main` matters most, it is the one the shell cannot render
     // without, so this goes red the moment the certificate route moves inside.
     await expect(canvas.queryByRole('button', { name: CHROME })).toBeNull()
     await expect(canvas.queryByRole('main')).toBeNull()
@@ -108,7 +108,7 @@ export const CertificateRendersWithoutTheAppChrome: Story = {
  * The four remaining routes, thinly.
  *
  * `path="*"` renders the dashboard, so a route that stopped resolving would not
- * throw — it would quietly serve the dashboard, and a screenshot of the app
+ * throw, it would quietly serve the dashboard, and a screenshot of the app
  * would look entirely correct. Each of these asserts the page's own `h2`, which
  * is the one thing the fallback cannot produce.
  */

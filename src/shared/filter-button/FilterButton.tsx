@@ -11,11 +11,11 @@ export interface FilterButtonProps extends Omit<ButtonProps, 'startIcon' | 'endI
 /**
  * Opens the filter popover, with a count badge when filters are applied.
  *
- * The badge matters for the same reason the chips do — a popover hides its
+ * The badge matters for the same reason the chips do, a popover hides its
  * contents, so the trigger has to carry the state.
  *
  * The design (`275:63`) puts the funnel on one edge and a filled 20px count
- * badge on the other, INSIDE the control — not as a corner overlay. The funnel
+ * badge on the other, INSIDE the control, not as a corner overlay. The funnel
  * is the `startIcon` and the badge is the last child, so RTL lands them on the
  * right and left respectively, matching the frame. Why the badge is not the
  * `endIcon` is recorded at the badge itself.

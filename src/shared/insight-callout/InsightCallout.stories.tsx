@@ -5,7 +5,7 @@ import { useFormat } from 'src/shared/format'
 import { InsightCallout } from './InsightCallout'
 
 // The sentence is composed inside each render so the copy follows the Language
-// toolbar the way the app's does — but a message typed into Controls wins over
+// toolbar the way the app's does, but a message typed into Controls wins over
 // the sample, which is what makes the panel worth opening.
 const meta = {
   title: 'Shared/InsightCallout',

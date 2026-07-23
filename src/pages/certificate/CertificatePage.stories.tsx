@@ -5,7 +5,7 @@ import { toPersianDigits, yearOf, yearRange } from 'src/shared/utils'
 import { expect, waitFor, within } from 'storybook/test'
 import { CertificatePage } from './CertificatePage'
 
-// The printable route takes its ENTIRE configuration from the query string —
+// The printable route takes its ENTIRE configuration from the query string
 // there is no state, no props and no picker on the page. So these stories
 // differ only in the URL the router is handed, which is exactly how the report
 // page opens it in a new tab.
@@ -16,7 +16,7 @@ const thisYear = yearOf(new Date(), 'JALALI')
 
 /**
  * Nothing paints until `useCertificateModel` resolves, and it begins by
- * DYNAMICALLY IMPORTING a second lingui instance plus a whole message catalog —
+ * DYNAMICALLY IMPORTING a second lingui instance plus a whole message catalog
  * that is what lets an English document be produced by a Persian interface. On
  * a cold module graph the import can outrun testing-library's one-second
  * default, so the wait is stated rather than left to flake.
@@ -24,14 +24,14 @@ const thisYear = yearOf(new Date(), 'JALALI')
 const findDocument = async (canvasElement: HTMLElement, text: string | RegExp) =>
   await within(canvasElement).findByText(text, undefined, { timeout: 10_000 })
 
-/** Any Persian money figure — «۱۸۷٬۲۶۰٬۰۰۰ تومان» — as opposed to «۰ تومان». */
+/** Any Persian money figure, «۱۸۷٬۲۶۰٬۰۰۰ تومان», as opposed to «۰ تومان». */
 const MONEY = /[۰-۹]{1,3}٬[۰-۹]{3}٬[۰-۹]{3} تومان/
 
 /**
  * Rows in the REAL database, dated inside the previous Jalali year.
  *
  * The page fixtures seed one report key, for the current year. `?year=` builds a
- * different key, so a past-year story misses the cache and reads Dexie — and an
+ * different key, so a past-year story misses the cache and reads Dexie, and an
  * empty Dexie still produces a complete-looking certificate, because the report
  * query buckets every month of a finished year whether or not anything is in it.
  * Every assertion below would then pass against a document reading zero.
@@ -56,7 +56,7 @@ const seedPreviousYear = async (): Promise<() => Promise<void>> => {
     updatedAt: occurredAt,
   })
 
-  // The first instant of the year, so the row lands in Farvardin — the month the
+  // The first instant of the year, so the row lands in Farvardin, the month the
   // play looks for by name.
   await db.receipts.bulkAdd([paid('prev-1', range.from, 187_260_000), paid('prev-2', midYear, 92_500_000)])
   return clear
@@ -107,13 +107,13 @@ export const English: Story = {
     await expect(await canvas.findByText('Raha Mousavi')).toBeInTheDocument()
 
     // The document carries its own direction and language, independent of the
-    // interface — which stays Persian and RTL around it.
+    // interface, which stays Persian and RTL around it.
     const sheet = heading.closest('[lang]')
     await expect(sheet).not.toBeNull()
     await expect(sheet).toHaveAttribute('lang', 'en-US')
     await expect(sheet).toHaveAttribute('dir', 'ltr')
 
-    // Latin grouping present, Persian numerals absent — everywhere, including
+    // Latin grouping present, Persian numerals absent, everywhere, including
     // the month table and the amount written out in words.
     await expect(sheet?.textContent).toMatch(/\d{1,3},\d{3},\d{3}/)
     await expect(sheet?.textContent).not.toMatch(/[۰-۹]/)
@@ -146,7 +146,7 @@ export const NoIncomeForThatYear: Story = {
       await findDocument(canvasElement, /^برای این سال دریافتی‌ای ثبت نشده$|^No receipts recorded for this year$/),
     ).toBeInTheDocument()
 
-    // No document at all — not a document with zeros in it.
+    // No document at all, not a document with zeros in it.
     await expect(canvas.queryByRole('heading', { level: 1 })).toBeNull()
     await expect(canvas.queryByText(new RegExp(`^DN-${thisYear}-`))).toBeNull()
     await expect(canvas.queryByText(MONEY)).toBeNull()

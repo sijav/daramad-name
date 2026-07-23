@@ -6,7 +6,7 @@ import { restoreBackupMutation } from './restoreBackup.mutation'
 
 // Restore replaces; it never merges. Merging would need a rule for "the same
 // receipt" that does not exist, and restoring one file twice would silently
-// double the user's income — the worst failure available to a tool whose entire
+// double the user's income, the worst failure available to a tool whose entire
 // value is an accurate total.
 //
 // The other half is that a file is checked BEFORE anything is deleted. Someone

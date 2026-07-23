@@ -8,7 +8,7 @@ import { defineConfig } from 'vitest/config'
 const rootDir = dirname(fileURLToPath(import.meta.url))
 
 // The lingui macros (`t`, `msg`, `Trans`) are compile-time transforms. Without
-// this plugin any module importing them throws at runtime — even a test that
+// this plugin any module importing them throws at runtime, even a test that
 // only touches pure helpers, because the constants module sits in its import
 // graph. Both projects need it.
 const lingui = () => react({ plugins: [['@lingui/swc-plugin', {}]] })
@@ -20,7 +20,7 @@ export default defineConfig({
   test: {
     // `npm run test:coverage` reports across BOTH projects, so a component
     // covered only by its story still counts. Barrels, stories and fixtures are
-    // excluded — they are wiring, and counting them flatters the number.
+    // excluded, they are wiring, and counting them flatters the number.
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],
@@ -40,7 +40,7 @@ export default defineConfig({
     },
     // Two projects rather than one root config. `include` and `environment` at
     // the root would leak into the Storybook project through `extends`, and the
-    // plugin then discards them with a warning — the unit tests would silently
+    // plugin then discards them with a warning, the unit tests would silently
     // stop running.
     projects: [
       {
@@ -75,7 +75,7 @@ export default defineConfig({
           name: 'storybook',
           // Story files run ONE AT A TIME.
           //
-          // They all share a single IndexedDB — it is the browser's, keyed by
+          // They all share a single IndexedDB, it is the browser's, keyed by
           // origin, not per-worker state that isolation could separate. So a
           // file seeding fixtures runs alongside one wiping the database for a
           // backup test, and whichever asserts on row counts loses. That

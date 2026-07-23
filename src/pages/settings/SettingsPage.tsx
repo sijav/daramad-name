@@ -334,11 +334,6 @@ export const SettingsPage = () => {
             the app, and disappears once it is installed, so it sits here
             rather than in the design's numbered sections. */}
         <InstallAppSection />
-
-        {/* 4, the design's `حریم خصوصی`: a statement, no control. */}
-        <SettingsSection title={t`Privacy`}>
-          <SettingRow label={t`All your data stays in your own browser and is never sent anywhere.`} />
-        </SettingsSection>
       </Stack>
 
       <ConfirmDialog

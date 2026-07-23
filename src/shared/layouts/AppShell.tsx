@@ -218,10 +218,7 @@ export const AppShell = () => {
         }}
       >
         <Outlet />
-        {/* Settings states this itself, as the design's «حریم خصوصی» section,
-            so the global footer would print the identical sentence twice in a
-            row directly beneath it. */}
-        {pathname === '/settings' ? null : <PrivacyFooter />}
+        <PrivacyFooter />
       </Box>
 
       {!isDesktop ? (

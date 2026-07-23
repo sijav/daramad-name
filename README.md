@@ -1,15 +1,14 @@
 # DaramadName · درآمدنامه
 
-A local-first income ledger and printable income certificate, for Iranian
-freelancers.
+A local-first income ledger and printable income certificate, for freelancers.
 
 [فارسی](./README.fa.md) · [Live demo](https://sijav.github.io/daramad-name/) ·
 [Component library](https://sijav.github.io/daramad-name/storybook/)
 
-An Iranian freelancer is **بی‌سند** (bi-sanad), a person without documents: no
-payslip, no certificate of income. An embassy, a landlord and an accountant all
-want a document that does not exist. DaramadName builds it from the receipts you
-record yourself.
+A freelancer is **بی‌سند** (bi-sanad), a person without documents: no payslip, no
+certificate of income. An embassy, a landlord and an accountant all want a
+document that does not exist. DaramadName builds it from the receipts you record
+yourself.
 
 **Your data never leaves your browser.** No account. No server. No backend.
 

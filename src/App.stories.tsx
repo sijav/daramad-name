@@ -76,9 +76,10 @@ const CHROME = /تغییر تم|Switch theme/i
 // `lazy()` across a suspense boundary, so give the first paint room.
 const LAZY_ROUTE = { timeout: 10_000 }
 
-// Page titles are `h2`. The level is pinned because the nav rail's own labels
-// come out as headings too — `ListItemText` renders its `subtitle2` variant as
-// an `h6` — so «دفتر درآمد» exists twice in the document while the ledger is open.
+// Page titles are `h2`, and the level is pinned rather than left to the name:
+// every page title is ALSO a nav label, so «دفتر درآمد» appears twice in the
+// document whenever the ledger is open. Role plus level is what separates the
+// title from the rail entry pointing at it.
 
 /**
  * `/ledger` reaches the ledger, inside the shell, with the seeded receipts and
@@ -142,8 +143,36 @@ export const CertificateRendersWithoutTheAppChrome: Story = {
 
     await expect(await canvas.findByRole('button', { name: /چاپ|Print/i }, LAZY_ROUTE)).toBeInTheDocument()
 
+    // Every landmark AppShell publishes, absent: `main` is the wrapper the
+    // pages render into, `navigation` the rail and the bottom bar, `banner` the
+    // top bar. `main` matters most — it is the one the shell cannot render
+    // without, so this goes red the moment the certificate route moves inside.
     await expect(canvas.queryByRole('button', { name: CHROME })).toBeNull()
+    await expect(canvas.queryByRole('main')).toBeNull()
     await expect(canvas.queryByRole('navigation')).toBeNull()
     await expect(canvas.queryByRole('banner')).toBeNull()
   },
 }
+
+/**
+ * The four remaining routes, thinly.
+ *
+ * `path="*"` renders the dashboard, so a route that stopped resolving would not
+ * throw — it would quietly serve the dashboard, and a screenshot of the app
+ * would look entirely correct. Each of these asserts the page's own `h2`, which
+ * is the one thing the fallback cannot produce.
+ */
+const routeStory = (route: string, title: RegExp): Story => ({
+  parameters: { layout: 'fullscreen', page: { route } },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(await canvas.findByRole('heading', { level: 2, name: title }, LAZY_ROUTE)).toBeInTheDocument()
+    await expect(await canvas.findByRole('button', { name: CHROME })).toBeInTheDocument()
+  },
+})
+
+export const QuickEntryRoute: Story = routeStory('/quick-entry', /^ثبت سریع دریافتی$|^Record a receipt quickly$/)
+export const ChartsRoute: Story = routeStory('/charts', /^نمودارها$|^Charts$/)
+export const ReportRoute: Story = routeStory('/report', /^گزارش درآمد$|^Income report$/)
+export const SettingsRoute: Story = routeStory('/settings', /^تنظیمات$|^Settings$/)

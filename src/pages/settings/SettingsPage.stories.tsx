@@ -168,7 +168,7 @@ export const ProfileRoundTrip: Story = {
     }
 
     await step('fill in the details the English certificate needs', async () => {
-      await typeInto(/^نام و نام خانوادگی$|^Full name$/, 'رها موسوی')
+      await typeInto(/^نام و نام خانوادگی$|^Full name in Farsi$/, 'رها موسوی')
       await typeInto(/^نام و نام خانوادگی به انگلیسی$|^Full name in English$/, 'Raha Mousavi')
       await typeInto(/^شماره‌ی پاسپورت$|^Passport number$/, 'A98765432')
       await typeInto(/^نشانی به انگلیسی$|^Address in English$/, 'Karimkhan St, Tehran')

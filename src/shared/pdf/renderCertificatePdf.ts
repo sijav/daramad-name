@@ -1,3 +1,5 @@
+import { msg } from '@lingui/core/macro'
+import { i18n } from 'src/core/i18n'
 import { installBidiLayout, toVisualLine } from './bidiText'
 import type { CertificateBlock, CertificateDoc } from './buildIncomeReport'
 
@@ -82,9 +84,14 @@ export const renderCertificatePdf = (
   // exercising an unpatched path.
   doc.font('regular')
   const embedded = (doc as unknown as { _font?: { font?: unknown } })._font
-  if (embedded?.font) {
-    installBidiLayout(embedded.font)
+  if (!embedded?.font) {
+    // Refuse to draw rather than draw it wrong. `_font` is private, so a pdfkit
+    // release that renames it turns the patch into a no-op — and an unpatched
+    // font prints «۱۴۰۵» as «۵۰۴۱» on a page nobody proofreads because it looks
+    // like a certificate. Failing here is the only signal that the shape moved.
+    throw new Error(i18n._(msg`The report could not be prepared for Persian text. Reload the page and try again.`))
   }
+  installBidiLayout(embedded.font)
 
   const x0 = doc.page.margins.left
   const W = doc.page.width - doc.page.margins.left - doc.page.margins.right
@@ -98,14 +105,35 @@ export const renderCertificatePdf = (
   const lineHeight = (size: number) => size * 1.6
 
   /**
-   * Draws text at an explicit y and returns the y just past it.
+   * Starts a new page when `height` would not fit above the bottom margin, and
+   * says whether it did.
    *
-   * Wraps in LOGICAL order using measured widths, then reorders each resulting
-   * line for display. `lineBreak: false` stops pdfkit re-wrapping a line that is
-   * already in visual order, which would break it in the wrong place.
+   * Every block draws at an explicit y taken from the one cursor above, and
+   * `lineBreak: false` keeps pdfkit's own wrapper — the thing that would
+   * otherwise add the page — out of it. So without this a certificate that
+   * outgrows one sheet keeps counting down past the paper: the text is in the
+   * file and nothing renders it. A twelve-month report with a full postal
+   * address is already that long.
+   *
+   * A block taller than a whole page is let through rather than looped over:
+   * the guard only fires once something has been drawn on the current page.
    */
-  const writeAt = (value: string, atY: number, style: TextStyle): number => {
-    doc.font(style.font).fontSize(style.size).fillColor(style.color)
+  const ensureRoom = (height: number): boolean => {
+    if (y <= doc.page.margins.top || y + height <= doc.page.height - doc.page.margins.bottom) {
+      return false
+    }
+    doc.addPage()
+    y = doc.page.margins.top
+    return true
+  }
+
+  /**
+   * Wraps in LOGICAL order using measured widths — reordering happens per line,
+   * after the break points are known, because bidi order is defined per visual
+   * line.
+   */
+  const wrap = (value: string, style: TextStyle): string[] => {
+    doc.font(style.font).fontSize(style.size)
 
     const words = value.split(/\s+/).filter(Boolean)
     const lines: string[] = []
@@ -120,8 +148,23 @@ export const renderCertificatePdf = (
       }
     }
     if (current) lines.push(current)
+    return lines
+  }
+
+  /** What `writeAt` is about to consume vertically, measured before it draws. */
+  const heightOf = (value: string, style: TextStyle): number => wrap(value, style).length * lineHeight(style.size)
+
+  /**
+   * Draws text at an explicit y and returns the y just past it.
+   *
+   * `lineBreak: false` stops pdfkit re-wrapping a line that is already in visual
+   * order, which would break it in the wrong place.
+   */
+  const writeAt = (value: string, atY: number, style: TextStyle): number => {
+    const lines = wrap(value, style)
     if (lines.length === 0) return atY
 
+    doc.font(style.font).fontSize(style.size).fillColor(style.color)
     const step = lineHeight(style.size)
     lines.forEach((line, index) => {
       doc.text(toVisualLine(line), style.x, atY + index * step, {
@@ -133,8 +176,9 @@ export const renderCertificatePdf = (
     return atY + lines.length * step
   }
 
-  /** Same, but advances the shared cursor. */
+  /** Same, but advances the shared cursor, breaking the page if it has to. */
   const write = (value: string, style: TextStyle): number => {
+    ensureRoom(heightOf(value, style))
     y = writeAt(value, y, style)
     return y
   }
@@ -179,17 +223,15 @@ export const renderCertificatePdf = (
     const valueW = W - labelW - 12
     const labelX = align === 'right' ? x0 + W - labelW : x0
     const valueX = align === 'right' ? x0 : x0 + labelW + 12
+    const labelStyle: TextStyle = { x: labelX, w: labelW, align, font: 'regular', size: 10.5, color: MUTED }
+    const valueStyle: TextStyle = { x: valueX, w: valueW, align, font: 'bold', size: 11, color: INK }
     for (const row of rows) {
+      // A row is a label and its value on one baseline; break before it rather
+      // than between the two halves of the same fact.
+      ensureRoom(Math.max(heightOf(row.label, labelStyle), heightOf(row.value, valueStyle)) + 4)
       const top = y
-      const labelBottom = writeAt(row.label, top, {
-        x: labelX,
-        w: labelW,
-        align,
-        font: 'regular',
-        size: 10.5,
-        color: MUTED,
-      })
-      const valueBottom = writeAt(row.value, top, { x: valueX, w: valueW, align, font: 'bold', size: 11, color: INK })
+      const labelBottom = writeAt(row.label, top, labelStyle)
+      const valueBottom = writeAt(row.value, top, valueStyle)
       y = Math.max(labelBottom, valueBottom) + 4
       doc
         .moveTo(x0, y - 2)
@@ -202,44 +244,31 @@ export const renderCertificatePdf = (
   }
 
   const drawTotal = (block: Extract<CertificateBlock, { type: 'total' }>) => {
-    const top = y
     const padding = 12
     const innerW = W - padding * 2
+    const labelStyle: TextStyle = { x: x0 + padding, w: innerW, align, font: 'regular', size: 11, color: MUTED }
+    const figureStyle: TextStyle = { x: x0 + padding, w: innerW, align: opposite, font: 'bold', size: 18, color: INK }
+    const wordsLabelStyle: TextStyle = { x: x0 + padding, w: innerW, align, font: 'regular', size: 9, color: FAINT }
+    const wordsStyle: TextStyle = { x: x0 + padding, w: innerW, align, font: 'regular', size: 10, color: MUTED }
+
+    // The border is stroked around the finished content, so the box has to be
+    // measured whole before anything is drawn — half a rounded rectangle
+    // continued on the next sheet reads as a printing fault on a document whose
+    // only job is to look official.
+    let inner = Math.max(heightOf(block.label, labelStyle), heightOf(block.figure, figureStyle))
+    if (block.words) {
+      inner += 2 + heightOf(block.wordsLabel, wordsLabelStyle) + heightOf(block.words, wordsStyle)
+    }
+    ensureRoom(inner + padding * 2 + 10)
+
+    const top = y
     const innerTop = top + padding
-    const labelBottom = writeAt(block.label, innerTop, {
-      x: x0 + padding,
-      w: innerW,
-      align,
-      font: 'regular',
-      size: 11,
-      color: MUTED,
-    })
-    const figureBottom = writeAt(block.figure, innerTop, {
-      x: x0 + padding,
-      w: innerW,
-      align: opposite,
-      font: 'bold',
-      size: 18,
-      color: INK,
-    })
+    const labelBottom = writeAt(block.label, innerTop, labelStyle)
+    const figureBottom = writeAt(block.figure, innerTop, figureStyle)
     let bottom = Math.max(labelBottom, figureBottom)
     if (block.words) {
-      const labelEnd = writeAt(block.wordsLabel, bottom + 2, {
-        x: x0 + padding,
-        w: innerW,
-        align,
-        font: 'regular',
-        size: 9,
-        color: FAINT,
-      })
-      bottom = writeAt(block.words, labelEnd, {
-        x: x0 + padding,
-        w: innerW,
-        align,
-        font: 'regular',
-        size: 10,
-        color: MUTED,
-      })
+      const labelEnd = writeAt(block.wordsLabel, bottom + 2, wordsLabelStyle)
+      bottom = writeAt(block.words, labelEnd, wordsStyle)
     }
     const boxBottom = bottom + padding
     doc
@@ -266,30 +295,56 @@ export const renderCertificatePdf = (
       return align === 'right' ? x0 + W - offset - cols[index].w : x0 + offset
     }
 
+    const cellStyle = (index: number, font: 'regular' | 'bold', size: number, color: string): TextStyle => ({
+      x: boxX(index),
+      w: cols[index].w,
+      align: cols[index].align,
+      font,
+      size,
+      color,
+    })
+
+    const rowHeight = (cells: string[], font: 'regular' | 'bold', size: number): number =>
+      cells.reduce((tallest, cell, index) => Math.max(tallest, heightOf(cell, cellStyle(index, font, size, INK))), 0)
+
     const drawRow = (cells: string[], font: 'regular' | 'bold', size: number, color: string) => {
       const top = y
       let bottom = top
       cells.forEach((cell, index) => {
-        const end = writeAt(cell, top, { x: boxX(index), w: cols[index].w, align: cols[index].align, font, size, color })
-        bottom = Math.max(bottom, end)
+        bottom = Math.max(bottom, writeAt(cell, top, cellStyle(index, font, size, color)))
       })
       y = bottom + 2
     }
 
-    drawRow(
-      cols.map((c) => c.header),
-      'bold',
-      9.5,
-      MUTED,
+    const headers = cols.map((c) => c.header)
+    // Repeated at the top of every sheet the table runs onto. A column of bare
+    // amounts with no headings above it cannot be read at all, and the month
+    // and count columns are the two a reader checks against each other.
+    const drawHead = () => {
+      drawRow(headers, 'bold', 9.5, MUTED)
+      rule(RULE, 1, 0, 4)
+    }
+    const headHeight = rowHeight(headers, 'bold', 9.5) + 2 + 4
+
+    // Never open a table with its heading alone at the foot of a page.
+    const first = block.rows[0]
+    ensureRoom(
+      headHeight +
+        (first
+          ? rowHeight(
+              cols.map((c) => c.text(first)),
+              'regular',
+              10,
+            ) + 2
+          : 0),
     )
-    rule(RULE, 1, 0, 4)
+    drawHead()
     for (const row of block.rows) {
-      drawRow(
-        cols.map((c) => c.text(row)),
-        'regular',
-        10,
-        INK,
-      )
+      const cells = cols.map((c) => c.text(row))
+      if (ensureRoom(rowHeight(cells, 'regular', 10) + 2)) {
+        drawHead()
+      }
+      drawRow(cells, 'regular', 10, INK)
       doc
         .moveTo(x0, y - 1)
         .lineTo(x0 + W, y - 1)
@@ -307,6 +362,9 @@ export const renderCertificatePdf = (
         drawHeader(block)
         break
       case 'rule':
+        // Carried onto the next sheet rather than stroked below the paper: the
+        // rule is what separates two sections, so losing it merges them.
+        ensureRoom(8 + 12)
         rule(INK, 1.5, 8, 12)
         break
       case 'rows':
@@ -315,10 +373,14 @@ export const renderCertificatePdf = (
       case 'total':
         drawTotal(block)
         break
-      case 'sectionTitle':
-        write(block.text, { x: x0, w: W, align, font: 'bold', size: 13, color: INK })
+      case 'sectionTitle': {
+        const style: TextStyle = { x: x0, w: W, align, font: 'bold', size: 13, color: INK }
+        // Keep the heading with at least one line of what it introduces.
+        ensureRoom(heightOf(block.text, style) + 4 + lineHeight(10))
+        write(block.text, style)
         y += 4
         break
+      }
       case 'table':
         drawTable(block)
         break

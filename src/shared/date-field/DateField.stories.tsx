@@ -83,10 +83,53 @@ export const IsNamedForScreenReaders: Story = {
   },
 }
 
-/** Filters allow future dates; the receipt form does not. */
+// A whole month that is unambiguously in the future, whenever the story runs.
+// Seeding from today and hunting for a later day in the same grid breaks on the
+// last day of a Jalali month — the flake the fixed date below already documents.
+const NEXT_YEAR = (() => {
+  const date = new Date()
+  date.setFullYear(date.getFullYear() + 1)
+  date.setHours(12, 0, 0, 0)
+  return date.toISOString()
+})()
+
+/** The calendar's day buttons, which are the ones `disableFuture` acts on. */
+const openDays = async (canvasElement: HTMLElement): Promise<HTMLElement[]> => {
+  const canvas = within(canvasElement)
+  const body = within(canvasElement.ownerDocument.body)
+
+  await userEvent.click(await canvas.findByRole('button', { name: /تاریخ را انتخاب کنید|choose date/i }))
+  // The grid pads its first week with non-interactive spacers that also carry
+  // the gridcell role, so the real days are the buttons.
+  return (await body.findAllByRole('gridcell')).filter((day) => day.tagName === 'BUTTON')
+}
+
+/**
+ * Filters allow future dates; the receipt form does not. Both halves are
+ * asserted, because a `disableFuture` that silently stopped working looks
+ * exactly like one that is off on purpose.
+ */
 export const AllowsFuture: Story = {
-  args: { label: 'To date', value: new Date().toISOString(), disableFuture: false, onValueChange: fn() },
+  args: { label: 'To date', value: NEXT_YEAR, disableFuture: false, onValueChange: fn() },
   render: Controlled,
+  play: async ({ canvasElement }) => {
+    const days = await openDays(canvasElement)
+
+    await expect(days.length).toBeGreaterThan(0)
+    await expect(days.filter((day) => day.hasAttribute('disabled'))).toHaveLength(0)
+  },
+}
+
+/** The default, and the one the receipt form relies on: a receipt cannot arrive tomorrow. */
+export const BlocksFuture: Story = {
+  args: { label: 'Date received', value: NEXT_YEAR, onValueChange: fn() },
+  render: Controlled,
+  play: async ({ canvasElement }) => {
+    const days = await openDays(canvasElement)
+
+    await expect(days.length).toBeGreaterThan(0)
+    await expect(days.filter((day) => !day.hasAttribute('disabled'))).toHaveLength(0)
+  },
 }
 
 /**

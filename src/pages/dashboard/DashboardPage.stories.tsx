@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Route, Routes } from 'react-router-dom'
 import { db } from 'src/core/db'
+import { i18n } from 'src/core/i18n'
 import { FIXTURE_MONTHS } from 'src/shared/story-fixtures'
 import type { Receipt } from 'src/shared/types'
-import { toEnglishDigits, yearOf } from 'src/shared/utils'
+import { monthIndexOf, monthNames, toEnglishDigits, toPersianDigits, yearOf } from 'src/shared/utils'
 import { expect, userEvent, within } from 'storybook/test'
 import { DashboardPage } from './DashboardPage'
 
@@ -89,12 +90,13 @@ export const MonthlyAverageStatesItsDivisor: Story = {
   play: async ({ canvasElement, step }) => {
     const averageCard = await cardFor(canvasElement, /^میانگین ماهانه$|^Monthly average$/)
     const totalCard = await cardFor(canvasElement, /^درآمد سال |^Income in /)
+    let divisor = 0
 
     await step('the divisor is stated on the card, in words', async () => {
       const hint = /(?:تقسیم بر|divided by)\s*([۰-۹\d]+)\s*(?:ماه|months)/.exec(averageCard?.textContent ?? '')
       await expect(hint).not.toBeNull()
 
-      const divisor = Number(toEnglishDigits(hint![1]))
+      divisor = Number(toEnglishDigits(hint![1]))
       await expect(divisor).toBeGreaterThan(0)
       await expect(divisor).toBeLessThanOrEqual(12)
 
@@ -102,14 +104,62 @@ export const MonthlyAverageStatesItsDivisor: Story = {
       await expect(figureIn(averageCard)).toBe(Math.round(figureIn(totalCard) / divisor))
     })
 
-    await step('and the year total is the sum of the months, not of the visible ones', async () => {
-      // Derived from the fixture rather than written out: the months carry
-      // varied receipt counts and a couple of empty ones, and a hard-coded
-      // figure here only records what the fixture happened to hold on the day
-      // it was written. The empty months belong in the total's denominator but
-      // contribute nothing to it.
-      const expected = FIXTURE_MONTHS(yearOf(new Date(), 'JALALI')).reduce((sum, month) => sum + month.totalToman, 0)
+    await step('and the total covers exactly the months the divisor counts', async () => {
+      // The fixture seeds all twelve buckets of the year, but only the elapsed
+      // ones may be summed — a numerator carrying months that have not happened
+      // over a divisor that does not count them inflates the average, which is
+      // the one figure on this page nobody can sanity-check by eye.
+      //
+      // The month cut-off is taken from the divisor the page PRINTED rather
+      // than recomputed here, so this cannot pass by making the same mistake
+      // twice. Derived from the fixture rather than written out: the months
+      // carry varied receipt counts and a couple of empty ones, and the empty
+      // ones belong in the divisor while contributing nothing to the total.
+      const expected = FIXTURE_MONTHS(yearOf(new Date(), 'JALALI'))
+        .filter((month) => month.month <= divisor)
+        .reduce((sum, month) => sum + month.totalToman, 0)
       await expect(figureIn(totalCard)).toBe(expected)
+    })
+  },
+}
+
+/**
+ * The first card reads the CURRENT calendar month's bucket out of whichever
+ * year the picker is on, so on a past year it holds that year's Mordad.
+ *
+ * Left headed «درآمد این ماه» that is income from a year ago under the words
+ * "this month" — on the one screen someone opens to find out what they earn,
+ * and the figure they would repeat to a landlord. The neighbouring cards
+ * already name their year; this one has to name its month as well, because the
+ * month is the part that moved.
+ */
+export const APastYearNamesTheMonthOnTheCard: Story = {
+  parameters: seeded,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const body = within(canvasElement.ownerDocument.body)
+    const previous = yearOf(new Date(), 'JALALI') - 1
+    const month = monthNames('JALALI', i18n)[monthIndexOf(new Date(), 'JALALI')]
+
+    await step('on the current year the card says "this month"', async () => {
+      await expect(await canvas.findByText(/^درآمد این ماه$|^Income this month$/)).toBeInTheDocument()
+    })
+
+    await step('pick the year before', async () => {
+      await userEvent.click(await canvas.findByRole('combobox'))
+      await userEvent.click(await body.findByRole('option', { name: new RegExp(`(${previous}|${toPersianDigits(previous)})$`) }))
+    })
+
+    await step('and the card names the month it is actually showing', async () => {
+      await expect(canvas.queryByText(/^درآمد این ماه$|^Income this month$/)).toBeNull()
+      // Month name AND year in ONE label. Matched on parts rather than on the
+      // whole sentence so the assertion survives translation and works in
+      // either language; `getNodeText` reads only an element's own text, so an
+      // ancestor holding both in different children cannot satisfy it.
+      const relabelled = await canvas.findByText(
+        (content) => content.includes(month) && toEnglishDigits(content).includes(String(previous)),
+      )
+      await expect(relabelled).toBeInTheDocument()
     })
   },
 }

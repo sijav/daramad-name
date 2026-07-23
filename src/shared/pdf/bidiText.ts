@@ -1,5 +1,7 @@
+import { msg } from '@lingui/core/macro'
 import bidiFactory from 'bidi-js'
 import * as fontkit from 'fontkit'
+import { i18n } from 'src/core/i18n'
 
 // The bidi layer the PDF stack was missing.
 //
@@ -155,13 +157,21 @@ const PATCHED = Symbol.for('daramadname.bidi-layout')
  * cheap to call repeatedly — it patches the shared prototype the first time and
  * no-ops after. Pass any opened font (fontkit exposes no class to reach the
  * prototype otherwise); the loader hands it the Vazirmatn probe it already has.
+ *
+ * Throws when the probe has no `layout` anywhere on its prototype chain. That
+ * only happens if fontkit changes shape, and returning quietly instead would
+ * ship a certificate with every year reversed — the one failure mode that looks
+ * completely normal to whoever generates the document.
  */
 export const installBidiLayout = (probe: unknown): void => {
   let proto = Object.getPrototypeOf(probe as object)
   while (proto && !Object.prototype.hasOwnProperty.call(proto, 'layout')) {
     proto = Object.getPrototypeOf(proto)
   }
-  if (!proto || (proto as Record<symbol, unknown>)[PATCHED]) return
+  if (!proto) {
+    throw new Error(i18n._(msg`The report could not be prepared for Persian text. Reload the page and try again.`))
+  }
+  if ((proto as Record<symbol, unknown>)[PATCHED]) return
 
   const original = (proto as { layout: LayoutFn }).layout
   ;(proto as { layout: LayoutFn }).layout = function patchedLayout(string, features, script, language, direction) {

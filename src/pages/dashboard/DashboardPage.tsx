@@ -6,7 +6,6 @@ import ReceiptLongRoundedIcon from '@mui/icons-material/ReceiptLongRounded'
 import ShowChartRoundedIcon from '@mui/icons-material/ShowChartRounded'
 import { Box, Button, CircularProgress, Grid, Stack, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSettings } from 'src/core/query'
 import { radius } from 'src/core/theme'
@@ -15,7 +14,7 @@ import { ChartCard } from 'src/shared/chart-card'
 import { EmptyState } from 'src/shared/empty-state'
 import { useFormat } from 'src/shared/format'
 import { InsightCallout } from 'src/shared/insight-callout'
-import { PageActions } from 'src/shared/page-actions'
+import { PageActions, useReportYear } from 'src/shared/page-actions'
 import { PageHeader } from 'src/shared/page-header'
 import {
   getClientSharesQuery,
@@ -29,7 +28,7 @@ import {
 } from 'src/shared/queries'
 import { SummaryCard } from 'src/shared/summary-card'
 import { SurfaceCard } from 'src/shared/surface-card'
-import { averagingPeriod, monthIndexOf, yearOf, yearRange } from 'src/shared/utils'
+import { averagingPeriod, monthIndexOf, monthNames, yearOf, yearRange } from 'src/shared/utils'
 import { RecentReceipts } from './RecentReceipts'
 
 /**
@@ -40,11 +39,14 @@ import { RecentReceipts } from './RecentReceipts'
  * the report, which is the thing they actually need a document for.
  */
 export const DashboardPage = () => {
-  const { t } = useLingui()
+  const { t, i18n } = useLingui()
   const navigate = useNavigate()
   const { calendar } = useSettings()
   const { digits } = useFormat()
-  const [year, setYear] = useState(() => yearOf(new Date(), calendar))
+  // `useReportYear` rather than a local `useState`, so the picked year is
+  // re-expressed when Settings switches calendar system instead of holding a
+  // Jalali number against a list of Gregorian options.
+  const [year, setYear] = useReportYear(calendar)
 
   const range = yearRange(year, calendar)
   // One rule for every monthly average in the app: divide by the months of the
@@ -60,10 +62,32 @@ export const DashboardPage = () => {
     queryFn: getLedgerQuery,
   })
 
-  const yearTotal = months?.reduce((sum, month) => sum + month.totalToman, 0) ?? 0
-  const receiptCount = months?.reduce((sum, month) => sum + month.receiptCount, 0) ?? 0
+  // Sum the SAME months the average divides by.
+  //
+  // Summing all twelve buckets while dividing by the clamped count inflates the
+  // average by however much sits in months that have not happened — the exact
+  // defect `getLedger.query.ts` records having fixed twice. Future-dated
+  // receipts are reachable (the form allows any date), so this is not
+  // hypothetical.
+  const lastCountedMonth =
+    yearOf(new Date(averagingPeriod(range, calendar).range.to), calendar) === year
+      ? monthIndexOf(new Date(averagingPeriod(range, calendar).range.to), calendar) + 1
+      : 12
+  const countedMonths = months?.filter((month) => month.month <= lastCountedMonth) ?? []
+  const yearTotal = countedMonths.reduce((sum, month) => sum + month.totalToman, 0)
+  const receiptCount = countedMonths.reduce((sum, month) => sum + month.receiptCount, 0)
   // The design's fourth card is the CURRENT month, not a count of active ones.
-  const thisMonthTotal = months?.find((month) => month.month === monthIndexOf(new Date(), calendar) + 1)?.totalToman ?? 0
+  //
+  // The bucket comes out of whichever year is picked, so on a past year it is
+  // that year's Mordad rather than this one. The label says so instead — a
+  // figure headed "this month" that is not this month is exactly the number
+  // someone copies onto a form. The neighbouring cards already name their year.
+  const currentMonth = monthIndexOf(new Date(), calendar) + 1
+  const monthTotal = months?.find((month) => month.month === currentMonth)?.totalToman ?? 0
+  const monthLabel =
+    year === yearOf(new Date(), calendar)
+      ? t`Income this month`
+      : t`Income in ${monthNames(calendar, i18n)[currentMonth - 1]} ${digits(year)}`
   const hasData = yearTotal > 0
 
   return (
@@ -94,7 +118,7 @@ export const DashboardPage = () => {
         <Stack spacing={3}>
           <Grid container spacing={2}>
             <Grid size={{ xs: 6, md: 3 }}>
-              <SummaryCard label={t`Income this month`} value={thisMonthTotal} icon={<EventAvailableRoundedIcon />} />
+              <SummaryCard label={monthLabel} value={monthTotal} icon={<EventAvailableRoundedIcon />} />
             </Grid>
             <Grid size={{ xs: 6, md: 3 }}>
               <SummaryCard label={t`Income in ${digits(year)}`} value={yearTotal} icon={<PaymentsRoundedIcon />} />

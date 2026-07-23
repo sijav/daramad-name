@@ -1,6 +1,15 @@
 import { msg } from '@lingui/core/macro'
 import { i18n } from 'src/core/i18n'
-import { CHANNELS, CURRENCIES, type Client, type Receipt, type Settings } from 'src/shared/types'
+import {
+  CHANNELS,
+  CURRENCIES,
+  type AppLocale,
+  type CalendarSystem,
+  type Client,
+  type Receipt,
+  type Settings,
+  type ThemePreference,
+} from 'src/shared/types'
 
 /**
  * The one place a receipt, client or settings row is checked before it is
@@ -77,9 +86,32 @@ export const assertReferencesResolve = (receipts: Receipt[], clients: Client[], 
   }
 }
 
-/** Settings are repaired rather than rejected — a bad preference is not worth losing data over. */
+// The three settings enums are bare union types with no runtime array beside
+// them the way `CURRENCIES` and `CHANNELS` have, so the accepted values are
+// listed here — this is the only place that has to check a stored preference
+// against them.
+const CALENDAR_SYSTEMS: readonly CalendarSystem[] = ['JALALI', 'GREGORIAN']
+const APP_LOCALES: readonly AppLocale[] = ['fa-IR', 'en-US']
+const THEME_PREFERENCES: readonly ThemePreference[] = ['light', 'dark', 'system']
+
+const oneOf = <T>(value: unknown, allowed: readonly T[], fallback: T): T => (allowed.includes(value as T) ? (value as T) : fallback)
+
+/**
+ * Settings are repaired rather than rejected — a bad preference is not worth
+ * losing data over.
+ *
+ * Repair means each value is checked, not just each key: a spread alone lets a
+ * present-but-unknown value win over the fallback, and an unknown one is worse
+ * than a missing one. An unrecognised `calendar` falls through every
+ * `calendar === 'JALALI' ? … : …` in `dates.ts` and silently renders the whole
+ * ledger in the other calendar; an unrecognised `locale` makes the catalog
+ * import reject, which leaves the app on its opening spinner.
+ */
 export const coerceSettings = (settings: Partial<Settings> | undefined, fallback: Settings): Settings => ({
   ...fallback,
   ...settings,
+  calendar: oneOf(settings?.calendar, CALENDAR_SYSTEMS, fallback.calendar),
+  locale: oneOf(settings?.locale, APP_LOCALES, fallback.locale),
+  themePreference: oneOf(settings?.themePreference, THEME_PREFERENCES, fallback.themePreference),
   profile: { ...fallback.profile, ...settings?.profile },
 })

@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Route, Routes } from 'react-router-dom'
-import { expect, userEvent, within } from 'storybook/test'
+import { db } from 'src/core/db'
+import type { Receipt } from 'src/shared/types'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 import { ChartsPage } from './ChartsPage'
 
 // `role-img-alt` is switched off HERE ONLY, and it is upstream rather than ours.
@@ -17,17 +19,22 @@ import { ChartsPage } from './ChartsPage'
 // rule stays enforced. SEE TECH-DEBT.md.
 const CHART_A11Y = { a11y: { config: { rules: [{ id: 'role-img-alt', enabled: false }] } } }
 
+// `data` is declared per story rather than on the meta, because Storybook MERGES
+// parameters: a story that wants the real database cannot switch the seeding off
+// again once the meta has turned it on.
 const meta = {
   title: 'Pages/Charts',
   component: ChartsPage,
-  parameters: { ...CHART_A11Y, layout: 'fullscreen', page: { data: 'full', route: '/charts' } },
+  parameters: { ...CHART_A11Y, layout: 'fullscreen', page: { route: '/charts' } },
 } satisfies Meta<typeof ChartsPage>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
+const seeded = { page: { data: 'full' } }
+
 /** Scenario 4: the year bar chart, the donut with its insight, and the ranked client list. */
-export const WithData: Story = {}
+export const WithData: Story = { parameters: seeded }
 
 /**
  * A year with nothing recorded — the empty state rather than twelve zero bars.
@@ -73,6 +80,7 @@ export const Empty: Story = {
  * learns about that dependency only once the client has gone.
  */
 export const ShowsTheWholeYearAndTheRisk: Story = {
+  parameters: seeded,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -86,5 +94,64 @@ export const ShowsTheWholeYearAndTheRisk: Story = {
     const insight = await canvas.findByText(/درآمدت از یک مشتری/)
     await expect(insight).toBeInTheDocument()
     await expect(insight.textContent).toMatch(/[۰-۹]+٪/)
+  },
+}
+
+const tomanReceipt = (id: string, clientId: string, amountToman: number): Receipt => ({
+  id,
+  occurredAt: new Date().toISOString(),
+  amountOriginal: amountToman,
+  currency: 'TOMAN',
+  rate: null,
+  amountToman,
+  clientId,
+  channel: 'CARD_TO_CARD',
+  note: null,
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+})
+
+/**
+ * The other half of the concentration rule, and the reason it needs the REAL
+ * database: the seeded fixture sets the insight whenever any share exists, so
+ * `ShowsTheWholeYearAndTheRisk` would stay green with the >50% threshold
+ * deleted. Four clients paying equally is a 25% top share, and the callout has
+ * to stay silent.
+ *
+ * A warning that always fires is worse than none. It teaches a freelancer to
+ * skip past it, and then the real 80% year goes unread.
+ */
+export const ConcentrationStaysQuietWhenSpread: Story = {
+  beforeEach: async () => {
+    const clear = async () => {
+      await Promise.all([db.receipts.clear(), db.clients.clear()])
+    }
+    await clear()
+
+    const names = ['Aria Trading', 'Homa Cafe', 'Naghsh Studio', 'Dadepardaz Co.']
+    await db.clients.bulkAdd(
+      names.map((name, index) => ({ id: `c${index}`, name, nameKey: name.toLowerCase(), createdAt: new Date().toISOString() })),
+    )
+    await db.receipts.bulkAdd(names.map((_name, index) => tomanReceipt(`r${index}`, `c${index}`, 25_000_000)))
+
+    return clear
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // Everything here came from Dexie, so wait for the charts before concluding
+    // anything from an absence.
+    await expect(await canvas.findByText(/^سهم مشتری‌ها از درآمد$|^Client share of income$/)).toBeInTheDocument()
+    // The leader is named on three surfaces here — the donut's centre overlay,
+    // its legend, and the ranked list — and which paints first is a race.
+    // `findAllByText` resolves as soon as ONE matches, so pinning an exact
+    // count only recorded whichever moment the assertion happened to catch.
+    // More than one is what actually proves the client surfaces have loaded,
+    // which is the precondition for reading anything into the absence below.
+    await waitFor(async () => {
+      await expect((await canvas.findAllByText('Aria Trading')).length).toBeGreaterThan(1)
+    })
+
+    await expect(canvas.queryByText(/درآمدت از یک مشتری|of your income comes from a single client/)).toBeNull()
   },
 }

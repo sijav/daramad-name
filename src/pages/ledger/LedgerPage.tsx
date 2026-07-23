@@ -22,11 +22,14 @@ import { ReceiptDetailsDrawer } from 'src/shared/receipt-details-drawer'
 import { SearchField } from 'src/shared/search-field'
 import { SummaryCard } from 'src/shared/summary-card'
 import { SurfaceCard } from 'src/shared/surface-card'
-import type { ReceiptWithClient } from 'src/shared/types'
+import type { LedgerSummary, ReceiptWithClient } from 'src/shared/types'
 import { EditReceiptDialog } from './EditReceiptDialog'
 import { LedgerFilterPopover } from './LedgerFilterPopover'
 import { LedgerTable } from './LedgerTable'
 import { useLedgerView } from './useLedgerView'
+
+/** Stands in until the query resolves; one month, so nothing divides by zero. */
+const EMPTY_SUMMARY: LedgerSummary = { totalToman: 0, receiptCount: 0, monthlyAverageToman: 0, monthsInRange: 1 }
 
 /**
  * Scenario 2's ledger, rebuilt to the redesign: search, a filter popover with
@@ -50,7 +53,10 @@ export const LedgerPage = () => {
   })
   const { data: clients = [] } = useQuery({ queryKey: clientsQueryKey, queryFn: getClientsQuery })
 
-  const paged = view.paginate(data?.receipts ?? [])
+  // Search is applied here rather than in the query, so the summary has to come
+  // back through the same call — otherwise the cards and the total band keep
+  // counting rows the search has already taken off the screen.
+  const paged = view.paginate(data?.receipts ?? [], data?.summary ?? EMPTY_SUMMARY)
 
   const { mutate: remove } = useMutation({
     mutationFn: deleteReceiptMutation,
@@ -136,18 +142,18 @@ export const LedgerPage = () => {
 
       <Grid container spacing={2} sx={{ mb: 3 }}>
         <Grid size={{ xs: 6, sm: 4 }}>
-          <SummaryCard label={t`Receipts`} value={digits(data?.summary.receiptCount ?? 0)} icon={<ReceiptLongRoundedIcon />} />
+          <SummaryCard label={t`Receipts`} value={digits(paged.summary.receiptCount)} icon={<ReceiptLongRoundedIcon />} />
         </Grid>
         <Grid size={{ xs: 6, sm: 4 }}>
           <SummaryCard
             label={t`Monthly average`}
-            value={data?.summary.monthlyAverageToman ?? 0}
-            hint={t`divided by ${digits(data?.summary.monthsInRange ?? 1)} months`}
+            value={paged.summary.monthlyAverageToman}
+            hint={t`divided by ${digits(paged.summary.monthsInRange)} months`}
             icon={<ShowChartRoundedIcon />}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 4 }}>
-          <SummaryCard label={t`Total`} value={data?.summary.totalToman ?? 0} icon={<PaymentsRoundedIcon />} />
+          <SummaryCard label={t`Total`} value={paged.summary.totalToman} icon={<PaymentsRoundedIcon />} />
         </Grid>
       </Grid>
 
@@ -169,10 +175,9 @@ export const LedgerPage = () => {
           <SurfaceCard flat disablePadding>
             <LedgerTable
               receipts={paged.rows}
-              summary={data?.summary ?? { totalToman: 0, receiptCount: 0, monthlyAverageToman: 0, monthsInRange: 1 }}
+              summary={paged.summary}
               sort={view.sort}
               filtered={isFiltered}
-              calendar={view.calendar}
               onSortChange={view.setSort}
               onView={setViewing}
               onEdit={setEditing}

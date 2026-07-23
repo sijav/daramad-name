@@ -1,10 +1,16 @@
-import { Stack, Typography } from '@mui/material'
+import { Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { SurfaceCard } from './SurfaceCard'
 
 const meta = {
   title: 'Shared/SurfaceCard',
   component: SurfaceCard,
+  argTypes: {
+    radius: { control: 'inline-radio', options: ['lg', 'xl'] },
+    tone: { control: 'inline-radio', options: ['default', 'subtle'] },
+    flat: { control: 'boolean' },
+    disablePadding: { control: 'boolean' },
+  },
 } satisfies Meta<typeof SurfaceCard>
 
 export default meta
@@ -30,3 +36,38 @@ export const Flat: Story = { args: { ...Default.args, flat: true } }
 
 /** `tone="subtle"` is the tinted panel behind the dashboard's report shortcut. */
 export const Subtle: Story = { args: { ...Default.args, tone: 'subtle', flat: true } }
+
+/**
+ * `disablePadding` is how the ledger table reaches the rounded corners, and it
+ * is a PROP rather than `sx={{ p: 0 }}` for a reason worth seeing: the default
+ * padding is responsive, so a scalar override loses to its own `@media` rule
+ * and the header band stops short of the corner at every breakpoint.
+ */
+export const EdgeToEdge: Story = {
+  args: {
+    ...Default.args,
+    disablePadding: true,
+    flat: true,
+    sx: { maxWidth: 520 },
+    children: (
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>Date</TableCell>
+            <TableCell>Client</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell>1404/05/08</TableCell>
+            <TableCell>Aria Trading</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>1404/05/21</TableCell>
+            <TableCell>Naghsh Studio</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    ),
+  },
+}

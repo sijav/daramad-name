@@ -167,10 +167,10 @@ export const ReportPage = () => {
                 />
               </Stack>
 
-              {/* Two ways out. The printable page is the one that renders
-                  Persian correctly, because the browser does the typesetting;
-                  the PDF is one click but its word order is not trustworthy
-                  for wrapping Persian text. */}
+              {/* Two ways out. The printable page is the browser's own
+                  typesetting, so the preview above IS what comes off the
+                  printer, and it costs none of the ~700 KB pdfkit/fontkit
+                  chunk. The PDF is the one you can attach to an email. */}
               <Button
                 variant="contained"
                 disabled={!hasIncome}

@@ -44,7 +44,7 @@ export const SegmentedControl = <T extends string>({
     onChange={(_event, next: T | null) => next !== null && onValueChange(next)}
     sx={[
       (theme) => ({
-        height: variant === 'subtle' ? 44 : 44,
+        height: 44,
         p: 0.5,
         gap: 0.5,
         borderRadius: `${variant === 'subtle' ? radius.sm + 2 : radius.full}px`,

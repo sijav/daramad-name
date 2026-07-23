@@ -6,6 +6,10 @@ import { SegmentedControl } from './SegmentedControl'
 const meta = {
   title: 'Shared/SegmentedControl',
   component: SegmentedControl,
+  argTypes: {
+    variant: { control: 'inline-radio', options: ['filled', 'subtle'] },
+    disabled: { control: 'boolean' },
+  },
 } satisfies Meta<typeof SegmentedControl<string>>
 
 export default meta
@@ -22,9 +26,21 @@ export const Currency: Story = {
     ],
     onValueChange: fn(),
   },
+  // Controlled so the pill moves, but the spy from `args` is called too — a
+  // bare `setValue` here would replace it and every story sharing this render
+  // would report nothing to the Actions panel.
   render: function Render(args) {
     const [value, setValue] = useState(args.value)
-    return <SegmentedControl {...args} value={value} onValueChange={setValue} />
+    return (
+      <SegmentedControl
+        {...args}
+        value={value}
+        onValueChange={(next) => {
+          setValue(next)
+          args.onValueChange(next)
+        }}
+      />
+    )
   },
 }
 
@@ -52,6 +68,35 @@ export const Subtle: Story = {
       { value: 'en', label: 'English' },
     ],
     onValueChange: fn(),
+  },
+}
+
+/**
+ * `disabled` is not a prop this component declares — it rides the rest spread
+ * through to `ToggleButtonGroup`. No page passes it yet, so this story is the
+ * only thing showing what the state looks like and the only proof that the
+ * spread reaches the group at all.
+ */
+export const Disabled: Story = {
+  ...Currency,
+  args: {
+    value: 'USDT',
+    disabled: true,
+    options: [
+      { value: 'USDT', label: 'Tether' },
+      { value: 'USD', label: 'USD' },
+      { value: 'TOMAN', label: 'Toman' },
+    ],
+    onValueChange: fn(),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // Every segment, not just the unselected ones — a half-disabled group would
+    // still let the user change the currency.
+    for (const name of ['Tether', 'USD', 'Toman']) {
+      await expect(await canvas.findByRole('button', { name })).toBeDisabled()
+    }
   },
 }
 

@@ -151,15 +151,6 @@ export const formatDateLong = (iso: string, calendar: CalendarSystem, i18n: I18n
 /** Gregorian, Latin digits — the English report must not use Persian digits. */
 export const formatDateEnglish = (iso: string): string => formatGregorian(new Date(iso), 'dd MMM yyyy')
 
-/** `yyyy-MM-dd` for the native date input, which only speaks Gregorian ISO. */
-export const toDateInputValue = (iso: string): string => formatGregorian(new Date(iso), 'yyyy-MM-dd')
-
-/** Whole-day range, so a filter's end date includes everything recorded that day. */
-export const inclusiveDayRange = (fromIso: string, toIso: string): DateRange => ({
-  from: startOfDay(new Date(fromIso)).toISOString(),
-  to: endOfDay(new Date(toIso)).toISOString(),
-})
-
 /** True when the instant falls on today's date, used to decide the rate-field wording. */
 export const isToday = (iso: string): boolean => {
   const date = new Date(iso)

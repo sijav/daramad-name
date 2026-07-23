@@ -17,8 +17,8 @@ export interface AmountFieldProps {
 }
 
 /**
- * The design's `Amount Field`: a 72px box with the currency name on the leading
- * edge and the amount set large and bold on the trailing edge.
+ * The design's `Amount Field`: a 72px box holding the amount set large and
+ * bold, with the currency name after it on the trailing edge.
  *
  * It is deliberately the biggest control on the record card — the amount is the
  * one value the user always types, and the 15-second path depends on hitting it

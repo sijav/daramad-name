@@ -6,7 +6,17 @@ import { createTheme, type Theme } from '@mui/material'
 import type {} from '@mui/x-date-pickers/themeAugmentation'
 import vazirFdRegular from 'vazirmatn/misc/Farsi-Digits/fonts/webfonts/Vazirmatn-FD-Regular.woff2?url'
 import vazirFdSemiBold from 'vazirmatn/misc/Farsi-Digits/fonts/webfonts/Vazirmatn-FD-SemiBold.woff2?url'
-import { darkColors, elevation, fontFamily, fontFamilyFarsiDigits, lightColors, radius, spacingUnit, typeScale } from './tokens'
+import {
+  controlHeight,
+  darkColors,
+  elevation,
+  fontFamily,
+  fontFamilyFarsiDigits,
+  lightColors,
+  radius,
+  spacingUnit,
+  typeScale,
+} from './tokens'
 
 export type ThemeMode = 'light' | 'dark'
 export type Direction = 'ltr' | 'rtl'
@@ -125,7 +135,7 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
         styleOverrides: {
           root: {
             borderRadius: radius.full,
-            height: 48,
+            height: controlHeight.large,
             paddingInline: '24px',
             // Written out rather than using `disableElevation`, which emits its
             // own `box-shadow: none` that no override could beat — it swallowed
@@ -148,7 +158,7 @@ const buildTheme = (mode: ThemeMode, direction: Direction): Theme => {
               outlineOffset: '2px',
             },
           },
-          sizeSmall: { height: 40, paddingInline: '16px' },
+          sizeSmall: { height: controlHeight.medium, paddingInline: '16px' },
           // The design outlines buttons in `--md-sys-color-outline`, not in a
           // half-transparent primary the way MUI does by default.
           outlined: { borderColor: c.outline },
@@ -512,6 +522,3 @@ export const getTheme = (mode: ThemeMode, direction: Direction): Theme => {
   }
   return cached
 }
-
-/** Default theme, for consumers with no settings context (tests, isolated stories). */
-export const theme = getTheme('light', 'rtl')

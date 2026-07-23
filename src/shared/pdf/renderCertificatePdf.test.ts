@@ -44,9 +44,39 @@ const report: IncomeReport = {
   generatedAt: '2026-07-22T00:00:00.000Z',
 }
 
-const render = async (language: 'fa' | 'en') => {
+/**
+ * A certificate that does not fit on one sheet: twelve month rows — the most
+ * `getIncomeReportQuery` can bucket — under the kind of Persian postal address
+ * people actually type, with the district, the landmark and the PO box in it.
+ *
+ * This is the shape that used to run off the bottom of page one and keep
+ * drawing at coordinates below the paper: in the file, rendered by nothing.
+ */
+const fullYear: IncomeReport = {
+  ...report,
+  range: { from: '2026-03-21T00:00:00.000Z', to: '2027-03-20T00:00:00.000Z' },
+  profile: {
+    ...report.profile,
+    address:
+      'تهران، منطقه ۳، خیابان شهید دکتر بهشتی، خیابان سرافراز، نبش کوچه چهارم شرقی، روبه‌روی بانک ملی شعبه‌ی مرکزی، مجتمع اداری نگین، بلوک ب، طبقه‌ی هفتم، واحد ۷۰۳، کد پستی ۱۵۳۳۶۷۸۹۱۲، صندوق پستی ۱۹۳۹۵-۴۶۷۸',
+    addressEn:
+      'Unit 703, Block B, 7th Floor, Negin Office Complex, Corner of 4th East Alley, Opposite Bank Melli Central Branch, Sarafraz St, Shahid Beheshti St, District 3, Tehran 1533678912, PO Box 19395-4678, Iran',
+  },
+  monthsInRange: 12,
+  months: Array.from({ length: 12 }, (_unused, index) => ({
+    month: index + 1,
+    year: 1405,
+    totalToman: 40_000_000 + index * 3_000_000,
+    receiptCount: (index % 4) + 1,
+  })),
+}
+
+/** pdfkit writes one `/Type /Page` object per sheet, and `/Type /Pages` for the tree. */
+const pageCount = (raw: string): number => (raw.match(/\/Type \/Page\b/g) ?? []).length
+
+const render = async (language: 'fa' | 'en', source: IncomeReport = report) => {
   const i18n = await loadReportI18n(language === 'fa' ? 'fa-IR' : 'en-US')
-  const model = buildCertificateModel(report, language, 'JALALI', i18n)
+  const model = buildCertificateModel(source, language, 'JALALI', i18n)
   const blob = await renderCertificatePdf(PdfCtor, { regular, bold }, buildIncomeReport(model))
   const bytes = new Uint8Array(await blob.arrayBuffer())
   return { blob, bytes, raw: new TextDecoder('latin1').decode(bytes) }
@@ -61,7 +91,7 @@ const render = async (language: 'fa' | 'en') => {
  * Getting this wrong is invisible to every other assertion here: the file is
  * still a valid, font-embedded, selectable PDF, it just reads backwards.
  */
-const recordDrawnWords = async (language: 'fa' | 'en') => {
+const recordDrawnWords = async (language: 'fa' | 'en', source: IncomeReport = report) => {
   // Instrument the fontkit pdfkit itself uses. This file imports fontkit as ESM
   // while pdfkit `require`s the CommonJS build, and in Node those are two
   // different copies of the Font class — instrumenting ours would record
@@ -77,7 +107,7 @@ const recordDrawnWords = async (language: 'fa' | 'en') => {
     return patched.apply(this, args)
   }
   try {
-    await render(language)
+    await render(language, source)
   } finally {
     owner.layout = patched
   }
@@ -128,6 +158,22 @@ describe('renderCertificatePdf', () => {
     expect(year).toBeGreaterThanOrEqual(0)
     expect(month).toBeGreaterThanOrEqual(0)
     expect(year).toBeLessThan(month)
+  })
+
+  it('starts a second page instead of drawing past the bottom of the first', async () => {
+    const short = await render('fa')
+    const long = await render('fa', fullYear)
+
+    expect(pageCount(short.raw)).toBe(1)
+    expect(pageCount(long.raw)).toBeGreaterThan(1)
+  })
+
+  it('carries the overflow onto the second page rather than losing it', async () => {
+    const words = await recordDrawnWords('fa', fullYear)
+
+    // The closing footnote is the last thing drawn, and it is what used to land
+    // below the paper. Present here means the whole document made it onto pages.
+    expect(words).toContain('خودش')
   })
 
   it('renders both the Persian and the English certificate without throwing', async () => {

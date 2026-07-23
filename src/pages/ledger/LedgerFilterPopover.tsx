@@ -24,7 +24,20 @@ export interface LedgerFilterPopoverProps {
 export const LedgerFilterPopover = ({ anchorEl, filter, onApply, onClose }: LedgerFilterPopoverProps) => {
   const { t, i18n } = useLingui()
   const { data: clients = [] } = useQuery({ queryKey: clientsQueryKey, queryFn: getClientsQuery })
+  const open = anchorEl !== null
   const [draft, setDraft] = useState<LedgerFilter>(filter)
+  const [wasOpen, setWasOpen] = useState(open)
+
+  // The page keeps this mounted and only moves the anchor, so the draft outlives
+  // every close. Reseeding it on the way open is what stops a filter the user
+  // removed from the chips — or cleared entirely — from being silently put back
+  // by the next Apply, which reads a draft that never heard about the removal.
+  if (open !== wasOpen) {
+    setWasOpen(open)
+    if (open) {
+      setDraft(filter)
+    }
+  }
 
   /**
    * Sets one end of the range and makes the other end VISIBLE.
@@ -56,7 +69,7 @@ export const LedgerFilterPopover = ({ anchorEl, filter, onApply, onClose }: Ledg
 
   return (
     <Popover
-      open={anchorEl !== null}
+      open={open}
       anchorEl={anchorEl}
       onClose={onClose}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}

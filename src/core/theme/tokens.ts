@@ -189,13 +189,13 @@ export const radius = {
   md: 12,
   lg: 16,
   xl: 20,
-  xxl: 28,
   full: 999,
 } as const
 
 // The Figma file uses an 8pt grid; MUI's spacing(1) === 8px matches it exactly.
 export const spacingUnit = 8
 
+/** Button heights from the design system; `theme.ts` is the only consumer. */
 export const controlHeight = {
   medium: 40,
   large: 48,
@@ -237,6 +237,3 @@ export const typeScale = {
   bodyMedium: { fontSize: 14, fontWeight: 400, lineHeight: 24 / 14 },
   caption: { fontSize: 12, fontWeight: 400, lineHeight: 20 / 12 },
 } as const
-
-/** Back-compat alias: `mdSysColor` was the light palette before dark mode existed. */
-export const mdSysColor = lightColors

@@ -23,8 +23,13 @@ const config: StorybookConfig = {
       // reloads the page, which drops the websocket and surfaces in the Testing
       // panel as "Connection lost" — reliably around test 56 of 252.
       exclude: [...(config.optimizeDeps?.exclude ?? []), 'fake-indexeddb', 'fake-indexeddb/auto'],
-      // Scanning entries are the stories, not every file under `src`.
-      entries: ['../src/**/*.stories.@(ts|tsx)', '../src/**/*.mdx'],
+      // Scanning entries are the stories, not every file under `src`. No `../`
+      // here even though `stories` above needs it: that field is resolved
+      // against this directory, while Vite globs `optimizeDeps.entries` against
+      // its own root, which builder-vite sets to the repo root. With the `../`
+      // these patterns pointed one level ABOVE the repo and matched nothing, so
+      // the narrowing was really a silent opt-out of scanning altogether.
+      entries: ['src/**/*.stories.@(ts|tsx)', 'src/**/*.mdx'],
     },
   }),
 }

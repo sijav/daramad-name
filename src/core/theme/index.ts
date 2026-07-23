@@ -1,15 +1,5 @@
+// Only what is consumed through this path. `getTheme`, the palettes and the
+// rest of the scale are reached relatively by `theme.ts`, `Tokens.mdx` and the
+// theme test, so re-exporting them here just hid which tokens the app uses.
 export { AppThemeProvider, type AppThemeProviderProps } from './AppThemeProvider'
-export { getTheme, theme, type Direction, type ThemeMode } from './theme'
-export {
-  controlHeight,
-  darkColors,
-  elevation,
-  fontFamily,
-  fontFamilyFarsiDigits,
-  lightColors,
-  mdSysColor,
-  radius,
-  spacingUnit,
-  typeScale,
-  type ColorPalette,
-} from './tokens'
+export { elevation, fontFamilyFarsiDigits, radius } from './tokens'

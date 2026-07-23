@@ -10,8 +10,11 @@ import { computeToman } from 'src/shared/utils'
 //
 // The shape of this data is deliberate — it exercises every scenario:
 //   · mixed currencies with different frozen rates (scenario 1)
-//   · one client at ~60% of income, tripping the concentration insight (scenario 4)
-//   · Mordad left empty, to prove empty months render as zero bars
+//   · Aria Trading at ~81% of the 649,980,000 total — well past the 50% the
+//     concentration insight fires on (scenario 4). The amounts and rates are
+//     pinned by seedSampleData.mutation.test.ts, so change them together.
+//   · the month four back left empty, to prove empty months render as zero
+//     bars. Which Jalali month that is depends on when the button is pressed.
 //   · receipts spread across ~10 months, so the monthly average is meaningful
 
 interface SampleReceipt {

@@ -56,7 +56,7 @@ export const Empty: Story = { parameters: { page: { data: 'empty' } } }
  * it is what the reported "preview does not match the file" bug came from.
  *
  * Switching to English must change the VALUES, not just the labels: an embassy
- * officer cannot read «۶۴۴٬۲۶۰٬۰۰۰» or a Persian name.
+ * officer reads neither Persian numerals nor a Persian name.
  */
 export const ProducesBothLanguages: Story = {
   parameters: seeded,
@@ -81,6 +81,15 @@ export const ProducesBothLanguages: Story = {
       await expect(await canvas.findByText(/In words/)).toBeInTheDocument()
       // Latin grouping, and the amount spelled out in English.
       await expect(await canvas.findAllByText(/\d{1,3},\d{3},\d{3}/)).not.toHaveLength(0)
+    })
+
+    await step('and the printable link goes to the English document too', async () => {
+      // `?lang=en` is the only thing that makes the new tab English, and this
+      // page assembles that URL by hand rather than through the router. Get it
+      // wrong and the user clicks "English", reads an English preview, then
+      // hands a Persian page to an embassy.
+      const link = await canvas.findByRole('link', { name: /قابل چاپ|printable document/i })
+      await expect(link.getAttribute('href')).toContain('lang=en')
     })
   },
 }
@@ -109,6 +118,7 @@ export const AYearWithNoIncomeProducesNoDocument: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     const body = within(canvasElement.ownerDocument.body)
+    let previousYear = ''
 
     await step('the current year has a document', async () => {
       await expect(await findDocument(canvasElement, 'گواهی درآمد')).toBeInTheDocument()
@@ -122,6 +132,7 @@ export const AYearWithNoIncomeProducesNoDocument: Story = {
       await userEvent.click(await panel.findByRole('combobox'))
       const options = await body.findAllByRole('option')
       // Newest first, so the second option is the previous year.
+      previousYear = options[1].getAttribute('data-value') ?? ''
       await userEvent.click(options[1])
     })
 
@@ -129,6 +140,15 @@ export const AYearWithNoIncomeProducesNoDocument: Story = {
       await expect(await canvas.findByText(/^برای این سال دریافتی‌ای ثبت نشده$|^No receipts recorded for this year$/)).toBeInTheDocument()
       await expect(canvas.queryByText('گواهی درآمد')).toBeNull()
       await expect(await canvas.findByRole('button', { name: /^دانلود PDF$|^Download PDF$/ })).toBeDisabled()
+    })
+
+    await step('the printable link carries the year that was picked', async () => {
+      // The link is disabled here, but the URL is still built by hand from the
+      // selected year — a range picker the document does not follow is the one
+      // mismatch nothing else on this page would show.
+      const link = await canvas.findByRole('link', { name: /قابل چاپ|printable document/i })
+      await expect(previousYear).not.toBe('')
+      await expect(link.getAttribute('href')).toContain(`year=${previousYear}`)
     })
   },
 }

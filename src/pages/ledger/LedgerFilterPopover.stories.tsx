@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
 import { FIXTURE_CLIENTS, seedDatabase } from 'src/shared/story-fixtures'
 import type { LedgerFilter } from 'src/shared/types'
-import { expect, fn, userEvent, within } from 'storybook/test'
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
 import { LedgerFilterPopover } from './LedgerFilterPopover'
 
 // The popover edits a DRAFT and commits only on Apply.
@@ -112,9 +112,14 @@ export const ResetClearsWithoutApplying: Story = {
   play: async ({ canvasElement, args: a }) => {
     const body = within(canvasElement.ownerDocument.body)
 
+    await expect(await body.findByText(/^تتر$|^Tether$/)).toBeInTheDocument()
     await userEvent.click(await body.findByRole('button', { name: /^بازنشانی$|^Reset$/ }))
 
-    // Nothing is committed until Apply — Reset only touches the draft.
+    // The draft actually emptied — the Channel select falls back to its
+    // all-channels option. Asserting only that nothing was committed passes
+    // just as well when Reset does nothing at all.
+    await waitFor(() => expect(body.queryByText(/^تتر$|^Tether$/)).toBeNull())
+    // And nothing is committed until Apply — Reset only touches the draft.
     await expect(a.onApply).not.toHaveBeenCalled()
   },
 }

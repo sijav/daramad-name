@@ -25,11 +25,13 @@ export const FilterChip = ({ field, value, sx, ...props }: FilterChipProps) => {
       label={`${field}: ${value}`}
       // `277:46` is a bare ✕; MUI defaults to a filled cancel disc.
       //
-      // MUI clones the delete icon with only `className` and `onClick` — no role
-      // and no name — so the only pointer affordance for removing an active
-      // filter was invisible to assistive tech. A user could be told a filter was
-      // applied and given no named control to undo it.
-      deleteIcon={<CloseRoundedIcon role="button" aria-label={t`Remove the ${field} filter`} />}
+      // MUI clones the delete icon with only `className` and `onClick`, so the
+      // role and the name set here survive the clone. `aria-hidden` has to be
+      // cancelled explicitly: `SvgIcon` writes `aria-hidden="true"` on every
+      // icon, which kept both attributes out of the accessibility tree and left
+      // the only pointer affordance for removing an active filter unnamed — a
+      // user told a filter is applied, with no named control to undo it.
+      deleteIcon={<CloseRoundedIcon aria-hidden={false} role="button" aria-label={t`Remove the ${field} filter`} />}
       sx={[
         (theme) => ({
           // `277:45`: a tinted 32px chip at radius 16 with a hairline — not the

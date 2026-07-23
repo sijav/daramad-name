@@ -3,6 +3,7 @@ import type { Messages } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import type { Decorator, Preview } from '@storybook/react-vite'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import type { ReactNode } from 'react'
 import { useEffect, useState } from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { i18n } from 'src/core/i18n'
@@ -79,6 +80,31 @@ const seededClient = (locale: AppLocale, themePreference: ThemePreference, pageD
   return client
 }
 
+/**
+ * Holds the client in state rather than building it in the decorator's JSX.
+ * Calling `seededClient(...)` inline made a new QueryClient — and so a new
+ * cache — on every render of the decorator, and `useCatalog` alone renders it
+ * twice. Anything a play function wrote (a saved profile, an invalidation after
+ * a delete) was silently replaced by the seed on the next render, which reads
+ * as a failed mutation rather than a harness bug. Remounted by `key` when the
+ * seed's own inputs change, since those go INTO the seeded settings.
+ */
+const SeededQueryProvider = ({
+  locale,
+  themePreference,
+  pageData,
+  children,
+}: {
+  locale: AppLocale
+  themePreference: ThemePreference
+  pageData?: 'full' | 'empty'
+  children: ReactNode
+}) => {
+  const [client] = useState(() => seededClient(locale, themePreference, pageData))
+
+  return <QueryClientProvider client={client}>{children}</QueryClientProvider>
+}
+
 const withProviders: Decorator = (Story, context) => {
   const locale = (context.globals.locale ?? 'fa-IR') as AppLocale
   const themePreference = (context.globals.theme ?? 'light') as ThemePreference
@@ -89,22 +115,35 @@ const withProviders: Decorator = (Story, context) => {
     return <div />
   }
 
+  // The padding keeps a single component off the canvas edge, but a story that
+  // asks for `layout: 'fullscreen'` is proving its own edge-to-edge chrome —
+  // the app shell's fixed top bar, the printable certificate sheet — and 24px
+  // of decorator inset is exactly what it is trying to show there is none of.
+  // `layout` only strips Storybook's own padding, so it cannot reach in here.
+  const content =
+    context.parameters.layout === 'fullscreen' ? (
+      <Story />
+    ) : (
+      <div style={{ padding: 24, minHeight: '100vh' }}>
+        <Story />
+      </div>
+    )
+
   // Pages call `useNavigate`, so they need a router. It is only added when a
   // story asks for it — AppShell supplies its own, and nesting two routers
   // would make the inner one unreachable.
-  const content = (
-    <div style={{ padding: 24, minHeight: '100vh' }}>
-      <Story />
-    </div>
-  )
-
   return (
     <I18nProvider i18n={i18n}>
-      <QueryClientProvider client={seededClient(locale, themePreference, page?.data)}>
+      <SeededQueryProvider
+        key={`${locale}-${themePreference}-${page?.data ?? 'none'}`}
+        locale={locale}
+        themePreference={themePreference}
+        pageData={page?.data}
+      >
         <AppThemeProvider locale={locale} themePreference={themePreference}>
           {page ? <MemoryRouter initialEntries={[page.route ?? '/']}>{content}</MemoryRouter> : content}
         </AppThemeProvider>
-      </QueryClientProvider>
+      </SeededQueryProvider>
     </I18nProvider>
   )
 }

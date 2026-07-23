@@ -26,8 +26,11 @@ label fails exactly like a Persian one would. It runs with type information
 (`useTsTypes`), so strings assigned to union types (MUI prop unions, `sx`
 values, our own enums) are skipped automatically.
 
-Three files are exempt, each for a stated reason: `digits.ts` (codepoint
-tables), `*.test.ts` (assertions), `*.stories.tsx` (fixtures).
+Four globs turn the rule off, each for a stated reason in `eslint.config.mjs`:
+`src/shared/utils/digits.ts` (codepoint tables), `**/*.test.{ts,tsx}`
+(assertions are expected values, not copy), `**/*.stories.{ts,tsx}` (a story
+shows one concrete rendering) and `src/shared/story-fixtures/**` (sample data
+that is never bundled into the app).
 
 After adding strings:
 
@@ -139,6 +142,7 @@ src/
   pages/         one folder per route
   shared/        components, queries, types, utils
   locales/       lingui catalogs (en-US source, fa-IR translation)
+  pwa/           install prompt, service-worker registration, icons
 ```
 
 Only these top-level folders. No others.
@@ -194,16 +198,16 @@ hairline. There is **no glass**: the frosted 28px card came from an older
 revision and was removed. Radius and shadow vary by screen, and the Figma file
 is genuinely inconsistent — match it per screen rather than unifying:
 
-| Screen | Radius | Shadow |
-|---|---|---|
-| Dashboard — summary cards, chart panels, recent receipts, top clients | 20 (`xl`) | Elevation/1 |
-| Dashboard — report shortcut | 20, `brand-primary-subtle` fill | none |
-| Charts page — the componentised `Chart/*` panels | 16 (`lg`) | none |
-| Quick Entry — the income form | 20 | Elevation/1 |
-| Quick Entry — support panels beside it | 16 | Elevation/1 |
-| Ledger — table panel | 20 | none |
-| Report — config and document | 16 | none |
-| Settings — every section | 16 | none |
+| Screen                                                                | Radius                          | Shadow      |
+| --------------------------------------------------------------------- | ------------------------------- | ----------- |
+| Dashboard — summary cards, chart panels, recent receipts, top clients | 20 (`xl`)                       | Elevation/1 |
+| Dashboard — report shortcut                                           | 20, `brand-primary-subtle` fill | none        |
+| Charts page — the componentised `Chart/*` panels                      | 16 (`lg`)                       | none        |
+| Quick Entry — the income form                                         | 20                              | Elevation/1 |
+| Quick Entry — support panels beside it                                | 16                              | Elevation/1 |
+| Ledger — table panel                                                  | 20                              | none        |
+| Report — config and document                                          | 16                              | none        |
+| Settings — every section                                              | 16                              | none        |
 
 `SurfaceCard` takes `radius`, `tone` and `flat` to express all of these.
 `ChartCard`'s `variant` picks between the two chart treatments. `StatTile` is
@@ -272,9 +276,10 @@ buttons are themed through a `variants` entry rather than the palette.
 
 ## 3. What this app is
 
-Local-first income ledger for Iranian freelancers. Five pages: quick entry,
-ledger, charts, report, settings. Six scenarios in `PHASE-NEXT.md` and
-`README.md`.
+Local-first income ledger for Iranian freelancers. Seven pages: dashboard (the
+landing route), quick entry, ledger, charts, report, settings, and certificate —
+the printable document the report links out to. Six scenarios in `PHASE-NEXT.md`
+and `README.md`.
 
 **There is no backend, deliberately.** Every scenario runs in the browser;
 exchange rates are typed by hand, there is no login, and transfer between
@@ -317,9 +322,14 @@ the root is not enough.
 `.ts` is treated by TypeScript as that file's generated declaration output and
 silently dropped from the program. The augmentation vanishes with no error.
 
-**pdfmake 0.3 uses `addVirtualFileSystem()` / `addFonts()`.** Assigning
-`pdfMake.vfs` (the 0.2 API) does nothing and fails later with
-"File not found in virtual file system".
+**The PDF is drawn with pdfkit, and its constructor takes two non-obvious
+options.** `font: false` — otherwise pdfkit reads Helvetica's AFM metrics with
+`fs.readFileSync` while constructing the document, which has no file to read in
+the browser and throws "readFileSync of null". `compress: false` — pdfkit's
+compression path calls Node's `deflateSync`, which the browser zlib shim does
+not implement; pdfkit already subsets the embedded font, so an uncompressed
+certificate is still small. Both are set in `renderCertificatePdf.ts`, and
+pdfmake — which the report was drawn with before — is no longer a dependency.
 
 ---
 

@@ -16,23 +16,39 @@ const CATALOG = join(dirname(fileURLToPath(import.meta.url)), '../../locales/fa-
 
 interface Entry {
   id: string
-  translation: string
+  /** The `msgid_plural` of a gettext plural entry, absent on an ordinary one. */
+  idPlural: string | null
+  /** Every `msgstr` form: one for a singular entry, one per plural form otherwise. */
+  translations: string[]
 }
 
-/** Minimal PO reader: `msgid`/`msgstr` with continuation lines, obsolete entries dropped. */
+/**
+ * Minimal PO reader: `msgid`/`msgid_plural`/`msgstr`, continuation lines,
+ * obsolete entries dropped.
+ *
+ * The plural forms are read even though the catalog holds none today. Matching
+ * only `msgstr ` — with the trailing space — silently DISCARDED any entry
+ * written as `msgstr[0]`, so the first `plural` macro anyone adds would have
+ * reopened the exact hole these tests exist to close: an untranslated string
+ * shipping to a Persian screen with nothing failing.
+ */
 const parseCatalog = (source: string): Entry[] => {
   const entries: Entry[] = []
   let id: string | null = null
-  let translation: string | null = null
-  let field: 'id' | 'translation' | null = null
+  let idPlural: string | null = null
+  let translations: string[] | null = null
+  let field: 'id' | 'idPlural' | 'translation' | null = null
+  let form = 0
 
   const flush = () => {
-    if (id !== null && translation !== null && id !== '') {
-      entries.push({ id, translation })
+    if (id !== null && translations !== null && id !== '') {
+      entries.push({ id, idPlural, translations })
     }
     id = null
-    translation = null
+    idPlural = null
+    translations = null
     field = null
+    form = 0
   }
 
   const unquote = (line: string): string => line.slice(line.indexOf('"') + 1, line.lastIndexOf('"'))
@@ -51,14 +67,21 @@ const parseCatalog = (source: string): Entry[] => {
       }
       continue
     }
+    if (trimmed.startsWith('msgid_plural ')) {
+      idPlural = unquote(trimmed)
+      field = 'idPlural'
+      continue
+    }
     if (trimmed.startsWith('msgid ')) {
       flush()
       id = unquote(trimmed)
       field = 'id'
       continue
     }
-    if (trimmed.startsWith('msgstr ')) {
-      translation = unquote(trimmed)
+    if (trimmed.startsWith('msgstr ') || trimmed.startsWith('msgstr[')) {
+      form = Number(/^msgstr\[(\d+)]/.exec(trimmed)?.[1] ?? 0)
+      translations = translations ?? []
+      translations[form] = unquote(trimmed)
       field = 'translation'
       continue
     }
@@ -66,8 +89,10 @@ const parseCatalog = (source: string): Entry[] => {
       const continuation = unquote(trimmed)
       if (field === 'id') {
         id = (id ?? '') + continuation
-      } else {
-        translation = (translation ?? '') + continuation
+      } else if (field === 'idPlural') {
+        idPlural = (idPlural ?? '') + continuation
+      } else if (translations) {
+        translations[form] += continuation
       }
     }
   }
@@ -81,15 +106,20 @@ const entries = parseCatalog(readFileSync(CATALOG, 'utf8'))
 /** `{0}`, `{name}` — the values the sentence is actually about. */
 const placeholders = (message: string): string[] => [...message.matchAll(/\{([a-zA-Z0-9_]+)\}/g)].map((match) => match[1]).sort()
 
+/** What every form of a translation has to carry: the singular's names, plus the plural's. */
+const declared = (entry: Entry): string[] => [...new Set([...placeholders(entry.id), ...placeholders(entry.idPlural ?? '')])].sort()
+
 describe('the fa-IR catalog', () => {
   it('has entries to check, so a broken parse cannot pass silently', () => {
     expect(entries.length).toBeGreaterThan(100)
   })
 
   // An untranslated entry renders its English id. On a Persian screen that is
-  // a visible defect that no test, type or lint rule catches.
+  // a visible defect that no test, type or lint rule catches. Every plural form
+  // counts separately: Persian needs both, and a filled "one" beside an empty
+  // "other" ships English on exactly the counts nobody tests with.
   it('translates every message', () => {
-    const untranslated = entries.filter((entry) => entry.translation === '').map((entry) => entry.id)
+    const untranslated = entries.filter((entry) => entry.translations.some((form) => form === '')).map((entry) => entry.id)
 
     expect(untranslated).toEqual([])
   })
@@ -99,7 +129,7 @@ describe('the fa-IR catalog', () => {
   // so a reviewer skimming the catalog would not notice.
   it('keeps every placeholder the English message declares', () => {
     const dropped = entries
-      .filter((entry) => placeholders(entry.id).join() !== placeholders(entry.translation).join())
+      .filter((entry) => entry.translations.some((form) => placeholders(form).join() !== declared(entry).join()))
       .map((entry) => entry.id)
 
     expect(dropped).toEqual([])

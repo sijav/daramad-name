@@ -66,7 +66,6 @@ export const Default: Story = {
     receipts: RECEIPTS,
     summary,
     sort: { field: 'occurredAt', direction: 'desc' },
-    calendar: 'JALALI',
     onSortChange: fn(),
     onView: fn(),
     onEdit: fn(),
@@ -95,11 +94,12 @@ export const SingleRow: Story = {
   },
 }
 
-/** Gregorian rendering, driven by the Settings calendar toggle. */
-export const GregorianCalendar: Story = {
-  ...Default,
-  args: { ...Default.args, calendar: 'GREGORIAN' },
-}
+// There is no Gregorian variant here on purpose. Dates come from `useFormat`,
+// which reads the calendar out of Settings — the table takes no calendar of its
+// own, so a story could only have pinned a prop nothing reads and shown Jalali
+// dates under a Gregorian label. The two calendars are covered where the choice
+// actually lands: `formatDateLong` in dates.test.ts, and the Settings toggle in
+// SettingsPage.DisplayPreferencesPersist.
 
 const fa = new Intl.NumberFormat('fa-IR')
 const dataRows = (canvasElement: HTMLElement): HTMLTableRowElement[] => [

@@ -17,14 +17,12 @@ import { useFormat } from 'src/shared/format'
 import { MoneyText } from 'src/shared/money-text'
 import { RowActionsMenu } from 'src/shared/row-actions-menu'
 import { Tag } from 'src/shared/tag'
-import type { CalendarSystem, LedgerSort, LedgerSortField, LedgerSummary, ReceiptWithClient } from 'src/shared/types'
+import type { LedgerSort, LedgerSortField, LedgerSummary, ReceiptWithClient } from 'src/shared/types'
 
 export interface LedgerTableProps {
   receipts: ReceiptWithClient[]
   summary: LedgerSummary
   sort: LedgerSort
-  /** Retained for stories that pin a calendar; dates format from settings. */
-  calendar?: CalendarSystem
   /** Drives the total row's wording — "filtered" is a lie when nothing is. */
   filtered?: boolean
   onSortChange: (sort: LedgerSort) => void

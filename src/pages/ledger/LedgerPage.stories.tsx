@@ -121,6 +121,84 @@ const fieldInput = (root: ParentNode, label: RegExp): HTMLInputElement => {
   return input
 }
 
+/**
+ * Search narrows the TOTALS, not just the rows.
+ *
+ * The query never sees the search term — it runs client-side over whatever the
+ * filter returned — so the summary arriving beside those rows describes the
+ * wider set. Printed unchanged, the page stated two different receipt counts at
+ * once: the heading counted the match while the cards and the total band kept
+ * counting the eight behind it, with the larger figure sitting under a band
+ * labelled "filtered". These are the numbers a freelancer copies onto a visa
+ * application, so every one of them has to describe the same set of receipts.
+ */
+export const SearchNarrowsTheTotalsNotJustTheTable: Story = {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const target = FIXTURE_RECEIPTS.find((receipt) => receipt.amountToman === 18_000_000)!
+    const wholeLedger = FIXTURE_RECEIPTS.reduce((sum, receipt) => sum + receipt.amountToman, 0)
+
+    await waitFor(() => expect(dataRows(canvasElement)).toHaveLength(FIXTURE_RECEIPTS.length))
+
+    await step('search down to a single receipt', async () => {
+      await userEvent.type(await canvas.findByRole('textbox', { name: /جست|Search receipts/i }), String(target.amountToman))
+      await waitFor(() => expect(dataRows(canvasElement)).toHaveLength(1))
+    })
+
+    await step('the total band sums that receipt alone', async () => {
+      await expect(within(totalRow(canvasElement)).getByText(toman(target.amountToman))).toBeInTheDocument()
+    })
+
+    await step('and the whole-ledger total is gone from the cards too', async () => {
+      await expect(await canvas.findByText(/^۱ نتیجه$|^1 results?$/)).toBeInTheDocument()
+      // Both the Total card and the total band printed this figure while the
+      // heading beside them said one result.
+      await expect(canvas.queryAllByText(toman(wholeLedger))).toHaveLength(0)
+    })
+  },
+}
+
+/**
+ * The error branch and the retry beside it.
+ *
+ * Everything here reads from IndexedDB, so the failure that matters is the
+ * database being unavailable — a private-mode browser, a revoked quota, a
+ * profile mid-upgrade. Closing the database reproduces exactly that, and the
+ * retry is then checked the only way that proves anything: by reopening and
+ * getting the real ledger back.
+ */
+export const LoadFailureOffersARetryThatRecovers: Story = {
+  // `data: null`, not an omitted key: Storybook deep-merges parameters, so
+  // leaving it out keeps the meta's `data: 'full'` and the page renders straight
+  // from the seeded cache — never issuing the query that has to fail.
+  parameters: { page: { data: null, route: '/ledger' } },
+  beforeEach: async () => {
+    const clear = await seedDatabase()
+    db.close({ disableAutoOpen: true })
+    return async () => {
+      if (!db.isOpen()) {
+        await db.open()
+      }
+      await clear()
+    }
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('the ledger says the read failed, without suggesting the data is gone', async () => {
+      await expect(await canvas.findByText(/^دفتر درآمد بارگذاری نشد$|^The ledger could not be loaded$/)).toBeInTheDocument()
+      await expect(canvas.queryByRole('table')).toBeNull()
+    })
+
+    await step('retrying re-issues the query rather than only clearing the message', async () => {
+      await db.open()
+      await userEvent.click(await canvas.findByRole('button', { name: /^دوباره امتحان کن$|^Try again$/ }))
+
+      await waitFor(() => expect(dataRows(canvasElement)).toHaveLength(FIXTURE_RECEIPTS.length))
+    })
+  },
+}
+
 const ACTIONS = /^عملیات$|^Actions$/
 const TETHER_RECEIPT = FIXTURE_RECEIPTS.find((receipt) => receipt.id === '1')!
 const CARD_RECEIPT = FIXTURE_RECEIPTS.find((receipt) => receipt.id === '4')!
@@ -323,6 +401,21 @@ export const FilterChipRemovesTheFilterAndRestoresTheRows: Story = {
 
       await waitFor(() => expect(dataRows(canvasElement)).toHaveLength(FIXTURE_RECEIPTS.length))
       await waitFor(() => expect(within(totalRow(canvasElement)).getByText(toman(wholeLedger))).toBeInTheDocument())
+      await expect(canvas.queryByText(/^کانال: تتر$|^Channel: Tether$/)).toBeNull()
+    })
+
+    // The popover stays mounted for the life of the page, so its draft survives
+    // the close — and once held the channel this chip just deleted. Reopening
+    // and pressing Apply put the removed filter straight back, undoing the
+    // user's own action with no visible cause.
+    await step('and the popover has forgotten it too, so Apply cannot put it back', async () => {
+      await userEvent.click(await canvas.findByRole('button', { name: /^فیلترها|^Filters/ }))
+
+      const channel = await body.findByRole('combobox', { name: /^کانال$|^Channel$/ })
+      await expect(channel).not.toHaveTextContent(/^تتر$|^Tether$/)
+
+      await userEvent.click(await body.findByRole('button', { name: /^اعمال فیلترها$|^Apply filters$/ }))
+      await waitFor(() => expect(dataRows(canvasElement)).toHaveLength(FIXTURE_RECEIPTS.length))
       await expect(canvas.queryByText(/^کانال: تتر$|^Channel: Tether$/)).toBeNull()
     })
   },

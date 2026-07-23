@@ -16,11 +16,22 @@ export const useLocaleSync = (): boolean => {
 
   useEffect(() => {
     let cancelled = false
-    void activateLocale(locale).then(() => {
-      if (!cancelled) {
-        setReady(true)
-      }
-    })
+    // Open the gate even when the catalog fails to load.
+    //
+    // The messages are a dynamic import, so a dropped connection or a stale
+    // chunk after a deploy rejects it. Gating render on success alone left the
+    // whole app on a spinner forever, with nothing shown and nothing to press —
+    // the one failure a user cannot act on. Rendering in whatever catalog is
+    // already active degrades to the previous language, or to the English
+    // message ids on a cold start, both of which are usable and recoverable by
+    // a reload.
+    void activateLocale(locale)
+      .catch(() => undefined)
+      .finally(() => {
+        if (!cancelled) {
+          setReady(true)
+        }
+      })
     return () => {
       cancelled = true
     }

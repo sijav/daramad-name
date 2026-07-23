@@ -60,10 +60,14 @@ export default defineConfig({
               // reinstall would look like a different app.
               id: base,
               // These are data, not interface copy: a manifest is read by the
-              // operating system before any locale is chosen, and the app is
-              // Persian by default. They are not lingui messages.
-              name: 'درآمدنامه — دفتر دریافتی‌ها و گزارش درآمد',
-              short_name: 'درآمدنامه',
+              // operating system before any locale is chosen, so it cannot be a
+              // lingui message. The NAME is deliberately Latin — it is what the
+              // OS prints under the installed icon, in the launcher and in the
+              // app switcher, none of which are guaranteed to shape Persian
+              // correctly, and a product needs one spelling people can type and
+              // search for. The interface itself stays Persian.
+              name: 'DaramadName',
+              short_name: 'DaramadName',
               description: 'دفتر دریافتی‌ها و گزارش درآمد قابل ارائه برای فریلنسر ایرانی. همه‌ی داده‌ها فقط روی مرورگر خودت می‌مونه.',
               lang: 'fa-IR',
               dir: 'rtl',

@@ -4,6 +4,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { enUS as enUSPickers, faIR as faIRPickers } from '@mui/x-date-pickers/locales'
 import { enUS as enUSJalali, faIR as faIRJalali } from 'date-fns-jalali/locale'
+import { enUS, faIR } from 'date-fns/locale'
 import { useId } from 'react'
 import { useSettings } from 'src/core/query'
 import { fontFamilyFarsiDigits } from 'src/core/theme'
@@ -127,15 +128,24 @@ export const DateField = ({ label, value, onValueChange, disableFuture = true, e
 }
 
 /**
- * The Jalali adapter still drives the calendar in English — the calendar system
- * is a separate setting from the language — but with `date-fns-jalali`'s enUS
- * locale, which transliterates the month names ("28 Tir 1405") instead of
- * printing them in Persian script an English reader cannot parse.
+ * Calendar system and interface language are independent settings, so BOTH
+ * adapters are given a locale for BOTH languages.
+ *
+ * The Jalali adapter still drives the calendar in English — with
+ * `date-fns-jalali`'s enUS locale, which transliterates the month names
+ * ("28 Tir 1405") instead of printing them in Persian script an English reader
+ * cannot parse. The Gregorian adapter has the mirror problem: with no locale
+ * date-fns falls back to enUS, so a Persian user who switched the calendar to
+ * Gregorian read "July 2026" in a header whose numerals were still Persian.
+ *
+ * Neither `date-fns` locale emits Persian digits, so MUI X's section
+ * measurement — which probes `formatByString(...)` against ASCII '0' — still
+ * holds either way.
  */
 const adapterProps = (calendar: CalendarSystem, isPersian: boolean) =>
   calendar === 'JALALI'
     ? { dateAdapter: AdapterDateFnsJalali, adapterLocale: isPersian ? faIRJalali : enUSJalali }
-    : { dateAdapter: AdapterDateFns }
+    : { dateAdapter: AdapterDateFns, adapterLocale: isPersian ? faIR : enUS }
 
 /**
  * The picker's OWN copy — section names, the open button, the month arrows, the

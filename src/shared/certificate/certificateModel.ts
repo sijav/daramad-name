@@ -40,7 +40,6 @@ export interface CertificateMonthRow {
  * model appears in both surfaces or in neither.
  */
 export interface CertificateModel {
-  language: ReportLanguage
   direction: 'rtl' | 'ltr'
   locale: AppLocale
   title: string
@@ -168,7 +167,6 @@ export const buildCertificateModel = (
   const words = numberToWords(report.totalToman, locale)
 
   return {
-    language,
     direction: persian ? 'rtl' : 'ltr',
     locale,
     title: t('title'),

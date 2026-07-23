@@ -69,50 +69,62 @@ export const AppShell = () => {
   })
   const toggleTheme = () => changeTheme.mutate({ themePreference: resolvedMode === 'dark' ? 'light' : 'dark' })
 
+  // ONE selection rule, shared by the rail and the bottom bar.
+  //
+  // `path="*"` inside the shell renders the dashboard, so an unmatched URL is a
+  // real, reachable state — and the two navigations used to disagree about it:
+  // the bar fell back to index 0 while the rail compared paths and marked
+  // nothing. A desktop user on a stale link then had no idea where they were.
   const activeIndex = Math.max(
     0,
     NAV_ITEMS.findIndex((item) => item.to === pathname),
   )
 
   const railContent = (
-    <List sx={{ p: 1.5 }}>
-      {NAV_ITEMS.map((item) => {
-        const selected = item.to === pathname
-        return (
-          // `ListItemButton` renders a <div role="button">, and a <ul> may only
-          // contain <li>. Dropping it straight into `List` published a list
-          // with no list items at all (axe `list`), so a screen reader lost
-          // both the "6 items" count and item-by-item navigation. `ListItem
-          // disablePadding` is MUI's documented wrapper for exactly this: an
-          // <li> that contributes no padding of its own, so nothing moves.
-          <ListItem key={item.to} disablePadding sx={{ mb: 0.5 }}>
-            <ListItemButton
-              selected={selected}
-              onClick={() => {
-                navigate(item.to)
-                setDrawerOpen(false)
-              }}
-              sx={(t) => ({
-                borderRadius: 999,
-                '&.Mui-selected': {
-                  backgroundColor: t.palette.primary.light,
-                  color: t.palette.primary.dark,
-                  '& .MuiListItemIcon-root': { color: t.palette.primary.main },
-                },
-              })}
-            >
-              <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
-              {/* `component: 'span'` matters: MUI maps the `subtitle2` variant to
-                  an <h6>, so all six nav labels landed in the accessibility tree
-                  as headings. A screen-reader user navigating by heading met six
-                  meaningless entries before any content on every page, and could
-                  not tell the nav entry from the page title of the same name. */}
-              <ListItemText slotProps={{ primary: { variant: 'subtitle2', component: 'span' } }}>{i18n._(item.label)}</ListItemText>
-            </ListItemButton>
-          </ListItem>
-        )
-      })}
-    </List>
+    // The rail is the app's navigation, so it has to BE a landmark — without
+    // one a screen-reader user has no way to jump to it or past it. `nav`
+    // wraps the list rather than replacing it, because <li> is only valid
+    // inside <ul> and the list semantics below are load-bearing too.
+    <Box component="nav" aria-label={t`Main navigation`}>
+      <List sx={{ p: 1.5 }}>
+        {NAV_ITEMS.map((item, index) => {
+          const selected = index === activeIndex
+          return (
+            // `ListItemButton` renders a <div role="button">, and a <ul> may only
+            // contain <li>. Dropping it straight into `List` published a list
+            // with no list items at all (axe `list`), so a screen reader lost
+            // both the "6 items" count and item-by-item navigation. `ListItem
+            // disablePadding` is MUI's documented wrapper for exactly this: an
+            // <li> that contributes no padding of its own, so nothing moves.
+            <ListItem key={item.to} disablePadding sx={{ mb: 0.5 }}>
+              <ListItemButton
+                selected={selected}
+                onClick={() => {
+                  navigate(item.to)
+                  setDrawerOpen(false)
+                }}
+                sx={(t) => ({
+                  borderRadius: 999,
+                  '&.Mui-selected': {
+                    backgroundColor: t.palette.primary.light,
+                    color: t.palette.primary.dark,
+                    '& .MuiListItemIcon-root': { color: t.palette.primary.main },
+                  },
+                })}
+              >
+                <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
+                {/* `component: 'span'` matters: MUI maps the `subtitle2` variant to
+                    an <h6>, so all six nav labels landed in the accessibility tree
+                    as headings. A screen-reader user navigating by heading met six
+                    meaningless entries before any content on every page, and could
+                    not tell the nav entry from the page title of the same name. */}
+                <ListItemText slotProps={{ primary: { variant: 'subtitle2', component: 'span' } }}>{i18n._(item.label)}</ListItemText>
+              </ListItemButton>
+            </ListItem>
+          )
+        })}
+      </List>
+    </Box>
   )
 
   return (
@@ -237,6 +249,12 @@ export const AppShell = () => {
 
       {!isDesktop ? (
         <BottomNavigation
+          // The phone's navigation, so it is a landmark too — and named apart
+          // from the drawer's, which holds the same six links under their full
+          // labels. A user who meets both otherwise hears "navigation" twice
+          // with no way to tell which one they landed in.
+          component="nav"
+          aria-label={t`Bottom navigation`}
           value={activeIndex}
           onChange={(_event, index: number) => navigate(NAV_ITEMS[index].to)}
           showLabels

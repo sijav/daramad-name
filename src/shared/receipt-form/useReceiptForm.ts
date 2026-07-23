@@ -98,13 +98,19 @@ export const useReceiptForm = (initial?: ReceiptWithClient) => {
      * the totals, the charts and the certificate's breakdown were all quietly
      * wrong.
      */
-    resetKeepingClient: () =>
+    resetKeepingClient: () => {
       setState((current) => ({
         ...emptyState(),
         clientName: current.clientName,
         channel: current.channel,
         occurredAt: current.occurredAt,
-      })),
+      }))
+      // The submit flag has to go with the values. Without this the emptied
+      // amount field is invalid again the instant it clears, so a saved receipt
+      // is answered with a red "enter an amount" on the next one — on the very
+      // button whose job is to make a batch feel uninterrupted.
+      setSubmitted(false)
+    },
     reset: () => {
       setState(emptyState())
       setSubmitted(false)

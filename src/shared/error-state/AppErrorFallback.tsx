@@ -1,6 +1,6 @@
 import { Trans, useLingui } from '@lingui/react/macro'
 import ErrorOutlineRoundedIcon from '@mui/icons-material/ErrorOutlineRounded'
-import { Box, Button, Stack, Typography } from '@mui/material'
+import { Alert, Box, Button, Stack, Typography } from '@mui/material'
 import { useState, type ReactNode } from 'react'
 import type { FallbackProps } from 'react-error-boundary'
 import { ConfirmDialog } from 'src/shared/confirm-dialog'
@@ -26,16 +26,35 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
   const letter = (index: number) => letters[index]
   const [confirmErase, setConfirmErase] = useState(false)
   const [backedUp, setBackedUp] = useState(false)
+  const [failure, setFailure] = useState<string | null>(null)
 
   // Called directly rather than through React Query: the boundary may have been
   // tripped by the provider tree itself, so no hook context above can be relied on.
+  //
+  // The failure path is the whole point of this screen. Step A is "take a
+  // backup" and step B is "erase everything" — so a backup that fails silently,
+  // leaving the button reading «دانلود» as though nothing happened, walks the
+  // user into erasing data they never saved. The export genuinely rejects on
+  // corrupt rows, which is exactly the state a crash screen is reached in.
   const backup = async () => {
-    await exportBackupMutation()
-    setBackedUp(true)
+    setFailure(null)
+    try {
+      await exportBackupMutation()
+      setBackedUp(true)
+    } catch {
+      setBackedUp(false)
+      setFailure(t`The backup failed, so nothing was saved. Try again before erasing anything.`)
+    }
   }
 
   const eraseAndRestart = async () => {
-    await clearAllDataMutation()
+    setFailure(null)
+    try {
+      await clearAllDataMutation()
+    } catch {
+      setFailure(t`The data could not be erased. Nothing was changed.`)
+      return
+    }
     // Lands on Settings rather than reloading in place, because the very next
     // thing to do is import the backup taken in step A — and a hard navigation
     // is what discards whatever state broke the render. `BASE_URL` keeps this
@@ -103,6 +122,13 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
               description={t`Save your data to a file, wipe the app clean, then bring it back from Settings. Nothing is lost as long as you take the file first.`}
             >
               <Stack spacing={1.5} sx={{ minWidth: 210 }}>
+                {/* Step B erases everything, so a failure in step A has to be
+                    impossible to miss — silence here reads as success. */}
+                {failure ? (
+                  <Alert severity="error" sx={{ textAlign: 'start' }}>
+                    {failure}
+                  </Alert>
+                ) : null}
                 <SubStep letter={letter(0)} label={t`Download a backup`}>
                   <Button variant="outlined" fullWidth onClick={() => void backup()}>
                     {backedUp ? t`Downloaded` : t`Download`}

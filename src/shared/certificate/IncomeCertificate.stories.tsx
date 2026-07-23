@@ -14,8 +14,14 @@ type Story = StoryObj<typeof meta>
 
 // The model is written out rather than built, so a story exercises the PAGE and
 // nothing else. What the builder puts in each field is `certificateModel.test.ts`.
+//
+// Written out is not the same as invented: the figures have to be a document the
+// app could actually emit. The month rows sum to the total, the total over the
+// four months of the period gives the average, and every month of the period has
+// a row — `getIncomeReportQuery` buckets EVERY month in range, including empty
+// ones, so a gap here would be a shape production cannot produce. The wording of
+// the two long lines is the catalogue's, verbatim.
 const persian: CertificateModel = {
-  language: 'fa',
   direction: 'rtl',
   locale: 'fa-IR',
   title: 'گواهی درآمد',
@@ -41,15 +47,17 @@ const persian: CertificateModel = {
   months: [
     { key: '1405-1', month: 'فروردین ۱۴۰۵', count: '۲', amount: '۴۴٬۰۰۰٬۰۰۰ تومان' },
     { key: '1405-2', month: 'اردیبهشت ۱۴۰۵', count: '۳', amount: '۱۹۸٬۵۰۰٬۰۰۰ تومان' },
+    { key: '1405-3', month: 'خرداد ۱۴۰۵', count: '۴', amount: '۱۸۷٬۲۶۰٬۰۰۰ تومان' },
+    { key: '1405-4', month: 'تیر ۱۴۰۵', count: '۳', amount: '۲۱۴٬۵۰۰٬۰۰۰ تومان' },
   ],
-  averageBasis: 'میانگین ماهانه جمع کل را بر ۴ ماه تقویمی دوره تقسیم می‌کند، شامل ماه‌هایی که درآمدی نداشته‌اند.',
-  footnote: 'این اظهارنامه از دریافتی‌هایی ساخته شده که دارنده خودش در درآمدنامه ثبت کرده است.',
+  averageBasis: 'میانگین ماهانه: جمع کل تقسیم بر ۴ ماه این بازه.',
+  footnote:
+    'این سند از روی دریافتی‌هایی ساخته شده که دارنده‌ی آن خودش در درآمدنامه ثبت کرده است. یک سابقه‌ی شخصی است، نه سند بانکی یا مالیاتی، و برای ارائه در کنار صورت‌حساب‌های بانکی در نظر گرفته شده است.',
   incomplete: false,
 }
 
 const english: CertificateModel = {
   ...persian,
-  language: 'en',
   direction: 'ltr',
   locale: 'en-US',
   title: 'Statement of Income',
@@ -74,9 +82,12 @@ const english: CertificateModel = {
   months: [
     { key: '1405-1', month: 'Farvardin 1405', count: '2', amount: '44,000,000 Toman' },
     { key: '1405-2', month: 'Ordibehesht 1405', count: '3', amount: '198,500,000 Toman' },
+    { key: '1405-3', month: 'Khordad 1405', count: '4', amount: '187,260,000 Toman' },
+    { key: '1405-4', month: 'Tir 1405', count: '3', amount: '214,500,000 Toman' },
   ],
-  averageBasis: 'The monthly average divides the total by the 4 calendar months in the period, including months with no income.',
-  footnote: 'This statement was produced from receipts the holder recorded themselves in Daramadname.',
+  averageBasis: 'Monthly average: the total divided by 4 months of this period.',
+  footnote:
+    'This statement was produced from receipts the holder recorded themselves in Daramadname. It is a personal record, not a bank or tax authority document, and is intended to be read alongside supporting bank statements.',
 }
 
 /** The document itself — the sheet carries `lang`, which is what identifies it. */
@@ -109,14 +120,15 @@ export const Page: Story = {
     await expect(await canvas.findByText('۶۴۴٬۲۶۰٬۰۰۰ تومان')).toBeInTheDocument()
     await expect(await canvas.findByText(/ششصد و چهل و چهار میلیون/)).toBeInTheDocument()
 
-    // Every month row, with its count and its amount.
-    await expect(await canvas.findAllByRole('row')).toHaveLength(3)
+    // Every month of the period gets a row — the header plus one per month.
+    await expect(await canvas.findAllByRole('row')).toHaveLength(persian.months.length + 1)
     await expect(await canvas.findByText('اردیبهشت ۱۴۰۵')).toBeInTheDocument()
     await expect(await canvas.findByText('۱۹۸٬۵۰۰٬۰۰۰ تومان')).toBeInTheDocument()
+    await expect(await canvas.findByText('تیر ۱۴۰۵')).toBeInTheDocument()
 
     // The divisor and the disclaimer, which are what stop a clerk discarding it.
-    await expect(await canvas.findByText(/بر ۴ ماه تقویمی/)).toBeInTheDocument()
-    await expect(await canvas.findByText(/دارنده خودش/)).toBeInTheDocument()
+    await expect(await canvas.findByText(/تقسیم بر ۴ ماه این بازه/)).toBeInTheDocument()
+    await expect(await canvas.findByText(/نه سند بانکی یا مالیاتی/)).toBeInTheDocument()
 
     // A4 at 96dpi is 210mm x 297mm — narrower than the container it sits in.
     const rect = sheet(canvasElement)!.getBoundingClientRect()
@@ -151,6 +163,10 @@ export const Preview: Story = {
  */
 export const EnglishInsideAPersianApp: Story = {
   args: { model: english },
+  // Pinned rather than inherited: the last assertion is about the APP's
+  // direction, which the Language toolbar owns. Without this it only passes
+  // while the toolbar happens to sit on its Persian default.
+  globals: { locale: 'fa-IR' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await canvas.findByRole('heading', { level: 1, name: 'Statement of Income' })
@@ -171,6 +187,10 @@ export const EnglishInsideAPersianApp: Story = {
  * A profile with nothing filled in. The identity block disappears entirely
  * rather than printing labels against blank space — an unfinished-looking form
  * is the one thing this document cannot afford to be.
+ *
+ * `incomplete` is set because it is what the builder would set for this profile,
+ * but this component never reads it: the flag drives the report page's «نامت
+ * هنوز ثبت نشده» banner, and that is where it is covered.
  */
 export const WithoutIdentity: Story = {
   args: { model: { ...persian, identity: [], incomplete: true } },
@@ -197,5 +217,24 @@ export const WithoutTheTotalInWords: Story = {
 
     await expect(await canvas.findByText('۶۴۴٬۲۶۰٬۰۰۰ تومان')).toBeInTheDocument()
     await expect(canvas.queryByText('به حروف')).not.toBeInTheDocument()
+  },
+}
+
+/**
+ * The sheet is paper in every theme. Its colours are literal rather than palette
+ * roles for exactly this reason — a document that inverts because the reader
+ * happened to have dark mode on is not a document, and the person receiving it
+ * never chose the theme it was printed under.
+ */
+export const StaysPaperInDarkMode: Story = {
+  args: { model: persian },
+  globals: { theme: 'dark' },
+  play: async ({ canvasElement }) => {
+    await within(canvasElement).findByRole('heading', { level: 1, name: 'گواهی درآمد' })
+    const document_ = sheet(canvasElement)!
+
+    await expect(window.getComputedStyle(document_).backgroundColor).toBe('rgb(255, 255, 255)')
+    // Ink, not the palette's light-on-dark text colour.
+    await expect(window.getComputedStyle(document_).color).toBe('rgb(24, 25, 27)')
   },
 }

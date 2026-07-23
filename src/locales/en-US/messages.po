@@ -80,6 +80,10 @@ msgstr "{label} {year}: no income recorded"
 msgid "A"
 msgstr "A"
 
+#: src/pages/certificate/CertificatePage.tsx
+msgid "A certificate for a year with nothing recorded would state that you earned zero. Record the receipts for that year first, then open the document again."
+msgstr "A certificate for a year with nothing recorded would state that you earned zero. Record the receipts for that year first, then open the document again."
+
 #: src/core/db/validate.ts
 msgid "A client in {where} has no identifier."
 msgstr "A client in {where} has no identifier."
@@ -256,10 +260,18 @@ msgstr "Banner and social posts"
 msgid "based on the active filters"
 msgstr "based on the active filters"
 
+#. placeholder {0}: digits(year)
 #: src/pages/charts/ChartsPage.tsx
+msgid "Based on the income recorded in {0}"
+msgstr "Based on the income recorded in {0}"
+
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Based on the income recorded this year"
 msgstr "Based on the income recorded this year"
+
+#: src/shared/layouts/AppShell.tsx
+msgid "Bottom navigation"
+msgstr "Bottom navigation"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Calendar"
@@ -399,7 +411,7 @@ msgid "Display"
 msgstr "Display"
 
 #. placeholder {0}: digits(averagingMonths)
-#. placeholder {0}: digits(data?.summary.monthsInRange ?? 1)
+#. placeholder {0}: digits(paged.summary.monthsInRange)
 #: src/pages/dashboard/DashboardPage.tsx
 #: src/pages/ledger/LedgerPage.tsx
 msgid "divided by {0} months"
@@ -617,6 +629,12 @@ msgstr "Income for {0} (millions of Toman)"
 msgid "Income in {0}"
 msgstr "Income in {0}"
 
+#. placeholder {0}: monthNames(calendar, i18n)[currentMonth - 1]
+#. placeholder {1}: digits(year)
+#: src/pages/dashboard/DashboardPage.tsx
+msgid "Income in {0} {1}"
+msgstr "Income in {0} {1}"
+
 #: src/pages/ledger/LedgerPage.tsx
 #: src/shared/constants/navigation.tsx
 msgid "Income ledger"
@@ -727,6 +745,10 @@ msgstr "Log a new receipt in under 15 seconds."
 msgid "Main menu"
 msgstr "Main menu"
 
+#: src/shared/layouts/AppShell.tsx
+msgid "Main navigation"
+msgstr "Main navigation"
+
 #: src/shared/constants/labels.ts
 msgid "March"
 msgstr "March"
@@ -790,6 +812,7 @@ msgstr "No income recorded for this year yet"
 msgid "No matching client"
 msgstr "No matching client"
 
+#: src/pages/certificate/CertificatePage.tsx
 #: src/pages/report/ReportPage.tsx
 msgid "No receipts recorded for this year"
 msgstr "No receipts recorded for this year"
@@ -1127,6 +1150,14 @@ msgid "That receipt was not found — you may have already deleted it."
 msgstr "That receipt was not found — you may have already deleted it."
 
 #: src/pages/settings/SettingsPage.tsx
+msgid "That setting could not be saved. Try again."
+msgstr "That setting could not be saved. Try again."
+
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "The backup failed, so nothing was saved. Try again before erasing anything."
+msgstr "The backup failed, so nothing was saved. Try again before erasing anything."
+
+#: src/pages/settings/SettingsPage.tsx
 msgid "The backup failed. Try again."
 msgstr "The backup failed. Try again."
 
@@ -1134,9 +1165,22 @@ msgstr "The backup failed. Try again."
 msgid "The backup file is incomplete — it has no receipts or clients list. Pick a complete backup file."
 msgstr "The backup file is incomplete — it has no receipts or clients list. Pick a complete backup file."
 
+#: src/pages/certificate/CertificatePage.tsx
+msgid "The certificate could not be produced"
+msgstr "The certificate could not be produced"
+
+#: src/pages/charts/ChartsPage.tsx
+msgid "The charts could not be loaded"
+msgstr "The charts could not be loaded"
+
 #: src/pages/quick-entry/QuickEntryPage.tsx
 msgid "The conversion rate is stored as you record it and does not change later."
 msgstr "The conversion rate is stored as you record it and does not change later."
+
+#: src/pages/settings/SettingsPage.tsx
+#: src/shared/error-state/AppErrorFallback.tsx
+msgid "The data could not be erased. Nothing was changed."
+msgstr "The data could not be erased. Nothing was changed."
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "The file could not be read. Make sure it is intact and pick it again."
@@ -1162,9 +1206,18 @@ msgstr "The ledger is where every payment you have received adds up in one place
 msgid "The rate and Toman equivalent are stored at the moment you record a receipt. Later rate changes do not affect it."
 msgstr "The rate and Toman equivalent are stored at the moment you record a receipt. Later rate changes do not affect it."
 
+#: src/shared/pdf/bidiText.ts
+#: src/shared/pdf/renderCertificatePdf.ts
+msgid "The report could not be prepared for Persian text. Reload the page and try again."
+msgstr "The report could not be prepared for Persian text. Reload the page and try again."
+
 #: src/shared/pdf/loadPdf.ts
 msgid "The report's Persian font failed to load. Reload the page."
 msgstr "The report's Persian font failed to load. Reload the page."
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "The sample receipts could not be added."
+msgstr "The sample receipts could not be added."
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "The whole interface switches, including text direction. Your data is untouched."
@@ -1265,6 +1318,8 @@ msgstr "Total of {0} filtered receipts"
 msgid "Total of {0} receipts"
 msgstr "Total of {0} receipts"
 
+#: src/pages/certificate/CertificatePage.tsx
+#: src/pages/charts/ChartsPage.tsx
 #: src/shared/error-state/AppErrorFallback.tsx
 #: src/shared/ledger-state/LedgerState.tsx
 msgid "Try again"
@@ -1346,6 +1401,8 @@ msgstr "your data"
 msgid "Your data is safe and has not been erased — this error only affects what is on screen."
 msgstr "Your data is safe and has not been erased — this error only affects what is on screen."
 
+#: src/pages/certificate/CertificatePage.tsx
+#: src/pages/charts/ChartsPage.tsx
 #: src/shared/ledger-state/LedgerState.tsx
 msgid "Your data is safe and has not been erased. Try again."
 msgstr "Your data is safe and has not been erased. Try again."
@@ -1353,6 +1410,10 @@ msgstr "Your data is safe and has not been erased. Try again."
 #: src/shared/layouts/AppShell.tsx
 msgid "Your details"
 msgstr "Your details"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Your details could not be saved. Try again."
+msgstr "Your details could not be saved. Try again."
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Your details were saved."

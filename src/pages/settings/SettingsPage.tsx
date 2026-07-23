@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRef, useState } from 'react'
 import { defaultSettings } from 'src/core/db'
 import { invalidateReceiptQueries, useSettings } from 'src/core/query'
+import { InstallAppSection } from 'src/pwa'
 import { ConfirmDialog } from 'src/shared/confirm-dialog'
 import { useFormat } from 'src/shared/format'
 import { PageActions, useReportYear } from 'src/shared/page-actions'
@@ -73,21 +74,25 @@ export const SettingsPage = () => {
       await queryClient.invalidateQueries({ queryKey: settingsQueryKey })
       setToast(t`Your details were saved.`)
     },
+    onError: () => setError(t`Your details could not be saved. Try again.`),
   })
 
   const changeCalendar = useMutation({
     mutationFn: setCalendarMutation,
     onSuccess: refreshAll,
+    onError: () => setError(t`That setting could not be saved. Try again.`),
   })
 
   const changeLocale = useMutation({
     mutationFn: setLocaleMutation,
     onSuccess: refreshAll,
+    onError: () => setError(t`That setting could not be saved. Try again.`),
   })
 
   const changeTheme = useMutation({
     mutationFn: setThemePreferenceMutation,
     onSuccess: refreshAll,
+    onError: () => setError(t`That setting could not be saved. Try again.`),
   })
 
   const backup = useMutation({
@@ -100,6 +105,10 @@ export const SettingsPage = () => {
     mutationFn: restoreBackupMutation,
     onSuccess: async (data) => {
       await refreshAll()
+      // Drop the local draft: the restored file carries its own profile, and a
+      // draft left pinned would show the OLD details over it and write them
+      // back on the next save.
+      setDraftProfile(null)
       setPendingRestore(null)
       setToast(t`${data.receipts.length} receipts restored.`)
     },
@@ -115,14 +124,22 @@ export const SettingsPage = () => {
       await invalidateReceiptQueries()
       setToast(t`${count} sample receipts added.`)
     },
+    onError: () => setError(t`The sample receipts could not be added.`),
   })
 
   const clearAll = useMutation({
     mutationFn: clearAllDataMutation,
     onSuccess: async () => {
       await refreshAll()
+      // Without this the name, national ID and passport number the user just
+      // erased stay on screen — and "Save details" puts them back.
+      setDraftProfile(null)
       setConfirmClear(false)
       setToast(t`All data was erased.`)
+    },
+    onError: () => {
+      setConfirmClear(false)
+      setError(t`The data could not be erased. Nothing was changed.`)
     },
   })
 
@@ -306,6 +323,11 @@ export const SettingsPage = () => {
             />
           </SettingRow>
         </SettingsSection>
+
+        {/* Renders itself only when the browser has actually offered to install
+            the app, and disappears once it is installed — so it sits here
+            rather than in the design's numbered sections. */}
+        <InstallAppSection />
 
         {/* 4 — the design's `حریم خصوصی`: a statement, no control. */}
         <SettingsSection title={t`Privacy`}>

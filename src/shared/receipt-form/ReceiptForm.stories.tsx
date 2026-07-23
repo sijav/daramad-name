@@ -3,23 +3,13 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { SurfaceCard } from 'src/shared/surface-card'
 import type { ReceiptWithClient } from 'src/shared/types'
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
-import { ReceiptForm } from './ReceiptForm'
+import { ReceiptForm, type ReceiptFormProps } from './ReceiptForm'
 import { useReceiptForm } from './useReceiptForm'
 
-const meta = {
-  title: 'Shared/ReceiptForm',
-  component: ReceiptForm,
-  parameters: { layout: 'padded' },
-} satisfies Meta<typeof ReceiptForm>
-
-export default meta
-type Story = StoryObj<typeof meta>
-
-interface HarnessProps {
+interface HarnessProps extends ReceiptFormProps {
   initial?: ReceiptWithClient
-  /** Called only when the form actually passed validation. */
-  onSaved?: () => void
-  pending?: boolean
+  /** Fires only once the form passed validation — `onSubmit` fires on the press. */
+  onSaved: () => void
   /** Editing an existing receipt drops «ذخیره و بعدی». */
   withNext?: boolean
 }
@@ -34,7 +24,7 @@ interface HarnessProps {
  * keeping the client for the next one in a batch. Reproducing it here is what
  * lets a story assert that an invalid form does not save.
  */
-const Harness = ({ initial, onSaved, pending, withNext = true }: HarnessProps) => {
+const Harness = ({ initial, onSubmit, onSubmitAndNext, onSaved, pending, withNext = true }: HarnessProps) => {
   const { t } = useLingui()
   const form = useReceiptForm(initial)
 
@@ -43,7 +33,7 @@ const Harness = ({ initial, onSaved, pending, withNext = true }: HarnessProps) =
     if (!form.isValid) {
       return
     }
-    onSaved?.()
+    onSaved()
     if (keepClient) {
       form.resetKeepingClient()
     } else {
@@ -57,14 +47,54 @@ const Harness = ({ initial, onSaved, pending, withNext = true }: HarnessProps) =
         form={form}
         submitLabel={t`Record a receipt`}
         pending={pending}
-        // Spies rather than bare arrows, so both submit paths show up in the
-        // Actions panel and a play function can assert which one ran.
-        onSubmit={fn(() => submit(false))}
-        onSubmitAndNext={withNext ? fn(() => submit(true)) : undefined}
+        // Each spy comes from args and runs beside the gate, so the Actions
+        // panel records the press itself while `onSaved` records only the
+        // presses that got past validation.
+        onSubmit={() => {
+          onSubmit()
+          submit(false)
+        }}
+        onSubmitAndNext={
+          withNext
+            ? () => {
+                onSubmitAndNext?.()
+                submit(true)
+              }
+            : undefined
+        }
       />
     </SurfaceCard>
   )
 }
+
+const meta = {
+  title: 'Shared/ReceiptForm',
+  component: ReceiptForm,
+  parameters: { layout: 'padded' },
+  render: (args) => <Harness {...args} />,
+  // `form` is a live hook return and `submitLabel` is the harness's own — no
+  // control can produce either, so they are stubbed once here and kept out of
+  // the props table instead of being repeated in every story.
+  argTypes: {
+    form: { control: false, table: { disable: true } },
+    submitLabel: { control: false, table: { disable: true } },
+    initial: { control: false },
+    pending: { control: 'boolean' },
+    withNext: { control: 'boolean' },
+  },
+  args: {
+    form: {} as never,
+    submitLabel: '',
+    pending: false,
+    withNext: true,
+    onSubmit: fn(),
+    onSubmitAndNext: fn(),
+    onSaved: fn(),
+  },
+} satisfies Meta<HarnessProps>
+
+export default meta
+type Story = StoryObj<typeof meta>
 
 const receipt = (overrides: Partial<ReceiptWithClient>): ReceiptWithClient => ({
   id: 'story',
@@ -95,18 +125,18 @@ const RATE_ERROR = /نرخ تبدیل لازمه|needs an exchange rate/
 const SUBMIT = /^ثبت دریافتی$|^Record a receipt$/
 const SAVE_AND_NEXT = /^ذخیره و بعدی$|^Save and next$/
 
-/** The 15-second path: today's date, toman, card-to-card, amount autofocused. */
-export const Empty: Story = {
-  args: { form: {} as never, submitLabel: '', onSubmit: fn() },
-  render: (args) => <Harness onSaved={args.onSubmit} />,
+const twoMonthsAgo = (): string => {
+  const date = new Date()
+  date.setMonth(date.getMonth() - 2)
+  return date.toISOString()
 }
+
+/** The 15-second path: today's date, toman, card-to-card, amount autofocused. */
+export const Empty: Story = {}
 
 /** A non-toman currency reveals the rate field and the live toman equivalent. */
 export const ForeignCurrency: Story = {
-  args: { form: {} as never, submitLabel: '', onSubmit: fn() },
-  render: (args) => (
-    <Harness onSaved={args.onSubmit} initial={receipt({ currency: 'USDT', amountOriginal: 500, rate: 98500, amountToman: 49250000 })} />
-  ),
+  args: { initial: receipt({ currency: 'USDT', amountOriginal: 500, rate: 98500, amountToman: 49250000 }) },
 }
 
 /**
@@ -115,29 +145,14 @@ export const ForeignCurrency: Story = {
  * today's rate against a two-month-old receipt would be silently wrong forever.
  */
 export const Backdated: Story = {
-  args: { form: {} as never, submitLabel: '', onSubmit: fn() },
-  render: (args) => {
-    const twoMonthsAgo = new Date()
-    twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2)
-    return (
-      <Harness
-        onSaved={args.onSubmit}
-        initial={receipt({
-          currency: 'USDT',
-          amountOriginal: 750,
-          rate: 94800,
-          amountToman: 71100000,
-          occurredAt: twoMonthsAgo.toISOString(),
-        })}
-      />
-    )
+  args: {
+    initial: receipt({ currency: 'USDT', amountOriginal: 750, rate: 94800, amountToman: 71100000, occurredAt: twoMonthsAgo() }),
   },
 }
 
 /** Saving is in flight: both buttons go dead so one receipt cannot be logged twice. */
 export const Pending: Story = {
-  args: { form: {} as never, submitLabel: '', onSubmit: fn() },
-  render: (args) => <Harness onSaved={args.onSubmit} pending initial={receipt({})} />,
+  args: { pending: true, initial: receipt({}) },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -151,8 +166,7 @@ export const Pending: Story = {
  * editing an existing receipt would promise a "next" that does not exist.
  */
 export const Editing: Story = {
-  args: { form: {} as never, submitLabel: '', onSubmit: fn() },
-  render: (args) => <Harness onSaved={args.onSubmit} withNext={false} initial={receipt({})} />,
+  args: { withNext: false, initial: receipt({}) },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -170,8 +184,6 @@ export const Editing: Story = {
  * write and never recomputed, so a wrong one here is wrong permanently.
  */
 export const RecordsAForeignReceipt: Story = {
-  args: { form: {} as never, submitLabel: '', onSubmit: fn() },
-  render: (args) => <Harness onSaved={args.onSubmit} />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
 
@@ -222,8 +234,6 @@ export const WarnsWhenBackdated: Story = {
  * screen that has to be fast feel hostile.
  */
 export const StaysQuietUntilYouTryToSave: Story = {
-  args: { form: {} as never, submitLabel: '', onSubmit: fn() },
-  render: (args) => <Harness onSaved={args.onSubmit} />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -238,22 +248,23 @@ export const StaysQuietUntilYouTryToSave: Story = {
  * user believes is complete.
  */
 export const BlocksSavingWithoutAnAmount: Story = {
-  args: { form: {} as never, submitLabel: '', onSubmit: fn() },
-  render: (args) => <Harness onSaved={args.onSubmit} />,
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement)
 
     await userEvent.click(await canvas.findByRole('button', { name: SUBMIT }))
 
     await expect(await canvas.findByText(AMOUNT_ERROR)).toBeInTheDocument()
-    await expect(args.onSubmit).not.toHaveBeenCalled()
+    // The press landed — what stopped is the save, which is the distinction
+    // that matters: a button that ignored the click would look broken instead.
+    await expect(args.onSubmit).toHaveBeenCalledTimes(1)
+    await expect(args.onSaved).not.toHaveBeenCalled()
 
     // And it saves once the amount is there — the block is the amount, not the
     // click.
     await userEvent.type(await amountBox(canvasElement), '2500000')
     await userEvent.click(await canvas.findByRole('button', { name: SUBMIT }))
 
-    await expect(args.onSubmit).toHaveBeenCalledTimes(1)
+    await expect(args.onSaved).toHaveBeenCalledTimes(1)
     await waitFor(async () => expect(canvas.queryByText(AMOUNT_ERROR)).not.toBeInTheDocument())
   },
 }
@@ -265,8 +276,6 @@ export const BlocksSavingWithoutAnAmount: Story = {
  * complete and contributing nothing to the total on the certificate.
  */
 export const BlocksForeignCurrencyWithoutARate: Story = {
-  args: { form: {} as never, submitLabel: '', onSubmit: fn() },
-  render: (args) => <Harness onSaved={args.onSubmit} />,
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -277,14 +286,14 @@ export const BlocksForeignCurrencyWithoutARate: Story = {
     await expect(await canvas.findByText(RATE_ERROR)).toBeInTheDocument()
     // Marked invalid for assistive tech too, not only tinted red.
     await expect(await rateBox(canvasElement)).toHaveAttribute('aria-invalid', 'true')
-    await expect(args.onSubmit).not.toHaveBeenCalled()
+    await expect(args.onSaved).not.toHaveBeenCalled()
     // The preview says so too: no rate, no toman.
     await expect(await canvas.findByText(/^۰ تومان$|^0 Toman$/)).toBeInTheDocument()
 
     await userEvent.type(await rateBox(canvasElement), '98500')
     await userEvent.click(await canvas.findByRole('button', { name: SUBMIT }))
 
-    await expect(args.onSubmit).toHaveBeenCalledTimes(1)
+    await expect(args.onSaved).toHaveBeenCalledTimes(1)
   },
 }
 
@@ -294,10 +303,7 @@ export const BlocksForeignCurrencyWithoutARate: Story = {
  * and then applied to dollars is a receipt three times its real size, frozen.
  */
 export const ReturningToTomanClearsTheRate: Story = {
-  args: { form: {} as never, submitLabel: '', onSubmit: fn() },
-  render: (args) => (
-    <Harness onSaved={args.onSubmit} initial={receipt({ currency: 'USDT', amountOriginal: 500, rate: 98500, amountToman: 49250000 })} />
-  ),
+  args: { initial: receipt({ currency: 'USDT', amountOriginal: 500, rate: 98500, amountToman: 49250000 }) },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -320,8 +326,6 @@ export const ReturningToTomanClearsTheRate: Story = {
  * the client on every save is what makes people stop after the second one.
  */
 export const SaveAndNextKeepsTheClientAndChannel: Story = {
-  args: { form: {} as never, submitLabel: '', onSubmit: fn() },
-  render: (args) => <Harness onSaved={args.onSubmit} />,
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -330,13 +334,18 @@ export const SaveAndNextKeepsTheClientAndChannel: Story = {
     await userEvent.click(await canvas.findByRole('radio', { name: /^حواله$|^Wire transfer$/ }))
 
     await userEvent.click(await canvas.findByRole('button', { name: SAVE_AND_NEXT }))
-    await expect(args.onSubmit).toHaveBeenCalledTimes(1)
+    await expect(args.onSubmitAndNext).toHaveBeenCalledTimes(1)
+    await expect(args.onSaved).toHaveBeenCalledTimes(1)
 
     // Cleared for the next receipt…
     await waitFor(async () => expect(await amountBox(canvasElement)).toHaveValue(''))
     // …but the client and the channel are still set.
     await expect(await canvas.findByRole('combobox')).toHaveValue('Aria Trading')
     await expect(await canvas.findByRole('radio', { name: /^حواله$|^Wire transfer$/ })).toHaveAttribute('aria-checked', 'true')
+    // And the emptied amount is not already shouting. The reset clears the
+    // submit flag with the values, so a saved receipt is not answered with a
+    // validation error on the next one.
+    await expect(canvas.queryByText(AMOUNT_ERROR)).not.toBeInTheDocument()
   },
 }
 
@@ -346,8 +355,6 @@ export const SaveAndNextKeepsTheClientAndChannel: Story = {
  * start of a batch.
  */
 export const RecordsTheClientChannelAndNote: Story = {
-  args: { form: {} as never, submitLabel: '', onSubmit: fn() },
-  render: (args) => <Harness onSaved={args.onSubmit} />,
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement)
     const note = await canvas.findByPlaceholderText(/مثلاً|e\.g\./)
@@ -361,7 +368,7 @@ export const RecordsTheClientChannelAndNote: Story = {
     await expect(note).toHaveValue('phase one')
 
     await userEvent.click(await canvas.findByRole('button', { name: SUBMIT }))
-    await expect(args.onSubmit).toHaveBeenCalledTimes(1)
+    await expect(args.onSaved).toHaveBeenCalledTimes(1)
 
     await waitFor(async () => expect(await canvas.findByRole('combobox')).toHaveValue(''))
     await expect(note).toHaveValue('')

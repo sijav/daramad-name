@@ -22,9 +22,15 @@ const rtlCache = createCache({ key: 'mui-rtl', stylisPlugins: [prefixer, rtlPlug
 const ltrCache = createCache({ key: 'mui-ltr', stylisPlugins: [prefixer] })
 
 export interface AppThemeProviderProps {
+  /**
+   * Decides text DIRECTION, not the translation: `fa-IR` selects the RTL
+   * Emotion cache, so every rule the app authors for LTR is mirrored on the way
+   * out. The catalog is loaded elsewhere.
+   */
   locale: AppLocale
   /** `system` follows the OS setting and keeps following it as it changes. */
   themePreference: ThemePreference
+  /** The whole app: everything below here reads the theme and the cache. */
   children: ReactNode
 }
 

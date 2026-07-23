@@ -9,8 +9,13 @@ import { AppThemeProvider } from './AppThemeProvider'
 // fails silently — the app still renders, just in the wrong scheme or mirrored
 // the wrong way.
 //
-// These stories render a probe INSIDE a second provider so the assertions are
-// about the provider under test rather than Storybook's toolbar.
+// These stories render a probe INSIDE a second provider. The theme and the
+// Emotion cache come from context, so those assertions really are about the
+// provider under test. `dir`, `lang` and `color-scheme` do NOT: they are written
+// to `<html>` from an effect, effects flush children-first, and the decorator's
+// own provider therefore writes last and wins. Every story that reads the
+// document pins the matching toolbar globals so the two agree — otherwise the
+// assertion is measuring the toolbar and passes only by coincidence.
 
 const Probe = () => {
   const theme = useTheme()
@@ -68,6 +73,11 @@ const meta = {
   title: 'Core/AppThemeProvider',
   component: AppThemeProvider,
   parameters: { layout: 'padded' },
+  argTypes: {
+    locale: { control: 'inline-radio', options: ['fa-IR', 'en-US'] },
+    themePreference: { control: 'inline-radio', options: ['light', 'dark', 'system'] },
+    children: { control: false, table: { disable: true } },
+  },
   args: { locale: 'fa-IR', themePreference: 'light', children: <Probe /> },
 } satisfies Meta<typeof AppThemeProvider>
 
@@ -84,6 +94,7 @@ const styleOf = (element: Element) => element.ownerDocument.defaultView!.getComp
  * else — the MUI theme is invisible to all three.
  */
 export const Light: Story = {
+  globals: { locale: 'fa-IR', theme: 'light' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -107,6 +118,7 @@ export const Light: Story = {
  */
 export const Dark: Story = {
   args: { themePreference: 'dark' },
+  globals: { theme: 'dark' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -114,6 +126,12 @@ export const Dark: Story = {
     // The dark brand blue #8fb0ff — lightened so a filled button is legible on
     // a near-black surface.
     await expect(styleOf(await canvas.findByTestId('filled')).backgroundColor).toBe('rgb(143, 176, 255)')
+
+    // The other half of `Light`: native controls and the scrollbar follow
+    // `color-scheme`, and nothing in the painted palette would reveal it stuck.
+    await waitFor(async () => {
+      await expect(window.document.documentElement.style.colorScheme).toBe('dark')
+    })
   },
 }
 
@@ -155,6 +173,7 @@ export const PersianMirrorsTheLayout: Story = {
 /** English keeps the same rule authored physically, so nothing is flipped. */
 export const EnglishKeepsTheLayout: Story = {
   args: { locale: 'en-US' },
+  globals: { locale: 'en-US' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -163,6 +182,14 @@ export const EnglishKeepsTheLayout: Story = {
     const inset = styleOf(await canvas.findByTestId('logical-inset'))
     await expect(inset.marginLeft).toBe('40px')
     await expect(inset.marginRight).toBe('0px')
+
+    // `<html>` in the other direction too — the document contract `Light`
+    // asserts for Persian, so neither half can be lost on its own.
+    const root = window.document.documentElement
+    await waitFor(async () => {
+      await expect(root.dir).toBe('ltr')
+      await expect(root.lang).toBe('en-US')
+    })
   },
 }
 

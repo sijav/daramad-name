@@ -8,13 +8,11 @@ import {
   formatDateEnglish,
   formatDateLong,
   formatDateRangeLong,
-  inclusiveDayRange,
   isToday,
   monthBucketsOfYear,
   monthIndexOf,
   monthNames,
   monthsSpanned,
-  toDateInputValue,
   yearOf,
   yearRange,
 } from './dates'
@@ -262,30 +260,10 @@ describe('isToday — the switch behind the backdating warning', () => {
   })
 })
 
-describe('inclusiveDayRange — a filter must not drop its own last day', () => {
-  it('covers the whole closing day, not the instant it began', () => {
-    const { from, to } = inclusiveDayRange(AUG_1, AUG_15)
-    const lateOnTheLastDay = new Date(2026, 7, 15, 23, 30).toISOString()
-    expect(lateOnTheLastDay >= from && lateOnTheLastDay <= to).toBe(true)
-  })
-
-  it('starts at the opening midnight, so that morning is not lost either', () => {
-    const { from } = inclusiveDayRange(AUG_1, AUG_15)
-    const earlyOnTheFirstDay = new Date(2026, 7, 1, 0, 30).toISOString()
-    expect(earlyOnTheFirstDay >= from).toBe(true)
-  })
-})
-
 describe('dayRange', () => {
   it('spans exactly one whole local day from any instant inside it', () => {
     const { from, to } = dayRange(new Date(2026, 7, 1, 15, 42))
     expect(new Date(to).getTime() - new Date(from).getTime()).toBe(24 * 60 * 60 * 1000 - 1)
-  })
-})
-
-describe('toDateInputValue', () => {
-  it('is Gregorian ISO, which is the only thing a native date input speaks', () => {
-    expect(toDateInputValue(AUG_1)).toBe('2026-08-01')
   })
 })
 

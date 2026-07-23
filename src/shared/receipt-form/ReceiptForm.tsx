@@ -112,7 +112,7 @@ export const ReceiptForm = ({ form, submitLabel, pending = false, onSubmit, onSu
           {isBackdated ? (
             <Alert severity="info" sx={{ borderRadius: `${radius.md}px` }}>
               <Trans>
-                This receipt is backdated. Enter the rate from that day, not today's — the amount is frozen permanently and will not change
+                This receipt is backdated. Enter the rate from that day, not today's. The amount is frozen permanently and will not change
                 if the price moves later.
               </Trans>
             </Alert>

@@ -68,7 +68,7 @@ export const LedgerState = ({ kind, onAction, errorMessage }: LedgerStateProps) 
     <EmptyState
       icon={<ReceiptLongRoundedIcon />}
       title={t`You have not recorded any receipts yet`}
-      description={t`The ledger is where every payment you have received adds up in one place — exactly what you need when it is time to produce a report.`}
+      description={t`The ledger is where every payment you have received adds up in one place, exactly what you need when it is time to produce a report.`}
       actionLabel={onAction ? t`Record your first receipt` : undefined}
       onAction={onAction}
     />

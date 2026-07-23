@@ -994,8 +994,8 @@ msgid "Recent clients"
 msgstr "مشتری‌های اخیر"
 
 #: src/pages/dashboard/DashboardPage.tsx
-msgid "Record a few receipts and this page will show your year at a glance — month by month, and which clients it came from."
-msgstr "چند دریافتی ثبت کن تا این صفحه تصویر یک‌ساله‌ات را نشان بدهد — ماه‌به‌ماه، و اینکه از کدام مشتری‌ها آمده."
+msgid "Record a few receipts and this page will show your year at a glance, month by month, and which clients it came from."
+msgstr "چند دریافتی ثبت کن تا این صفحه تصویر یک‌ساله‌ات را نشان بدهد، ماه‌به‌ماه، و اینکه از کدام مشتری‌ها آمده."
 
 #: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
@@ -1146,7 +1146,7 @@ msgid "Tether"
 msgstr "تتر"
 
 #: src/shared/queries/updateReceipt.mutation.ts
-msgid "That receipt was not found — you may have already deleted it."
+msgid "That receipt was not found, you may have already deleted it."
 msgstr "این دریافتی پیدا نشد؛ ممکنه قبلاً حذفش کرده باشی."
 
 #: src/pages/settings/SettingsPage.tsx
@@ -1162,7 +1162,7 @@ msgid "The backup failed. Try again."
 msgstr "گرفتن بکاپ ناموفق بود. دوباره امتحان کن."
 
 #: src/shared/queries/restoreBackup.mutation.ts
-msgid "The backup file is incomplete — it has no receipts or clients list. Pick a complete backup file."
+msgid "The backup file is incomplete, it has no receipts or clients list. Pick a complete backup file."
 msgstr "ساختار فایل بکاپ ناقصه؛ فهرست دریافتی‌ها یا مشتری‌ها توش نیست. یه فایل بکاپ کامل انتخاب کن."
 
 #: src/pages/certificate/CertificatePage.tsx
@@ -1199,8 +1199,8 @@ msgid "The ledger could not be loaded"
 msgstr "دفتر درآمد بارگذاری نشد"
 
 #: src/shared/ledger-state/LedgerState.tsx
-msgid "The ledger is where every payment you have received adds up in one place — exactly what you need when it is time to produce a report."
-msgstr "دفتر درآمد جاییه که همه‌ی پول‌هایی که گرفتی یک‌جا جمع می‌شه — همون چیزی که موقع گزارش گرفتن لازمت می‌شه."
+msgid "The ledger is where every payment you have received adds up in one place, exactly what you need when it is time to produce a report."
+msgstr "دفتر درآمد جاییه که همه‌ی پول‌هایی که گرفتی یک‌جا جمع می‌شه، همون چیزی که موقع گزارش گرفتن لازمت می‌شه."
 
 #: src/pages/quick-entry/QuickEntryAside.tsx
 msgid "The rate and Toman equivalent are stored at the moment you record a receipt. Later rate changes do not affect it."
@@ -1245,8 +1245,8 @@ msgid "this receipt"
 msgstr "این دریافتی"
 
 #: src/shared/receipt-form/ReceiptForm.tsx
-msgid "This receipt is backdated. Enter the rate from that day, not today's — the amount is frozen permanently and will not change if the price moves later."
-msgstr "این دریافتی تاریخ گذشته داره. نرخ همون روز رو وارد کن، نه نرخ امروز — این مبلغ برای همیشه ثبت می‌شه و بعداً با تغییر قیمت عوض نمی‌شه."
+msgid "This receipt is backdated. Enter the rate from that day, not today's. The amount is frozen permanently and will not change if the price moves later."
+msgstr "این دریافتی تاریخ گذشته داره. نرخ همون روز رو وارد کن، نه نرخ امروز. این مبلغ برای همیشه ثبت می‌شه و بعداً با تغییر قیمت عوض نمی‌شه."
 
 #: src/pages/ledger/LedgerPage.tsx
 msgid "This receipt is removed from the ledger and the totals and charts update. This cannot be undone."
@@ -1347,7 +1347,7 @@ msgid "USD"
 msgstr "دلار"
 
 #: src/pages/settings/SettingsPage.tsx
-msgid "Used on the English certificate — spell it exactly as your passport does"
+msgid "Used on the English certificate, spell it exactly as your passport does"
 msgstr "روی گواهی انگلیسی چاپ می‌شود؛ همان‌طور بنویس که توی پاسپورتت آمده"
 
 #: src/pages/settings/SettingsPage.tsx
@@ -1398,8 +1398,8 @@ msgid "your data"
 msgstr "داده‌های تو"
 
 #: src/shared/error-state/AppErrorFallback.tsx
-msgid "Your data is safe and has not been erased — this error only affects what is on screen."
-msgstr "داده‌هایت سر جاشه و پاک نشده — این خطا فقط روی چیزی که نمایش داده می‌شه اثر داره."
+msgid "Your data is safe and has not been erased, this error only affects what is on screen."
+msgstr "داده‌هایت سر جاشه و پاک نشده، این خطا فقط روی چیزی که نمایش داده می‌شه اثر داره."
 
 #: src/pages/certificate/CertificatePage.tsx
 #: src/pages/charts/ChartsPage.tsx
@@ -1420,5 +1420,5 @@ msgid "Your details were saved."
 msgstr "مشخصاتت ذخیره شد."
 
 #: src/pages/report/ReportPage.tsx
-msgid "Your name is not set yet. Without personal details this document carries no weight with an embassy or a landlord — <0>fill it in from Settings</0>."
-msgstr "اسمت هنوز ثبت نشده. بدون مشخصات فردی، این سند برای سفارت یا صاحب‌خونه اعتبار نداره — <0>از تنظیمات پرش کن</0>."
+msgid "Your name is not set yet. Without personal details this document carries no weight with an embassy or a landlord, <0>fill it in from Settings</0>."
+msgstr "اسمت هنوز ثبت نشده. بدون مشخصات فردی، این سند برای سفارت یا صاحب‌خونه اعتبار نداره، <0>از تنظیمات پرش کن</0>."

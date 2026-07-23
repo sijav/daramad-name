@@ -994,8 +994,8 @@ msgid "Recent clients"
 msgstr "Recent clients"
 
 #: src/pages/dashboard/DashboardPage.tsx
-msgid "Record a few receipts and this page will show your year at a glance — month by month, and which clients it came from."
-msgstr "Record a few receipts and this page will show your year at a glance — month by month, and which clients it came from."
+msgid "Record a few receipts and this page will show your year at a glance, month by month, and which clients it came from."
+msgstr "Record a few receipts and this page will show your year at a glance, month by month, and which clients it came from."
 
 #: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
@@ -1146,8 +1146,8 @@ msgid "Tether"
 msgstr "Tether"
 
 #: src/shared/queries/updateReceipt.mutation.ts
-msgid "That receipt was not found — you may have already deleted it."
-msgstr "That receipt was not found — you may have already deleted it."
+msgid "That receipt was not found, you may have already deleted it."
+msgstr "That receipt was not found, you may have already deleted it."
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "That setting could not be saved. Try again."
@@ -1162,8 +1162,8 @@ msgid "The backup failed. Try again."
 msgstr "The backup failed. Try again."
 
 #: src/shared/queries/restoreBackup.mutation.ts
-msgid "The backup file is incomplete — it has no receipts or clients list. Pick a complete backup file."
-msgstr "The backup file is incomplete — it has no receipts or clients list. Pick a complete backup file."
+msgid "The backup file is incomplete, it has no receipts or clients list. Pick a complete backup file."
+msgstr "The backup file is incomplete, it has no receipts or clients list. Pick a complete backup file."
 
 #: src/pages/certificate/CertificatePage.tsx
 msgid "The certificate could not be produced"
@@ -1199,8 +1199,8 @@ msgid "The ledger could not be loaded"
 msgstr "The ledger could not be loaded"
 
 #: src/shared/ledger-state/LedgerState.tsx
-msgid "The ledger is where every payment you have received adds up in one place — exactly what you need when it is time to produce a report."
-msgstr "The ledger is where every payment you have received adds up in one place — exactly what you need when it is time to produce a report."
+msgid "The ledger is where every payment you have received adds up in one place, exactly what you need when it is time to produce a report."
+msgstr "The ledger is where every payment you have received adds up in one place, exactly what you need when it is time to produce a report."
 
 #: src/pages/quick-entry/QuickEntryAside.tsx
 msgid "The rate and Toman equivalent are stored at the moment you record a receipt. Later rate changes do not affect it."
@@ -1245,8 +1245,8 @@ msgid "this receipt"
 msgstr "this receipt"
 
 #: src/shared/receipt-form/ReceiptForm.tsx
-msgid "This receipt is backdated. Enter the rate from that day, not today's — the amount is frozen permanently and will not change if the price moves later."
-msgstr "This receipt is backdated. Enter the rate from that day, not today's — the amount is frozen permanently and will not change if the price moves later."
+msgid "This receipt is backdated. Enter the rate from that day, not today's. The amount is frozen permanently and will not change if the price moves later."
+msgstr "This receipt is backdated. Enter the rate from that day, not today's. The amount is frozen permanently and will not change if the price moves later."
 
 #: src/pages/ledger/LedgerPage.tsx
 msgid "This receipt is removed from the ledger and the totals and charts update. This cannot be undone."
@@ -1347,8 +1347,8 @@ msgid "USD"
 msgstr "USD"
 
 #: src/pages/settings/SettingsPage.tsx
-msgid "Used on the English certificate — spell it exactly as your passport does"
-msgstr "Used on the English certificate — spell it exactly as your passport does"
+msgid "Used on the English certificate, spell it exactly as your passport does"
+msgstr "Used on the English certificate, spell it exactly as your passport does"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Used on the English certificate; falls back to the Persian address when empty"
@@ -1398,8 +1398,8 @@ msgid "your data"
 msgstr "your data"
 
 #: src/shared/error-state/AppErrorFallback.tsx
-msgid "Your data is safe and has not been erased — this error only affects what is on screen."
-msgstr "Your data is safe and has not been erased — this error only affects what is on screen."
+msgid "Your data is safe and has not been erased, this error only affects what is on screen."
+msgstr "Your data is safe and has not been erased, this error only affects what is on screen."
 
 #: src/pages/certificate/CertificatePage.tsx
 #: src/pages/charts/ChartsPage.tsx
@@ -1420,5 +1420,5 @@ msgid "Your details were saved."
 msgstr "Your details were saved."
 
 #: src/pages/report/ReportPage.tsx
-msgid "Your name is not set yet. Without personal details this document carries no weight with an embassy or a landlord — <0>fill it in from Settings</0>."
-msgstr "Your name is not set yet. Without personal details this document carries no weight with an embassy or a landlord — <0>fill it in from Settings</0>."
+msgid "Your name is not set yet. Without personal details this document carries no weight with an embassy or a landlord, <0>fill it in from Settings</0>."
+msgstr "Your name is not set yet. Without personal details this document carries no weight with an embassy or a landlord, <0>fill it in from Settings</0>."

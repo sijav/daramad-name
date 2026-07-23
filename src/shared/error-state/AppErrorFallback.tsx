@@ -69,7 +69,7 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
           </Typography>
 
           <Typography sx={{ color: 'text.secondary' }} variant="body2">
-            <Trans>Your data is safe and has not been erased — this error only affects what is on screen.</Trans>
+            <Trans>Your data is safe and has not been erased, this error only affects what is on screen.</Trans>
           </Typography>
 
           <Typography

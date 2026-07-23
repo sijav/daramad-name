@@ -43,7 +43,7 @@ export const FirstRun: Story = {
           title={args.title || t`You have not recorded any receipts yet`}
           description={
             args.description ||
-            t`The ledger is where every payment you have received adds up in one place — exactly what you need when it is time to produce a report.`
+            t`The ledger is where every payment you have received adds up in one place, exactly what you need when it is time to produce a report.`
           }
           actionLabel={args.actionLabel || t`Record your first receipt`}
         />

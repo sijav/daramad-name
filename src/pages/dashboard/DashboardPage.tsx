@@ -109,7 +109,7 @@ export const DashboardPage = () => {
           <EmptyState
             icon={<DescriptionRoundedIcon />}
             title={t`No income recorded for this year yet`}
-            description={t`Record a few receipts and this page will show your year at a glance — month by month, and which clients it came from.`}
+            description={t`Record a few receipts and this page will show your year at a glance, month by month, and which clients it came from.`}
             actionLabel={t`Record a receipt`}
             onAction={() => navigate('/quick-entry')}
           />

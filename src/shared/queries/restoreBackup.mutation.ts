@@ -57,7 +57,7 @@ const parseBackup = (json: string): BackupFile => {
     throw new Error(i18n._(msg`This backup file was made by a newer version of the app. Update Daramadname and try again.`))
   }
   if (!Array.isArray(candidate.receipts) || !Array.isArray(candidate.clients)) {
-    throw new Error(i18n._(msg`The backup file is incomplete — it has no receipts or clients list. Pick a complete backup file.`))
+    throw new Error(i18n._(msg`The backup file is incomplete, it has no receipts or clients list. Pick a complete backup file.`))
   }
 
   // Same checks the app uses on write and on export, so a file cannot be

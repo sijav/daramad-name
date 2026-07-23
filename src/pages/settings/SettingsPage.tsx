@@ -190,7 +190,7 @@ export const SettingsPage = () => {
           </SettingRow>
           <SettingRow
             label={t`Full name in English`}
-            description={t`Used on the English certificate — spell it exactly as your passport does`}
+            description={t`Used on the English certificate, spell it exactly as your passport does`}
           >
             <TextField
               size="small"

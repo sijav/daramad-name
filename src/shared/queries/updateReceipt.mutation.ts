@@ -29,7 +29,7 @@ export const updateReceiptMutation = async ({
 }: UpdateReceiptRequest): Promise<Receipt> => {
   const existing = await db.receipts.get(id)
   if (!existing) {
-    throw new Error(i18n._(msg`That receipt was not found — you may have already deleted it.`))
+    throw new Error(i18n._(msg`That receipt was not found, you may have already deleted it.`))
   }
 
   const client = await upsertClientByName(clientName)

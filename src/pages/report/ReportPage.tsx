@@ -191,7 +191,7 @@ export const ReportPage = () => {
               {model?.incomplete ? (
                 <Alert severity="warning">
                   <Trans>
-                    Your name is not set yet. Without personal details this document carries no weight with an embassy or a landlord —{' '}
+                    Your name is not set yet. Without personal details this document carries no weight with an embassy or a landlord,{' '}
                     <RouterLink to="/settings">fill it in from Settings</RouterLink>.
                   </Trans>
                 </Alert>

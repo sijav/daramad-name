@@ -4,12 +4,10 @@
 declare module 'bidi-js' {
   interface EmbeddingLevels {
     levels: Uint8Array
-    paragraphs: { start: number; end: number; level: number }[]
   }
   interface Bidi {
     /** UAX#9 resolved embedding levels; base 'auto' derives from the first strong char. */
     getEmbeddingLevels(text: string, baseDirection?: 'ltr' | 'rtl' | 'auto'): EmbeddingLevels
-    getReorderSegments(text: string, embeddingLevels: EmbeddingLevels): [number, number][]
   }
   export default function bidiFactory(): Bidi
 }

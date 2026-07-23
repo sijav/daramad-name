@@ -6,7 +6,7 @@ import { isPersian, useDocsLocale } from './useDocsLocale'
  * "Language" toolbar, and follows it when it changes.
  *
  * Used from `.mdx`, where prose is written inline in both languages. Generated
- * Docs pages take a different route, their Persian lives in `fa/*.md` and is
+ * Docs pages take a different route: their Persian lives in `fa/*.md` and is
  * applied by `.storybook/LocalizedDocs.tsx`.
  */
 export const Localized = ({ fa, en }: { fa: ReactNode; en: ReactNode }): ReactNode => (isPersian(useDocsLocale()) ? fa : en)

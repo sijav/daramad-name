@@ -14,8 +14,8 @@ import { registerSW } from 'virtual:pwa-register'
  * builds loads the PWA plugin, so `virtual:pwa-register` would not resolve.
  *
  * In `npm run dev` the plugin resolves this import to a no-op, because
- * `devOptions` is off, a service worker on the dev server caches the very
- * files you are editing.
+ * `devOptions` is off: a worker on the dev server would cache the very files
+ * being edited.
  */
 export const registerServiceWorker = () => {
   registerSW({

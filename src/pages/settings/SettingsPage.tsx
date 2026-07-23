@@ -29,9 +29,9 @@ import type { AppLocale, CalendarSystem, Profile, ThemePreference } from 'src/sh
 /**
  * Personal details, backup and restore, display preferences, privacy.
  *
- * Every destructive control on this page is behind a typed confirmation, and
- * both of them, erase, and restore-over, offer a backup first. There is no
- * server copy to fall back on, so a mis-click here is the end of the data.
+ * Every destructive control here is behind a typed confirmation, and both of
+ * them (erase, and restore-over) offer a backup first. There is no server copy
+ * to fall back on, so a mis-click is the end of the data.
  */
 export const SettingsPage = () => {
   const { t } = useLingui()
@@ -52,18 +52,17 @@ export const SettingsPage = () => {
 
   // `null` until the user edits, so the form reads straight from the saved
   // settings as they arrive from IndexedDB. Deriving rather than copying into
-  // state on mount avoids a effect that would clobber typing on every refetch.
+  // state on mount avoids an effect that would clobber typing on every refetch.
   //
   // Merged over the defaults because the settings reaching this component come
-  // from the query CACHE, which is not guaranteed to have been through
-  // `readSettings`: a profile written or seeded before `fullNameEn`,
-  // `passportNumber` and `addressEn` existed has no such keys. Feeding
-  // `undefined` to a TextField makes it uncontrolled for one paint and
-  // controlled on the next, React warns, and anything typed in between is
-  // dropped on the floor. Every field is a string from the first frame.
-  const [draftProfile, setDraftProfile] = useState<Profile | null>(null)
+  // from the query CACHE, which has not necessarily been through
+  // `readSettings`: a profile seeded before `fullNameEn`, `passportNumber` and
+  // `addressEn` existed carries no such keys, and feeding `undefined` to a
+  // TextField makes it uncontrolled for one paint and controlled on the next,
+  // which drops whatever was typed in between. Every field is a string from the
+  // first frame.
+  const [draftProfile, setProfile] = useState<Profile | null>(null)
   const profile: Profile = draftProfile ?? { ...defaultSettings.profile, ...settings.profile }
-  const setProfile = setDraftProfile
 
   const [toast, setToast] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -115,7 +114,7 @@ export const SettingsPage = () => {
       // Drop the local draft: the restored file carries its own profile, and a
       // draft left pinned would show the OLD details over it and write them
       // back on the next save.
-      setDraftProfile(null)
+      setProfile(null)
       setPendingRestore(null)
       setToast(t`${data.receipts.length} receipts restored.`)
     },
@@ -140,7 +139,7 @@ export const SettingsPage = () => {
       await refreshAll()
       // Without this the name, national ID and passport number the user just
       // erased stay on screen, and "Save details" puts them back.
-      setDraftProfile(null)
+      setProfile(null)
       setConfirmClear(false)
       setToast(t`All data was erased.`)
     },

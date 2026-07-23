@@ -1,3 +1,11 @@
+The printable route takes **all** of its configuration from the query string: no state, no props and no picker on the page.
+
+So these stories differ only in the address handed to the router, which is exactly what the report page does when it opens the certificate in a new tab.
+
+The backdrop and the print button paint immediately, but the document itself waits on `useCertificateModel`. That hook dynamically imports the report's message catalog, which is what lets a Persian interface produce an English document.
+
+The previous-year subtlety: the page fixtures seed only the current year's report key. `?year=` builds a different one, so that story misses the cache and reads Dexie directly. An empty Dexie totals zero, and the page answers zero with the no-income notice rather than a document, which is why that story seeds Dexie itself.
+
 ## stories
 
 - `Persian`: The Persian certificate, and the reason this route sits OUTSIDE the app shell. Everything the browser paints here ends up on paper. A nav rail, a bottom bar or a stray toolbar would print onto a document someone hands to an embassy, so the page is asserted to carry exactly one control, the print button, and that control is asserted to be marked `no-print`. The document title matters for the same reason: the browser names the saved PDF after it, and a file called «درآمدنامه.pdf» tells the person receiving it nothing. It has to be the reference printed on the page.

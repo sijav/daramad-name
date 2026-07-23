@@ -19,23 +19,18 @@ type Story = StoryObj<typeof meta>
 const seeded = { page: { data: 'full' } }
 
 /**
- * The document cannot appear until `useCertificateModel` has finished, and it
- * starts by DYNAMICALLY IMPORTING a second lingui instance plus a whole message
- * catalog, so the certificate can be written in a language the interface is not
- * in. On a cold module graph that import outruns testing-library's one-second
- * default and the first story in this file fails while the rest pass, which
- * reads like a bug in the page and is not one. The wait is stated instead.
+ * The document waits on `useCertificateModel`, which dynamically imports the
+ * report's message catalog so the certificate can be written in a language the
+ * interface is not in. On a cold module graph that import outruns
+ * testing-library's one-second default, and only the first story in the file
+ * fails, which reads like a bug in the page rather than a timeout.
  */
-const findDocument = async (canvasElement: HTMLElement, title: string) =>
-  await within(canvasElement).findByText(title, undefined, { timeout: 10_000 })
+const findDocument = (canvasElement: HTMLElement, title: string) => within(canvasElement).findByText(title, undefined, { timeout: 10_000 })
 
 export const WithData: Story = {
   parameters: seeded,
-  /**
-   * The other half of `WarnsWhenTheNameIsMissing`. A warning that is always on
-   * screen is noise the user learns to read past, and then it is not there when
-   * it matters, so the quiet case is asserted as deliberately as the loud one.
-   */
+  // The other half of `WarnsWhenTheNameIsMissing`: a warning that is always on
+  // screen is one the user reads past, so the quiet case is asserted too.
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await findDocument(canvasElement, 'گواهی درآمد')

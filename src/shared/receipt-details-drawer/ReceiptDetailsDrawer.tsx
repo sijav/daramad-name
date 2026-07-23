@@ -2,7 +2,7 @@ import { Trans, useLingui } from '@lingui/react/macro'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import LockRoundedIcon from '@mui/icons-material/LockRounded'
 import { Box, Button, Divider, Drawer, IconButton, Stack, Typography } from '@mui/material'
-import { useId } from 'react'
+import { useId, type ReactNode } from 'react'
 import { CHANNEL_LABELS, CURRENCY_LABELS } from 'src/shared/constants'
 import { useFormat } from 'src/shared/format'
 import { MoneyText } from 'src/shared/money-text'
@@ -19,11 +19,10 @@ export interface ReceiptDetailsDrawerProps {
 /**
  * Read-only detail view for one receipt.
  *
- * This is where the frozen conversion is actually explained to the user: the
- * ledger shows the toman figure, but only here do they see the original amount,
- * the rate it was captured at, and a «frozen» marker saying it will not move.
- * Without that, a Tether receipt whose toman value never changes looks like a
- * bug rather than the guarantee it is.
+ * Where the frozen conversion is explained. The ledger shows only the toman
+ * figure; the original amount, the captured rate and the «frozen» marker are
+ * here, so a Tether receipt whose value never moves reads as a guarantee rather
+ * than a bug.
  *
  * `anchor="right"` is written once; the RTL plugin mirrors it in Persian.
  */
@@ -37,10 +36,8 @@ export const ReceiptDetailsDrawer = ({ receipt, onClose, onEdit, onDelete }: Rec
       anchor="right"
       open={receipt !== null}
       onClose={onClose}
-      // The drawer's paper IS the `role="dialog"`, and MUI cannot guess its
-      // name, it opened as an unnamed dialog (axe: `aria-dialog-name`,
-      // serious), so a screen reader announced "dialog" and left the user to
-      // work out what had appeared. Pointing at the heading rather than
+      // The paper IS the `role="dialog"`, so the name goes there or it opens
+      // unnamed (axe `aria-dialog-name`). Pointing at the heading rather than
       // repeating it in an `aria-label` keeps the two from drifting apart.
       slotProps={{ paper: { 'aria-labelledby': titleId, sx: { width: { xs: '100%', sm: 420 } } } }}
     >
@@ -117,12 +114,11 @@ export const ReceiptDetailsDrawer = ({ receipt, onClose, onEdit, onDelete }: Rec
   )
 }
 
-// `component="span"` is load-bearing, not tidiness: MUI maps the `subtitle2`
-// variant onto `<h6>` by default, so every one of these captions was published
-// as a level-6 heading directly under the drawer's `<h3>`, eight fake headings
-// in the document outline, and a level jump axe reports as `heading-order`. A
-// caption is not a heading; the block layout is kept with `display: block`.
-const Detail = ({ label, children }: { label: string; children: React.ReactNode }) => (
+// `component="span"` is load-bearing: MUI maps `subtitle2` onto `<h6>`, so
+// these captions published eight level-6 headings under the drawer's `<h3>`,
+// a level jump axe reports as `heading-order`. `display: block` keeps the
+// layout the heading element was providing.
+const Detail = ({ label, children }: { label: string; children: ReactNode }) => (
   <Box>
     <Typography variant="subtitle2" component="span" sx={{ color: 'text.secondary', display: 'block', mb: 0.75 }}>
       {label}

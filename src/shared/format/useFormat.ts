@@ -6,11 +6,10 @@ import { formatAmount, formatDate, formatDateLong, formatDateRangeLong, formatNu
 /**
  * Locale-aware number and date rendering.
  *
- * Persian numerals are a property of the Persian locale, not of the app. In
- * English the same figures must read «649,980,000», showing «۶۴۹,۹۸۰,۰۰۰» to
- * an English reader (or to an embassy officer) is exactly the failure the
- * bilingual report exists to avoid. Every surface that prints a number or a
- * date goes through this hook so the two can never drift apart.
+ * Persian numerals are a property of the Persian LOCALE, not of the app, so in
+ * English the same figures read «649,980,000». Every surface that prints a
+ * number or a date goes through this hook, which is what stops the two drifting
+ * apart. Never call `toPersianDigits` from a component.
  */
 export const useFormat = () => {
   const { locale, calendar } = useSettings()

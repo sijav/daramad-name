@@ -51,13 +51,12 @@ export const ClientShareChart = ({ shares, limit = 4, othersLabel }: ClientShare
                 label: row.clientName,
                 color: theme.palette.chartSeries[index % theme.palette.chartSeries.length],
               })),
-              // This formatter is the donut's ONLY text alternative. MUI X marks
-              // its own `<svg>` `aria-hidden`, so nothing in the drawing reaches
-              // a screen reader except through here: it feeds the hover tooltip
-              // AND the keyboard-navigation announcement, which `pieDescription`
-              // builds as «label; formattedValue». A bare «۲۳۵٬۸۳۰٬۰۰۰» leaves a
-              // figure with no unit and no proportion, and the proportion is
-              // the only thing a slice is drawn to say.
+              // The donut's ONLY text alternative: MUI X marks its own `<svg>`
+              // `aria-hidden`, so nothing in the drawing reaches a screen reader
+              // except through here. It feeds both the hover tooltip and the
+              // keyboard announcement, which `pieDescription` builds as
+              // «label; formattedValue», so a bare «۲۳۵٬۸۳۰٬۰۰۰» would carry
+              // neither unit nor proportion.
               valueFormatter: (item) => {
                 const amount = number(item.value)
                 const share = digits(pct(item.value))

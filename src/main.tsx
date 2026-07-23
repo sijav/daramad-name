@@ -6,8 +6,6 @@ import { App } from 'src/App'
 import { DEFAULT_LOCALE, activateLocale } from 'src/core/i18n'
 import { registerServiceWorker } from 'src/pwa/registerServiceWorker'
 
-// `BASE_URL` keeps routing correct on GitHub Pages, which serves the app from a
-// repository subpath rather than the domain root.
 const container = window.document.getElementById('root')
 if (!container) {
   throw new Error('Root element not found')
@@ -18,14 +16,14 @@ if (!container) {
 // only avoids a flash of English message ids on a cold start.
 await activateLocale(DEFAULT_LOCALE)
 
-// The whole app is local-first, so working offline is its honest default rather
-// than an extra: the worker precaches the shell, the catalogs and the Vazirmatn
-// cuts the PDF certificate embeds. It is also what makes Chrome offer to
-// install the app at all.
+// Precaches the shell, the catalogs and the Vazirmatn cuts the PDF embeds, so
+// the app works offline. It is also what makes Chrome offer to install it.
 registerServiceWorker()
 
 createRoot(container).render(
   <StrictMode>
+    {/* `BASE_URL` keeps routing correct on GitHub Pages, which serves from a
+        repository subpath rather than the domain root. */}
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <App />
     </BrowserRouter>

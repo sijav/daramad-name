@@ -13,11 +13,10 @@ export interface TopCustomersProps {
  * The design's `Chart/Top Customers`: a ranked list, each row a name, a compact
  * amount, and a share bar.
  *
- * Amounts are shown in millions («۹۹۶ م تومان») because the full figure would
- * wrap at this width. The bar is measured against the LEADER rather than the
- * total, that is what the design's bar widths imply, and it keeps the gaps
- * between clients readable instead of squashing everything under a dominant
- * first row.
+ * Amounts are in millions («۹۹۶ م تومان») because the full figure wraps at this
+ * width. The bar is measured against the LEADER rather than the total, which is
+ * what the design's bar widths imply and what keeps the gaps between clients
+ * readable under a dominant first row.
  */
 export const TopCustomers = ({ shares, limit = 5, othersLabel }: TopCustomersProps) => {
   const { t } = useLingui()
@@ -39,9 +38,9 @@ export const TopCustomers = ({ shares, limit = 5, othersLabel }: TopCustomersPro
             <Typography variant="subtitle1" sx={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {row.clientName}
             </Typography>
-            {/* A row of a ranked list, not an outline entry, the client name
-                and its amount are data. `h5` is only the size the design draws
-                the amount at, so the element is pinned to `p`. */}
+            {/* `h5` is only the SIZE the design draws the amount at. This is a
+                row of data, not an outline entry, so the element is pinned to
+                `p` and stays out of the heading tree. */}
             <Typography variant="h5" component="p" sx={{ color: 'text.secondary', flexShrink: 0, whiteSpace: 'nowrap' }}>
               {t`${number(Math.round(row.totalToman / 1_000_000))} M Toman`}
             </Typography>

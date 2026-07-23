@@ -15,10 +15,8 @@ export interface SummaryCardProps {
  * The design's dashboard `Card`: a tinted icon chip and a small label on one
  * row, the figure beneath.
  *
- * Flat, not frosted, `surface-default` with a 1px `border-default` hairline,
- * 20px radius and the Elevation/1 shadow. The 28px glass treatment belongs to
- * the older record card; the current design system uses bordered surfaces
- * everywhere, and a blurred panel behind a headline number costs legibility.
+ * Flat, not frosted: `surface-default` with a 1px `border-default` hairline,
+ * 20px radius and the Elevation/1 shadow.
  */
 export const SummaryCard = ({ label, value, icon, hint, emphasis = false }: SummaryCardProps) => (
   <Paper
@@ -38,11 +36,10 @@ export const SummaryCard = ({ label, value, icon, hint, emphasis = false }: Summ
       <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
         <Typography
           variant="caption"
-          sx={{ fontWeight: 500, lineHeight: '16px' }}
-          color={emphasis ? 'primary.dark' : 'text.secondary'}
-          // The label can be long in English; it wraps rather than pushing the
+          // `minWidth: 0` lets a long English label wrap instead of pushing the
           // icon chip out of the row.
-          style={{ minWidth: 0 }}
+          sx={{ fontWeight: 500, lineHeight: '16px', minWidth: 0 }}
+          color={emphasis ? 'primary.dark' : 'text.secondary'}
         >
           {label}
         </Typography>

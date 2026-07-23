@@ -12,14 +12,12 @@ export interface SurfaceCardProps extends Omit<PaperProps, 'variant'> {
  * The panel every page sits on: a 1px `border-default` hairline over
  * `surface-default`, with the radius and shadow the screen calls for.
  *
- * This was `GlassCard`, translucent with a 16px backdrop blur and 28px
- * corners. That treatment came from one record card in an older revision of
- * the design; the current system uses flat bordered surfaces everywhere, and
- * the blur was being inherited by every menu and dialog in the app.
+ * There is no glass here. Only the fixed app chrome blurs; a backdrop filter on
+ * this component reaches every menu and dialog in the app.
  *
- * Built on MUI's `Paper` rather than a bare `Box` so elevation, square/rounded
- * variants and the `component` prop keep working, and so the theme's
- * `MuiPaper` overrides apply in one place.
+ * Built on MUI's `Paper` rather than a bare `Box`, so elevation, the
+ * square/rounded variants and the `component` prop keep working, and the
+ * theme's `MuiPaper` overrides apply in one place.
  */
 export const SurfaceCard = ({
   radius: size = 'xl',

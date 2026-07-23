@@ -50,15 +50,13 @@ export const getClientSharesQuery = async ({
     .sort((left, right) => right.totalToman - left.totalToman)
 
   const top = shares[0]
-  // An "unassigned" bucket over 50% is a data-hygiene problem, not a client
-  // concentration risk, so it must not raise the dependency warning.
+  // An "unassigned" bucket over the threshold is a data-hygiene problem, not a
+  // concentration risk, so it does not raise the warning.
   //
-  // The test uses the RAW share, not the rounded one the callout prints.
-  // Comparing the rounded value moved the real boundary to 50.5%: a client at a
-  // true 50.4% rounded to 50, `50 > 50` was false, and a freelancer taking over
-  // half their income from one place got no warning, beside a donut reading
-  // «۵۰٪». Rounding stays for display only, so the callout still agrees with the
-  // legend.
+  // Tested against the RAW share, not the rounded one the callout prints.
+  // Comparing the rounded value moved the boundary to 50.5%: a true 50.4%
+  // rounded to 50, and `50 > 50` is false, so no warning appeared beside a
+  // donut reading «۵۰٪». Rounding is for display only.
   const topShare = top ? (top.totalToman / grandTotal) * 100 : 0
   const insight =
     top && top.clientId !== UNASSIGNED_ID && topShare > CONCENTRATION_THRESHOLD

@@ -49,7 +49,7 @@ export const monthIndexOf = (date: Date, calendar: CalendarSystem): number =>
 
 /**
  * The full year as an inclusive instant range. Jalali years start at Farvardin
- * 1, not January, the edge case the brief calls out explicitly.
+ * 1, not January.
  */
 export const yearRange = (year: number, calendar: CalendarSystem): DateRange => {
   if (calendar === 'JALALI') {

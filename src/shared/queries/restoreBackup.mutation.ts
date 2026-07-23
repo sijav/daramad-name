@@ -14,13 +14,12 @@ import type { BackupFile, Client, Receipt } from 'src/shared/types'
 /**
  * Replaces the entire database with a backup file.
  *
- * Replace, not merge: merging would need identity rules for "the same receipt"
- * that do not exist, and would silently double someone's income if they
- * restored the same file twice, the worst possible failure for a tool whose
- * entire value is an accurate total.
+ * Replace, not merge: merging needs an identity rule for "the same receipt"
+ * that does not exist, and restoring one file twice would double the user's
+ * income in a tool whose whole value is an accurate total.
  *
- * The file is validated before anything is deleted, so a malformed file leaves
- * the existing data untouched rather than destroying it.
+ * Validated before anything is deleted, so a malformed file leaves the existing
+ * data untouched.
  */
 export const restoreBackupMutation = async ({ json }: { json: string }): Promise<BackupFile> => {
   const backup = parseBackup(json)
@@ -35,7 +34,7 @@ export const restoreBackupMutation = async ({ json }: { json: string }): Promise
   return backup
 }
 
-/** Throws a human Persian error naming what is wrong, per rule 9. */
+/** Throws an error naming what is wrong with the file, not a generic failure. */
 const parseBackup = (json: string): BackupFile => {
   let parsed: unknown
   try {

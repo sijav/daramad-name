@@ -11,14 +11,14 @@ export interface FilterButtonProps extends Omit<ButtonProps, 'startIcon' | 'endI
 /**
  * Opens the filter popover, with a count badge when filters are applied.
  *
- * The badge matters for the same reason the chips do, a popover hides its
- * contents, so the trigger has to carry the state.
+ * A popover hides its contents, so the trigger has to carry the state; that is
+ * what the badge and the chips are both for.
  *
- * The design (`275:63`) puts the funnel on one edge and a filled 20px count
- * badge on the other, INSIDE the control, not as a corner overlay. The funnel
- * is the `startIcon` and the badge is the last child, so RTL lands them on the
- * right and left respectively, matching the frame. Why the badge is not the
- * `endIcon` is recorded at the badge itself.
+ * Figma `275:63` puts the funnel on one edge and a filled 20px count badge on
+ * the other, INSIDE the control rather than as a corner overlay. The funnel is
+ * the `startIcon` and the badge the last child, so RTL lands them right and
+ * left to match the frame. Why the badge is not the `endIcon` is recorded at
+ * the badge itself.
  */
 export const FilterButton = ({ activeCount = 0, sx, ...props }: FilterButtonProps) => {
   const { t } = useLingui()

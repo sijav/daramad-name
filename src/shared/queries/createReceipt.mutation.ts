@@ -19,9 +19,8 @@ export interface CreateReceiptRequest {
  * Writes a receipt, freezing its toman value.
  *
  * `amountToman` is computed here, once, and stored. Nothing recomputes it on
- * read. That is the whole point of scenario 1: a receipt logged when Tether was
- * 98,500 must still read 246,250,000 toman after Tether moves, because that is
- * what the freelancer actually received.
+ * read: 500 USDT logged when Tether was 98,500 still reads 49,250,000 toman
+ * after Tether moves, because that is what the freelancer actually received.
  */
 export const createReceiptMutation = async ({
   occurredAt,

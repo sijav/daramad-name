@@ -22,11 +22,8 @@ export interface NavItem {
 }
 
 /**
- * The six destinations in the design's Nav Rail, in its order.
- *
- * «نمای کلی» (Overview) is the landing page; the brief's five pages all remain
- * behind it. The rail confirmed the structure, the redesign added a dashboard
- * rather than replacing anything.
+ * The six destinations in the design's Nav Rail, in its order. «نمای کلی»
+ * (Overview) is the landing route; the other five sit behind it.
  */
 export const NAV_ITEMS: NavItem[] = [
   { to: '/', label: msg`Overview`, icon: <DashboardRoundedIcon /> },

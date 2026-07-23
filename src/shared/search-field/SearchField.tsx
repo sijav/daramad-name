@@ -14,11 +14,10 @@ export type SearchFieldProps = Omit<TextFieldProps, 'value' | 'onChange'> & {
  * `surface-default` with a 1px `border-default` hairline, magnifier on the
  * leading edge.
  *
- * NOT a pill, an earlier pass recorded it as fully rounded, which was wrong;
- * it shares the 10px radius with the filter button standing next to it.
+ * NOT a pill: it shares its 10px radius with the filter button beside it.
  *
- * The clear button only appears once there is something to clear, a permanent
- * one reads as "this filter is active" even when it is not.
+ * The clear button appears only once there is something to clear, since a
+ * permanent one reads as "this filter is active" when it is not.
  */
 export const SearchField = ({ value, onValueChange, placeholder, sx, ...props }: SearchFieldProps) => {
   const { t } = useLingui()

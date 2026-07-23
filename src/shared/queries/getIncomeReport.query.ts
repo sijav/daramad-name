@@ -8,18 +8,15 @@ export const getIncomeReportQueryKey = (range: DateRange, calendar: CalendarSyst
 /**
  * Everything the PDF prints. Computed, never stored.
  *
- * The monthly average divides by months ELAPSED in the range, not by months
- * that had income. An embassy reads this as "what does this person earn per
- * month"; dividing by only the productive months would inflate it and
- * misrepresent the applicant.
+ * The monthly average divides by months ELAPSED, not by months that had income.
+ * `averagingPeriod` owns that rule and explains it; every surface shares it.
  */
 export const getIncomeReportQuery = async ({
   queryKey: [, requestedRange, calendar],
 }: QueryFunctionContext<ReturnType<typeof getIncomeReportQueryKey>>): Promise<IncomeReport> => {
-  // The period never runs past today. A certificate for the current year would
-  // otherwise claim to cover months that have not happened, printing eight
-  // zero rows for the future and dividing four months of real income by 12,
-  // which understates the holder threefold on the page an embassy reads.
+  // The period never runs past today, or a certificate for the current year
+  // prints zero rows for months that have not happened and divides four months
+  // of real income by twelve.
   const { range, months: monthsInRange } = averagingPeriod(requestedRange, calendar)
 
   const [receipts, settings] = await Promise.all([

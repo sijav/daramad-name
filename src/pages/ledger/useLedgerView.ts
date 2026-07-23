@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useSettings } from 'src/core/query'
 import type { LedgerFilter, LedgerSort, LedgerSummary, ReceiptWithClient } from 'src/shared/types'
 import { toEnglishDigits } from 'src/shared/utils'
@@ -17,19 +17,16 @@ export interface LedgerPage {
 }
 
 /**
- * View state for the redesigned ledger: filters, free-text search, sorting and
- * pagination.
+ * View state for the ledger: filters, free-text search, sorting and pagination.
  *
- * The hook owns the state but does NOT take the ledger, because the query key
- * is built from `filter` and `sort`, passing the data in would require the
- * query to exist before the state that drives it. Instead the page calls
- * `paginate(rows, summary)` once the query resolves.
+ * The hook owns the state but does NOT take the ledger. The query key is built
+ * from `filter` and `sort`, so passing the data in would need the query to exist
+ * before the state that drives it. The page calls `paginate(rows, summary)` once
+ * the query resolves instead.
  *
- * Search runs client-side over the already-filtered rows: the data is local and
- * small, so a text index in IndexedDB would add machinery for no gain. The
- * summary goes through the same call because of that, the query computed it
- * before the search existed, so `paginate` is the only place that can bring the
- * two back into agreement.
+ * Search is client-side over the already-filtered rows, the data being local and
+ * small. The summary has to go through the same call: the query computed it
+ * without knowing the search term.
  */
 export const useLedgerView = () => {
   const { calendar } = useSettings()
@@ -41,27 +38,23 @@ export const useLedgerView = () => {
 
   const activeFilterCount = [filter.range, filter.clientId, filter.channel].filter(Boolean).length
 
-  const paginate = useMemo(
-    () =>
-      (rows: ReceiptWithClient[], summary: LedgerSummary): LedgerPage => {
-        const term = toEnglishDigits(search).trim().toLowerCase()
-        const searched = term ? rows.filter((receipt) => matches(receipt, term)) : rows
+  const paginate = (rows: ReceiptWithClient[], summary: LedgerSummary): LedgerPage => {
+    const term = toEnglishDigits(search).trim().toLowerCase()
+    const searched = term ? rows.filter((receipt) => matches(receipt, term)) : rows
 
-        const pageCount = Math.max(1, Math.ceil(searched.length / pageSize))
-        // Clamped rather than stored, deleting the last row on page 4 must not
-        // strand the user on an empty page.
-        const safePage = Math.min(page, pageCount)
+    const pageCount = Math.max(1, Math.ceil(searched.length / pageSize))
+    // Clamped rather than stored, deleting the last row on page 4 must not
+    // strand the user on an empty page.
+    const safePage = Math.min(page, pageCount)
 
-        return {
-          rows: searched.slice((safePage - 1) * pageSize, safePage * pageSize),
-          matchedCount: searched.length,
-          summary: term ? summarise(searched, summary.monthsInRange) : summary,
-          page: safePage,
-          pageCount,
-        }
-      },
-    [search, page, pageSize],
-  )
+    return {
+      rows: searched.slice((safePage - 1) * pageSize, safePage * pageSize),
+      matchedCount: searched.length,
+      summary: term ? summarise(searched, summary.monthsInRange) : summary,
+      page: safePage,
+      pageCount,
+    }
+  }
 
   return {
     calendar,
@@ -96,13 +89,9 @@ export const useLedgerView = () => {
 }
 
 /**
- * Re-states the summary over the searched rows.
- *
- * The query never sees the search term, so its total and count still describe
- * the rows the search has removed, leaving the ledger printing one receipt
- * count in the heading and another in the total band and the cards below it,
- * with the larger figure labelled as filtered. These numbers get copied onto a
- * document handed to an embassy, so they have to describe the same set.
+ * Re-states the summary over the searched rows, so the heading's result count
+ * and the total band below it describe the same set. Without it the query's
+ * untouched total sits under a heading counting the searched rows.
  *
  * The divisor is kept: months come from the date range, and narrowing the text
  * does not shorten the period the income was earned over.

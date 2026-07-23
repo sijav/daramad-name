@@ -9,33 +9,29 @@ import { SurfaceCard } from 'src/shared/surface-card'
 import { toPersianDigits } from 'src/shared/utils'
 
 /**
- * Rule 9: no «خطایی رخ داد». Say what happened and what to do about it.
+ * The crash screen, carrying its own recovery steps in the order to try them,
+ * each with its own button. Telling the user to "take a backup from Settings and
+ * reopen the page" is no help when the screen that broke is the one they are
+ * reading it on. Erasing sits last and behind a confirmation.
  *
- * The recovery steps are laid out in the order they should be tried, each with
- * its own explanation and its own button, because "take a backup from Settings
- * and reopen the page" is useless advice when the screen that broke is the one
- * you are reading it on. Erasing sits last and behind a confirmation.
+ * Nothing here goes through React Query, and that is deliberate throughout: the
+ * boundary may have been tripped by the provider tree above this screen, so no
+ * hook context can be relied on.
  */
 export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
   const { t, i18n } = useLingui()
-  // Not `useFormat`: that reads settings through React Query, and the boundary
-  // may have been tripped by the provider tree above this screen.
+  // Hence reading the locale off i18n rather than through `useFormat`.
   const step = (n: number) => (i18n.locale === 'fa-IR' ? toPersianDigits(n) : String(n))
   // Enumeration letters are user-visible text: Persian lists with الف-ب.
-  const letters = [t`A`, t`B`]
-  const letter = (index: number) => letters[index]
+  const [letterA, letterB] = [t`A`, t`B`]
   const [confirmErase, setConfirmErase] = useState(false)
   const [backedUp, setBackedUp] = useState(false)
   const [failure, setFailure] = useState<string | null>(null)
 
-  // Called directly rather than through React Query: the boundary may have been
-  // tripped by the provider tree itself, so no hook context above can be relied on.
-  //
-  // The failure path is the whole point of this screen. Step A is "take a
-  // backup" and step B is "erase everything", so a backup that fails silently,
-  // leaving the button reading «دانلود» as though nothing happened, walks the
-  // user into erasing data they never saved. The export genuinely rejects on
-  // corrupt rows, which is exactly the state a crash screen is reached in.
+  // Step A is "take a backup" and step B is "erase everything", so a failed
+  // backup that leaves the button reading «دانلود» walks the user into erasing
+  // data they never saved. The export does reject on corrupt rows, which is one
+  // of the states this screen is reached in.
   const backup = async () => {
     setFailure(null)
     try {
@@ -129,12 +125,12 @@ export const AppErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) =
                     {failure}
                   </Alert>
                 ) : null}
-                <SubStep letter={letter(0)} label={t`Download a backup`}>
+                <SubStep letter={letterA} label={t`Download a backup`}>
                   <Button variant="outlined" fullWidth onClick={() => void backup()}>
                     {backedUp ? t`Downloaded` : t`Download`}
                   </Button>
                 </SubStep>
-                <SubStep letter={letter(1)} label={t`Erase and restart, then import your file from Settings`}>
+                <SubStep letter={letterB} label={t`Erase and restart, then import your file from Settings`}>
                   <Button variant="outlined" color="error" fullWidth onClick={() => setConfirmErase(true)}>
                     {t`Erase and restart`}
                   </Button>

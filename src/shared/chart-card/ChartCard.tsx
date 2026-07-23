@@ -41,11 +41,11 @@ export const ChartCard = ({ title, subtitle, variant = 'chart', action, children
     <Stack spacing={2.5} sx={{ height: '100%', minWidth: 0, width: '100%' }}>
       <Stack direction="row" sx={{ alignItems: 'flex-start', justifyContent: 'space-between', gap: 2 }}>
         <Stack spacing={0.5} sx={{ minWidth: 0, textAlign: 'start' }}>
-          {/* The variant only picks the SIZE the design draws this panel's
-              title at — 18px on a dashboard panel, 16px on a charts one. The
-              element is pinned to `h3` in both, because either way this is a
-              section title sitting under the page's `h2`. Without it the
-              `chart` variant emitted an `<h5>` and skipped two levels. */}
+          {/* The variant picks only the SIZE the design draws this title at:
+              18px on a dashboard panel, 16px on a charts one. The element is
+              pinned to `h3` in both, since either way this is a section title
+              under the page's `h2`. Without it the `chart` variant emitted an
+              `<h5>` and skipped two levels. */}
           <Typography variant={variant === 'content' ? 'h3' : 'h5'} component="h3">
             {title}
           </Typography>

@@ -1,0 +1,16 @@
+# LF everywhere: in the index, in the working tree, on every machine.
+#
+# `core.autocrlf=input` normalises on the way IN, so commits are already LF, but
+# it leaves whatever the working tree happens to hold. A tool that writes CRLF
+# then produces a file that lints red locally and clean in CI, which is a
+# confusing way to lose an afternoon. `eol=lf` settles it on checkout too, and
+# it applies to anyone who clones, whatever their global config says.
+* text=auto eol=lf
+
+# Binaries git must not touch.
+*.png binary
+*.ico binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
+*.pdf binary

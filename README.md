@@ -16,15 +16,39 @@ recorded receipts.
 
 ---
 
-## Why there is no backend
+## Where is my data stored?
 
-This is a decision, not a gap. All six scenarios in the brief run entirely in
-the browser: the exchange rate is typed in by hand (so no rate API), there is no
-login (so no auth), and moving between devices is a JSON file (so no sync).
+**On your own machine, in your own browser. Nowhere else.**
 
-A server would carry no responsibility in this architecture and would, in
-exchange, break the privacy claim printed in the footer. The one capability that
-is lost is a signed, verifiable PDF, recorded in
+Every receipt, your client list and your personal details are written to
+**IndexedDB**, the browser's own database, under the origin you opened the app
+from. There is no account, no server and no database belonging to us, because
+there is no backend at all. Nothing is uploaded, nothing is synced in the
+background, and no analytics call leaves the page. The PDF certificate is
+produced inside the page too, so its contents never leave your machine either.
+
+That is a decision rather than a gap. All six scenarios in the brief run
+entirely in the browser: the exchange rate is typed in by hand (so no rate API),
+there is no login (so no auth), and moving between devices is a JSON file (so no
+sync). A server would carry no responsibility here and would, in exchange, break
+the privacy claim printed in the footer.
+
+What follows from it, and is worth knowing before you rely on it:
+
+- **The data belongs to that browser on that device.** Opening the app on your
+  phone will not show what you recorded on your laptop. Clearing site data, or
+  "clear browsing history" with site data ticked, erases it. So does
+  uninstalling the browser.
+- **Moving between devices is a file you carry.** Settings has Backup, which
+  downloads a JSON file, and Restore, which reads one back. That file is the
+  only copy that exists outside the browser, so keep it somewhere you trust.
+- **Restore replaces, it does not merge.** Restoring a backup discards what is
+  currently in the browser and puts the file's contents in its place.
+- **Private or incognito windows forget everything** when the window closes,
+  including your ledger.
+
+The one capability this costs is a certificate an embassy could verify against
+an issuer, which would need a server to sign it. That trade is recorded in
 [PHASE-NEXT.md](./PHASE-NEXT.md).
 
 ## Running it

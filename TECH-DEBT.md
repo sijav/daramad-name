@@ -12,6 +12,38 @@ Ordered by how much it would hurt to leave forever.
 
 ---
 
+## When to check for updates again
+
+Sina's global `~/.npmrc` sets `min-release-age=7`, so npm refuses anything
+published in the last seven days. That is deliberate supply-chain protection,
+not a bug, and it means some updates are not blocked by us at all, they are
+simply not old enough yet.
+
+Checked 2026-07-23. Run `npm outdated` and `npm audit` again on or after each
+date below; if the package has moved on since, recompute from its own publish
+date rather than trusting this table.
+
+| Package                                   | Want   | Published  | Installable from | Why                                                     |
+| ----------------------------------------- | ------ | ---------- | ---------------- | ------------------------------------------------------- |
+| `fast-uri`                                | 3.1.4  | 2026-07-19 | **2026-07-26**   | The one high-severity advisory, GHSA-v2hh-gcrm-f6hx     |
+| `storybook` and `@storybook/addon-vitest` | 10.5.3 | 2026-07-20 | **2026-07-27**   | Clears entry 3's banner, and possibly entry 1b's notice |
+
+Two others are held back by something other than age, so no date applies:
+`typescript` waits on typescript-eslint's peer range (entry 4) and `stylis`
+waits on `@emotion/cache`'s exact pin (entry 5). Check those with the commands
+in their own entries, not with the calendar.
+
+To take an update once its date has passed:
+
+```bash
+npm outdated          # what moved
+npm update            # everything inside the semver ranges
+npm audit fix         # advisories that do not need a major bump
+npm run lint && npm run lint:tsc && npm test && npm run build
+```
+
+---
+
 ## 1. Test runs exhaust the heap, so both hosts run with a raised ceiling
 
 **Mitigated by** `scripts/vitest.mjs` and `scripts/storybook-dev.mjs`, which

@@ -96,9 +96,9 @@ describe('toPersianDigits', () => {
   })
 })
 
-// Rule 5: Arabic letterforms must not leak into Persian text. They are
-// different codepoints that render almost identically, so «كيف» passes a
-// glance and then fails a search for «کیف».
+// Arabic letterforms must not leak into Persian text. They are different
+// codepoints that render almost identically, so «كيف» passes a glance and then
+// fails a search for «کیف».
 describe('toPersianLetters', () => {
   it('folds the Arabic letterforms a Persian keyboard smuggles in', () => {
     expect(toPersianLetters('شركت كيان')).toBe('شرکت کیان')

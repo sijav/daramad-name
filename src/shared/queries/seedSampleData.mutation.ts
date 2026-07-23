@@ -5,7 +5,7 @@ import { i18n } from 'src/core/i18n'
 import type { Channel, Currency, Receipt } from 'src/shared/types'
 import { computeToman } from 'src/shared/utils'
 
-// Rule 7: one click fills the app with believable Persian data for testing and
+// One click fills the app with believable Persian data for testing and
 // screenshots. Demo day itself must use the team's own real records.
 //
 // The shape of this data is deliberate, it exercises every scenario:

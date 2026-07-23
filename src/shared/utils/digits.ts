@@ -1,8 +1,8 @@
 // Persian/Arabic-Indic digit handling.
 //
-// Rule 3 of the brief: numbers display as Persian digits, but the input must
-// accept both Persian and English keyboards and normalise on save. Rule 5
-// additionally forbids Arabic «ي»/«ك» leaking into Persian text.
+// Numbers display as Persian digits, but input accepts both Persian and English
+// keyboards and normalises on save. Arabic «ي»/«ك» must not leak into Persian
+// text either.
 
 const PERSIAN_DIGITS = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']
 const ARABIC_INDIC_DIGITS = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩']

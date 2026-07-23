@@ -10,9 +10,9 @@ export interface EmptyStateProps {
 }
 
 /**
- * Rule 6: every page has a designed empty state. Opening the tool for the first
- * time must not be a dead blank screen, it needs a sentence explaining why the
- * page matters and a button for the first action.
+ * Every page has a designed empty state. Opening the tool for the first time
+ * must not be a blank screen: it needs a sentence explaining why the page
+ * matters and a button for the first action.
  */
 export const EmptyState = ({ icon, title, description, actionLabel, onAction }: EmptyStateProps) => (
   <Stack spacing={2} sx={{ alignItems: 'center', py: { xs: 5, sm: 8 }, px: 3, textAlign: 'center' }}>

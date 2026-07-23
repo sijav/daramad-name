@@ -3,17 +3,14 @@ import LockRoundedIcon from '@mui/icons-material/LockRounded'
 import { Stack, Typography } from '@mui/material'
 
 /**
- * Rule 8. This sentence is literally true: the app has no backend, makes no
- * network requests with user data, and the only way anything leaves the browser
- * is the backup file the user downloads themselves.
+ * The privacy line, which is literally true: no backend, no network request
+ * carrying user data, and the only way anything leaves the browser is a backup
+ * file the user downloads.
  *
- * It carried `opacity: 0.75`, which is not a colour and therefore not covered by
- * the palette's contrast work at all, it composited `text.secondary` #626569
- * down to #888a8e over the page's `surface-subtle` #f8f9fb, 3.28:1 at 12px
- * against a 4.5:1 bar. `text.secondary` on its own is 5.56:1 there. The one
- * promise this app makes about the user's data is not the line to whisper, and
- * the recession the opacity was after is already in the token: `text.secondary`
- * IS the quieter ink.
+ * Do not add `opacity` here. It is not a colour, so the palette's contrast work
+ * does not reach it: 0.75 composited `text.secondary` down to 3.28:1 at 12px,
+ * against a 4.5:1 bar. The token alone is 5.56:1 on `surface-subtle` and is
+ * already the quieter ink.
  */
 export const PrivacyFooter = () => (
   <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifyContent: 'center', mt: 6, pt: 3 }}>

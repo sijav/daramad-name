@@ -3,41 +3,35 @@ import type { CertificateModel } from './certificateModel'
 
 // The income certificate, as a page.
 //
-// This one component is both the on-screen preview and the printed sheet
-// there is no second renderer to drift from. `@page` gives it real A4
-// geometry, so what the browser prints is what the user sees.
+// One component serves as both the on-screen preview and the printed sheet, so
+// there is no second renderer to drift from, and `@page` gives it real A4
+// geometry.
 //
-// Colours here are deliberately literal rather than palette roles. A printed
-// document has no dark mode, and a certificate that inverts because the reader
-// happened to have dark mode on is not a document. This is the same exception
-// AGENTS.md already records for the PDF.
+// Colours are literal rather than palette roles: a printed document has no dark
+// mode, the same exception AGENTS.md records for the PDF.
 //
-// Direction is the model's, not the app's: an English certificate reads LTR
-// while the interface stays Persian. Everything below uses LOGICAL properties
-// (`textAlign: start`, `marginInline*`) so it follows the `dir` attribute set
-// on the root rather than the app-wide RTL cache.
+// Direction is the MODEL's, not the app's, so an English certificate reads LTR
+// while the interface stays Persian. Everything below uses logical properties
+// (`textAlign: start`, `marginInline*`) to follow the `dir` on the root rather
+// than the app-wide RTL cache.
 
 const INK = '#18191b'
 const MUTED = '#494b50'
-// FAINT was #7c7e83, which measured 4.06:1 on the white sheet and 3.75:1 on the
-// TINT box, under the 4.5:1 body-text bar on both, at the SMALLEST type on the
-// page. It carries the footnote, the average basis, the serial label and the
-// «به حروف» label, so the least readable text was also the faintest. Darkened in
-// HSL lightness only (222.9°, 2.7% saturation held, 50% -> 44.5%) by the least
-// that clears 4.5:1 against BOTH backgrounds: now 4.96:1 on #ffffff and 4.58:1
-// on TINT. #707176 also clears, at 4.5006:1 on TINT, a margin thinner than one
-// rounding step, which is not a margin.
+// Carries the smallest type on the page: the footnote, the average basis, the
+// serial label and the «به حروف» label. The design's #7c7e83 measured 4.06:1 on
+// the sheet and 3.75:1 on TINT, under the 4.5:1 bar on both. Darkened in HSL
+// lightness only (222.9° hue and 2.7% saturation held, 50% to 44.5%) by the
+// least that clears both: 4.96:1 on #ffffff, 4.58:1 on TINT. #707176 also
+// clears, but at 4.5006:1 on TINT, which is thinner than one rounding step.
 const FAINT = '#6e7075'
 const RULE = '#c8cbcf'
 const HAIRLINE = '#e3e5e8'
 const TINT = '#f4f6fa'
 const BRAND = '#3460d6'
 
-// Nothing on this sheet is set smaller than this. The table header was already
-// 9.5px; the footnote sat at 8.5px, which is 6.4pt on the printed A4, smaller
-// than any print style guide allows for a footnote, and this is a document an
-// embassy clerk or a landlord reads on paper. Contrast alone does not rescue
-// type that small, so the three sub-floor sizes come up to meet it.
+// Nothing on this sheet is set smaller. The footnote sat at 8.5px, which is
+// 6.4pt on printed A4, below what any print style guide allows, and contrast
+// does not rescue type that small. Three sizes were raised to meet this.
 const FLOOR = 9.5
 
 export interface IncomeCertificateProps {

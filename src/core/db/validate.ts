@@ -20,8 +20,8 @@ import {
  * invariants rather than types: a receipt with no `amountToman` type-checks
  * fine and then contributes zero to every total.
  *
- * Errors name the record and what is wrong with it, per rule 9. The user is the
- * only one who can decide whether to repair the file or abandon it.
+ * Errors name the record and what is wrong with it. The user is the only one
+ * who can decide whether to repair the file or abandon it.
  */
 
 const isFiniteNumber = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value)

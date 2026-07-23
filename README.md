@@ -70,5 +70,4 @@ and Vitest.
 
 ## Deployment
 
-Deploys to GitHub Pages and [Liara](https://liara.ir/), which stays reachable
-from inside Iran.
+Deploys to [GitHub Pages](https://sijav.github.io/daramad-name/).

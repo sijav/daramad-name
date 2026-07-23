@@ -67,5 +67,4 @@ Vitest.
 
 ## استقرار
 
-روی GitHub Pages و [Liara](https://liara.ir/) مستقر می‌شود که از داخلِ ایران در
-دسترس می‌ماند.
+روی [GitHub Pages](https://sijav.github.io/daramad-name/) مستقر می‌شود.

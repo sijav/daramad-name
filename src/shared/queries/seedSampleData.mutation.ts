@@ -8,7 +8,7 @@ import { computeToman } from 'src/shared/utils'
 // One click fills the app with believable Persian data for testing and
 // screenshots. Demo day itself must use the team's own real records.
 //
-// The shape of this data is deliberate, it exercises every scenario:
+// Shaped to exercise every scenario:
 //   · mixed currencies with different frozen rates (scenario 1)
 //   · Aria Trading at ~81% of the 649,980,000 total, well past the 50% the
 //     concentration insight fires on (scenario 4). The amounts and rates are

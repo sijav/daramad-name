@@ -1,8 +1,8 @@
 import { db, defaultSettings, writeSettings } from 'src/core/db'
 
 /**
- * Wipes everything. The two-step confirmation lives in the UI, not here
- * this function assumes the caller already got a deliberate yes.
+ * Wipes everything. The two-step confirmation lives in the UI, not here, so
+ * this function assumes the caller already has a deliberate yes.
  */
 export const clearAllDataMutation = async (): Promise<boolean> => {
   await db.transaction('rw', db.receipts, db.clients, db.settings, async () => {

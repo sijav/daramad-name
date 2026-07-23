@@ -5,10 +5,9 @@ A local-first income ledger and printable income certificate, for freelancers.
 [فارسی](./README.fa.md) · [Live demo](https://sijav.github.io/daramad-name/) ·
 [Component library](https://sijav.github.io/daramad-name/storybook/)
 
-A freelancer is **بی‌سند** (bi-sanad), a person without documents: no payslip, no
-certificate of income. An embassy, a landlord and an accountant all want a
-document that does not exist. DaramadName builds it from the receipts you record
-yourself.
+An embassy, a landlord, an accountant: each wants a document a freelancer does
+not have. No payslip, no certificate of income, **بی‌سند** (bi-sanad), without
+papers. DaramadName builds that document from the receipts you record yourself.
 
 **Your data never leaves your browser.** No account. No server. No backend.
 
@@ -21,8 +20,8 @@ yourself.
 - 📄 Generate a bilingual (Persian/English) PDF income certificate.
 - 📈 See a 12-month income chart, with a warning when one client is too much of
   your income.
-- 💾 Local-first: your data never leaves the browser, with JSON backup and
-  restore to move between devices.
+- 💾 Local-first, with JSON backup and restore to move your ledger between
+  devices.
 
 ## Quick start
 

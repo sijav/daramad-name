@@ -23,11 +23,6 @@ msgstr "{0} M"
 msgid "{0} M Toman"
 msgstr "{0} M Toman"
 
-#. placeholder {0}: digits(activeMonths)
-#: src/pages/dashboard/DashboardPage.tsx
-#~ msgid "{0} of 12"
-#~ msgstr "{0} of 12"
-
 #. placeholder {0}: number(todayLedger?.receipts.length ?? 0)
 #: src/pages/quick-entry/QuickEntryAside.tsx
 msgid "{0} receipts"
@@ -48,21 +43,10 @@ msgstr "{0} receipts restored."
 msgid "{0} results"
 msgstr "{0} results"
 
-#. placeholder {0}: digits(paged.matchedCount)
-#: src/pages/ledger/LedgerPage.tsx
-#~ msgid "{0} results based on the active filters"
-#~ msgstr "{0} results based on the active filters"
-
 #. placeholder {0}: digits(option)
 #: src/shared/page-control/PageControl.tsx
 msgid "{0} rows per page"
 msgstr "{0} rows per page"
-
-#. placeholder {0}: dateLong(range.from)
-#. placeholder {1}: dateLong(range.to)
-#: src/pages/report/ReportPage.tsx
-#~ msgid "{0} to {1}"
-#~ msgstr "{0} to {1}"
 
 #. placeholder {0}: digits(pct(leader.totalToman))
 #. placeholder {0}: digits(pct(row.totalToman))
@@ -75,12 +59,6 @@ msgstr "{0}%"
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "{0}% of your income comes from a single client."
 msgstr "{0}% of your income comes from a single client."
-
-#. placeholder {0}: digits(shareData.insight.percentage)
-#. placeholder {1}: shareData.insight.clientName
-#: src/pages/charts/ChartsPage.tsx
-#~ msgid "{0}% of your income comes from one client (“{1}”). If they leave, a large part of your income goes with them."
-#~ msgstr "{0}% of your income comes from one client (“{1}”). If they leave, a large part of your income goes with them."
 
 #: src/pages/charts/ClientShareChart.tsx
 msgid "{amount} Toman ({share}%)"
@@ -98,11 +76,6 @@ msgstr "{label} {year}: {amount} Toman"
 msgid "{label} {year}: no income recorded"
 msgstr "{label} {year}: no income recorded"
 
-#. placeholder {0}: number(month.totalToman)
-#: src/pages/charts/MonthlyIncomeChart.tsx
-#~ msgid "{label}: {0} {toman}"
-#~ msgstr "{label}: {0} {toman}"
-
 #: src/shared/error-state/AppErrorFallback.tsx
 msgid "A"
 msgstr "A"
@@ -118,10 +91,6 @@ msgstr "A client in {where} has no name."
 #: src/pages/report/ReportPage.tsx
 msgid "A document you can hand to an embassy, a landlord or an accountant"
 msgstr "A document you can hand to an embassy, a landlord or an accountant"
-
-#: src/shared/error-state/AppErrorFallback.tsx
-#~ msgid "A JSON file of every receipt. Do this before erasing anything."
-#~ msgstr "A JSON file of every receipt. Do this before erasing anything."
 
 #: src/shared/receipt-form/useReceiptForm.ts
 msgid "A non-Toman currency needs an exchange rate."
@@ -181,10 +150,6 @@ msgstr "Aban"
 msgid "Actions"
 msgstr "Actions"
 
-#: src/pages/settings/SettingsPage.tsx
-#~ msgid "Add sample data"
-#~ msgstr "Add sample data"
-
 #: src/shared/certificate/certificateModel.ts
 msgid "Address"
 msgstr ""
@@ -242,10 +207,6 @@ msgstr "App icon set"
 msgid "App theme"
 msgstr "App theme"
 
-#: src/pages/settings/SettingsPage.tsx
-#~ msgid "Appearance"
-#~ msgstr "Appearance"
-
 #: src/pages/ledger/LedgerFilterPopover.tsx
 msgid "Apply filters"
 msgstr "Apply filters"
@@ -276,20 +237,8 @@ msgid "B"
 msgstr "B"
 
 #: src/pages/settings/SettingsPage.tsx
-#~ msgid "Back up (download JSON)"
-#~ msgstr "Back up (download JSON)"
-
-#: src/pages/settings/SettingsPage.tsx
 msgid "Back up data"
 msgstr "Back up data"
-
-#: src/pages/settings/SettingsPage.tsx
-#~ msgid "Backup and restore"
-#~ msgstr "Backup and restore"
-
-#: src/shared/error-state/AppErrorFallback.tsx
-#~ msgid "Backup downloaded"
-#~ msgstr "Backup downloaded"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Backup file downloaded."
@@ -329,16 +278,8 @@ msgid "Captured when the receipt was recorded. Later rate changes do not affect 
 msgstr "Captured when the receipt was recorded. Later rate changes do not affect this amount."
 
 #: src/shared/constants/labels.ts
-#~ msgid "Card to card"
-#~ msgstr "Card to card"
-
-#: src/shared/constants/labels.ts
 msgid "Card transfer"
 msgstr "Card transfer"
-
-#: src/pages/report/ReportPage.tsx
-#~ msgid "Certificate of income"
-#~ msgstr "Certificate of income"
 
 #: src/shared/ledger-state/LedgerState.tsx
 msgid "Change the date range or client, or clear the filters to see every receipt."
@@ -355,10 +296,6 @@ msgstr "Channel"
 #: src/shared/constants/navigation.tsx
 msgid "Charts"
 msgstr "Charts"
-
-#: src/pages/settings/SettingsPage.tsx
-#~ msgid "Choose a colour scheme, or let it follow your device."
-#~ msgstr "Choose a colour scheme, or let it follow your device."
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Choose file"
@@ -389,17 +326,9 @@ msgid "Client / project"
 msgstr "Client / project"
 
 #: src/pages/charts/ChartsPage.tsx
-#~ msgid "Client share"
-#~ msgstr "Client share"
-
-#: src/pages/charts/ChartsPage.tsx
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Client share of income"
 msgstr "Client share of income"
-
-#: src/pages/dashboard/DashboardPage.tsx
-#~ msgid "Clients"
-#~ msgstr "Clients"
 
 #: src/pages/ledger/EditReceiptDialog.tsx
 #: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
@@ -475,22 +404,6 @@ msgstr "Display"
 #: src/pages/ledger/LedgerPage.tsx
 msgid "divided by {0} months"
 msgstr "divided by {0} months"
-
-#: src/pages/charts/ChartsPage.tsx
-#~ msgid "Divided by the 12 months of the year"
-#~ msgstr "Divided by the 12 months of the year"
-
-#: src/pages/report/ReportPage.tsx
-#~ msgid "Divided by the months in the range, not only the months with income"
-#~ msgstr "Divided by the months in the range, not only the months with income"
-
-#: src/pages/report/ReportPage.tsx
-#~ msgid "Document language"
-#~ msgstr "Document language"
-
-#: src/pages/report/ReportPage.tsx
-#~ msgid "Document preview"
-#~ msgstr "Document preview"
 
 #: src/shared/error-state/AppErrorFallback.tsx
 msgid "Download"
@@ -572,10 +485,6 @@ msgstr "Erase and restart"
 msgid "Erase and restart, then import your file from Settings"
 msgstr "Erase and restart, then import your file from Settings"
 
-#: src/shared/error-state/AppErrorFallback.tsx
-#~ msgid "Erase data and restart"
-#~ msgstr "Erase data and restart"
-
 #: src/pages/settings/SettingsPage.tsx
 #: src/shared/error-state/AppErrorFallback.tsx
 msgid "Erase everything"
@@ -593,21 +502,9 @@ msgstr "Esfand"
 msgid "Every date and monthly total is shown in this calendar. Your data itself does not change."
 msgstr "Every date and monthly total is shown in this calendar. Your data itself does not change."
 
-#: src/pages/ledger/LedgerPage.tsx
-#~ msgid "Every receipt you have, with an exact total"
-#~ msgstr "Every receipt you have, with an exact total"
-
 #: src/shared/error-state/AppErrorFallback.tsx
 msgid "Every receipt, client and personal detail is erased permanently, then Settings opens so you can import your backup. Without that file there is no way back."
 msgstr "Every receipt, client and personal detail is erased permanently, then Settings opens so you can import your backup. Without that file there is no way back."
-
-#: src/shared/error-state/AppErrorFallback.tsx
-#~ msgid "Every receipt, client and personal detail is erased permanently, then the page reloads. Download a backup first — without one there is no way back."
-#~ msgstr "Every receipt, client and personal detail is erased permanently, then the page reloads. Download a backup first — without one there is no way back."
-
-#: src/shared/error-state/AppErrorFallback.tsx
-#~ msgid "Every receipt, client and personal detail is erased permanently, then the page reloads. Without a backup there is no way back."
-#~ msgstr "Every receipt, client and personal detail is erased permanently, then the page reloads. Without a backup there is no way back."
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Every receipt, client and personal detail is erased permanently. Without a backup there is no way back."
@@ -698,10 +595,6 @@ msgstr "Gregorian"
 msgid "Homa Cafe"
 msgstr "Homa Cafe"
 
-#: src/shared/error-state/AppErrorFallback.tsx
-#~ msgid "If it still fails, start over"
-#~ msgstr "If it still fails, start over"
-
 #: src/pages/settings/SettingsPage.tsx
 msgid "Import a backup file to bring your ledger back"
 msgstr "Import a backup file to bring your ledger back"
@@ -713,11 +606,6 @@ msgstr "In words"
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Income by month"
 msgstr "Income by month"
-
-#. placeholder {0}: digits(year)
-#: src/pages/charts/ChartsPage.tsx
-#~ msgid "Income for {0}"
-#~ msgstr "Income for {0}"
 
 #. placeholder {0}: digits(year)
 #: src/pages/charts/ChartsPage.tsx
@@ -737,10 +625,6 @@ msgstr "Income ledger"
 #: src/pages/ledger/LedgerTable.tsx
 msgid "Income ledger table"
 msgstr "Income ledger table"
-
-#: src/pages/charts/ChartsPage.tsx
-#~ msgid "Income over 12 months"
-#~ msgstr "Income over 12 months"
 
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Income overview"
@@ -771,10 +655,6 @@ msgstr "Installation"
 #: src/shared/certificate/certificateModel.ts
 msgid "Issued by Daramadname"
 msgstr "Issued by Daramadname"
-
-#: src/pages/report/ReportPage.tsx
-#~ msgid "Issued by Daramadname — a personal record of freelance income"
-#~ msgstr "Issued by Daramadname — a personal record of freelance income"
 
 #: src/shared/certificate/certificateModel.ts
 msgid "Issued on"
@@ -812,10 +692,6 @@ msgstr "Language"
 msgid "Last receipt"
 msgstr "Last receipt"
 
-#: src/shared/error-state/AppErrorFallback.tsx
-#~ msgid "Last resort, and only once you have the backup above."
-#~ msgstr "Last resort, and only once you have the backup above."
-
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Latest receipts"
 msgstr "Latest receipts"
@@ -847,10 +723,6 @@ msgstr "Loading the ledger"
 msgid "Log a new receipt in under 15 seconds."
 msgstr "Log a new receipt in under 15 seconds."
 
-#: src/pages/quick-entry/QuickEntryPage.tsx
-#~ msgid "Log it in under 15 seconds"
-#~ msgstr "Log it in under 15 seconds"
-
 #: src/shared/layouts/AppShell.tsx
 msgid "Main menu"
 msgstr "Main menu"
@@ -875,10 +747,6 @@ msgstr "Menu design"
 msgid "Month"
 msgstr "Month"
 
-#: src/pages/report/ReportPage.tsx
-#~ msgid "Month by month"
-#~ msgstr "Month by month"
-
 #: src/shared/certificate/certificateModel.ts
 msgid "Month-by-month breakdown"
 msgstr "Month-by-month breakdown"
@@ -888,13 +756,10 @@ msgstr "Month-by-month breakdown"
 msgid "Monthly average"
 msgstr "Monthly average"
 
-#: src/pages/charts/MonthlyIncomeChart.tsx
-#~ msgid "Monthly income"
-#~ msgstr "Monthly income"
-
-#: src/pages/dashboard/DashboardPage.tsx
-#~ msgid "Months with income"
-#~ msgstr "Months with income"
+#. placeholder {0}: digits(report.monthsInRange)
+#: src/shared/certificate/certificateModel.ts
+msgid "Monthly average: the total divided by the {0} months in this period, including months with no income."
+msgstr "Monthly average: the total divided by the {0} months in this period, including months with no income."
 
 #: src/shared/constants/labels.ts
 msgid "Mordad"
@@ -903,10 +768,6 @@ msgstr "Mordad"
 #: src/shared/queries/seedSampleData.mutation.ts
 msgid "Naghsh Studio"
 msgstr "Naghsh Studio"
-
-#: src/pages/report/ReportPage.tsx
-#~ msgid "Name"
-#~ msgstr "Name"
 
 #: src/pages/settings/SettingsPage.tsx
 #: src/shared/certificate/certificateModel.ts
@@ -954,10 +815,6 @@ msgstr "Nothing matched these filters"
 msgid "Nothing recorded in this range yet."
 msgstr "Nothing recorded in this range yet."
 
-#: src/shared/layouts/AppShell.tsx
-#~ msgid "Notifications"
-#~ msgstr "Notifications"
-
 #: src/shared/constants/labels.ts
 msgid "November"
 msgstr "November"
@@ -969,18 +826,6 @@ msgstr "October"
 #: src/pages/charts/ChartsPage.tsx
 msgid "Once you record a few receipts, this shows how your income rose and fell month by month, and how much of it depends on a single client."
 msgstr "Once you record a few receipts, this shows how your income rose and fell month by month, and how much of it depends on a single client."
-
-#: src/shared/queries/restoreBackup.mutation.ts
-#~ msgid "One of the clients in the file is incomplete and cannot be restored."
-#~ msgstr "One of the clients in the file is incomplete and cannot be restored."
-
-#: src/shared/queries/restoreBackup.mutation.ts
-#~ msgid "One of the receipts in the file is incomplete and cannot be restored."
-#~ msgstr "One of the receipts in the file is incomplete and cannot be restored."
-
-#: src/pages/dashboard/DashboardPage.tsx
-#~ msgid "Open ledger"
-#~ msgstr "Open ledger"
 
 #: src/shared/layouts/AppShell.tsx
 msgid "Open menu"
@@ -1173,19 +1018,9 @@ msgstr "Report language"
 msgid "Report range"
 msgstr "Report range"
 
-#. placeholder {0}: digits(year)
-#: src/pages/charts/ChartsPage.tsx
-#: src/pages/dashboard/DashboardPage.tsx
-#~ msgid "Report range: {0}"
-#~ msgstr "Report range: {0}"
-
 #: src/pages/report/ReportPage.tsx
 msgid "Report settings"
 msgstr "Report settings"
-
-#: src/pages/report/ReportPage.tsx
-#~ msgid "Report year"
-#~ msgstr "Report year"
 
 #: src/shared/certificate/certificateModel.ts
 msgid "Reporting period"
@@ -1204,24 +1039,12 @@ msgid "Restore from file"
 msgstr "Restore from file"
 
 #: src/shared/page-control/PageControl.tsx
-#~ msgid "Rows"
-#~ msgstr "Rows"
-
-#: src/shared/page-control/PageControl.tsx
 msgid "Rows per page"
 msgstr "Rows per page"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Sample data"
 msgstr "Sample data"
-
-#: src/pages/settings/SettingsPage.tsx
-#~ msgid "Sample data and reset"
-#~ msgstr "Sample data and reset"
-
-#: src/pages/settings/SettingsPage.tsx
-#~ msgid "Sample data is for testing and screenshots. For a real demo, record your own data."
-#~ msgstr "Sample data is for testing and screenshots. For a real demo, record your own data."
 
 #: src/shared/receipt-form/ReceiptForm.tsx
 msgid "Save and next"
@@ -1247,10 +1070,6 @@ msgstr "Search by client, note or amount"
 msgid "Search receipts"
 msgstr "Search receipts"
 
-#: src/shared/pdf/buildIncomeReport.ts
-#~ msgid "Self-recorded freelance income report"
-#~ msgstr "Self-recorded freelance income report"
-
 #: src/shared/constants/labels.ts
 msgid "September"
 msgstr "September"
@@ -1270,13 +1089,6 @@ msgstr "Shahrivar"
 #: src/shared/page-control/PageControl.tsx
 msgid "Showing {0} to {1} of {2} receipts"
 msgstr "Showing {0} to {1} of {2} receipts"
-
-#. placeholder {0}: digits(firstRow)
-#. placeholder {1}: digits(lastRow)
-#. placeholder {2}: digits(totalCount)
-#: src/shared/page-control/PageControl.tsx
-#~ msgid "Showing {0}–{1} of {2}"
-#~ msgstr "Showing {0}–{1} of {2}"
 
 #: src/shared/queries/seedSampleData.mutation.ts
 msgid "Small illustration project"
@@ -1298,10 +1110,6 @@ msgstr "Statement of Income"
 msgid "Store these on this device"
 msgstr "Store these on this device"
 
-#: src/shared/pdf/buildIncomeReport.ts
-#~ msgid "Summary"
-#~ msgstr "Summary"
-
 #: src/shared/layouts/AppShell.tsx
 msgid "Switch theme"
 msgstr "Switch theme"
@@ -1309,10 +1117,6 @@ msgstr "Switch theme"
 #: src/pages/settings/SettingsPage.tsx
 msgid "System"
 msgstr "System"
-
-#: src/shared/error-state/AppErrorFallback.tsx
-#~ msgid "Take the backup first — erasing cannot be undone without it."
-#~ msgstr "Take the backup first — erasing cannot be undone without it."
 
 #: src/shared/constants/labels.ts
 msgid "Tether"
@@ -1327,10 +1131,6 @@ msgid "The backup failed. Try again."
 msgstr "The backup failed. Try again."
 
 #: src/shared/queries/restoreBackup.mutation.ts
-#~ msgid "The backup file is incomplete — it has no receipts or clients list."
-#~ msgstr "The backup file is incomplete — it has no receipts or clients list."
-
-#: src/shared/queries/restoreBackup.mutation.ts
 msgid "The backup file is incomplete — it has no receipts or clients list. Pick a complete backup file."
 msgstr "The backup file is incomplete — it has no receipts or clients list. Pick a complete backup file."
 
@@ -1341,10 +1141,6 @@ msgstr "The conversion rate is stored as you record it and does not change later
 #: src/pages/settings/SettingsPage.tsx
 msgid "The file could not be read. Make sure it is intact and pick it again."
 msgstr "The file could not be read. Make sure it is intact and pick it again."
-
-#: src/shared/queries/restoreBackup.mutation.ts
-#~ msgid "The file is empty or corrupt."
-#~ msgstr "The file is empty or corrupt."
 
 #: src/shared/queries/restoreBackup.mutation.ts
 msgid "The file is empty or corrupt. Pick a different backup file."
@@ -1362,11 +1158,6 @@ msgstr "The ledger could not be loaded"
 msgid "The ledger is where every payment you have received adds up in one place — exactly what you need when it is time to produce a report."
 msgstr "The ledger is where every payment you have received adds up in one place — exactly what you need when it is time to produce a report."
 
-#. placeholder {0}: digits(report.monthsInRange)
-#: src/shared/certificate/certificateModel.ts
-msgid "The monthly average divides the total by the {0} calendar months in the period, including months with no income."
-msgstr "The monthly average divides the total by the {0} calendar months in the period, including months with no income."
-
 #: src/pages/quick-entry/QuickEntryAside.tsx
 msgid "The rate and Toman equivalent are stored at the moment you record a receipt. Later rate changes do not affect it."
 msgstr "The rate and Toman equivalent are stored at the moment you record a receipt. Later rate changes do not affect it."
@@ -1379,10 +1170,6 @@ msgstr "The report's Persian font failed to load. Reload the page."
 msgid "The whole interface switches, including text direction. Your data is untouched."
 msgstr "The whole interface switches, including text direction. Your data is untouched."
 
-#: src/pages/settings/SettingsPage.tsx
-#~ msgid "These details are printed at the top of the income report. Without a name the document carries no weight with an embassy or a landlord."
-#~ msgstr "These details are printed at the top of the income report. Without a name the document carries no weight with an embassy or a landlord."
-
 #: src/shared/queries/restoreBackup.mutation.ts
 msgid "this backup file"
 msgstr "this backup file"
@@ -1390,14 +1177,6 @@ msgstr "this backup file"
 #: src/shared/queries/restoreBackup.mutation.ts
 msgid "This backup file was made by a newer version of the app. Update Daramadname and try again."
 msgstr "This backup file was made by a newer version of the app. Update Daramadname and try again."
-
-#: src/shared/queries/restoreBackup.mutation.ts
-#~ msgid "This backup file's version is not supported. It was made by a newer version of the app."
-#~ msgstr "This backup file's version is not supported. It was made by a newer version of the app."
-
-#: src/pages/report/ReportPage.tsx
-#~ msgid "This document is generated from the data you recorded in Daramadname and is informational."
-#~ msgstr "This document is generated from the data you recorded in Daramadname and is informational."
 
 #: src/shared/queries/restoreBackup.mutation.ts
 msgid "This file is not from Daramadname. Did you pick a backup from another tool?"
@@ -1419,10 +1198,6 @@ msgstr "This receipt is backdated. Enter the rate from that day, not today's —
 #: src/pages/ledger/LedgerPage.tsx
 msgid "This receipt is removed from the ledger and the totals and charts update. This cannot be undone."
 msgstr "This receipt is removed from the ledger and the totals and charts update. This cannot be undone."
-
-#: src/shared/pdf/buildIncomeReport.ts
-#~ msgid "This report was generated from records entered by the user in the Daramadname application."
-#~ msgstr "This report was generated from records entered by the user in the Daramadname application."
 
 #: src/shared/certificate/certificateModel.ts
 msgid "This statement was produced from receipts the holder recorded themselves in Daramadname. It is a personal record, not a bank or tax authority document, and is intended to be read alongside supporting bank statements."
@@ -1474,11 +1249,6 @@ msgstr "Top clients"
 #: src/pages/ledger/LedgerPage.tsx
 msgid "Total"
 msgstr "Total"
-
-#. placeholder {0}: digits(receipts.length)
-#: src/pages/ledger/LedgerTable.tsx
-#~ msgid "Total ({0} receipts)"
-#~ msgstr "Total ({0} receipts)"
 
 #: src/core/i18n/i18n.test.ts
 #: src/shared/certificate/certificateModel.ts
@@ -1533,10 +1303,6 @@ msgstr "Used on the English certificate; falls back to the Persian address when 
 msgid "UX consulting"
 msgstr "UX consulting"
 
-#: src/pages/charts/ChartsPage.tsx
-#~ msgid "Vertical axis figures are in millions of Toman."
-#~ msgstr "Vertical axis figures are in millions of Toman."
-
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "View all"
 msgstr "View all"
@@ -1556,10 +1322,6 @@ msgstr "Visual identity redesign"
 #: src/shared/constants/labels.ts
 msgid "Wire transfer"
 msgstr "Wire transfer"
-
-#: src/pages/charts/ChartsPage.tsx
-#~ msgid "Year"
-#~ msgstr "Year"
 
 #. placeholder {0}: digits(option)
 #. placeholder {0}: formatYear(option)
@@ -1581,24 +1343,12 @@ msgid "your data"
 msgstr "your data"
 
 #: src/shared/error-state/AppErrorFallback.tsx
-#~ msgid "Your data is safe and has not been erased — this error only affects rendering. Try again first. If it keeps happening, download a backup here, and only then erase and start fresh."
-#~ msgstr "Your data is safe and has not been erased — this error only affects rendering. Try again first. If it keeps happening, download a backup here, and only then erase and start fresh."
-
-#: src/shared/error-state/AppErrorFallback.tsx
-#~ msgid "Your data is safe and has not been erased — this error only affects rendering. Try again; if it keeps happening, take a backup from Settings, then close and reopen the page."
-#~ msgstr "Your data is safe and has not been erased — this error only affects rendering. Try again; if it keeps happening, take a backup from Settings, then close and reopen the page."
-
-#: src/shared/error-state/AppErrorFallback.tsx
 msgid "Your data is safe and has not been erased — this error only affects what is on screen."
 msgstr "Your data is safe and has not been erased — this error only affects what is on screen."
 
 #: src/shared/ledger-state/LedgerState.tsx
 msgid "Your data is safe and has not been erased. Try again."
 msgstr "Your data is safe and has not been erased. Try again."
-
-#: src/pages/settings/SettingsPage.tsx
-#~ msgid "Your data lives only in this browser. If you clear the browser, everything is lost without a backup."
-#~ msgstr "Your data lives only in this browser. If you clear the browser, everything is lost without a backup."
 
 #: src/shared/layouts/AppShell.tsx
 msgid "Your details"

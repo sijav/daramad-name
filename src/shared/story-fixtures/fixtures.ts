@@ -9,7 +9,7 @@ import {
   getPopulatedYearsQueryKey,
 } from 'src/shared/queries'
 import type { CalendarSystem, ClientShare, Ledger, MonthlyTotal, ReceiptWithClient } from 'src/shared/types'
-import { yearOf, yearRange } from 'src/shared/utils'
+import { averagingPeriod, yearOf, yearRange } from 'src/shared/utils'
 
 // Fixture data and cache seeding for PAGE stories.
 //
@@ -129,6 +129,13 @@ export const seedPageData = (client: QueryClient, { empty = false }: { empty?: b
   client.setQueryData(getLedgerQueryKey({}, { field: 'occurredAt', direction: 'desc' }, CALENDAR), ledger)
   client.setQueryData(getLedgerQueryKey({ range }, { field: 'occurredAt', direction: 'desc' }, CALENDAR), ledger)
 
+  // The report covers the period ELAPSED so far, exactly as the real query does
+  // (`averagingPeriod`). Seeding the raw year range instead produced a
+  // self-contradicting certificate — a period line reading «۱ فروردین تا ۲۹
+  // اسفند» beside an average divided by 7 months — which is not a document
+  // anyone could defend, and is not what the app actually prints.
+  const { range: reported, months: monthsInRange } = averagingPeriod(range, CALENDAR)
+
   client.setQueryData(getIncomeReportQueryKey(range, CALENDAR), {
     profile: {
       fullName: 'رها موسوی',
@@ -139,10 +146,10 @@ export const seedPageData = (client: QueryClient, { empty = false }: { empty?: b
       address: 'تهران، خیابان کریم‌خان',
       addressEn: 'Karimkhan St, Tehran',
     },
-    range,
+    range: reported,
     totalToman: ledger.summary.totalToman,
-    monthlyAverageToman: ledger.summary.monthlyAverageToman,
-    monthsInRange: ledger.summary.monthsInRange,
+    monthlyAverageToman: empty ? 0 : Math.round(ledger.summary.totalToman / monthsInRange),
+    monthsInRange,
     months,
     generatedAt: new Date().toISOString(),
   })

@@ -21,12 +21,6 @@ import { dayRange, formatDate } from 'src/shared/utils'
  * ledger already populates, so recording a receipt refreshes all three.
  */
 export interface QuickEntryAsideProps {
-  /**
-   * Fills the form's client field. Without it the "recent clients" chips are
-   * inert — an outlined chip in a form column reads as tappable, so a user taps
-   * one, nothing happens, and they type the name by hand. That is also how a
-   * second «Aria Trading » gets created and splits a client's totals.
-   */
   onPickClient?: (name: string) => void
 }
 

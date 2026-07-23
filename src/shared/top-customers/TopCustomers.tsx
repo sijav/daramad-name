@@ -5,7 +5,6 @@ import type { ClientShare } from 'src/shared/types'
 
 export interface TopCustomersProps {
   shares: ClientShare[]
-  /** How many to list; the rest fold into an "others" row. */
   limit?: number
   othersLabel: string
 }

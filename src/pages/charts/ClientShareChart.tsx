@@ -6,7 +6,6 @@ import type { ClientShare } from 'src/shared/types'
 
 export interface ClientShareChartProps {
   shares: ClientShare[]
-  /** Rows past this fold into a single "others" slice. */
   limit?: number
   othersLabel: string
 }

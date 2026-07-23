@@ -2,26 +2,9 @@ import { Paper, type PaperProps } from '@mui/material'
 import { elevation, radius } from 'src/core/theme'
 
 export interface SurfaceCardProps extends Omit<PaperProps, 'variant'> {
-  /**
-   * `xl` (20px) for a screen's primary panel, `lg` (16px) for supporting ones.
-   * The design draws this distinction on every screen — the Quick Entry form is
-   * 20 while the three panels beside it are 16.
-   */
   radius?: 'lg' | 'xl'
-  /**
-   * `subtle` is the `brand-primary-subtle` tint the design uses for callouts and
-   * the dashboard's report shortcut.
-   */
   tone?: 'default' | 'subtle'
-  /** Drops the Elevation/1 shadow. The design omits it on Ledger, Report and Settings. */
   flat?: boolean
-  /**
-   * Removes the padding for cards whose child paints edge to edge — the ledger
-   * table, whose header band has to reach the rounded corners.
-   *
-   * A prop rather than `sx={{ p: 0 }}`: the default padding is responsive, so a
-   * scalar override loses to its own `@media` rule and the padding stays.
-   */
   disablePadding?: boolean
 }
 

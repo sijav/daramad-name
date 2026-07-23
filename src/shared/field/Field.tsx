@@ -4,17 +4,7 @@ import type { ReactNode } from 'react'
 export interface FieldProps {
   label: string
   children: ReactNode
-  /**
-   * Put on the label text itself, so a control that a `<label>` cannot name can
-   * point at it with `aria-labelledby`.
-   *
-   * Only ARIA-labelable elements benefit from the implicit association the
-   * wrapper gives: MUI X's picker renders `role="group"` around its editable
-   * sections, and a group is not a labelable element, so the picker asks for an
-   * id and spells the association out.
-   */
   labelId?: string
-  /** Rendered under the control, in the error colour when `error` is set. */
   helperText?: string
   error?: boolean
   fullWidth?: boolean

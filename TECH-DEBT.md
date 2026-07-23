@@ -298,7 +298,28 @@ narrowest one to watch is the brand-constant list, which is a plain allowlist.
 
 ---
 
-## 13. Scope deliberately cut
+## 13. Most Docs pages are half-translated
+
+**Where** `src/shared/story-docs/fa/*.md`, and the `PENDING` list in
+`src/shared/story-docs/faDocs.test.ts`.
+
+**Cause** A generated Docs page prints four things: the page prose, a
+Description per prop, a note per story, and each story's heading. All four are
+now translatable — `.storybook/LocalizedDocs.tsx` swaps them when the Language
+toolbar is Persian. Every page has its prose. Only `App` and `Shared/Tag` have
+the other three; the remaining 51 are being written page by page.
+
+**Cost** On a page still on the list, a Persian reader gets a Persian
+description and then an English props table and English story notes below it.
+The test holds finished pages to the full standard and refuses to let the list
+grow or go stale, but it cannot check what has not been written.
+
+**Fix** Delete a slug from `PENDING` as its page is finished. When the list is
+empty, delete it and the two tests that guard it.
+
+---
+
+## 14. Scope deliberately cut
 
 Listed in `PHASE-NEXT.md`, not here — those are decisions, not debt. The
 notable one is that nothing can verify a certificate is authentic, which would

@@ -3,7 +3,9 @@ import { MenuItem, Select, type SelectProps } from '@mui/material'
 import { radius } from 'src/core/theme'
 
 export interface RangeSelectOption {
+  /** Matched against `RangeSelectProps.value`, so both sides must be the same type. */
   value: number | string
+  /** Already formatted for display — the caller owns the digits and the calendar. */
   label: string
 }
 
@@ -11,7 +13,6 @@ export interface RangeSelectProps extends Omit<SelectProps<string>, 'onChange' |
   value: number | string
   options: RangeSelectOption[]
   onSelect: (value: string) => void
-  /** Prefixed to the selected label, e.g. "Report range: year 1403". */
   prefix: string
 }
 

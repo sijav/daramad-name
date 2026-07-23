@@ -205,7 +205,7 @@ export const DashboardPage = () => {
                   </Button>
                 }
               >
-                <RecentReceipts receipts={(ledger?.receipts ?? []).slice(0, 6)} calendar={calendar} />
+                <RecentReceipts receipts={(ledger?.receipts ?? []).slice(0, 6)} />
               </ChartCard>
             </Grid>
           </Grid>

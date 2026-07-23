@@ -6,9 +6,7 @@ import type { Currency } from 'src/shared/types'
 
 export interface MoneyTextProps extends Omit<TypographyProps, 'children'> {
   value: number
-  /** Omit for toman; pass a currency to render the original amount instead. */
   currency?: Currency
-  /** Appends the currency name. */
   showUnit?: boolean
 }
 

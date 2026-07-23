@@ -5,9 +5,7 @@ import { MoneyText } from 'src/shared/money-text'
 
 export interface SummaryCardProps {
   label: string
-  /** A number renders as money; a string renders verbatim. */
   value: number | string
-  /** Shown in a 36px tinted chip beside the label, per the design's `Head` row. */
   icon?: ReactNode
   hint?: string
   emphasis?: boolean

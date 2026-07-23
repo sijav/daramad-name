@@ -4,60 +4,31 @@ import SearchOffRoundedIcon from '@mui/icons-material/SearchOffRounded'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { SurfaceCard } from 'src/shared/surface-card'
 import { expect, fn, userEvent, within } from 'storybook/test'
-import { EmptyState, type EmptyStateProps } from './EmptyState'
+import { EmptyState } from './EmptyState'
 
-type ActionProps = Pick<EmptyStateProps, 'onAction'>
-
-const FirstRunView = ({ onAction }: ActionProps) => {
-  const { t } = useLingui()
-  return (
-    <SurfaceCard>
-      <EmptyState
-        icon={<ReceiptLongRoundedIcon />}
-        title={t`You have not recorded any receipts yet`}
-        description={t`The ledger is where every payment you have received adds up in one place — exactly what you need when it is time to produce a report.`}
-        actionLabel={t`Record your first receipt`}
-        onAction={onAction}
-      />
-    </SurfaceCard>
-  )
-}
-
-const NoMatchView = ({ onAction }: ActionProps) => {
-  const { t } = useLingui()
-  return (
-    <SurfaceCard>
-      <EmptyState
-        icon={<SearchOffRoundedIcon />}
-        title={t`Nothing matched these filters`}
-        description={t`Change the date range or client, or clear the filters to see every receipt.`}
-        actionLabel={t`Clear filters`}
-        onAction={onAction}
-      />
-    </SurfaceCard>
-  )
-}
-
-const MessageOnlyView = () => {
-  const { t } = useLingui()
-  return (
-    <SurfaceCard>
-      <EmptyState
-        title={t`No receipts recorded for this year`}
-        description={t`The income report is built from the receipts you record. Add a few receipts first, then produce the document here.`}
-      />
-    </SurfaceCard>
-  )
-}
+// Each story spreads its args and then falls back per field. The copy is read
+// from the catalog rather than written into `args`, so it follows the Language
+// toolbar the way the app's does — but anything typed into Controls wins, which
+// is what makes the panel real rather than decorative.
+//
+// The card around it is not the component's doing. An empty state always sits
+// inside a panel, and floating on the canvas it reads as a component that
+// failed to render rather than as a designed screen.
 
 const meta = {
   title: 'Shared/EmptyState',
   component: EmptyState,
-  // Each story is a whole view — its own card and its own catalog copy — so the
-  // Controls panel would be editing props that never reach the screen. Better
-  // an empty panel than one that lies.
-  parameters: { controls: { disable: true } },
-  args: { title: '', description: '', onAction: fn() },
+  argTypes: {
+    title: { control: 'text', description: 'What is empty, in the user’s terms. Blank falls back to the story’s translated sample.' },
+    description: {
+      control: 'text',
+      description: 'Why the page matters and what to do next. Rule 6 forbids a bare "no data" message.',
+    },
+    actionLabel: { control: 'text', description: 'The button. Omitted when there is genuinely nothing to press yet.' },
+    icon: { control: false, description: 'Optional 72px circle above the text.' },
+    onAction: { description: 'Fired by the button — the page decides what "the first action" is.' },
+  },
+  args: { title: '', description: '', actionLabel: '', onAction: fn() },
 } satisfies Meta<typeof EmptyState>
 
 export default meta
@@ -65,7 +36,23 @@ type Story = StoryObj<typeof meta>
 
 /** Rule 6: never a dead blank screen — say why the page matters, offer the first action. */
 export const FirstRun: Story = {
-  render: (args) => <FirstRunView onAction={args.onAction} />,
+  render: (args) => {
+    const { t } = useLingui()
+    return (
+      <SurfaceCard>
+        <EmptyState
+          {...args}
+          icon={<ReceiptLongRoundedIcon />}
+          title={args.title || t`You have not recorded any receipts yet`}
+          description={
+            args.description ||
+            t`The ledger is where every payment you have received adds up in one place — exactly what you need when it is time to produce a report.`
+          }
+          actionLabel={args.actionLabel || t`Record your first receipt`}
+        />
+      </SurfaceCard>
+    )
+  },
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -79,7 +66,26 @@ export const FirstRun: Story = {
 }
 
 /** A filtered-to-empty ledger is a different situation and gets different words. */
-export const NoFilterMatches: Story = { render: (args) => <NoMatchView onAction={args.onAction} /> }
+export const NoFilterMatches: Story = {
+  render: (args) => {
+    const { t } = useLingui()
+    return (
+      <SurfaceCard>
+        <EmptyState
+          {...args}
+          icon={<SearchOffRoundedIcon />}
+          title={args.title || t`Nothing matched these filters`}
+          description={args.description || t`Change the date range or client, or clear the filters to see every receipt.`}
+          actionLabel={args.actionLabel || t`Clear filters`}
+        />
+      </SurfaceCard>
+    )
+  },
+  play: async ({ args, canvasElement }) => {
+    await userEvent.click(await within(canvasElement).findByRole('button', { name: /^پاک کردن فیلترها$|^Clear filters$/ }))
+    await expect(args.onAction).toHaveBeenCalledTimes(1)
+  },
+}
 
 /**
  * Both decorations are optional, and the report page proves it: until a receipt
@@ -88,7 +94,22 @@ export const NoFilterMatches: Story = { render: (args) => <NoMatchView onAction=
  * sentence, centred — rather than as a component that failed to render.
  */
 export const MessageOnly: Story = {
-  render: () => <MessageOnlyView />,
+  render: (args) => {
+    const { t } = useLingui()
+    return (
+      <SurfaceCard>
+        <EmptyState
+          {...args}
+          title={args.title || t`No receipts recorded for this year`}
+          description={
+            args.description ||
+            t`The income report is built from the receipts you record. Add a few receipts first, then produce the document here.`
+          }
+          actionLabel={args.actionLabel || undefined}
+        />
+      </SurfaceCard>
+    )
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 

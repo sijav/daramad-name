@@ -7,6 +7,8 @@
     "types": ["node"],
 
     "moduleResolution": "bundler",
+    // `vite.config.ts` reads the PWA manifest from `pwa-manifest.json`.
+    "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
@@ -20,5 +22,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["vite.config.ts", "lingui.config.ts", "vitest.config.ts"]
+  "include": ["vite.config.ts", "lingui.config.ts", "vitest.config.ts", "pwa-manifest.json"]
 }

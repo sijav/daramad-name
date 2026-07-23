@@ -18,6 +18,10 @@ const TOMAN = FIXTURE_RECEIPTS.find((receipt) => receipt.currency === 'TOMAN')!
 const meta = {
   title: 'Pages/Ledger/EditReceiptDialog',
   component: EditReceiptDialog,
+  argTypes: {
+    receipt: { description: 'The receipt being edited. The dialog is mounted per receipt, so this seeds the form once.' },
+    onClose: { description: 'Save, cancel, Escape and a backdrop click all arrive here.' },
+  },
   parameters: { layout: 'fullscreen', page: { route: '/ledger' } },
   beforeEach: async () => await seedDatabase(),
 } satisfies Meta<typeof EditReceiptDialog>

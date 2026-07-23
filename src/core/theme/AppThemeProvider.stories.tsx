@@ -74,9 +74,22 @@ const meta = {
   component: AppThemeProvider,
   parameters: { layout: 'padded' },
   argTypes: {
-    locale: { control: 'inline-radio', options: ['fa-IR', 'en-US'] },
-    themePreference: { control: 'inline-radio', options: ['light', 'dark', 'system'] },
-    children: { control: false, table: { disable: true } },
+    locale: {
+      description:
+        'Decides text DIRECTION, not the translation: `fa-IR` selects the RTL\nEmotion cache, so every rule the app authors for LTR is mirrored on the way\nout. The catalog is loaded elsewhere.',
+      control: 'inline-radio',
+      options: ['fa-IR', 'en-US'],
+    },
+    themePreference: {
+      description: '`system` follows the OS setting and keeps following it as it changes.',
+      control: 'inline-radio',
+      options: ['light', 'dark', 'system'],
+    },
+    children: {
+      description: 'The whole app: everything below here reads the theme and the cache.',
+      control: false,
+      table: { disable: true },
+    },
   },
   args: { locale: 'fa-IR', themePreference: 'light', children: <Probe /> },
 } satisfies Meta<typeof AppThemeProvider>

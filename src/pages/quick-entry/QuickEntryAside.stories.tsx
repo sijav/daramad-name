@@ -15,6 +15,12 @@ import { QuickEntryAside } from './QuickEntryAside'
 const meta = {
   title: 'Pages/QuickEntry/Aside',
   component: QuickEntryAside,
+  argTypes: {
+    onPickClient: {
+      description:
+        'Fills the form\'s client field. Without it the "recent clients" chips are\ninert — an outlined chip in a form column reads as tappable, so a user taps\none, nothing happens, and they type the name by hand. That is also how a\nsecond «Aria Trading » gets created and splits a client\'s totals.',
+    },
+  },
   parameters: { layout: 'padded', page: { route: '/quick-entry' } },
   beforeEach: async () => await seedDatabase(),
 } satisfies Meta<typeof QuickEntryAside>

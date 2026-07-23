@@ -41,6 +41,12 @@ const Harness = ({
 const meta = {
   title: 'Pages/Ledger/FilterPopover',
   component: LedgerFilterPopover,
+  argTypes: {
+    anchorEl: { description: 'What the popover hangs off, and whether it is open at all: `null` is closed.' },
+    filter: { description: 'The APPLIED filter. The draft is rebuilt from it each time the popover opens.' },
+    onApply: { description: 'Fires on Apply only — never per keystroke, or the ledger refetches mid-edit.' },
+    onClose: { description: 'Dismissed without applying; the draft is discarded.' },
+  },
   parameters: { layout: 'padded', page: { route: '/ledger' } },
   beforeEach: async () => await seedDatabase(),
 } satisfies Meta<typeof LedgerFilterPopover>

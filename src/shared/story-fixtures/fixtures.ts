@@ -8,7 +8,7 @@ import {
   getMonthlyTotalsQueryKey,
   getPopulatedYearsQueryKey,
 } from 'src/shared/queries'
-import type { CalendarSystem, ClientShare, Ledger, MonthlyTotal, ReceiptWithClient } from 'src/shared/types'
+import type { CalendarSystem, ClientShare, Ledger, MonthlyTotal, Profile, ReceiptWithClient } from 'src/shared/types'
 import { averagingPeriod, monthIndexOf, yearOf, yearRange } from 'src/shared/utils'
 
 // Fixture data and cache seeding for PAGE stories.
@@ -20,6 +20,38 @@ import { averagingPeriod, monthIndexOf, yearOf, yearRange } from 'src/shared/uti
 // no database at all.
 
 const CALENDAR: CalendarSystem = 'JALALI'
+
+/**
+ * The demo identity, in one place because two very different consumers need it
+ * to agree: the certificate prints it, and Storybook's preview seeds it into
+ * Settings. Written out twice, a rename would leave the report naming one
+ * person and the top bar naming another.
+ */
+export const FIXTURE_PROFILE: Profile = {
+  fullName: 'رها موسوی',
+  fullNameEn: 'Raha Mousavi',
+  nationalId: '۰۰۱۲۳۴۵۶۷۸',
+  passportNumber: 'A98765432',
+  phone: '',
+  address: 'تهران، خیابان کریم‌خان',
+  addressEn: 'Karimkhan St, Tehran',
+}
+
+/**
+ * What Settings holds by default: the name, and nothing else.
+ *
+ * A component story has no business carrying a national ID around — the fields
+ * that identify a real person only ever appear where the certificate needs
+ * them, and the Settings stories type them in themselves when that is the
+ * subject.
+ */
+export const FIXTURE_SETTINGS_PROFILE: Profile = {
+  ...FIXTURE_PROFILE,
+  nationalId: '',
+  passportNumber: '',
+  address: '',
+  addressEn: '',
+}
 
 const iso = (monthsAgo: number, day: number): string => {
   const d = new Date()
@@ -208,15 +240,7 @@ export const seedPageData = (client: QueryClient, { empty = false }: { empty?: b
   const reportedTotal = reportedMonths.reduce((sum, month) => sum + month.totalToman, 0)
 
   client.setQueryData(getIncomeReportQueryKey(range, CALENDAR), {
-    profile: {
-      fullName: 'رها موسوی',
-      fullNameEn: 'Raha Mousavi',
-      nationalId: '۰۰۱۲۳۴۵۶۷۸',
-      passportNumber: 'A98765432',
-      phone: '',
-      address: 'تهران، خیابان کریم‌خان',
-      addressEn: 'Karimkhan St, Tehran',
-    },
+    profile: FIXTURE_PROFILE,
     range: reported,
     totalToman: reportedTotal,
     monthlyAverageToman: empty ? 0 : Math.round(reportedTotal / monthsInRange),
@@ -239,19 +263,47 @@ export const seedPageData = (client: QueryClient, { empty = false }: { empty?: b
  * Returns a cleanup that empties the tables again, so one scenario cannot leak
  * rows into the next.
  */
-export const seedDatabase = async (): Promise<() => Promise<void>> => {
-  const clear = async () => {
-    await Promise.all([db.receipts.clear(), db.clients.clear()])
-  }
-  await clear()
+const clear = async () => {
+  await Promise.all([db.receipts.clear(), db.clients.clear()])
+}
 
-  await db.clients.bulkAdd(FIXTURE_CLIENTS.map(({ id, name }) => ({ id, name, nameKey: name.toLowerCase(), createdAt: iso(12, 1) })))
-  await db.receipts.bulkAdd(
+const write = async () => {
+  await clear()
+  await db.clients.bulkPut(FIXTURE_CLIENTS.map(({ id, name }) => ({ id, name, nameKey: name.toLowerCase(), createdAt: iso(12, 1) })))
+  await db.receipts.bulkPut(
     FIXTURE_RECEIPTS.map(({ clientName: _clientName, ...receipt }) => ({
       ...receipt,
       clientId: FIXTURE_CLIENTS.find((client) => client.name === _clientName)?.id ?? null,
     })),
   )
+}
 
-  return clear
+// A Docs page renders EVERY story of its component at once, so several stories
+// seed the same IndexedDB at the same moment. Run separately their clears and
+// writes interleave — one story's rows land before another's write — and Dexie
+// rejects the whole batch: «receipts.bulkAdd(): 8 of 8 operations failed.
+// ConstraintError: Key already exists in the object store.»
+//
+// So the seed is shared: concurrent callers await one in-flight write, and the
+// tables are only emptied once the last of them has released. `bulkPut` rather
+// than `bulkAdd` on top of that, so re-seeding is idempotent instead of fatal.
+let seeded: Promise<void> | undefined
+let holders = 0
+
+export const seedDatabase = async (): Promise<() => Promise<void>> => {
+  holders += 1
+  seeded ??= write()
+  await seeded
+
+  let released = false
+  return async () => {
+    // Cleanups run per story, and a story that unmounts twice must not empty
+    // the tables out from under the ones still on screen.
+    if (released) return
+    released = true
+    holders -= 1
+    if (holders > 0) return
+    seeded = undefined
+    await clear()
+  }
 }

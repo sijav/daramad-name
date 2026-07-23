@@ -9,7 +9,6 @@ export type LedgerStateKind = 'loading' | 'empty' | 'no-results' | 'error'
 
 export interface LedgerStateProps {
   kind: LedgerStateKind
-  /** Retry for `error`, clear-filters for `no-results`, first-entry for `empty`. */
   onAction?: () => void
   errorMessage?: string
 }

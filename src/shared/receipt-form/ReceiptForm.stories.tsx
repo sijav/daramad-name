@@ -70,16 +70,24 @@ const Harness = ({ initial, onSubmit, onSubmitAndNext, onSaved, pending, withNex
 const meta = {
   title: 'Shared/ReceiptForm',
   component: ReceiptForm,
-  parameters: { layout: 'padded' },
+  parameters: {
+    layout: 'padded',
+  },
   render: (args) => <Harness {...args} />,
   // `form` is a live hook return and `submitLabel` is the harness's own — no
   // control can produce either, so they are stubbed once here and kept out of
   // the props table instead of being repeated in every story.
   argTypes: {
-    form: { control: false, table: { disable: true } },
-    submitLabel: { control: false, table: { disable: true } },
+    onSubmitAndNext: { description: '«ذخیره و بعدی» — omitted when editing an existing receipt.' },
+    onSubmit: { description: 'Fires only once the form validates — the page does not re-check.' },
+    form: {
+      description: 'The whole form state, from `useReceiptForm`. The caller owns it so the page can seed and reset it.',
+      control: false,
+      table: { disable: true },
+    },
+    submitLabel: { description: '«ثبت دریافتی» when recording, «ذخیره تغییرات» when editing.', control: false, table: { disable: true } },
     initial: { control: false },
-    pending: { control: 'boolean' },
+    pending: { description: 'Disables both submit buttons and shows a spinner while the write is in flight.', control: 'boolean' },
     withNext: { control: 'boolean' },
   },
   args: {

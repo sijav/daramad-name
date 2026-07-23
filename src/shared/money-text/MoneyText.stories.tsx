@@ -5,7 +5,24 @@ import { MoneyText } from './MoneyText'
 const meta = {
   title: 'Shared/MoneyText',
   component: MoneyText,
-  parameters: { layout: 'centered' },
+  parameters: {
+    layout: 'centered',
+  },
+  // `MoneyText` forwards the rest of `TypographyProps`, so docgen offers all of
+  // MUI's typography surface. These four are the ones that change what the
+  // figure SAYS. Only the control shape is set — the descriptions come from the
+  // JSDoc on `MoneyTextProps`, so the table cannot drift from the source.
+  argTypes: {
+    value: { description: 'The amount, in whichever currency is passed below.', control: { type: 'number', step: 1000 } },
+    currency: {
+      description: 'Omit for toman; pass a currency to render the original amount instead.',
+      control: 'inline-radio',
+      options: ['TOMAN', 'USD', 'USDT'],
+    },
+    showUnit: { description: 'Appends the currency name.', control: 'boolean' },
+    variant: { control: 'select' },
+  },
+  args: { value: 12_500_000, currency: 'TOMAN', showUnit: true },
 } satisfies Meta<typeof MoneyText>
 
 export default meta

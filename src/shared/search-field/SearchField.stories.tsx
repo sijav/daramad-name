@@ -3,7 +3,10 @@ import { useState } from 'react'
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
 import { SearchField } from './SearchField'
 
-const meta = { title: 'Shared/SearchField', component: SearchField } satisfies Meta<typeof SearchField>
+const meta = {
+  title: 'Shared/SearchField',
+  component: SearchField,
+} satisfies Meta<typeof SearchField>
 export default meta
 type Story = StoryObj<typeof meta>
 

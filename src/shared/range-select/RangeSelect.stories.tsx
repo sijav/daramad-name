@@ -7,7 +7,15 @@ const meta = {
   title: 'Shared/RangeSelect',
   component: RangeSelect,
   argTypes: {
-    value: { control: 'select', options: [1403, 1402] },
+    prefix: { description: 'Prefixed to the selected label, e.g. "Report range: year 1403".' },
+    onSelect: { description: 'The chosen value, always as a string: it arrives from a DOM select.' },
+    options: { description: 'Every choice, in the order they should appear. Newest first, for years.' },
+    value: {
+      description:
+        "The selected option's value.\n\nMUI renders NOTHING — no label, no fallback — when this is absent from\n`options`, so callers fold the selection in rather than letting the two\ndisagree. See `selectableYears`.",
+      control: 'select',
+      options: [1403, 1402],
+    },
   },
 } satisfies Meta<typeof RangeSelect>
 

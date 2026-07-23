@@ -6,6 +6,11 @@ import { LedgerState } from './LedgerState'
 const meta = {
   title: 'Shared/LedgerState',
   component: LedgerState,
+  argTypes: {
+    kind: { description: 'Which of the four states to show. Each has its own wording and its own icon.' },
+    onAction: { description: 'Retry for `error`, clear-filters for `no-results`, first-entry for `empty`.' },
+    errorMessage: { description: 'The raw cause, shown under the `error` state so a glitch is distinguishable from real damage.' },
+  },
   render: (args) => (
     <SurfaceCard>
       <LedgerState {...args} />

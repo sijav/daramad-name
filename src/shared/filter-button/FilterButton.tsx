@@ -5,7 +5,6 @@ import { radius } from 'src/core/theme'
 import { useFormat } from 'src/shared/format'
 
 export interface FilterButtonProps extends Omit<ButtonProps, 'startIcon' | 'endIcon' | 'children'> {
-  /** How many filters are currently applied; drives the badge. */
   activeCount?: number
 }
 

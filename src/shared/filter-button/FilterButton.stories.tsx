@@ -6,7 +6,7 @@ const meta = {
   title: 'Shared/FilterButton',
   component: FilterButton,
   argTypes: {
-    activeCount: { control: { type: 'number', min: 0, max: 99 } },
+    activeCount: { description: 'How many filters are currently applied; drives the badge.', control: { type: 'number', min: 0, max: 99 } },
     disabled: { control: 'boolean' },
   },
   args: { onClick: fn() },

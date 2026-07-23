@@ -4,7 +4,14 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect, fn, userEvent, within } from 'storybook/test'
 import { FilterChip } from './FilterChip'
 
-const meta = { title: 'Shared/FilterChip', component: FilterChip } satisfies Meta<typeof FilterChip>
+const meta = {
+  title: 'Shared/FilterChip',
+  component: FilterChip,
+  argTypes: {
+    field: { description: "The filter's field name, shown before the value." },
+    value: { description: 'The active value.' },
+  },
+} satisfies Meta<typeof FilterChip>
 export default meta
 type Story = StoryObj<typeof meta>
 

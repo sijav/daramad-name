@@ -9,15 +9,22 @@ const meta = {
   title: 'Shared/ConfirmDialog',
   component: ConfirmDialog,
   argTypes: {
+    onClose: { description: 'Cancel, Escape and a backdrop click all arrive here.' },
+    onConfirm: { description: 'The dialog does not close itself on confirm — the caller decides what follows.' },
+    open: { description: 'Mounted always, shown by this. The dialog keeps no state of its own between openings.' },
     destructive: { control: 'boolean' },
     // Every caller passes catalog messages for the copy, so the harness does
     // too. A text box here would put an English sentence above a Persian
     // cancel button, which is the one thing this dialog must never look like.
     title: { control: false },
-    description: { control: false },
-    confirmLabel: { control: false },
-    cancelLabel: { control: false },
-    confirmationWord: { control: false },
+    description: { description: 'Exactly what happens on confirm, including what cannot be undone.', control: false },
+    confirmLabel: { description: 'Names the ACTION rather than saying "OK", so the button reads on its own.', control: false },
+    cancelLabel: { description: "Defaults to the catalog's «انصراف».", control: false },
+    confirmationWord: {
+      description:
+        'When set, the user must type this exact word to enable the confirm button.\nThis is the second step of the two-step confirmation the brief requires\nbefore wiping all data.',
+      control: false,
+    },
   },
 } satisfies Meta<typeof ConfirmDialog>
 

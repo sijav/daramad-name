@@ -1,1 +1,11 @@
-export { FIXTURE_CLIENTS, FIXTURE_LEDGER, FIXTURE_MONTHS, FIXTURE_RECEIPTS, FIXTURE_SHARES, seedDatabase, seedPageData } from './fixtures'
+export {
+  FIXTURE_CLIENTS,
+  FIXTURE_LEDGER,
+  FIXTURE_MONTHS,
+  FIXTURE_PROFILE,
+  FIXTURE_RECEIPTS,
+  FIXTURE_SETTINGS_PROFILE,
+  FIXTURE_SHARES,
+  seedDatabase,
+  seedPageData,
+} from './fixtures'

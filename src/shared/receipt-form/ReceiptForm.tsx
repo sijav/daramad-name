@@ -19,7 +19,6 @@ export interface ReceiptFormProps {
   submitLabel: string
   pending?: boolean
   onSubmit: () => void
-  /** «ذخیره و بعدی» — omitted when editing an existing receipt. */
   onSubmitAndNext?: () => void
 }
 

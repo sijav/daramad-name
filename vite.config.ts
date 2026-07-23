@@ -2,7 +2,13 @@ import react from '@vitejs/plugin-react-swc'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
-import { VitePWA } from 'vite-plugin-pwa'
+import { type ManifestOptions, VitePWA } from 'vite-plugin-pwa'
+import manifestJson from './pwa-manifest.json' with { type: 'json' }
+
+// A JSON import widens every string to `string`, so `display: 'standalone'` no
+// longer satisfies the plugin's `Display` union. The assertion re-narrows it;
+// the file is validated by the build, which rejects an unknown display mode.
+const manifest = manifestJson as Partial<ManifestOptions>
 
 // `base` is read from an env var so the same build works on both deploy targets:
 // GitHub Pages serves from a repo subpath, Liara serves from the domain root.
@@ -54,43 +60,22 @@ export default defineConfig({
             // The manifest is emitted next to `index.html` and linked from it,
             // so it inherits `base` — which is what keeps `start_url` and
             // `scope` correct on GitHub Pages' `/daramad-name/` subpath.
-            manifest: {
-              // Explicit so the identity survives a change of `start_url`;
-              // without it the browser derives the id FROM `start_url` and a
-              // reinstall would look like a different app.
-              id: base,
-              // These are data, not interface copy: a manifest is read by the
-              // operating system before any locale is chosen, so it cannot be a
-              // lingui message. The NAME is deliberately Latin — it is what the
-              // OS prints under the installed icon, in the launcher and in the
-              // app switcher, none of which are guaranteed to shape Persian
-              // correctly, and a product needs one spelling people can type and
-              // search for. The interface itself stays Persian.
-              name: 'DaramadName',
-              short_name: 'DaramadName',
-              description: 'دفتر دریافتی‌ها و گزارش درآمد قابل ارائه برای فریلنسر ایرانی. همه‌ی داده‌ها فقط روی مرورگر خودت می‌مونه.',
-              lang: 'fa-IR',
-              dir: 'rtl',
-              start_url: base,
-              scope: base,
-              display: 'standalone',
-              // Matches `<meta name="theme-color">` in index.html; a mismatch is
-              // the most common reason an installed window paints the wrong bar.
-              theme_color: '#3b6ef5',
-              background_color: '#f8f9fb',
-              categories: ['finance', 'business', 'productivity'],
-              icons: [
-                { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
-                { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-                // A launcher clips a maskable icon to its own shape, so these
-                // are separate files with the glyph inside the safe zone rather
-                // than `purpose: 'any maskable'` on the ones above. Chrome
-                // counts only `any` icons towards the 192/512 install
-                // requirement, which is why both sets exist.
-                { src: 'pwa-maskable-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
-                { src: 'pwa-maskable-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
-              ],
-            },
+            // The static half lives in `pwa-manifest.json`, which is the only
+            // Persian the build owns: a manifest is read by the operating
+            // system before any locale is chosen, so its description cannot be
+            // a lingui message — but it is still copy, and copy does not belong
+            // in a config file. The NAME there is deliberately Latin: it is
+            // what the OS prints under the installed icon, in the launcher and
+            // in the app switcher, none of which are guaranteed to shape
+            // Persian correctly, and a product needs one spelling people can
+            // type and search for. The interface itself stays Persian.
+            //
+            // The three URL fields are derived rather than written down, so
+            // they follow `base` onto GitHub Pages' `/daramad-name/` subpath.
+            // `id` is explicit so the identity survives a change of `start_url`
+            // — without it the browser derives the id FROM `start_url`, and a
+            // reinstall would look like a different app.
+            manifest: { ...manifest, id: base, start_url: base, scope: base },
             workbox: {
               // Everything the app can ever need, because there is no backend:
               // once the shell and the fonts are cached the whole product works

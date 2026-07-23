@@ -7,6 +7,16 @@ import { LedgerTable } from './LedgerTable'
 const meta = {
   title: 'Pages/Ledger/LedgerTable',
   component: LedgerTable,
+  argTypes: {
+    receipts: { description: 'The rows for the current page, in the order the query returned them.' },
+    summary: { description: 'Totals for the WHOLE filtered set, not just this page — the brief requires the total to track the filter.' },
+    sort: { description: 'Which column is sorted and which way, so the header can show its arrow.' },
+    filtered: { description: 'Drives the total row\'s wording — "filtered" is a lie when nothing is.' },
+    onSortChange: { description: 'The page owns the sort; the header only reports the press.' },
+    onView: { description: 'Opens the details drawer for that row.' },
+    onEdit: { description: 'Opens the edit dialog for that row.' },
+    onDelete: { description: 'Asks to delete. The confirmation belongs to the page.' },
+  },
   parameters: { layout: 'fullscreen' },
 } satisfies Meta<typeof LedgerTable>
 

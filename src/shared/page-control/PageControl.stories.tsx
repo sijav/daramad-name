@@ -7,10 +7,19 @@ const meta = {
   title: 'Shared/PageControl',
   component: PageControl,
   argTypes: {
+    onPageSizeChange: { description: 'A new size, with the caller responsible for putting the view back on page 1.' },
+    onPageChange: { description: 'The page owns the position; this control only reports the press.' },
+    totalCount: { description: 'Rows across every page — the "N of M" line, not just what is on screen.' },
+    pageSize: { description: 'Rows per page. Changing it resets to page 1, since the old page may not exist.' },
+    page: { description: "The current page, 1-based, as MUI's `Pagination` counts." },
     // Derived by the harness from `totalCount` and the live page size, the way
     // `useLedgerView` derives it. An editable second copy could only contradict
     // the row-range sentence, and every story's value was already discarded.
-    pageCount: { control: false, table: { disable: true } },
+    pageCount: {
+      description: 'How many pages there are. The control hides itself when there is only one.',
+      control: false,
+      table: { disable: true },
+    },
   },
 } satisfies Meta<typeof PageControl>
 export default meta

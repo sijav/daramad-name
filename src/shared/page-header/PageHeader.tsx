@@ -4,7 +4,6 @@ import type { ReactNode } from 'react'
 export interface PageHeaderProps {
   title: string
   subtitle?: string
-  /** The design's third header line, e.g. "Last updated: 22 Mordad 1404". */
   meta?: string
   action?: ReactNode
 }

@@ -13,16 +13,8 @@ import type { CalendarSystem } from 'src/shared/types'
 
 export interface DateFieldProps {
   label: string
-  /**
-   * ISO-8601 instant, or `null` for an empty field.
-   *
-   * Empty is a real state, not a missing one: the ledger's filter opens with no
-   * range set, and showing today's date there would advertise a filter that is
-   * not applied.
-   */
   value: string | null
   onValueChange: (iso: string) => void
-  /** Blocks future dates — a receipt cannot arrive tomorrow. */
   disableFuture?: boolean
   error?: boolean
   helperText?: string

@@ -4,7 +4,6 @@ import type { ReactNode } from 'react'
 export interface EmptyStateProps {
   icon?: ReactNode
   title: string
-  /** Why this screen matters — rule 6 forbids a bare "no data" message. */
   description: string
   actionLabel?: string
   onAction?: () => void

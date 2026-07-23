@@ -3,6 +3,13 @@ import { useEffect } from 'react'
 import { expect, fn, waitFor, within } from 'storybook/test'
 import { InstallAppSection } from './InstallAppSection'
 
+/**
+ * The Settings row that installs the app to the home screen.
+ *
+ * It renders nothing at all until the browser says installation is possible,
+ * which is a state no test runner can produce on its own — so the stories build
+ * the `beforeinstallprompt` event by hand and fire it from a parent effect.
+ */
 const meta = {
   title: 'PWA/InstallAppSection',
   component: InstallAppSection,

@@ -9,11 +9,6 @@ export interface ConfirmDialogProps {
   confirmLabel: string
   cancelLabel?: string
   destructive?: boolean
-  /**
-   * When set, the user must type this exact word to enable the confirm button.
-   * This is the second step of the two-step confirmation the brief requires
-   * before wiping all data.
-   */
   confirmationWord?: string
   onConfirm: () => void
   onClose: () => void

@@ -23,7 +23,6 @@ export interface LedgerTableProps {
   receipts: ReceiptWithClient[]
   summary: LedgerSummary
   sort: LedgerSort
-  /** Drives the total row's wording — "filtered" is a lie when nothing is. */
   filtered?: boolean
   onSortChange: (sort: LedgerSort) => void
   onView: (receipt: ReceiptWithClient) => void

@@ -6,6 +6,9 @@ import { RecentReceipts } from './RecentReceipts'
 const meta = {
   title: 'Pages/Dashboard/RecentReceipts',
   component: RecentReceipts,
+  argTypes: {
+    receipts: { description: 'Newest first, already sliced by the caller — this list does not paginate.' },
+  },
   parameters: { layout: 'padded' },
   args: { receipts: FIXTURE_RECEIPTS.slice(0, 4) },
 } satisfies Meta<typeof RecentReceipts>

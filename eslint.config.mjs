@@ -231,6 +231,16 @@ export default tseslint.config(
     },
   },
   {
+    // Storybook's own documentation plumbing: never bundled into the app, and
+    // its literals are Vite glob patterns and import queries rather than copy.
+    // The Persian prose these files render is not here at all — it lives in
+    // `story-docs/fa/*.md`, which is the point of the directory.
+    files: ['src/shared/story-docs/**'],
+    rules: {
+      'lingui/no-unlocalized-strings': 'off',
+    },
+  },
+  {
     // Tests assert on concrete rendered output, so their literals are expected
     // values rather than user-facing copy.
     files: ['**/*.test.{ts,tsx}'],

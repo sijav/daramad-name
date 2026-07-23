@@ -3,10 +3,32 @@ import { expect, within } from 'storybook/test'
 import type { CertificateModel } from './certificateModel'
 import { IncomeCertificate } from './IncomeCertificate'
 
+/**
+ * The income certificate, as a page.
+ *
+ * This one component is both the on-screen preview and the printed sheet, so
+ * there is no second renderer to drift from. `@page` gives it real A4 geometry:
+ * what the browser prints is what the user saw.
+ *
+ * Its direction comes from the MODEL, not the app — an English certificate
+ * reads left-to-right while the interface stays Persian.
+ */
 const meta = {
   title: 'Shared/IncomeCertificate',
   component: IncomeCertificate,
-  parameters: { layout: 'padded' },
+  argTypes: {
+    model: {
+      description:
+        'Everything the document says, already localized and formatted.\n\nThe component renders it and nothing else — the model carries its own\ndirection and its own language, which is what lets a Persian interface\nproduce an English certificate.',
+    },
+    variant: {
+      description:
+        '`page` draws real A4 geometry for printing. `preview` drops the fixed\nheight and the paper shadow so the document can sit inside a card and\nflow with the page it is embedded in.',
+    },
+  },
+  parameters: {
+    layout: 'padded',
+  },
 } satisfies Meta<typeof IncomeCertificate>
 
 export default meta

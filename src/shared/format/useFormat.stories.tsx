@@ -29,10 +29,17 @@ const FormatSample = () => {
   )
 }
 
+/**
+ * Every number and date the app prints goes through `useFormat`. These stories
+ * exercise all of it at once, because the failure worth catching is one surface
+ * drifting from the others — not the hook being broken outright.
+ */
 const meta = {
   title: 'Shared/useFormat',
   component: FormatSample,
-  parameters: { layout: 'padded' },
+  parameters: {
+    layout: 'padded',
+  },
 } satisfies Meta<typeof FormatSample>
 
 export default meta

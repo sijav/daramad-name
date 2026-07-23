@@ -5,12 +5,10 @@ import { CHANNEL_LABELS } from 'src/shared/constants'
 import { useFormat } from 'src/shared/format'
 import { MoneyText } from 'src/shared/money-text'
 import { Tag } from 'src/shared/tag'
-import type { CalendarSystem, ReceiptWithClient } from 'src/shared/types'
+import type { ReceiptWithClient } from 'src/shared/types'
 
 export interface RecentReceiptsProps {
   receipts: ReceiptWithClient[]
-  /** Retained for stories that pin a calendar; dates format from settings. */
-  calendar?: CalendarSystem
 }
 
 /**

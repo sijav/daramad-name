@@ -10,14 +10,16 @@ const meta = {
   title: 'Shared/AmountField',
   component: AmountField,
   argTypes: {
+    onValueChange: { description: 'Fires on every keystroke, with `null` while the field is empty.' },
+    value: { description: 'The amount, or `null` for an empty field — which is not the same as zero.' },
     currency: { control: 'select', options: [...CURRENCIES] },
     error: { control: 'boolean' },
     autoFocus: { control: 'boolean' },
     // The label and the helper text are caller-supplied, and every caller
     // passes a catalog message. The harness does the same, so switching the
     // Language toolbar cannot leave an English label on a Persian card.
-    label: { control: false },
-    helperText: { control: false },
+    label: { description: 'The caption above the field.', control: false },
+    helperText: { description: 'What is wrong, or what the field expects.', control: false },
   },
 } satisfies Meta<typeof AmountField>
 

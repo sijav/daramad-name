@@ -6,7 +6,15 @@ import { ReceiptDetailsDrawer } from './ReceiptDetailsDrawer'
 const meta = {
   title: 'Shared/ReceiptDetailsDrawer',
   component: ReceiptDetailsDrawer,
-  parameters: { layout: 'fullscreen' },
+  argTypes: {
+    receipt: { description: 'The receipt to show; `null` closes the drawer. Selection is what opens it.' },
+    onClose: { description: 'Backdrop, Escape and the close button all arrive here.' },
+    onEdit: { description: 'Hands the same receipt back, so the caller need not track the selection twice.' },
+    onDelete: { description: 'Asks to delete. The confirmation belongs to the page, not the drawer.' },
+  },
+  parameters: {
+    layout: 'fullscreen',
+  },
 } satisfies Meta<typeof ReceiptDetailsDrawer>
 
 export default meta

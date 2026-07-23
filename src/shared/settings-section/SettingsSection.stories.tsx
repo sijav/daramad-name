@@ -19,11 +19,17 @@ interface SectionArgs extends SettingsSectionProps {
 const meta = {
   title: 'Shared/SettingsSection',
   component: SettingsSection,
+  argTypes: {
+    title: { description: "The group's name, rendered as an `h3` so the page is navigable by heading." },
+    children: { description: 'The rows — `SettingRow` and `SettingButton`, in the order the design lists them.' },
+  },
   // `title` and `children` are both composed inside the render — the copy goes
   // through the catalog like the settings page's does, and `children` is a tree
   // no control can produce. An empty panel is honest; a panel describing args
   // that are not on screen is not.
-  parameters: { controls: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+  },
   args: { title: '', children: null, onBackUp: fn(), onChooseFile: fn(), onEraseAll: fn() },
 } satisfies Meta<SectionArgs>
 

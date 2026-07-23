@@ -5,14 +5,7 @@ import { elevation, radius } from 'src/core/theme'
 export interface ChartCardProps extends Omit<PaperProps, 'title' | 'variant'> {
   title: string
   subtitle?: string
-  /**
-   * `chart` is the componentised `Chart/*` treatment used on the Charts page:
-   * 16px and no shadow. `content` is the dashboard's panel: 20px with
-   * Elevation/1. The Figma file genuinely draws the same panel both ways
-   * depending on the screen, so this follows it per call site.
-   */
   variant?: 'chart' | 'content'
-  /** Optional control aligned opposite the title, e.g. a link to a full page. */
   action?: ReactNode
   children: ReactNode
 }

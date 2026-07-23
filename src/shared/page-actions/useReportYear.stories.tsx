@@ -51,6 +51,11 @@ const Harness = () => {
   )
 }
 
+/**
+ * Holds the selected report year, and re-expresses it when the calendar system
+ * changes. Without that, a Jalali year stays selected against a list of
+ * Gregorian options and the range pill renders blank.
+ */
 const meta = {
   title: 'Shared/useReportYear',
   component: Harness,

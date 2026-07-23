@@ -42,8 +42,18 @@ const meta = {
   component: PageActions,
   render: (args) => <Harness key={args.year} {...args} />,
   // A router, because the record button navigates.
-  parameters: { page: { route: '/report' } },
-  argTypes: { formatYear: { control: false } },
+  parameters: {
+    page: { route: '/report' },
+  },
+  argTypes: {
+    year: { description: 'The selected report year, expressed in the calendar currently in force.' },
+    years: { description: 'Years the ledger actually has receipts in. The selection is folded in if it is missing.' },
+    onYearChange: { description: 'The page owns the selection; the pill only reports the change.' },
+    formatYear: {
+      control: false,
+      description: 'Renders a year for display — Persian digits under a Jalali calendar.',
+    },
+  },
   args: {
     year: THIS_YEAR,
     years: [THIS_YEAR, THIS_YEAR - 1, THIS_YEAR - 2],

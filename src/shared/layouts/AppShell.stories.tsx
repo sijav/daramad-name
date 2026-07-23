@@ -8,7 +8,9 @@ import { AppShell } from './AppShell'
 const meta = {
   title: 'Layouts/AppShell',
   component: AppShell,
-  parameters: { layout: 'fullscreen' },
+  parameters: {
+    layout: 'fullscreen',
+  },
 } satisfies Meta<typeof AppShell>
 
 export default meta

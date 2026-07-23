@@ -16,6 +16,10 @@ import { MonthlyIncomeChart } from './MonthlyIncomeChart'
 const meta = {
   title: 'Pages/Charts/MonthlyIncomeChart',
   component: MonthlyIncomeChart,
+  argTypes: {
+    months: { description: 'All twelve buckets, including the empty ones — a missing month would hide the gap.' },
+    calendar: { description: 'Names the months. A Jalali year starts at Farvardin, a Gregorian one at January.' },
+  },
 } satisfies Meta<typeof MonthlyIncomeChart>
 
 export default meta

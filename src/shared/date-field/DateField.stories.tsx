@@ -6,6 +6,18 @@ import { DateField } from './DateField'
 const meta = {
   title: 'Shared/DateField',
   component: DateField,
+  argTypes: {
+    label: { description: 'The caption above the picker.' },
+    value: {
+      description:
+        "ISO-8601 instant, or `null` for an empty field.\n\nEmpty is a real state, not a missing one: the ledger's filter opens with no\nrange set, and showing today's date there would advertise a filter that is\nnot applied.",
+    },
+    onValueChange: { description: 'Fires only on a complete, valid date, so a half-typed year never reaches the caller.' },
+    disableFuture: { description: 'Blocks future dates — a receipt cannot arrive tomorrow.' },
+    error: { description: 'Marks the field, and turns the helper text red.' },
+    helperText: { description: 'What is wrong, or what the field expects.' },
+    fullWidth: { description: 'Stretches the picker to its container.' },
+  },
 } satisfies Meta<typeof DateField>
 
 export default meta

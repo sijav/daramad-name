@@ -4,9 +4,7 @@ import { Chip, type ChipProps } from '@mui/material'
 import { radius } from 'src/core/theme'
 
 export interface FilterChipProps extends Omit<ChipProps, 'variant' | 'color'> {
-  /** The filter's field name, shown before the value. */
   field: string
-  /** The active value. */
   value: string
 }
 

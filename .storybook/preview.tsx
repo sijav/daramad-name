@@ -9,8 +9,9 @@ import { MemoryRouter } from 'react-router-dom'
 import { i18n } from 'src/core/i18n'
 import { AppThemeProvider } from 'src/core/theme'
 import { settingsQueryKey } from 'src/shared/queries'
-import { seedPageData } from 'src/shared/story-fixtures'
+import { FIXTURE_SETTINGS_PROFILE, seedPageData } from 'src/shared/story-fixtures'
 import type { AppLocale, Settings, ThemePreference } from 'src/shared/types'
+import { LocalizedDocs } from './LocalizedDocs'
 
 // Stories render through the same providers as the app: lingui for copy,
 // TanStack Query because several components read settings via a query, and the
@@ -59,15 +60,7 @@ const seededClient = (locale: AppLocale, themePreference: ThemePreference, pageD
     calendar: 'JALALI',
     locale,
     themePreference,
-    profile: {
-      fullName: 'رها موسوی',
-      fullNameEn: 'Raha Mousavi',
-      nationalId: '',
-      passportNumber: '',
-      phone: '',
-      address: '',
-      addressEn: '',
-    },
+    profile: FIXTURE_SETTINGS_PROFILE,
   }
   client.setQueryData(settingsQueryKey, settings)
 
@@ -188,6 +181,11 @@ const preview: Preview = {
     docs: {
       // A component with six state variants is a page worth navigating.
       toc: true,
+      // The generated Docs page, with its description chosen by the Language
+      // toolbar. Autodocs reads the JSDoc above each `meta` at build time, so
+      // without this the pages are permanently English while every story beside
+      // them switches. The Persian lives in `src/shared/story-docs/fa`.
+      page: LocalizedDocs,
     },
     // No `actions.argTypesRegex` here on purpose.
     //

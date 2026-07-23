@@ -26,6 +26,13 @@ import { SegmentedControl } from 'src/shared/segmented-control'
 import { SettingButton, SettingRow, SettingsSection } from 'src/shared/settings-section'
 import type { AppLocale, CalendarSystem, Profile, ThemePreference } from 'src/shared/types'
 
+/**
+ * Personal details, backup and restore, display preferences, privacy.
+ *
+ * Every destructive control on this page is behind a typed confirmation, and
+ * both of them — erase, and restore-over — offer a backup first. There is no
+ * server copy to fall back on, so a mis-click here is the end of the data.
+ */
 export const SettingsPage = () => {
   const { t } = useLingui()
   const settings = useSettings()

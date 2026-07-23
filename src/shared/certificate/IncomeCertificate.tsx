@@ -42,11 +42,6 @@ const FLOOR = 9.5
 
 export interface IncomeCertificateProps {
   model: CertificateModel
-  /**
-   * `page` draws real A4 geometry for printing. `preview` drops the fixed
-   * height and the paper shadow so the document can sit inside a card and
-   * flow with the page it is embedded in.
-   */
   variant?: 'page' | 'preview'
 }
 

@@ -26,10 +26,12 @@ const meta = {
   component: ClientShareChart,
   parameters: { ...CHART_A11Y },
   argTypes: {
+    othersLabel: { description: "The folded slice's name, passed in so the caller owns the wording." },
+    shares: { description: 'Ranked clients. The arc order follows the array, not the values.' },
     // The fold threshold is the component's one real setting and had no control
     // and no arg on any story, so the "others" slice could not be reached from
     // the Controls panel at all.
-    limit: { control: { type: 'number', min: 1, max: 10 } },
+    limit: { description: 'Rows past this fold into a single "others" slice.', control: { type: 'number', min: 1, max: 10 } },
   },
   // A literal rather than `t`, so the fold assertions read the arg itself and do
   // not depend on where the Language toolbar happens to be.

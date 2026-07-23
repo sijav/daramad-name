@@ -50,9 +50,10 @@ export const DashboardPage = () => {
 
   const range = yearRange(year, calendar)
   // One rule for every monthly average in the app: divide by the months of the
-  // period on screen, never counting past today. A year still in progress must
-  // not be divided by 12.
-  const averagingMonths = averagingPeriod(range, calendar).months
+  // period on screen, never counting past today, so a year still in progress is
+  // not divided by 12.
+  const period = averagingPeriod(range, calendar)
+  const averagingMonths = period.months
 
   const { data: years = [] } = useQuery({ queryKey: getPopulatedYearsQueryKey(calendar), queryFn: getPopulatedYearsQuery })
   const { data: months, isLoading } = useQuery({ queryKey: getMonthlyTotalsQueryKey(year, calendar), queryFn: getMonthlyTotalsQuery })
@@ -62,26 +63,19 @@ export const DashboardPage = () => {
     queryFn: getLedgerQuery,
   })
 
-  // Sum the SAME months the average divides by.
-  //
-  // Summing all twelve buckets while dividing by the clamped count inflates the
-  // average by however much sits in months that have not happened, the exact
-  // defect `getLedger.query.ts` records having fixed twice. Future-dated
-  // receipts are reachable (the form allows any date), so this is not
-  // hypothetical.
-  const lastCountedMonth =
-    yearOf(new Date(averagingPeriod(range, calendar).range.to), calendar) === year
-      ? monthIndexOf(new Date(averagingPeriod(range, calendar).range.to), calendar) + 1
-      : 12
+  // Sum the SAME months the average divides by. Summing all twelve buckets
+  // while dividing by the clamped count inflates the average by whatever sits
+  // in months that have not happened, and the form allows a future date, so
+  // those buckets are reachable.
+  const periodEnd = new Date(period.range.to)
+  const lastCountedMonth = yearOf(periodEnd, calendar) === year ? monthIndexOf(periodEnd, calendar) + 1 : 12
   const countedMonths = months?.filter((month) => month.month <= lastCountedMonth) ?? []
   const yearTotal = countedMonths.reduce((sum, month) => sum + month.totalToman, 0)
   const receiptCount = countedMonths.reduce((sum, month) => sum + month.receiptCount, 0)
-  // The design's fourth card is the CURRENT month, not a count of active ones.
-  //
-  // The bucket comes out of whichever year is picked, so on a past year it is
-  // that year's Mordad rather than this one. The label says so instead, a
-  // figure headed "this month" that is not this month is exactly the number
-  // someone copies onto a form. The neighbouring cards already name their year.
+  // The design's fourth card is the CURRENT month. The bucket comes from
+  // whichever year is picked, so on a past year it is that year's Mordad, and
+  // the label names the year rather than reading "this month" about a month
+  // that is not this one.
   const currentMonth = monthIndexOf(new Date(), calendar) + 1
   const monthTotal = months?.find((month) => month.month === currentMonth)?.totalToman ?? 0
   const monthLabel =

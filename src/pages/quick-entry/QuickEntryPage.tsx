@@ -12,8 +12,9 @@ import { QuickEntryAside } from './QuickEntryAside'
 /**
  * Scenario 1: record a receipt in under 15 seconds.
  *
- * Smart defaults do the work, today's date, the last channel, an autofocused
- * amount field, so the fast path is type amount, tab, save.
+ * Defaults do the work: today's date, card-to-card, and an autofocused amount
+ * field, so the fast path is type amount, tab, save. Saving with "and next"
+ * carries the client and channel into the following entry.
  */
 export const QuickEntryPage = () => {
   const { t } = useLingui()
@@ -43,7 +44,8 @@ export const QuickEntryPage = () => {
 
     const request: CreateReceiptRequest = {
       occurredAt: form.state.occurredAt,
-      // Validated above; the non-null assertions are safe here.
+      // `form.isValid` above guarantees a positive amount, so the fallback is
+      // unreachable and exists only to keep the type honest without a cast.
       amountOriginal: form.state.amountOriginal ?? 0,
       currency: form.state.currency,
       rate: form.state.rate,

@@ -8,8 +8,8 @@ import sharp from 'sharp'
 // the PNGs are committed, so a normal build does not need sharp.
 //
 // Deliberately not `@vite-pwa/assets-generator`: it derives every size from one
-// square source, which cannot express the three different framings these icons
-// need, rounded for `any`, edge-to-edge with a shrunken glyph for `maskable`,
+// square source, which cannot express the three framings these icons need:
+// rounded for `any`, edge-to-edge with a shrunken glyph for `maskable`, and
 // edge-to-edge at full size for iOS.
 //
 // No `process` and no bare `console` in this file: eslint lints `.mjs` under

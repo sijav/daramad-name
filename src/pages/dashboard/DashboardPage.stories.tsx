@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Route, Routes } from 'react-router-dom'
 import { db } from 'src/core/db'
+import { FIXTURE_MONTHS } from 'src/shared/story-fixtures'
 import type { Receipt } from 'src/shared/types'
-import { toEnglishDigits } from 'src/shared/utils'
+import { toEnglishDigits, yearOf } from 'src/shared/utils'
 import { expect, userEvent, within } from 'storybook/test'
 import { DashboardPage } from './DashboardPage'
 
@@ -102,9 +103,13 @@ export const MonthlyAverageStatesItsDivisor: Story = {
     })
 
     await step('and the year total is the sum of the months, not of the visible ones', async () => {
-      // The fixture has four months with nothing in them; they belong in the
-      // total's denominator but contribute nothing to it.
-      await expect(figureIn(totalCard)).toBe(492_000_000)
+      // Derived from the fixture rather than written out: the months carry
+      // varied receipt counts and a couple of empty ones, and a hard-coded
+      // figure here only records what the fixture happened to hold on the day
+      // it was written. The empty months belong in the total's denominator but
+      // contribute nothing to it.
+      const expected = FIXTURE_MONTHS(yearOf(new Date(), 'JALALI')).reduce((sum, month) => sum + month.totalToman, 0)
+      await expect(figureIn(totalCard)).toBe(expected)
     })
   },
 }

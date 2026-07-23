@@ -82,16 +82,45 @@ export const FIXTURE_SHARES: ClientShare[] = ['Aria Trading', 'Dadepardaz Co.', 
   }))
   .sort((a, b) => b.totalToman - a.totalToman)
 
-/** Twelve buckets with a couple of empty months, to exercise the zero-bar case. */
+/**
+ * Twelve buckets: millions earned, and how many receipts made up that month.
+ *
+ * The counts vary deliberately. A ledger where every single month holds exactly
+ * one receipt reads as invented, and the certificate's «تعداد دریافتی» column is
+ * one of the first things a reader checks against the amounts. Two months are
+ * left empty to exercise the zero-bar case and because a freelance year that
+ * never has a quiet month is not a believable one either.
+ */
+const MONTH_SHAPE: readonly (readonly [millions: number, receipts: number])[] = [
+  [22, 1],
+  [108, 4],
+  [125, 3],
+  [67, 2],
+  [41, 1],
+  [0, 0],
+  [33, 2],
+  [15, 1],
+  [0, 0],
+  [52, 3],
+  [70, 4],
+  [28, 2],
+]
+
 export const FIXTURE_MONTHS = (year: number): MonthlyTotal[] => {
-  const values = [22, 108, 125, 67, 0, 0, 33, 15, 0, 52, 70, 0]
-  return values.map((m, index) => ({
+  // Earlier years read lighter, so moving the year picker visibly changes the
+  // page instead of repeating one set of twelve numbers three times over.
+  const yearsBack = Math.max(0, yearOf(new Date(), CALENDAR) - year)
+  const scale = [1, 0.82, 0.65][Math.min(yearsBack, 2)]
+  return MONTH_SHAPE.map(([millions, receipts], index) => ({
     month: index + 1,
     year,
-    totalToman: m * 1_000_000,
-    receiptCount: m > 0 ? 1 : 0,
+    totalToman: Math.round(millions * scale) * 1_000_000,
+    receiptCount: receipts,
   }))
 }
+
+/** Years the demo has history for — back to 1403, which is 2024. */
+export const FIXTURE_YEARS = (year: number): number[] => [year, year - 1, year - 2]
 
 export const FIXTURE_CLIENTS = FIXTURE_SHARES.map((s) => ({
   id: s.clientId,
@@ -118,8 +147,19 @@ export const seedPageData = (client: QueryClient, { empty = false }: { empty?: b
   const months = empty ? FIXTURE_MONTHS(year).map((m) => ({ ...m, totalToman: 0, receiptCount: 0 })) : FIXTURE_MONTHS(year)
 
   client.setQueryData(clientsQueryKey, empty ? [] : FIXTURE_CLIENTS)
-  client.setQueryData(getPopulatedYearsQueryKey(CALENDAR), [year, year - 1])
-  client.setQueryData(getMonthlyTotalsQueryKey(year, CALENDAR), months)
+
+  // Three years of history, so the year picker has somewhere to go and the demo
+  // reaches back to 1403 — 2024. Each year is seeded, not just the current one;
+  // selecting an earlier year otherwise landed on an empty page.
+  const years = FIXTURE_YEARS(year)
+  client.setQueryData(getPopulatedYearsQueryKey(CALENDAR), years)
+  for (const populated of years) {
+    const buckets = FIXTURE_MONTHS(populated)
+    client.setQueryData(
+      getMonthlyTotalsQueryKey(populated, CALENDAR),
+      empty ? buckets.map((bucket) => ({ ...bucket, totalToman: 0, receiptCount: 0 })) : buckets,
+    )
+  }
   client.setQueryData(getClientSharesQueryKey(range), {
     shares,
     insight: empty || shares.length === 0 ? null : { clientName: shares[0].clientName, percentage: shares[0].percentage },

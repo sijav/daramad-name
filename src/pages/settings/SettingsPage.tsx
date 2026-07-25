@@ -67,6 +67,7 @@ export const SettingsPage = () => {
   const [toast, setToast] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [confirmClear, setConfirmClear] = useState(false)
+  const [confirmSeed, setConfirmSeed] = useState(false)
   const [pendingRestore, setPendingRestore] = useState<string | null>(null)
 
   const refreshAll = async () => {
@@ -128,9 +129,13 @@ export const SettingsPage = () => {
     mutationFn: seedSampleDataMutation,
     onSuccess: async (count) => {
       await invalidateReceiptQueries()
+      setConfirmSeed(false)
       setToast(t`${count} sample receipts added.`)
     },
-    onError: () => setError(t`The sample receipts could not be added.`),
+    onError: () => {
+      setConfirmSeed(false)
+      setError(t`The sample receipts could not be added.`)
+    },
   })
 
   const clearAll = useMutation({
@@ -279,8 +284,14 @@ export const SettingsPage = () => {
               }}
             />
           </SettingRow>
-          <SettingRow label={t`Sample data`} description={t`Fill the ledger with sample receipts for testing and screenshots`}>
-            <SettingButton onClick={() => seed.mutate()} disabled={seed.isPending}>
+          <SettingRow
+            label={t`Sample data`}
+            description={t`Fill the ledger with sample receipts for testing and screenshots. Replaces what is there.`}
+          >
+            {/* An empty ledger has nothing to lose, so it fills straight away.
+                Once there are receipts, the typed confirmation stands between a
+                stray click and a wiped ledger. */}
+            <SettingButton onClick={() => (years.length > 0 ? setConfirmSeed(true) : seed.mutate())} disabled={seed.isPending}>
               {t`Fill`}
             </SettingButton>
           </SettingRow>
@@ -335,6 +346,17 @@ export const SettingsPage = () => {
             rather than in the design's numbered sections. */}
         <InstallAppSection />
       </Stack>
+
+      <ConfirmDialog
+        open={confirmSeed}
+        title={t`Fill with sample data`}
+        description={t`This is test data. Your current receipts and clients are erased and replaced with a fresh sample set; personal details are kept. Back up first if you need them.`}
+        confirmLabel={t`Erase and fill`}
+        confirmationWord={t`erase`}
+        destructive
+        onConfirm={() => seed.mutate()}
+        onClose={() => setConfirmSeed(false)}
+      />
 
       <ConfirmDialog
         open={confirmClear}

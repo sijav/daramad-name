@@ -504,6 +504,10 @@ msgstr "Erase all"
 msgid "Erase all data"
 msgstr "Erase all data"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Erase and fill"
+msgstr "Erase and fill"
+
 #: src/shared/error-state/AppErrorFallback.tsx
 msgid "Erase and restart"
 msgstr "Erase and restart"
@@ -562,8 +566,16 @@ msgid "Fill"
 msgstr "Fill"
 
 #: src/pages/settings/SettingsPage.tsx
-msgid "Fill the ledger with sample receipts for testing and screenshots"
-msgstr "Fill the ledger with sample receipts for testing and screenshots"
+#~ msgid "Fill the ledger with sample receipts for testing and screenshots"
+#~ msgstr "Fill the ledger with sample receipts for testing and screenshots"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Fill the ledger with sample receipts for testing and screenshots. Replaces what is there."
+msgstr "Fill the ledger with sample receipts for testing and screenshots. Replaces what is there."
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Fill with sample data"
+msgstr "Fill with sample data"
 
 #: src/shared/filter-button/FilterButton.tsx
 msgid "Filters"
@@ -1305,6 +1317,10 @@ msgstr "This file is not from Daramadname. Did you pick a backup from another to
 #: src/shared/queries/restoreBackup.mutation.ts
 msgid "This is not valid JSON. Make sure you picked the file you downloaded from Back up."
 msgstr "This is not valid JSON. Make sure you picked the file you downloaded from Back up."
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "This is test data. Your current receipts and clients are erased and replaced with a fresh sample set; personal details are kept. Back up first if you need them."
+msgstr "This is test data. Your current receipts and clients are erased and replaced with a fresh sample set; personal details are kept. Back up first if you need them."
 
 #: src/shared/queries/createReceipt.mutation.ts
 #: src/shared/queries/updateReceipt.mutation.ts

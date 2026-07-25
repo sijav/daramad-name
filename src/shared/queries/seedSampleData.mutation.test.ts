@@ -1,5 +1,6 @@
 import { assertValidReceipt, db } from 'src/core/db'
 import { activateLocale } from 'src/core/i18n'
+import { monthIndexOf, startOfMonthsAgo, yearOf } from 'src/shared/utils'
 import { computeToman } from 'src/shared/utils/money'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { getClientSharesQuery, getClientSharesQueryKey } from './getClientShares.query'
@@ -91,21 +92,54 @@ describe('seedSampleDataMutation', () => {
     expect(years.size).toBeGreaterThanOrEqual(4)
   })
 
-  // The empty-month edge case: one recent month has nothing, and the bar chart
-  // story exists to show it drawn as zero rather than dropped from the axis.
-  it('leaves at least one of the last twelve months empty', async () => {
+  // No month in range may be blank: a gap in the year view reads as missing
+  // data, not as a quiet month. Counted in Jalali months, the calendar the seed
+  // and the chart both bucket by.
+  it('covers every one of the last twelve months', async () => {
     await seedSampleDataMutation()
 
     const now = new Date()
-    const monthsBack = (occurredAt: string) => {
-      const date = new Date(occurredAt)
-      return (now.getFullYear() - date.getFullYear()) * 12 + (now.getMonth() - date.getMonth())
+    const monthKey = (date: Date) => `${yearOf(date, 'JALALI')}-${monthIndexOf(date, 'JALALI')}`
+    const populated = new Set((await db.receipts.toArray()).map((receipt) => monthKey(new Date(receipt.occurredAt))))
+    const recentMonths = Array.from({ length: 12 }, (_unused, monthsAgo) => monthKey(startOfMonthsAgo(now, monthsAgo, 'JALALI')))
+
+    expect(recentMonths.every((month) => populated.has(month))).toBe(true)
+  })
+
+  // The bug that sent us here: a monthly retainer counted in Gregorian months
+  // shows up twice in the Jalali months a Gregorian month straddles. The busiest
+  // client is the retainer, it pays once a month, so it must never land twice in
+  // one Jalali month.
+  it('never lists the monthly retainer twice in one Jalali month', async () => {
+    await seedSampleDataMutation()
+    const receipts = await db.receipts.toArray()
+
+    const countByClient = new Map<string, number>()
+    for (const receipt of receipts) {
+      if (receipt.clientId) countByClient.set(receipt.clientId, (countByClient.get(receipt.clientId) ?? 0) + 1)
     }
-    const recent = new Set(
-      (await db.receipts.toArray()).map((receipt) => monthsBack(receipt.occurredAt)).filter((month) => month >= 0 && month < 12),
+    const retainer = [...countByClient.entries()].sort((left, right) => right[1] - left[1])[0][0]
+
+    const perMonth = new Map<string, number>()
+    for (const receipt of receipts.filter((each) => each.clientId === retainer)) {
+      const date = new Date(receipt.occurredAt)
+      const key = `${yearOf(date, 'JALALI')}-${monthIndexOf(date, 'JALALI')}`
+      perMonth.set(key, (perMonth.get(key) ?? 0) + 1)
+    }
+
+    expect(Math.max(...perMonth.values())).toBe(1)
+  })
+
+  // Two identical rows read as one receipt entered twice, the artefact the
+  // distinct-client and per-calendar-month rules exist to avoid.
+  it('never repeats a receipt exactly', async () => {
+    await seedSampleDataMutation()
+
+    const keys = (await db.receipts.toArray()).map(
+      (receipt) => `${receipt.clientId}|${receipt.occurredAt.slice(0, 10)}|${receipt.amountOriginal}|${receipt.currency}`,
     )
 
-    expect(recent.size).toBeLessThan(12)
+    expect(new Set(keys).size).toBe(keys.length)
   })
 
   // The whole point of generating it: two presses must not produce the same
@@ -122,12 +156,13 @@ describe('seedSampleDataMutation', () => {
     expect(await fingerprint()).not.toBe(await fingerprint())
   })
 
-  // It is the "fill this in for me" button, not a reset button; someone with
-  // real records must not lose them by pressing it.
-  it('adds alongside existing data rather than clearing first', async () => {
-    const first = await seedSampleDataMutation()
+  // Pressing Fill again gives a fresh sample, not two seeds stacked into the
+  // same months. The UI puts a typed confirmation in front of this so someone
+  // with real records cannot lose them by a stray click.
+  it('replaces existing data rather than piling a second seed on top', async () => {
+    await seedSampleDataMutation()
     const second = await seedSampleDataMutation()
 
-    expect(await db.receipts.count()).toBe(first + second)
+    expect(await db.receipts.count()).toBe(second)
   })
 })

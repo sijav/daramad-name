@@ -504,6 +504,10 @@ msgstr "پاک کردن همه"
 msgid "Erase all data"
 msgstr "پاک کردن همه‌ی داده‌ها"
 
+#: src/pages/settings/SettingsPage.tsx
+msgid "Erase and fill"
+msgstr "پاک کن و پر کن"
+
 #: src/shared/error-state/AppErrorFallback.tsx
 msgid "Erase and restart"
 msgstr "پاک کن و از نو شروع کن"
@@ -562,8 +566,16 @@ msgid "Fill"
 msgstr "پر کردن"
 
 #: src/pages/settings/SettingsPage.tsx
-msgid "Fill the ledger with sample receipts for testing and screenshots"
-msgstr "برای تست و اسکرین‌شات، داده‌ی نمونه پر کن"
+#~ msgid "Fill the ledger with sample receipts for testing and screenshots"
+#~ msgstr "برای تست و اسکرین‌شات، داده‌ی نمونه پر کن"
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Fill the ledger with sample receipts for testing and screenshots. Replaces what is there."
+msgstr "دفتر را با دریافتی‌های نمونه برای تست و اسکرین‌شات پر کن. جای داده‌های فعلی را می‌گیرد."
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "Fill with sample data"
+msgstr "پر کردن با داده‌ی نمونه"
 
 #: src/shared/filter-button/FilterButton.tsx
 msgid "Filters"
@@ -1305,6 +1317,10 @@ msgstr "این فایل مال درآمدنامه نیست. فایل بکاپ ی
 #: src/shared/queries/restoreBackup.mutation.ts
 msgid "This is not valid JSON. Make sure you picked the file you downloaded from Back up."
 msgstr "این فایل JSON معتبر نیست. مطمئن شو همون فایلی رو انتخاب کردی که از «بکاپ» گرفته بودی."
+
+#: src/pages/settings/SettingsPage.tsx
+msgid "This is test data. Your current receipts and clients are erased and replaced with a fresh sample set; personal details are kept. Back up first if you need them."
+msgstr "این داده‌ی آزمایشی است. دریافتی‌ها و مشتری‌های فعلی‌ات پاک و با یک مجموعه‌ی نمونه‌ی تازه جایگزین می‌شوند؛ مشخصات فردی‌ات می‌ماند. اگر لازمشان داری، اول بکاپ بگیر."
 
 #: src/shared/queries/createReceipt.mutation.ts
 #: src/shared/queries/updateReceipt.mutation.ts

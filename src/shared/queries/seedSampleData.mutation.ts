@@ -1,9 +1,10 @@
 import type { MessageDescriptor } from '@lingui/core'
 import { msg } from '@lingui/core/macro'
-import { db, upsertClientByName } from 'src/core/db'
+import { differenceInCalendarDays } from 'date-fns'
+import { db, readSettings, upsertClientByName } from 'src/core/db'
 import { i18n } from 'src/core/i18n'
 import type { Channel, Currency, Receipt } from 'src/shared/types'
-import { computeToman } from 'src/shared/utils'
+import { computeToman, startOfMonthsAgo } from 'src/shared/utils'
 
 // One click fills the app with four years of believable sample data for testing
 // and screenshots, GENERATED FRESH each time, so no two seeds look alike. Demo
@@ -18,8 +19,9 @@ import { computeToman } from 'src/shared/utils'
 //     thousand rare, so nobody is paid ۲۲٬۳۴۷٬۸۹۱
 //   - the retainer earns several times the rest each month, so it stays the top
 //     client well past half the income and the concentration insight fires
-//     (scenario 4), and one month is left empty so an empty month draws as a
-//     zero bar
+//     (scenario 4)
+//   - every month in range carries at least one gig, so no month draws as a
+//     blank in the year view
 //
 // Client and note names go through `msg`, so a seed made in English reads in
 // English and one made in Persian reads in Persian.
@@ -91,13 +93,26 @@ const NOTES: readonly MessageDescriptor[] = [
   msg`Event poster`,
 ]
 
-// Mostly one or two gigs a month, never more than five.
-const GIG_COUNTS = [1, 1, 1, 2, 2, 2, 3, 4, GIGS_MAX] as const
+// How many gigs land in a month, weighted so two is the common month and one a
+// little less common, with three (rare), four (very rare) and five (legendary)
+// each falling off sharply from the last.
+const GIG_COUNTS = [2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 3, 3, 3, 4, 4, GIGS_MAX] as const
 
 const rand = (min: number, max: number): number => min + Math.random() * (max - min)
 const randInt = (min: number, max: number): number => Math.floor(rand(min, max + 1))
 const pick = <T>(list: readonly T[]): T => list[randInt(0, list.length - 1)]
 const roundToStep = (value: number, step: number): number => Math.max(step, Math.round(value / step) * step)
+
+// `count` different entries from the list, so a month's gigs come from distinct
+// clients and never read as one receipt entered twice.
+const pickDistinct = <T>(list: readonly T[], count: number): T[] => {
+  const pool = [...list]
+  const chosen: T[] = []
+  while (chosen.length < count && pool.length > 0) {
+    chosen.push(pool.splice(randInt(0, pool.length - 1), 1)[0])
+  }
+  return chosen
+}
 
 // A foreign receipt is frozen at the rate of its month, and the Toman weakened
 // over the years, so older receipts sit at a lower rate. A little jitter keeps
@@ -117,6 +132,13 @@ interface Draft {
 }
 
 export const seedSampleDataMutation = async (): Promise<number> => {
+  // Sample data is a fresh set, not an addition: wipe the ledger first so
+  // pressing Fill twice cannot stack two seeds into the same month. Personal
+  // details are left untouched. When there is real data to lose, the UI guards
+  // this behind a typed confirmation.
+  await db.receipts.clear()
+  await db.clients.clear()
+
   const drafts: Draft[] = []
 
   // Emit one receipt for a target Toman amount. A foreign one keeps its own
@@ -133,11 +155,8 @@ export const seedSampleDataMutation = async (): Promise<number> => {
 
   for (let yearBack = 0; yearBack < YEAR_SCALE.length; yearBack += 1) {
     const scale = YEAR_SCALE[yearBack]
-    // One month this year is deliberately blank, and which one moves per run.
-    const emptyMonth = randInt(2, 9)
 
     for (let month = 0; month < 12; month += 1) {
-      if (month === emptyMonth) continue
       const monthsAgo = month + yearBack * 12
 
       for (const steady of STEADY) {
@@ -145,9 +164,9 @@ export const seedSampleDataMutation = async (): Promise<number> => {
         emit(steady.client, steady.currency, steady.monthlyToman * scale * rand(0.95, 1.1), monthsAgo, UNCOMMON)
       }
 
-      for (let gigs = pick(GIG_COUNTS); gigs > 0; gigs -= 1) {
+      for (const gigClient of pickDistinct(GIG_CLIENTS, pick(GIG_COUNTS))) {
         emit(
-          pick(GIG_CLIENTS),
+          gigClient,
           pick(['TOMAN', 'TOMAN', 'USDT', 'USD'] as const),
           roundToStep(rand(3_000_000, GIG_MAX_TOMAN) * scale, pick(STEPS)),
           monthsAgo,
@@ -157,11 +176,21 @@ export const seedSampleDataMutation = async (): Promise<number> => {
     }
   }
 
+  // Count months in the user's own calendar, so a monthly retainer lands once
+  // per Jalali month rather than twice at the boundary where a Gregorian month
+  // spills across two Jalali ones.
+  const { calendar } = await readSettings()
   const now = new Date()
   const receipts: Receipt[] = []
   for (const draft of drafts) {
     const client = await upsertClientByName(i18n._(draft.client))
-    const occurred = new Date(now.getFullYear(), now.getMonth() - draft.monthsAgo, randInt(1, 28), 12, 0, 0)
+    const monthStart = startOfMonthsAgo(now, draft.monthsAgo, calendar)
+    // Every past month gets the full 28-day window; the current month only runs
+    // up to today, so nothing is dated in the future.
+    const daysAvailable = draft.monthsAgo === 0 ? differenceInCalendarDays(now, monthStart) : 27
+    const occurred = monthStart
+    occurred.setDate(occurred.getDate() + randInt(0, Math.min(27, daysAvailable)))
+    occurred.setHours(12, 0, 0, 0)
     const timestamp = new Date().toISOString()
 
     receipts.push({

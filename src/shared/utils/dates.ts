@@ -90,6 +90,22 @@ export const monthBucketsOfYear = (year: number, calendar: CalendarSystem): Date
 }
 
 /**
+ * The first day of the calendar month `monthsAgo` months before `from`, at
+ * local midnight, in the given calendar.
+ *
+ * Jalali and Gregorian months do not line up, so anything that wants one thing
+ * per Jalali month has to step in Jalali months. Counting in Gregorian months
+ * instead drops two of them into the same Jalali month at every boundary and
+ * leaves the neighbour bare, which is exactly how a monthly retainer ends up
+ * listed twice in one month of the sample data.
+ */
+export const startOfMonthsAgo = (from: Date, monthsAgo: number, calendar: CalendarSystem): Date => {
+  const add = calendar === 'JALALI' ? addMonthsJalali : addMonths
+  const startOfM = calendar === 'JALALI' ? startOfMonthJalali : startOfMonth
+  return startOfM(add(from, -monthsAgo))
+}
+
+/**
  * How many calendar months a range spans, minimum 1.
  *
  * Prefer `averagingPeriod` for anything the user sees, this is the raw span

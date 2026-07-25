@@ -5,15 +5,11 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# Two independent targets, deliberately.
+# Deploys to GitHub Pages on every push to main.
 #
-# Two failure modes some users hit: hosts that block sanctioned regions
-# (Vercel/Netlify sit on AWS, which does), and local networks that filter
-# foreign hosts. A regional host dodges both, so Liara is the demo link;
-# GitHub Pages is the always-available mirror.
-#
-# The Liara job is skipped automatically until LIARA_API_TOKEN is set, so this
-# workflow is green from the first push.
+# A second target (Liara) is commented out below, along with the build steps
+# that fed it. To re-enable it, uncomment the `Build for Liara` and
+# `dist-root` steps and the `liara` job, and set LIARA_API_TOKEN.
 
 permissions:
   contents: read
@@ -60,15 +56,16 @@ jobs:
         with:
           path: dist
 
-      # Liara serves from the domain root, so this build uses the default base.
-      - name: Build for Liara
-        run: npm run build
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: dist-root
-          path: dist
-          retention-days: 7
+      # --- Liara build (commented out; see header) ---
+      # # Liara serves from the domain root, so this build uses the default base.
+      # - name: Build for Liara
+      #   run: npm run build
+      #
+      # - uses: actions/upload-artifact@v4
+      #   with:
+      #     name: dist-root
+      #     path: dist
+      #     retention-days: 7
 
   github-pages:
     name: GitHub Pages
@@ -81,29 +78,30 @@ jobs:
       - id: deployment
         uses: actions/deploy-pages@v4
 
-  liara:
-    name: Liara
-    needs: build
-    runs-on: ubuntu-latest
-    # Skipped until the token exists, so the pipeline is green out of the box.
-    if: ${{ github.event_name != 'pull_request' }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: dist-root
-          path: dist
-
-      - name: Deploy to Liara
-        env:
-          LIARA_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
-          LIARA_APP: ${{ vars.LIARA_APP_NAME }}
-        run: |
-          if [ -z "$LIARA_TOKEN" ]; then
-            echo "LIARA_API_TOKEN not set — skipping Liara deploy."
-            echo "Add the secret in Settings > Secrets and variables > Actions to enable it."
-            exit 0
-          fi
-          npm i -g @liara/cli
-          liara deploy --app "$LIARA_APP" --platform static --path dist --api-token "$LIARA_TOKEN" --no-app-logs --detach
+  # --- Liara deploy job (commented out; see header) ---
+  # liara:
+  #   name: Liara
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   # Skipped until the token exists, so the pipeline is green out of the box.
+  #   if: ${{ github.event_name != 'pull_request' }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         name: dist-root
+  #         path: dist
+  #
+  #     - name: Deploy to Liara
+  #       env:
+  #         LIARA_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
+  #         LIARA_APP: ${{ vars.LIARA_APP_NAME }}
+  #       run: |
+  #         if [ -z "$LIARA_TOKEN" ]; then
+  #           echo "LIARA_API_TOKEN not set — skipping Liara deploy."
+  #           echo "Add the secret in Settings > Secrets and variables > Actions to enable it."
+  #           exit 0
+  #         fi
+  #         npm i -g @liara/cli
+  #         liara deploy --app "$LIARA_APP" --platform static --path dist --api-token "$LIARA_TOKEN" --no-app-logs --detach

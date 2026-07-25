@@ -56,11 +56,11 @@ export const renderCertificatePdf = (
     // Load NO default font. pdfkit otherwise reads Helvetica's AFM metrics off
     // disk with `fs.readFileSync` in its constructor, which has no file to read
     // in the browser and throws "readFileSync of null". Only the embedded
-    // Vazirmatn is ever used. See TECH-DEBT.md 7b.
+    // Vazirmatn is ever used. See TECH-DEBT.md 6b.
     font: false,
     // pdfkit's compression path calls Node's `deflateSync`, which the browser
     // zlib shim does not implement. It still subsets the embedded font, so an
-    // uncompressed certificate is ~42 KB. See TECH-DEBT.md 7c.
+    // uncompressed certificate is ~42 KB. See TECH-DEBT.md 6c.
     compress: false,
     info: { Title: cert.title, Author: cert.author },
     lang: cert.direction === 'rtl' ? 'fa-IR' : 'en-US',

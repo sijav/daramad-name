@@ -9,11 +9,21 @@ which is the point: everything works, but nothing has been through a beta.
 
 ## [Unreleased]
 
-Nothing yet.
+### Added
+
+- **End-to-end tests** for the six founding scenarios (`npm run test:e2e`), each
+  asserting its outcome against the stored data rather than only the clicks.
+
+### Changed
+
+- **Sample data is generated fresh on every press.** Four years of believable
+  receipts, different every time: one salary paid most months on a steady payday,
+  plus the occasional gig. The Fill button now replaces the ledger, behind a
+  typed confirmation, rather than stacking a second set onto it.
 
 ## [0.1.0-alpha.1] - 2026-07-23
 
-The MVP. Every scenario in the brief works end to end.
+The MVP. All six founding scenarios work end to end.
 
 ### Added
 

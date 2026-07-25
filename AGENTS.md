@@ -187,7 +187,9 @@ src/
   pwa/           install prompt, service-worker registration, icons
 ```
 
-Only these top-level folders. No others.
+Only these top-level folders. No others. The `src/` root itself holds `App.tsx`
+and `main.tsx` (the app entry) and `Introduction.mdx` (the Storybook landing
+page). End-to-end tests live in `e2e/` at the repo root, outside `src/`.
 
 Two folders under `shared/` are Storybook-only and never reach the app bundle:
 
@@ -321,8 +323,8 @@ two content rows, the charts row, and both summary-card strips.
 - **`stylis` at 4.2.0**, the copy `@emotion/cache` bundles. Emotion walks the
   element tree with its own stylis, so handing it a `prefixer` from a different
   version yields elements it cannot lift and crashes on every `::placeholder`
-  rule in the app. `@mui/stylis-plugin-rtl` wants 4.4.0; the `overrides` entry
-  holds everything at 4.2.0. Do not bump it without checking what emotion ships.
+  rule in the app. The `overrides` entry holds everything at 4.2.0 to match the
+  copy emotion bundles. Do not bump it without checking what emotion ships.
 - **`typescript` at 6.0.3**, typescript-eslint's peer range is `<6.1.0`.
 
 Run `npm outdated` when picking up work; everything else is free to move,
@@ -359,8 +361,10 @@ buttons are themed through a `variants` entry rather than the palette.
 
 Local-first income ledger for freelancers. Seven pages: dashboard (the
 landing route), quick entry, ledger, charts, report, settings, and certificate, which is
-the printable document the report links out to. Six scenarios in `PHASE-NEXT.md`
-and `README.md` (Persian: `README.fa.md`).
+the printable document the report links out to. The six founding scenarios are
+enumerated as S1 to S6 and end-to-end tested in `e2e/scenarios.spec.ts`
+(`npm run test:e2e`), the canonical list the "Scenario 1" and "scenario 5"
+references below point at.
 
 **There is no backend, deliberately.** Every scenario runs in the browser;
 exchange rates are typed by hand, there is no login, and transfer between
@@ -431,13 +435,19 @@ npm run dev            # http://localhost:5173
 npm run storybook      # http://localhost:6006
 npm run lint           # zero warnings allowed
 npm run lint:tsc
-npm test
+npm test               # unit + Storybook (headless Chromium) projects
+npm run test:unit      # the fast, browserless subset for iterating
+npm run test:e2e       # Playwright: the six founding scenarios (S1-S6), end to end
 npm run build
 npm run i18n:extract   # after adding strings
 npm run i18n:compile
 ```
 
-Package manager is **npm**. There is no yarn.lock and no workspace.
+Package manager is **npm**. There is no yarn.lock and no workspace. Node
+`>= 22.12.0` (the `engines` field). `npm test` renders the Storybook project in a
+real headless Chromium via `@vitest/browser-playwright`, so a fresh checkout needs
+`npx playwright install chromium` once or it fails to launch. `test:e2e` uses the
+same browser on its own dev server (port 5180), separate from the Vitest gate.
 
 ---
 
@@ -473,7 +483,7 @@ heading down. Open the page being asked about.
 **A tool that finds nothing has not proved anything.** Two scripted sweeps here
 reported clean while being broken: a greedy regex that matched the first `/**`
 in a file and bled one story's prose into every story below it, and a
-a byte-wise `grep` for dashes that compares bytes and both misses real hits and invents others
+byte-wise `grep` for dashes that both missed real hits and invented others
 inside Persian text. When a check comes back empty, confirm it can find a case
 you plant by hand.
 

@@ -8,7 +8,7 @@ story files.
 Autodocs reads a page's prose from the JSDoc above `const meta`, each prop's
 description from `argTypes`, and each story's note from the docblock above its
 export. All of that is read at build time, so it can only ever be in one
-language — and it puts paragraphs of prose in a `.tsx`, where it is unreadable
+language, and it puts paragraphs of prose in a `.tsx`, where it is unreadable
 to anyone editing the wording rather than the code.
 
 So the prose lives here instead, and `.storybook/LocalizedDocs.tsx` applies
@@ -37,27 +37,31 @@ A second paragraph if it needs one.
 
 ## props
 
-- `tone` — Which palette role the pill paints in.
+- `tone`: Which palette role the pill paints in.
 
 ## stories
 
-- `All Tones` — All four tones at once, for comparison.
+- `All Tones`: All four tones at once, for comparison.
 
 ## names
 
-- `All Tones` — همه‌ی لحن‌ها
+- `All Tones`: همه‌ی لحن‌ها
 ```
 
-- Keys go in backticks. The separator is an em dash with a space either side.
+- Keys go in backticks, then a colon, then the text: ``- `key`: text``. The
+  parser (`parse.ts`) matches on the colon; an em dash will not match, and the
+  no-em-dash rule forbids it anyway.
 - One entry per line. A description may not wrap.
 - `## props` keys are prop names, exactly as the component declares them.
-- `## stories` and `## names` keys are the DISPLAY name Storybook prints —
+- `## stories` and `## names` keys are the DISPLAY name Storybook prints,
   `All Tones`, not `AllTones`.
 - `## names` is Persian only. English pages already read in English, and the
   heading renders as «همه‌ی لحن‌ها (All Tones)» so the English name, which is
   the story's identity in the sidebar and the URL, stays visible.
-- Any section may be left out. What is missing falls back to Storybook's own
-  resolution, which for English means the component's docgen.
+- On the English side any section may be left out; what is missing falls back to
+  Storybook's own resolution, the component's docgen. The Persian side is held
+  complete by the guard, so a page that exists must describe its props, stories
+  and names.
 
 ## What still belongs in the story file
 

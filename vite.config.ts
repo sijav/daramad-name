@@ -29,7 +29,7 @@ export default defineConfig({
     // The certificate is drawn with pdfkit, a Node library. Deliberately NOT
     // gated behind `isStorybook`: the browser test project renders the report
     // story and needs the same shims. The Node unit project uses its own
-    // `vitest.config.ts` and keeps the real modules. See TECH-DEBT.md 7a.
+    // `vitest.config.ts` and keeps the real modules. See TECH-DEBT.md 6a.
     nodePolyfills({
       include: ['buffer', 'stream', 'zlib', 'util', 'events', 'string_decoder', 'fs'],
       // readable-stream, pdfkit's stream shim, calls `process.nextTick`.

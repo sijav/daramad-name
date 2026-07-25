@@ -96,11 +96,6 @@ Emitted by the addon's own code, `@storybook/addon-vitest@10.5.0`,
 **How to tell it can go** It should clear when addon-vitest updates. Currently
 held at 10.5.0 by the 7-day release-age cap, see entry 3.
 
-The second notice this entry used to carry, "You can safely remove the
-setProjectAnnotations call", is gone: the advice turned out to be correct once
-the upstream `aria-query` interop break was fixed, and the setup file was
-deleted on 2026-07-23.
-
 ---
 
 ## 2. Story files run one at a time
@@ -204,7 +199,7 @@ rendering, and those are proven by the manual download working.
 The residual debt below is the price of drawing PDFs with a Node library in the
 browser. It is small, but it is real.
 
-### 7a. pdfkit needs Node built-ins polyfilled in the browser
+### 6a. pdfkit needs Node built-ins polyfilled in the browser
 
 **Workaround** `vite.config.ts` adds `vite-plugin-node-polyfills` for `buffer`,
 `stream`, `zlib`, `util`, `events`, `string_decoder` and `fs`, plus the `Buffer`
@@ -218,7 +213,7 @@ report chunk.
 **How to tell it can go** pdfkit ships a browser build that does not reach for
 Node built-ins, or a maintained pure-browser PDF engine gains correct bidi.
 
-### 7b. The default font is switched off to avoid an `fs` read
+### 6b. The default font is switched off to avoid an `fs` read
 
 **Workaround** `renderCertificatePdf` passes `font: false` to the pdfkit
 constructor.
@@ -232,7 +227,7 @@ needed.
 **How to tell it can go** It does not need to; it is the correct setting. Noted
 because it looks odd without the reason.
 
-### 7c. The PDF is emitted uncompressed
+### 6c. The PDF is emitted uncompressed
 
 **Workaround** `renderCertificatePdf` passes `compress: false`.
 
@@ -254,9 +249,10 @@ If it opens, the shim now provides a working `deflateSync`.
 `a11y: { test: 'error' }`, so any violation fails the run. The suite is at zero.
 It was at 103 findings.
 
-**The exception** `role-img-alt` is disabled in five story files, all of which
+**The exception** `role-img-alt` is disabled in four story files, all of which
 render a MUI X chart, via `parameters.a11y.config.rules`. Nowhere else, and no
-other rule anywhere.
+other rule anywhere. `MonthlyIncomeChart.stories.tsx` deliberately does NOT
+suppress it, so a bar chart still exercises the rule.
 
 **Cause, and it is upstream** MUI X renders `ChartsAccessibilityProxy`
 (`@mui/x-charts/internals/components/ChartsAccessibilityProxy`). It creates two
@@ -271,7 +267,7 @@ every story. 18 findings, one cause.
 satisfy a checker, or writing into MUI X's internal divs. Both are worse than
 the finding.
 
-**How to tell it can go** Delete the `CHART_A11Y` constant from the five story
+**How to tell it can go** Delete the `CHART_A11Y` constant from the four story
 files and run `npm run test:storybook`. If it passes, MUI X now gives the proxy
 a name at rest.
 

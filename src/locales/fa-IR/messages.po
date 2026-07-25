@@ -182,7 +182,6 @@ msgstr "همه‌ی داده‌ها برای همیشه حذف می‌شود"
 msgid "All data was erased."
 msgstr "همه‌ی داده‌ها پاک شد."
 
-#: src/pages/settings/SettingsPage.tsx
 #: src/shared/privacy-footer/PrivacyFooter.tsx
 msgid "All your data stays in your own browser and is never sent anywhere."
 msgstr "همه‌ی داده‌ها فقط روی مرورگر خودت می‌مونه و هیچ‌جا ارسال نمی‌شه."
@@ -227,6 +226,10 @@ msgstr "بازرگانی آریا"
 msgid "August"
 msgstr "اوت"
 
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Avang Interactive"
+msgstr "آونگ اینتراکتیو"
+
 #: src/core/i18n/i18n.test.ts
 #: src/shared/certificate/certificateModel.ts
 msgid "Average monthly income"
@@ -256,6 +259,10 @@ msgstr "بهمن"
 msgid "Banner and social posts"
 msgstr "بنر و پست شبکه اجتماعی"
 
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Baran Studio"
+msgstr "استودیو باران"
+
 #: src/pages/ledger/LedgerPage.tsx
 msgid "based on the active filters"
 msgstr "بر اساس فیلترهای فعال"
@@ -268,6 +275,10 @@ msgstr "بر پایه‌ی درآمد ثبت‌شده در {0}"
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Based on the income recorded this year"
 msgstr "بر اساس درآمد ثبت‌شده در این سال"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Borna Studio"
+msgstr "استودیو برنا"
 
 #: src/shared/layouts/AppShell.tsx
 msgid "Bottom navigation"
@@ -308,6 +319,10 @@ msgstr "کانال"
 #: src/shared/constants/navigation.tsx
 msgid "Charts"
 msgstr "نمودارها"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Checkout flow"
+msgstr "روند پرداخت"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Choose file"
@@ -510,6 +525,10 @@ msgstr "پاک کردن همه‌چیز و شروع دوباره"
 msgid "Esfand"
 msgstr "اسفند"
 
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Event poster"
+msgstr "پوستر رویداد"
+
 #: src/pages/settings/SettingsPage.tsx
 msgid "Every date and monthly total is shown in this calendar. Your data itself does not change."
 msgstr "همه‌ی تاریخ‌ها و جمع‌بندی‌های ماهانه با این تقویم نمایش داده می‌شن. داده‌هایت تغییری نمی‌کنن."
@@ -551,8 +570,8 @@ msgid "Filters"
 msgstr "فیلترها"
 
 #: src/shared/queries/seedSampleData.mutation.ts
-msgid "Final revisions"
-msgstr "اصلاحات نهایی"
+#~ msgid "Final revisions"
+#~ msgstr "اصلاحات نهایی"
 
 #: src/pages/ledger/LedgerFilterPopover.tsx
 msgid "From date"
@@ -606,6 +625,14 @@ msgstr "میلادی"
 #: src/shared/queries/seedSampleData.mutation.ts
 msgid "Homa Cafe"
 msgstr "کافه رستوران هما"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Icon refresh"
+msgstr "بازطراحی آیکون‌ها"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Illustration set"
+msgstr "مجموعه‌ی تصویرسازی"
 
 #: src/pages/settings/SettingsPage.tsx
 msgid "Import a backup file to bring your ledger back"
@@ -698,6 +725,10 @@ msgstr "ژوئیه"
 msgid "June"
 msgstr "ژوئن"
 
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Kavir Tech"
+msgstr "کویر تک"
+
 #: src/shared/constants/labels.ts
 msgid "Khordad"
 msgstr "خرداد"
@@ -762,6 +793,10 @@ msgid "Mehr"
 msgstr "مهر"
 
 #: src/shared/queries/seedSampleData.mutation.ts
+msgid "Mehr Agency"
+msgstr "آژانس مهر"
+
+#: src/shared/queries/seedSampleData.mutation.ts
 msgid "Menu design"
 msgstr "طراحی منو"
 
@@ -782,6 +817,10 @@ msgstr "میانگین ماهانه"
 #: src/shared/certificate/certificateModel.ts
 msgid "Monthly average: the total divided by {0} months of this period."
 msgstr "میانگین ماهانه: جمع کل تقسیم بر {0} ماه این بازه."
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Monthly retainer"
+msgstr "حق‌الزحمه‌ی ماهانه"
 
 #: src/shared/constants/labels.ts
 msgid "Mordad"
@@ -837,6 +876,10 @@ msgstr "با این فیلترها چیزی پیدا نشد"
 #: src/pages/dashboard/RecentReceipts.tsx
 msgid "Nothing recorded in this range yet."
 msgstr "در این بازه هنوز چیزی ثبت نشده."
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Nova Print"
+msgstr "چاپ نوا"
 
 #: src/shared/constants/labels.ts
 msgid "November"
@@ -901,6 +944,14 @@ msgstr "نمای کلی"
 msgid "Page {spoken}, current page"
 msgstr "صفحه‌ی {spoken}، صفحه‌ی فعلی"
 
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Pardis Web"
+msgstr "پردیس وب"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Parsa Group"
+msgstr "گروه پارسا"
+
 #: src/pages/settings/SettingsPage.tsx
 #: src/shared/certificate/certificateModel.ts
 msgid "Passport number"
@@ -938,8 +989,8 @@ msgid "Printed at the top of the income report"
 msgstr "بالای گزارش درآمد چاپ می‌شود"
 
 #: src/pages/settings/SettingsPage.tsx
-msgid "Privacy"
-msgstr "حریم خصوصی"
+#~ msgid "Privacy"
+#~ msgstr "حریم خصوصی"
 
 #: src/pages/dashboard/DashboardPage.tsx
 msgid "Produce an official income document for any range, in Persian or English."
@@ -957,6 +1008,10 @@ msgstr "ثبت سریع"
 #: src/pages/report/ReportPage.tsx
 msgid "Range"
 msgstr "بازه"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Rebrand rollout"
+msgstr "اجرای برندِ تازه"
 
 #: src/pages/quick-entry/QuickEntryPage.tsx
 #: src/shared/receipt-details-drawer/ReceiptDetailsDrawer.tsx
@@ -1061,6 +1116,10 @@ msgstr "بازیابی کن"
 msgid "Restore from file"
 msgstr "بازیابی از فایل"
 
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Roshan Labs"
+msgstr "روشن‌لبز"
+
 #: src/shared/page-control/PageControl.tsx
 msgid "Rows per page"
 msgstr "ردیف در هر صفحه"
@@ -1097,6 +1156,10 @@ msgstr "جست‌وجو در دریافتی‌ها"
 msgid "September"
 msgstr "سپتامبر"
 
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Setareh Design"
+msgstr "طراحی ستاره"
+
 #: src/pages/settings/SettingsPage.tsx
 #: src/shared/constants/navigation.tsx
 msgid "Settings"
@@ -1114,8 +1177,12 @@ msgid "Showing {0} to {1} of {2} receipts"
 msgstr "نمایش {0} تا {1} از {2} دریافتی"
 
 #: src/shared/queries/seedSampleData.mutation.ts
-msgid "Small illustration project"
-msgstr "پروژه کوچک تصویرسازی"
+msgid "Simorgh Media"
+msgstr "رسانه سیمرغ"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+#~ msgid "Small illustration project"
+#~ msgstr "پروژه کوچک تصویرسازی"
 
 #: src/shared/error-state/AppErrorFallback.tsx
 msgid "Something went wrong"
@@ -1371,8 +1438,12 @@ msgid "View in the ledger"
 msgstr "مشاهده در دفتر درآمد"
 
 #: src/shared/queries/seedSampleData.mutation.ts
-msgid "Visual identity redesign"
-msgstr "بازطراحی هویت بصری"
+msgid "Visual identity"
+msgstr "هویت بصری"
+
+#: src/shared/queries/seedSampleData.mutation.ts
+#~ msgid "Visual identity redesign"
+#~ msgstr "بازطراحی هویت بصری"
 
 #: src/shared/constants/labels.ts
 msgid "Wire transfer"
@@ -1422,3 +1493,7 @@ msgstr "مشخصاتت ذخیره شد."
 #: src/pages/report/ReportPage.tsx
 msgid "Your name is not set yet. Without personal details this document carries no weight with an embassy or a landlord, <0>fill it in from Settings</0>."
 msgstr "اسمت هنوز ثبت نشده. بدون مشخصات فردی، این سند برای سفارت یا صاحب‌خونه اعتبار نداره، <0>از تنظیمات پرش کن</0>."
+
+#: src/shared/queries/seedSampleData.mutation.ts
+msgid "Zarin Apps"
+msgstr "اپ‌های زرین"

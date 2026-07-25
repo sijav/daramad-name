@@ -5,12 +5,12 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vite
 import { getClientSharesQuery, getClientSharesQueryKey } from './getClientShares.query'
 import { seedSampleDataMutation } from './seedSampleData.mutation'
 
-// The sample data is what every screenshot, story and demo is read from, so its
-// shape is a promise rather than an accident: mixed currencies at different
-// frozen rates, one client over half the income to trip the concentration
-// warning, and one month deliberately left empty to prove a zero bar draws.
-// If any of that quietly stopped being true, the screens would still render
-// they would just stop demonstrating the thing they were built to show.
+// The sample data is generated fresh on every press, so the assertions here are
+// the promises that hold whatever the dice do rather than a fixed count or
+// total: four years of history, a retainer past half the income, mixed
+// currencies at their own frozen rates, and one empty month. If any of that
+// quietly stopped being true, the screens would still render, they would just
+// stop demonstrating the thing they were built to show.
 
 const ALL_OF_TIME = { from: '2000-01-01T00:00:00.000Z', to: '2100-01-01T00:00:00.000Z' }
 
@@ -27,9 +27,11 @@ afterEach(() => {
 })
 
 describe('seedSampleDataMutation', () => {
-  it('writes the receipts it says it wrote', async () => {
-    expect(await seedSampleDataMutation()).toBe(13)
-    expect(await db.receipts.count()).toBe(13)
+  it('writes the number of receipts it reports', async () => {
+    const written = await seedSampleDataMutation()
+
+    expect(written).toBeGreaterThan(0)
+    expect(await db.receipts.count()).toBe(written)
   })
 
   // Sample data that could not have been entered through the form is not sample
@@ -47,6 +49,7 @@ describe('seedSampleDataMutation', () => {
 
     const foreign = (await db.receipts.toArray()).filter((receipt) => receipt.currency !== 'TOMAN')
 
+    expect(foreign).not.toHaveLength(0)
     expect(new Set(foreign.map((receipt) => receipt.rate)).size).toBeGreaterThan(1)
     for (const receipt of foreign) {
       expect(receipt.amountToman).toBe(computeToman(receipt.amountOriginal, receipt.currency, receipt.rate))
@@ -62,17 +65,7 @@ describe('seedSampleDataMutation', () => {
     expect(toman.every((receipt) => receipt.rate === null)).toBe(true)
   })
 
-  // The figure the design and the docs both quote. It only holds while the
-  // amounts and the frozen rates are exactly what they are.
-  it('adds up to the total every screenshot in the design was drawn from', async () => {
-    await seedSampleDataMutation()
-
-    const total = (await db.receipts.toArray()).reduce((sum, receipt) => sum + receipt.amountToman, 0)
-
-    expect(total).toBe(649_980_000)
-  })
-
-  it('gives one client more than half the income, so the concentration warning has something to fire on', async () => {
+  it('keeps one client past half the income, so the concentration warning fires', async () => {
     await seedSampleDataMutation()
 
     const { insight } = await getClientSharesQuery({ queryKey: getClientSharesQueryKey(ALL_OF_TIME) } as never)
@@ -81,17 +74,26 @@ describe('seedSampleDataMutation', () => {
     expect(insight?.percentage).toBeGreaterThan(50)
   })
 
-  it('assigns every sample receipt to a client, so no slice lands in the unassigned bucket', async () => {
+  it('assigns every receipt to a client, across several of them', async () => {
     await seedSampleDataMutation()
 
     expect((await db.receipts.toArray()).every((receipt) => receipt.clientId !== null)).toBe(true)
-    expect(await db.clients.count()).toBe(4)
+    const clients = await db.clients.count()
+    expect(clients).toBeGreaterThanOrEqual(4)
+    expect(clients).toBeLessThanOrEqual(16)
   })
 
-  // The empty-month edge case: four months back is deliberately skipped, and
-  // the bar chart story exists to show that month drawn as zero rather than
-  // dropped from the axis.
-  it('leaves exactly one of the last eleven months empty', async () => {
+  it('spans four calendar years', async () => {
+    await seedSampleDataMutation()
+
+    const years = new Set((await db.receipts.toArray()).map((receipt) => new Date(receipt.occurredAt).getFullYear()))
+
+    expect(years.size).toBeGreaterThanOrEqual(4)
+  })
+
+  // The empty-month edge case: one recent month has nothing, and the bar chart
+  // story exists to show it drawn as zero rather than dropped from the axis.
+  it('leaves at least one of the last twelve months empty', async () => {
     await seedSampleDataMutation()
 
     const now = new Date()
@@ -99,20 +101,33 @@ describe('seedSampleDataMutation', () => {
       const date = new Date(occurredAt)
       return (now.getFullYear() - date.getFullYear()) * 12 + (now.getMonth() - date.getMonth())
     }
-    const populated = new Set((await db.receipts.toArray()).map((receipt) => monthsBack(receipt.occurredAt)))
+    const recent = new Set(
+      (await db.receipts.toArray()).map((receipt) => monthsBack(receipt.occurredAt)).filter((month) => month >= 0 && month < 12),
+    )
 
-    expect(populated.has(4)).toBe(false)
-    expect([0, 1, 2, 3, 5, 6, 7, 8, 9, 10].every((month) => populated.has(month))).toBe(true)
+    expect(recent.size).toBeLessThan(12)
+  })
+
+  // The whole point of generating it: two presses must not produce the same
+  // ledger.
+  it('generates different data on every run', async () => {
+    const fingerprint = async () => {
+      await seedSampleDataMutation()
+      const amounts = (await db.receipts.toArray()).map((receipt) => receipt.amountToman).sort((left, right) => left - right)
+      await db.receipts.clear()
+      await db.clients.clear()
+      return amounts.join(',')
+    }
+
+    expect(await fingerprint()).not.toBe(await fingerprint())
   })
 
   // It is the "fill this in for me" button, not a reset button; someone with
   // real records must not lose them by pressing it.
   it('adds alongside existing data rather than clearing first', async () => {
-    await seedSampleDataMutation()
-    await seedSampleDataMutation()
+    const first = await seedSampleDataMutation()
+    const second = await seedSampleDataMutation()
 
-    expect(await db.receipts.count()).toBe(26)
-    // The second pass reuses the same four clients rather than duplicating them.
-    expect(await db.clients.count()).toBe(4)
+    expect(await db.receipts.count()).toBe(first + second)
   })
 })

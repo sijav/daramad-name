@@ -12,9 +12,9 @@ import { computeToman, startOfMonthsAgo } from 'src/shared/utils'
 //
 // The shape is deliberate:
 //   - one salary client pays most months, near the same day give or take a
-//     couple, the way a monthly retainer lands. Paid in Tether, so the frozen-
-//     rate case shows up constantly, and large enough to sit well past half the
-//     year's income and trip the concentration insight (scenario 4)
+//     couple, the way a monthly retainer lands. Paid in Toman at a flat figure,
+//     and large enough to sit well past half the year's income and trip the
+//     concentration insight (scenario 4)
 //   - a pool of one-off clients adds gigs on top: with the salary in, most
 //     months none, sometimes one, rarely up to four; on a month the salary
 //     skips, one to five gigs cover for it, so a month always runs one to five
@@ -44,13 +44,15 @@ const YEARS = 4
 const GIG_MIN_TOMAN = 3_000_000
 const GIG_MAX_TOMAN = 30_000_000
 
-// The single salary: one retainer paid most months, in Tether, large enough to
-// dominate the year. Its size is drawn once per seed, fifty to two hundred
-// million Toman in whole millions, then held steady month to month the way a
-// real salary is, so it differs between seeds but never down the page of one.
-// Now and then it skips a month, and that month leans on gigs instead.
+// The single salary: one retainer paid most months, large enough to dominate
+// the year. Its size is drawn once per seed, fifty to two hundred million Toman
+// in whole millions, then held to exactly that figure every month the way a real
+// salary is, so it differs between seeds but never down the page of one. Paid in
+// Toman so that flatness actually holds: a foreign salary would drift month to
+// month as the frozen rate moved. Now and then it skips a month, and that month
+// leans on gigs instead.
 const SALARY_CLIENT = msg`Aria Trading`
-const SALARY_CURRENCY: Currency = 'USDT'
+const SALARY_CURRENCY: Currency = 'TOMAN'
 const SALARY_MIN_TOMAN = 50_000_000
 const SALARY_MAX_TOMAN = 200_000_000
 const SALARY_REGULARITY = 0.85

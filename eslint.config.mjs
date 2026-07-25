@@ -18,6 +18,11 @@ export default tseslint.config(
       'vite.config.ts',
       'vitest.config.ts',
       'lingui.config.ts',
+      // End-to-end tests drive the built app through Playwright and are full of
+      // Persian selector strings; they run under their own runner, not the app's
+      // lint rules.
+      'playwright.config.ts',
+      'e2e/**',
     ],
   },
   js.configs.recommended,

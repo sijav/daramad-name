@@ -29,7 +29,8 @@
     "test:watch": "node scripts/vitest.mjs",
     "test:unit": "node scripts/vitest.mjs run --project unit",
     "test:storybook": "node scripts/vitest.mjs run --project storybook",
-    "test:coverage": "node scripts/vitest.mjs run --coverage"
+    "test:coverage": "node scripts/vitest.mjs run --coverage",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
@@ -64,6 +65,7 @@
     "@lingui/cli": "^6.5.0",
     "@lingui/format-po": "^6.5.0",
     "@lingui/swc-plugin": "^6.5.1",
+    "@playwright/test": "^1.61.1",
     "@storybook/addon-a11y": "^10.5.0",
     "@storybook/addon-docs": "^10.5.0",
     "@storybook/addon-vitest": "^10.5.0",

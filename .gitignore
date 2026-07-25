@@ -12,3 +12,8 @@ storybook-static/
 
 # Coverage output
 coverage/
+
+# Playwright end-to-end output
+test-results/
+playwright-report/
+blob-report/

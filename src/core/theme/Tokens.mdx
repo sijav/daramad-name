@@ -22,8 +22,8 @@ export const contrast = (fg, bg) => {
 # <Localized fa="توکن‌های دیزاین" en="Design tokens" />
 
 <Localized
-  fa="همه‌ی این‌ها از شیتِ Foundations فیگما می‌آید. کامپوننت‌ها همین نقش‌ها را می‌خوانند نه هگز را؛ رنگِ هاردکدشده همان چیزی است که یک‌بار باعث شد سه کامپوننت در حالتِ تیره ناخوانا منتشر شوند."
-  en="Everything here comes from the Figma Foundations sheet. Components read these roles rather than hexes, a hardcoded colour is how three components once shipped unreadable in dark mode."
+  fa="پالت، نردبانِ تایپ و توکن‌های چیدمانی که تم از آن‌ها ساخته می‌شود. کامپوننت‌ها این نقش‌ها را از راهِ تم می‌خوانند، `theme.palette.<role>`، `theme.spacing`، `theme.shape.borderRadius`، نه هگزِ خام را؛ رنگِ هاردکدشده همان چیزی است که یک‌بار باعث شد سه کامپوننت در حالتِ تیره ناخوانا منتشر شوند. زنجیره این است: `tokens.ts` (مقادیر)، بعد `theme.ts` (نگاشت روی MUI)، بعد `muiPalette.d.ts` (تایپ‌ها)، بعد `theme.test.ts` (نگهبان). مقادیرِ روشن از شیتِ Foundations فیگما می‌آید؛ پالتِ تیره در فایل نیست و اینجا بر پایه‌ی MD3 مشتق شده و تا وقتی دیزاین توکن‌های تیره‌ی واقعی بدهد موقتی می‌ماند."
+  en="The palette, type ramp and layout tokens the theme is built from. Components read these roles through the theme, `theme.palette.<role>`, `theme.spacing`, `theme.shape.borderRadius`, never a raw hex, a hardcoded colour is how three components once shipped unreadable in dark mode. The chain is `tokens.ts` (the values), then `theme.ts` (mapped onto MUI), then `muiPalette.d.ts` (the types), then `theme.test.ts` (the guard). The light values are the Figma Foundations sheet; the dark palette is not in the file, it is derived here per MD3 and stays provisional until the design ships real dark tokens."
 />
 
 ---
@@ -244,4 +244,13 @@ export const contrast = (fg, bg) => {
 <Localized
   fa="کارت‌های محتوا از **xl** استفاده می‌کنند، پنل‌های نمودار از **lg**، جعبه‌های تودرتوی شکل از **md**، و **full** همان شعاعِ قرصی است روی دکمه‌ها و چیپ‌ها و سگمنت‌ها. کارتِ مات و ۲۸ پیکسلیِ بازنگریِ قبلی رفته است؛ سیستمِ فعلی سطح‌های تخت با یک کادرِ مویی است، و توکنِ ۲۸ پیکسلی هم با آن رفت."
   en="Content cards use **xl**, chart panels **lg**, nested figure boxes **md**, and **full** is the pill radius on buttons, chips and segments. The 28px frosted card from an older revision is gone, the current system is flat surfaces with a hairline border, and the 28px token went with it."
+/>
+
+---
+
+## <Localized fa="بقیه‌ی توکن‌ها" en="The rest of the tokens" />
+
+<Localized
+  fa="بیرون از رنگ و تایپ: فاصله‌ها روی گریدِ ۸ پیکسلی می‌نشینند، پس `spacing(1)` می‌شود ۸px و هر گپ و پدینگ مضربی از آن است. ارتفاعِ کنترل‌ها دو مقدار دارد، `medium` برابرِ ۴۰px و `large` برابرِ ۴۸px. سایه فقط یکی است، `elevation.level1`، و تنها بلورِ مجاز `glassBlur` یعنی `blur(12px)` است که فقط روی نوارِ بالا و ناوبریِ پایین می‌آید؛ یک‌بار یک `backdrop-filter` سراسری همین را به هر منو و دیالوگ نشت داد. و `fontFamilyFarsiDigits` فونتی است که ارقامِ اَسکی را با گلیفِ فارسی می‌کشد، برای کنترل‌هایی مثلِ تاریخ‌گزین که باید مقدارِ DOM را اَسکی نگه دارند ولی فارسی دیده شوند. مقادیر در `tokens.ts`."
+  en="Beyond colour and type: spacing sits on an 8px grid, so `spacing(1)` is 8px and every gap and padding is a multiple of it. Control height has two values, `medium` at 40px and `large` at 48px. There is one shadow, `elevation.level1`, and the only allowed blur is `glassBlur`, `blur(12px)`, on the top bar and bottom nav alone; a global `backdrop-filter` once leaked it into every menu and dialog. And `fontFamilyFarsiDigits` draws ASCII digits with Persian glyphs, for controls like the date picker that must keep an ASCII DOM value while reading as Persian. The values live in `tokens.ts`."
 />

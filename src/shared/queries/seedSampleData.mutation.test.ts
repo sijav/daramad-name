@@ -1,6 +1,6 @@
 import { assertValidReceipt, db } from 'src/core/db'
 import { activateLocale } from 'src/core/i18n'
-import { monthIndexOf, startOfMonthsAgo, yearOf } from 'src/shared/utils'
+import { formatDate, monthIndexOf, startOfMonthsAgo, yearOf } from 'src/shared/utils'
 import { computeToman } from 'src/shared/utils/money'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { getClientSharesQuery, getClientSharesQueryKey } from './getClientShares.query'
@@ -9,7 +9,7 @@ import { seedSampleDataMutation } from './seedSampleData.mutation'
 // The sample data is generated fresh on every press, so the assertions here are
 // the promises that hold whatever the dice do rather than a fixed count or
 // total: four years of history, a retainer past half the income, mixed
-// currencies at their own frozen rates, and one empty month. If any of that
+// currencies at their own frozen rates, and no blank month. If any of that
 // quietly stopped being true, the screens would still render, they would just
 // stop demonstrating the thing they were built to show.
 
@@ -128,6 +128,27 @@ describe('seedSampleDataMutation', () => {
     }
 
     expect(Math.max(...perMonth.values())).toBe(1)
+  })
+
+  // The salary is a payday: its receipts cluster on the same day of the month,
+  // give or take a couple, rather than scattering the way gigs do.
+  it('pays the salary near the same day each month', async () => {
+    await seedSampleDataMutation()
+    const receipts = await db.receipts.toArray()
+
+    const countByClient = new Map<string, number>()
+    for (const receipt of receipts) {
+      if (receipt.clientId) countByClient.set(receipt.clientId, (countByClient.get(receipt.clientId) ?? 0) + 1)
+    }
+    const salaryId = [...countByClient.entries()].sort((left, right) => right[1] - left[1])[0][0]
+
+    const paydays = new Set(
+      receipts.filter((each) => each.clientId === salaryId).map((each) => formatDate(each.occurredAt, 'JALALI', false).split('/')[2]),
+    )
+
+    // Payday give or take two is five possible days, plus at most the current
+    // month pulled back to today.
+    expect(paydays.size).toBeLessThanOrEqual(6)
   })
 
   // Two identical rows read as one receipt entered twice, the artefact the

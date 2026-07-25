@@ -367,8 +367,8 @@ msgid "Create report"
 msgstr "Create report"
 
 #: src/shared/queries/seedSampleData.mutation.ts
-msgid "Dadepardaz Co."
-msgstr "Dadepardaz Co."
+#~ msgid "Dadepardaz Co."
+#~ msgstr "Dadepardaz Co."
 
 #: src/shared/layouts/AppShell.tsx
 msgid "Daramadname"

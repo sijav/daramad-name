@@ -11,17 +11,19 @@ import { computeToman, startOfMonthsAgo } from 'src/shared/utils'
 // day itself must use the team's own real records.
 //
 // The shape is deliberate:
-//   - two steady clients pay most months (a big foreign retainer and a smaller
-//     Toman one), the way a freelancer's regular income does
-//   - a pool of one-off clients adds one or two gigs a month, up to five
+//   - one salary client pays most months, near the same day give or take a
+//     couple, the way a monthly retainer lands. Paid in Tether, so the frozen-
+//     rate case shows up constantly, and large enough to sit well past half the
+//     year's income and trip the concentration insight (scenario 4)
+//   - a pool of one-off clients adds gigs on top: with the salary in, most
+//     months none, sometimes one, rarely up to four; on a month the salary
+//     skips, one to five gigs cover for it, so a month always runs one to five
+//     rows
 //   - four years, earlier ones lighter, so the year picker changes the page
 //   - amounts follow a power law: a round million is ordinary, an exact ten
 //     thousand rare, so nobody is paid ۲۲٬۳۴۷٬۸۹۱
-//   - the retainer earns several times the rest each month, so it stays the top
-//     client well past half the income and the concentration insight fires
-//     (scenario 4)
-//   - every month in range carries at least one gig, so no month draws as a
-//     blank in the year view
+//   - every month carries the salary or a gig, so no month draws blank in the
+//     year view
 //
 // Client and note names go through `msg`, so a seed made in English reads in
 // English and one made in Persian reads in Persian.
@@ -36,25 +38,18 @@ const STEPS = [COMMON, COMMON, COMMON, UNCOMMON, UNCOMMON, RARE, LEGENDARY] as c
 // Four years, each lighter than the last.
 const YEAR_SCALE = [1, 0.82, 0.65, 0.5] as const
 
-// A one-off gig is at most this much, and there are at most five a month.
+// A one-off gig is at most this much.
 const GIG_MAX_TOMAN = 15_000_000
-const GIGS_MAX = 5
 
-interface SteadyClient {
-  client: MessageDescriptor
-  currency: Currency
-  monthlyToman: number
-  // How often it actually pays, so even a steady client misses the odd month.
-  regularity: number
-}
-
-const STEADY: readonly SteadyClient[] = [
-  // The retainer: several times the second client plus a typical month of gigs,
-  // so across four years it sits comfortably past half the income. Paid in
-  // Tether, the way a foreign retainer is.
-  { client: msg`Aria Trading`, currency: 'USDT', monthlyToman: 150_000_000, regularity: 1 },
-  { client: msg`Dadepardaz Co.`, currency: 'TOMAN', monthlyToman: 38_000_000, regularity: 0.85 },
-]
+// The single salary: one retainer paid most months, in Tether, large enough to
+// dominate the year. The amount is the target Toman before the month's rate and
+// a little jitter are applied to it. Now and then it skips a month, and that
+// month leans on gigs instead.
+const SALARY_CLIENT = msg`Aria Trading`
+const SALARY_CURRENCY: Currency = 'USDT'
+const SALARY_MONTHLY_TOMAN = 90_000_000
+const SALARY_REGULARITY = 0.85
+const SALARY_NOTE = msg`Monthly retainer`
 
 const GIG_CLIENTS: readonly MessageDescriptor[] = [
   msg`Naghsh Studio`,
@@ -73,8 +68,7 @@ const GIG_CLIENTS: readonly MessageDescriptor[] = [
   msg`Borna Studio`,
 ]
 
-const NOTES: readonly MessageDescriptor[] = [
-  msg`Monthly retainer`,
+const GIG_NOTES: readonly MessageDescriptor[] = [
   msg`Deposit for design phase one`,
   msg`App icon set`,
   msg`Phase two settlement`,
@@ -93,10 +87,13 @@ const NOTES: readonly MessageDescriptor[] = [
   msg`Event poster`,
 ]
 
-// How many gigs land in a month, weighted so two is the common month and one a
-// little less common, with three (rare), four (very rare) and five (legendary)
-// each falling off sharply from the last.
-const GIG_COUNTS = [2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 3, 3, 3, 4, 4, GIGS_MAX] as const
+// Gigs in a month, weighted along a rarity ladder. When the salary is there the
+// ladder starts at none (the common month) and reaches four (legendary), so the
+// month runs one to five rows. On a month the salary skips, it shifts up a rung,
+// one to five gigs, so the month still fills and a five-gig month is its own
+// kind of legendary.
+const GIGS_WITH_SALARY = [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4] as const
+const GIGS_WITHOUT_SALARY = [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 4, 4, 5] as const
 
 const rand = (min: number, max: number): number => min + Math.random() * (max - min)
 const randInt = (min: number, max: number): number => Math.floor(rand(min, max + 1))
@@ -125,10 +122,24 @@ const channelFor = (currency: Currency): Channel =>
 
 interface Draft {
   monthsAgo: number
+  // Days past the first of its calendar month, so the salary can hold a payday
+  // while gigs scatter across the month.
+  dayOffset: number
   client: MessageDescriptor
   currency: Currency
   amountOriginal: number
   rate: number | null
+  note: MessageDescriptor
+}
+
+interface EmitSpec {
+  client: MessageDescriptor
+  currency: Currency
+  targetToman: number
+  monthsAgo: number
+  tomanStep: number
+  dayOffset: number
+  note: MessageDescriptor
 }
 
 export const seedSampleDataMutation = async (): Promise<number> => {
@@ -144,14 +155,26 @@ export const seedSampleDataMutation = async (): Promise<number> => {
   // Emit one receipt for a target Toman amount. A foreign one keeps its own
   // rate and carries the units that rate implies, so the frozen Toman lands
   // where intended whatever the rate did that month.
-  const emit = (client: MessageDescriptor, currency: Currency, targetToman: number, monthsAgo: number, tomanStep: number) => {
+  const emit = ({ client, currency, targetToman, monthsAgo, tomanStep, dayOffset, note }: EmitSpec) => {
     if (currency === 'TOMAN') {
-      drafts.push({ monthsAgo, client, currency, amountOriginal: roundToStep(targetToman, tomanStep), rate: null })
+      drafts.push({ monthsAgo, dayOffset, client, currency, amountOriginal: roundToStep(targetToman, tomanStep), rate: null, note })
       return
     }
     const rate = rateFor(currency, monthsAgo)
-    drafts.push({ monthsAgo, client, currency, amountOriginal: roundToStep(targetToman / rate, currency === 'USDT' ? 50 : 100), rate })
+    drafts.push({
+      monthsAgo,
+      dayOffset,
+      client,
+      currency,
+      amountOriginal: roundToStep(targetToman / rate, currency === 'USDT' ? 50 : 100),
+      rate,
+      note,
+    })
   }
+
+  // The salary lands on the same day of the month across the whole history, give
+  // or take a couple, the way a payday clusters.
+  const payday = randInt(3, 25)
 
   for (let yearBack = 0; yearBack < YEAR_SCALE.length; yearBack += 1) {
     const scale = YEAR_SCALE[yearBack]
@@ -159,25 +182,35 @@ export const seedSampleDataMutation = async (): Promise<number> => {
     for (let month = 0; month < 12; month += 1) {
       const monthsAgo = month + yearBack * 12
 
-      for (const steady of STEADY) {
-        if (Math.random() > steady.regularity) continue
-        emit(steady.client, steady.currency, steady.monthlyToman * scale * rand(0.95, 1.1), monthsAgo, UNCOMMON)
+      const hasSalary = Math.random() < SALARY_REGULARITY
+      if (hasSalary) {
+        emit({
+          client: SALARY_CLIENT,
+          currency: SALARY_CURRENCY,
+          targetToman: SALARY_MONTHLY_TOMAN * scale * rand(0.95, 1.1),
+          monthsAgo,
+          tomanStep: UNCOMMON,
+          dayOffset: payday - 1 + randInt(-2, 2),
+          note: SALARY_NOTE,
+        })
       }
 
-      for (const gigClient of pickDistinct(GIG_CLIENTS, pick(GIG_COUNTS))) {
-        emit(
-          gigClient,
-          pick(['TOMAN', 'TOMAN', 'USDT', 'USD'] as const),
-          roundToStep(rand(3_000_000, GIG_MAX_TOMAN) * scale, pick(STEPS)),
+      for (const gigClient of pickDistinct(GIG_CLIENTS, pick(hasSalary ? GIGS_WITH_SALARY : GIGS_WITHOUT_SALARY))) {
+        emit({
+          client: gigClient,
+          currency: pick(['TOMAN', 'TOMAN', 'USDT', 'USD'] as const),
+          targetToman: roundToStep(rand(3_000_000, GIG_MAX_TOMAN) * scale, pick(STEPS)),
           monthsAgo,
-          pick(STEPS),
-        )
+          tomanStep: pick(STEPS),
+          dayOffset: randInt(0, 27),
+          note: pick(GIG_NOTES),
+        })
       }
     }
   }
 
-  // Count months in the user's own calendar, so a monthly retainer lands once
-  // per Jalali month rather than twice at the boundary where a Gregorian month
+  // Count months in the user's own calendar, so the salary lands once per
+  // calendar month rather than twice at the boundary where a Gregorian month
   // spills across two Jalali ones.
   const { calendar } = await readSettings()
   const now = new Date()
@@ -185,11 +218,12 @@ export const seedSampleDataMutation = async (): Promise<number> => {
   for (const draft of drafts) {
     const client = await upsertClientByName(i18n._(draft.client))
     const monthStart = startOfMonthsAgo(now, draft.monthsAgo, calendar)
-    // Every past month gets the full 28-day window; the current month only runs
-    // up to today, so nothing is dated in the future.
-    const daysAvailable = draft.monthsAgo === 0 ? differenceInCalendarDays(now, monthStart) : 27
+    // Past months get the full window; the current month only runs up to today,
+    // so nothing is dated in the future and the salary shifts earlier rather
+    // than spilling past the clamp.
+    const lastDay = draft.monthsAgo === 0 ? Math.min(27, differenceInCalendarDays(now, monthStart)) : 27
     const occurred = monthStart
-    occurred.setDate(occurred.getDate() + randInt(0, Math.min(27, daysAvailable)))
+    occurred.setDate(occurred.getDate() + Math.max(0, Math.min(draft.dayOffset, lastDay)))
     occurred.setHours(12, 0, 0, 0)
     const timestamp = new Date().toISOString()
 
@@ -202,7 +236,7 @@ export const seedSampleDataMutation = async (): Promise<number> => {
       amountToman: computeToman(draft.amountOriginal, draft.currency, draft.rate),
       clientId: client?.id ?? null,
       channel: channelFor(draft.currency),
-      note: i18n._(pick(NOTES)),
+      note: i18n._(draft.note),
       createdAt: timestamp,
       updatedAt: timestamp,
     })

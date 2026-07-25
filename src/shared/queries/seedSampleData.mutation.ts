@@ -19,35 +19,40 @@ import { computeToman, startOfMonthsAgo } from 'src/shared/utils'
 //     months none, sometimes one, rarely up to four; on a month the salary
 //     skips, one to five gigs cover for it, so a month always runs one to five
 //     rows
-//   - four years, earlier ones lighter, so the year picker changes the page
-//   - amounts follow a power law: a round million is ordinary, an exact ten
-//     thousand rare, so nobody is paid ۲۲٬۳۴۷٬۸۹۱
+//   - four years of history, so the year picker changes the page
+//   - gig amounts follow a power law: a round million is ordinary, an exact
+//     fifty thousand rare, so nobody is paid ۲۲٬۳۴۷٬۸۹۱
 //   - every month carries the salary or a gig, so no month draws blank in the
 //     year view
 //
 // Client and note names go through `msg`, so a seed made in English reads in
 // English and one made in Persian reads in Persian.
 
-const COMMON = 1_000_000
-const UNCOMMON = 500_000
-const RARE = 100_000
-const LEGENDARY = 10_000 // :D
-// Weighted so a round figure is ordinary and a ten-thousand precise one is rare.
-const STEPS = [COMMON, COMMON, COMMON, UNCOMMON, UNCOMMON, RARE, LEGENDARY] as const
+// The step a gig amount is rounded to, weighted: a round million is the common
+// case, a half-million uncommon, and the exact 100k and 50k figures rare and
+// legendary, so most gigs read as tidy sums and the odd one lands precise.
+const GIG_STEPS = [
+  1_000_000, 1_000_000, 1_000_000, 1_000_000, 1_000_000, 1_000_000, 500_000, 500_000, 500_000, 100_000, 100_000, 50_000,
+] as const
 
-// Four years, each lighter than the last.
-const YEAR_SCALE = [1, 0.82, 0.65, 0.5] as const
+// Four years of history.
+const YEARS = 4
 
-// A one-off gig is at most this much.
-const GIG_MAX_TOMAN = 15_000_000
+// A gig runs from a few million up to the low tens of millions, kept well under
+// the salary so the retainer stays the top client and the concentration insight
+// keeps firing whatever the dice do.
+const GIG_MIN_TOMAN = 3_000_000
+const GIG_MAX_TOMAN = 30_000_000
 
 // The single salary: one retainer paid most months, in Tether, large enough to
-// dominate the year. The amount is the target Toman before the month's rate and
-// a little jitter are applied to it. Now and then it skips a month, and that
-// month leans on gigs instead.
+// dominate the year. Its size is drawn once per seed, fifty to two hundred
+// million Toman in whole millions, then held steady month to month the way a
+// real salary is, so it differs between seeds but never down the page of one.
+// Now and then it skips a month, and that month leans on gigs instead.
 const SALARY_CLIENT = msg`Aria Trading`
 const SALARY_CURRENCY: Currency = 'USDT'
-const SALARY_MONTHLY_TOMAN = 90_000_000
+const SALARY_MIN_TOMAN = 50_000_000
+const SALARY_MAX_TOMAN = 200_000_000
 const SALARY_REGULARITY = 0.85
 const SALARY_NOTE = msg`Monthly retainer`
 
@@ -173,39 +178,36 @@ export const seedSampleDataMutation = async (): Promise<number> => {
   }
 
   // The salary lands on the same day of the month across the whole history, give
-  // or take a couple, the way a payday clusters.
+  // or take a couple, the way a payday clusters, and is a fixed figure for this
+  // whole seed drawn once here.
   const payday = randInt(3, 25)
+  const salaryToman = roundToStep(rand(SALARY_MIN_TOMAN, SALARY_MAX_TOMAN), 1_000_000)
 
-  for (let yearBack = 0; yearBack < YEAR_SCALE.length; yearBack += 1) {
-    const scale = YEAR_SCALE[yearBack]
+  for (let monthsAgo = 0; monthsAgo < YEARS * 12; monthsAgo += 1) {
+    const hasSalary = Math.random() < SALARY_REGULARITY
+    if (hasSalary) {
+      emit({
+        client: SALARY_CLIENT,
+        currency: SALARY_CURRENCY,
+        targetToman: salaryToman,
+        monthsAgo,
+        tomanStep: 1_000_000,
+        dayOffset: payday - 1 + randInt(-2, 2),
+        note: SALARY_NOTE,
+      })
+    }
 
-    for (let month = 0; month < 12; month += 1) {
-      const monthsAgo = month + yearBack * 12
-
-      const hasSalary = Math.random() < SALARY_REGULARITY
-      if (hasSalary) {
-        emit({
-          client: SALARY_CLIENT,
-          currency: SALARY_CURRENCY,
-          targetToman: SALARY_MONTHLY_TOMAN * scale * rand(0.95, 1.1),
-          monthsAgo,
-          tomanStep: UNCOMMON,
-          dayOffset: payday - 1 + randInt(-2, 2),
-          note: SALARY_NOTE,
-        })
-      }
-
-      for (const gigClient of pickDistinct(GIG_CLIENTS, pick(hasSalary ? GIGS_WITH_SALARY : GIGS_WITHOUT_SALARY))) {
-        emit({
-          client: gigClient,
-          currency: pick(['TOMAN', 'TOMAN', 'USDT', 'USD'] as const),
-          targetToman: roundToStep(rand(3_000_000, GIG_MAX_TOMAN) * scale, pick(STEPS)),
-          monthsAgo,
-          tomanStep: pick(STEPS),
-          dayOffset: randInt(0, 27),
-          note: pick(GIG_NOTES),
-        })
-      }
+    for (const gigClient of pickDistinct(GIG_CLIENTS, pick(hasSalary ? GIGS_WITH_SALARY : GIGS_WITHOUT_SALARY))) {
+      const gigStep = pick(GIG_STEPS)
+      emit({
+        client: gigClient,
+        currency: pick(['TOMAN', 'TOMAN', 'USDT', 'USD'] as const),
+        targetToman: roundToStep(rand(GIG_MIN_TOMAN, GIG_MAX_TOMAN), gigStep),
+        monthsAgo,
+        tomanStep: gigStep,
+        dayOffset: randInt(0, 27),
+        note: pick(GIG_NOTES),
+      })
     }
   }
 
